@@ -66,9 +66,9 @@ export default function App() {
   // Scroll progress inside the container (0 = top, 1 = bottom)
   const { scrollYProgress } = useScroll({ container: containerRef });
 
-  // Hero: zoom-out khi cuộn (bắt đầu phóng to 1.35 → thu về 1.0)
-  const heroZoom = useTransform(scrollYProgress, [0, 0.22], [1.35, 1.0]);
-  const heroY    = useTransform(scrollYProgress, [0, 0.22], ["0%", "6%"]);
+  // Hero: bắt đầu bình thường (1.0), zoom OUT khi cuộn
+  const heroZoom = useTransform(scrollYProgress, [0, 0.22], [1.0, 0.82]);
+  const heroY    = useTransform(scrollYProgress, [0, 0.22], ["0%", "5%"]);
 
   // Active section tracking
   useEffect(() => {
@@ -161,10 +161,11 @@ export default function App() {
             <motion.h2
               initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.9, delay: 0.28, ease: [0.22, 1, 0.36, 1] }}
-              className="font-cormorant italic text-center leading-[0.85] mb-5"
+              className="font-serif italic text-center leading-[0.88] mb-5"
               style={{
                 fontSize: "clamp(6rem, 20vw, 11rem)",
                 color: "#3a5029",
+                fontWeight: 400,
                 textShadow: "0 2px 0 rgba(255,255,255,0.85), 0 6px 28px rgba(255,255,255,0.65)",
               }}
             >
@@ -200,29 +201,29 @@ export default function App() {
               <div className="h-px w-10 bg-sage/60" />
             </motion.div>
 
-            {/* Couple names – Great Vibes */}
+            {/* Couple names – 1 dòng, font serif đơn giản */}
             <motion.div
               initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.68, ease: [0.22, 1, 0.36, 1] }}
-              className="flex items-center justify-center gap-3 mb-5"
+              className="flex items-center justify-center gap-2 mb-5 whitespace-nowrap"
             >
-              <span className="font-script text-secondary"
+              <span className="font-serif italic text-secondary font-normal"
                 style={{
-                  fontSize: "clamp(2.6rem, 8.5vw, 3.8rem)",
-                  textShadow: "0 2px 0 rgba(255,255,255,0.95), 0 4px 16px rgba(255,255,255,0.75)",
+                  fontSize: "clamp(1.5rem, 4.2vw, 2.1rem)",
+                  textShadow: "0 1px 0 rgba(255,255,255,0.95), 0 3px 12px rgba(255,255,255,0.8)",
                 }}>
                 {COUPLE.bride}
               </span>
               <motion.span
                 animate={{ scale: [1, 1.4, 1] }}
                 transition={{ repeat: Infinity, duration: 2.2, ease: "easeInOut" }}
-                className="text-primary-dark leading-none"
-                style={{ fontSize: "1.4rem" }}
+                className="text-primary-dark leading-none mx-1"
+                style={{ fontSize: "1.1rem" }}
               >♥</motion.span>
-              <span className="font-script text-secondary"
+              <span className="font-serif italic text-secondary font-normal"
                 style={{
-                  fontSize: "clamp(2.6rem, 8.5vw, 3.8rem)",
-                  textShadow: "0 2px 0 rgba(255,255,255,0.95), 0 4px 16px rgba(255,255,255,0.75)",
+                  fontSize: "clamp(1.5rem, 4.2vw, 2.1rem)",
+                  textShadow: "0 1px 0 rgba(255,255,255,0.95), 0 3px 12px rgba(255,255,255,0.8)",
                 }}>
                 {COUPLE.groom}
               </span>
@@ -235,9 +236,9 @@ export default function App() {
               className="flex items-center gap-3 mb-10"
             >
               <div className="h-px w-8 bg-primary-dark/40" />
-              <span className="font-cormorant italic text-secondary/65"
-                style={{ fontSize: "1.1rem", letterSpacing: "0.3em",
-                  textShadow: "0 1px 8px rgba(255,255,255,0.95)" }}>
+              <span className="font-cormorant italic text-secondary/70"
+                style={{ fontSize: "1.3rem", letterSpacing: "0.32em",
+                  textShadow: "0 1px 8px rgba(255,255,255,0.98)" }}>
                 {WEDDING_DATE}
               </span>
               <div className="h-px w-8 bg-primary-dark/40" />
@@ -566,7 +567,7 @@ function GalleryCard({
     >
       <motion.img src={photo.img} alt={photo.title}
         className="w-full h-full object-cover"
-        whileHover={{ scale: 1.07 }}
+        whileHover={{ scale: 0.93 }}
         transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
       />
       <div className="absolute inset-0 bg-gradient-to-t from-primary-deep/70 via-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-10">
