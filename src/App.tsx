@@ -331,14 +331,14 @@ export default function App() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 30 }}
               transition={{ type: "spring", damping: 26, stiffness: 280 }}
-              className="fixed inset-0 z-[100] flex items-center justify-center p-5 pointer-events-none"
+              className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-5 pointer-events-none"
             >
-              <div className="relative w-full max-w-md bg-white rounded-[2rem] shadow-2xl overflow-hidden pointer-events-auto">
-                <div className="relative h-36 overflow-hidden">
+              <div className="relative w-full max-w-md max-h-[90vh] bg-white rounded-[2rem] shadow-2xl overflow-y-auto pointer-events-auto scrollbar-hide">
+                <div className="sticky top-0 z-20 h-32 md:h-36 overflow-hidden">
                   <img src={IMAGES.hero} alt=""
                     className="w-full h-full object-cover object-top brightness-90" />
-                  <div className="absolute inset-0 bg-gradient-to-b from-black/10 to-white" />
-                  <div className="absolute bottom-3 left-0 right-0 flex justify-center">
+                  <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-white" />
+                  <div className="absolute bottom-2 left-0 right-0 flex justify-center">
                     <span className="font-script text-2xl text-secondary drop-shadow-sm">
                       {COUPLE.bride} <span className="text-primary-dark">♥</span> {COUPLE.groom}
                     </span>
@@ -346,10 +346,10 @@ export default function App() {
                   <div className="absolute top-0 left-0 right-0 h-0.5 bg-sage/40" />
                 </div>
                 <button onClick={() => setShowRSVP(false)}
-                  className="absolute top-3 right-3 z-10 p-1.5 rounded-full bg-white/80 text-secondary/60 hover:bg-white hover:text-secondary transition-all shadow-sm">
+                  className="fixed md:absolute top-6 right-6 md:top-3 md:right-3 z-30 p-1.5 rounded-full bg-white/90 text-secondary/60 hover:bg-white hover:text-secondary transition-all shadow-md">
                   <X size={18} />
                 </button>
-                <div className="px-8 pb-8 pt-2">
+                <div className="px-5 pb-8 pt-2 md:px-8">
                   <RSVPForm onComplete={() => setShowRSVP(false)} />
                 </div>
               </div>
