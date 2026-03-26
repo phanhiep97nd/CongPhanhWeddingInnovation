@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(npm run:*)",
+      "Bash(grep -E \"\\\\.\\(json|config|rc|tsx|ts\\)$\")",
+      "Bash(mkdir -p \"E:\\\\My Project\\\\CongPhanhWeddingInnovation\\\\public\\\\images\")",
+      "Bash(cp \"E:\\\\Downloads\\\\DSCF7860.jpg\" \"E:\\\\My Project\\\\CongPhanhWeddingInnovation\\\\public\\\\images/\")",
+      "Bash(cp \"E:\\\\Downloads\\\\DSCF7944.jpg\" \"E:\\\\My Project\\\\CongPhanhWeddingInnovation\\\\public\\\\images/\")",
+      "Bash(cp \"E:\\\\Downloads\\\\AMV_3279.jpg\" \"E:\\\\My Project\\\\CongPhanhWeddingInnovation\\\\public\\\\images/\")",
+      "Bash(npx tsc:*)"
+    ]
+  }
+}

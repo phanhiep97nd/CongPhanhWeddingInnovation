@@ -129,8 +129,8 @@ export default function App() {
             <motion.img
               src={IMAGES.hero}
               alt="Wedding"
-              style={{ scale: heroZoom, y: heroY }}
-              className="w-full h-full object-cover object-center"
+              style={{ scale: heroZoom, y: heroY, objectPosition: "62% center" }}
+              className="w-full h-full object-cover"
             />
             {/* Gradient overlay: subtle so photo stays vivid but text is readable */}
             <div className="absolute inset-0 bg-gradient-to-br from-white/55 via-white/45 to-white/30" />
@@ -161,15 +161,16 @@ export default function App() {
             <motion.h2
               initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.9, delay: 0.28, ease: [0.22, 1, 0.36, 1] }}
-              className="font-serif italic text-center leading-[0.88] mb-5"
+              className="font-cormorant italic text-center leading-[1.05] mb-4"
               style={{
-                fontSize: "clamp(6rem, 20vw, 11rem)",
+                fontSize: "clamp(3rem, 20vw, 5.5rem)",
                 color: "#3a5029",
                 fontWeight: 400,
-                textShadow: "0 2px 0 rgba(255,255,255,0.85), 0 6px 28px rgba(255,255,255,0.65)",
+                letterSpacing: "0.04em",
+                textShadow: "0 1px 0 rgba(255,255,255,0.9), 0 4px 20px rgba(255,255,255,0.6)",
               }}
             >
-              Eternal<br />Us
+              Eternal Us
             </motion.h2>
 
             {/* Love in ∞ dimensions */}
@@ -180,7 +181,7 @@ export default function App() {
             >
               <div className="h-px w-10 bg-sage/60" />
               <span className="font-cormorant italic text-secondary/80"
-                style={{ fontSize: "1.05rem", letterSpacing: "0.2em",
+                style={{ fontSize: "1.55rem", letterSpacing: "0.2em",
                   textShadow: "0 1px 8px rgba(255,255,255,0.95)" }}>
                 Love in
               </span>
@@ -194,7 +195,7 @@ export default function App() {
                 }}
               >8</span>
               <span className="font-cormorant italic text-secondary/80"
-                style={{ fontSize: "1.05rem", letterSpacing: "0.2em",
+                style={{ fontSize: "1.55rem", letterSpacing: "0.2em",
                   textShadow: "0 1px 8px rgba(255,255,255,0.95)" }}>
                 dimensions
               </span>
@@ -237,7 +238,7 @@ export default function App() {
             >
               <div className="h-px w-8 bg-primary-dark/40" />
               <span className="font-cormorant italic text-secondary/70"
-                style={{ fontSize: "1.3rem", letterSpacing: "0.32em",
+                style={{ fontSize: "1.5rem", letterSpacing: "0.32em",
                   textShadow: "0 1px 8px rgba(255,255,255,0.98)" }}>
                 {WEDDING_DATE}
               </span>
@@ -567,7 +568,7 @@ function GalleryCard({
     >
       <motion.img src={photo.img} alt={photo.title}
         className="w-full h-full object-cover"
-        whileHover={{ scale: 0.93 }}
+        whileHover={{ scale: 1.07 }}
         transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
       />
       <div className="absolute inset-0 bg-gradient-to-t from-primary-deep/70 via-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-10">
