@@ -66,9 +66,9 @@ export default function App() {
   // Scroll progress inside the container (0 = top, 1 = bottom)
   const { scrollYProgress } = useScroll({ container: containerRef });
 
-  // Hero: bắt đầu bình thường (1.0), zoom OUT khi cuộn
-  const heroZoom = useTransform(scrollYProgress, [0, 0.22], [1.0, 0.82]);
-  const heroY    = useTransform(scrollYProgress, [0, 0.22], ["0%", "5%"]);
+  // Hero: Tăng cường hiệu ứng Zoom mạnh hơn (từ 1.0 lên 1.5)
+  const heroZoom = useTransform(scrollYProgress, [0, 0.25], [1.0, 1.5]);
+  const heroY    = useTransform(scrollYProgress, [0, 0.25], ["0%", "10%"]);
 
   // Active section tracking
   useEffect(() => {
@@ -293,8 +293,16 @@ export default function App() {
 
       {/* ── Footer ── */}
       <footer className="w-full py-16 flex flex-col items-center gap-8 text-center px-8 border-t border-sage/20 bg-white">
-        <h4 className="font-script text-4xl text-secondary">
-          {COUPLE.bride} <span className="text-primary-dark">♥</span> {COUPLE.groom}
+        <h4 className="font-script text-4xl text-secondary whitespace-nowrap flex items-center justify-center gap-3">
+          <span>{COUPLE.bride}</span>
+          <motion.span
+            animate={{ scale: [1, 1.35, 1] }}
+            transition={{ repeat: Infinity, duration: 2.4, ease: "easeInOut" }}
+            className="inline-block text-primary not-italic leading-none"
+          >
+            <Heart size={24} className="fill-primary" />
+          </motion.span>
+          <span>{COUPLE.groom}</span>
         </h4>
         <nav className="flex flex-wrap justify-center gap-x-12 gap-y-4">
           {NAV_ITEMS.map((item) => (
