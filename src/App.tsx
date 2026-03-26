@@ -113,8 +113,10 @@ export default function App() {
             <motion.span
               animate={{ scale: [1, 1.35, 1] }}
               transition={{ repeat: Infinity, duration: 2.4, ease: "easeInOut" }}
-              className="inline-block text-primary-dark not-italic text-lg leading-none"
-            >♥</motion.span>
+              className="inline-block text-primary not-italic leading-none"
+            >
+              <Heart size={16} className="fill-primary" />
+            </motion.span>
             <span>M.Công</span>
           </h1>
         </div>
