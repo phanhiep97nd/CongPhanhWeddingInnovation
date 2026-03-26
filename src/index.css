@@ -1,14 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400;1,600&family=Noto+Serif:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
 
 @theme {
   --font-serif: "Noto Serif", serif;
   --font-sans: "Plus Jakarta Sans", sans-serif;
+  --font-script: "Great Vibes", cursive;
+  --font-cormorant: "Cormorant Garamond", serif;
 
   --color-primary: #F2C8CD;
+  --color-primary-dark: #C9848B;
+  --color-primary-deep: #A85E65;
   --color-secondary: #4C6635;
-  --color-background-light: #f8f6f6;
-  
+  --color-sage: #8DA06B;
+  --color-sage-light: #d4e0c4;
+  --color-petal: #fdf5f6;
+  --color-blush: #f9e8ea;
+  --color-background-light: #fdf5f6;
+
   --radius-xl: 0.75rem;
   --radius-2xl: 1rem;
   --radius-3xl: 1.5rem;
@@ -17,8 +25,16 @@
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
   body {
-    @apply bg-background-light text-secondary font-sans antialiased;
+    @apply bg-petal text-secondary font-sans antialiased;
+    overflow-x: hidden;
+  }
+  ::selection {
+    background-color: #F2C8CD;
+    color: #4C6635;
   }
 }
 
@@ -28,10 +44,41 @@
 }
 
 .editorial-text-shadow {
-  text-shadow: 0 4px 12px rgba(76, 102, 53, 0.1);
+  text-shadow: 0 4px 20px rgba(0,0,0,0.45);
 }
 
-.infinity-symbol {
+.name-shadow {
+  text-shadow: 0 2px 24px rgba(0,0,0,0.5), 0 0 60px rgba(242,200,205,0.25);
+}
+
+.pink-glow {
+  box-shadow: 0 8px 40px rgba(242, 200, 205, 0.5);
+}
+
+.scroll-container {
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 100vh;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Smooth scrollbar */
+.scroll-container::-webkit-scrollbar {
+  width: 4px;
+}
+.scroll-container::-webkit-scrollbar-track {
+  background: #fdf5f6;
+}
+.scroll-container::-webkit-scrollbar-thumb {
+  background: #F2C8CD;
+  border-radius: 2px;
+}
+
+/* Infinity "8" rotated */
+.infinity-8 {
   display: inline-block;
   transform: rotate(90deg);
+  line-height: 1;
+  font-style: normal;
 }
