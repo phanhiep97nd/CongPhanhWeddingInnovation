@@ -132,117 +132,107 @@ export default function App() {
 
       <main>
         {/* ── Hero ── */}
-        <section className="relative h-screen flex flex-col items-center justify-center overflow-hidden">
-          {/* Background photo with parallax */}
-          <motion.div style={{ scale: heroScale, y: heroY, filter: `blur(${heroBlur}px)` }} className="absolute inset-0 z-0">
-            <img src={IMAGES.hero} alt="Wedding" className="w-full h-full object-cover brightness-110" />
-            {/* Strong white overlay so dark text is always readable */}
-            <div className="absolute inset-0 bg-gradient-to-b from-white/50 via-white/65 to-petal/95" />
-            <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-petal to-transparent" />
+        <section className="relative h-screen overflow-hidden">
+
+          {/* ── Layer 1: ảnh parallax ── */}
+          <motion.div
+            style={{ scale: heroScale, y: heroY }}
+            className="absolute inset-0 z-0"
+          >
+            <img
+              src={IMAGES.hero}
+              alt="Wedding"
+              className="w-full h-full object-cover"
+            />
+            {/* overlay trắng nhẹ để text tối đọc được */}
+            <div className="absolute inset-0 bg-white/40" />
+            <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-petal to-transparent" />
           </motion.div>
 
-          {/* Hero text – scroll fades via heroOpacity, entrance via inner children */}
-          <motion.div
-            style={{ opacity: heroOpacity, y: textY }}
-            className="relative z-10 text-center max-w-lg mx-auto px-6 flex flex-col items-center"
-          >
+          {/* ── Layer 2: text ── z-10, KHÔNG dùng heroOpacity */}
+          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center px-6 pt-16 pb-10">
+
             {/* ESTABLISHED */}
             <motion.div
-              initial={{ opacity: 0, y: -8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.9, delay: 0.2 }}
-              className="mb-5 flex flex-col items-center gap-0.5"
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.1 }}
+              className="flex flex-col items-center gap-0.5 mb-4"
             >
-              <div className="flex items-center gap-3 mb-0.5">
-                <div className="h-px w-10 bg-secondary/30" />
-                <span className="font-sans text-[9px] uppercase tracking-[0.45em] text-secondary/55 font-medium">Established</span>
-                <div className="h-px w-10 bg-secondary/30" />
+              <div className="flex items-center gap-3">
+                <div className="h-px w-8 bg-secondary/35" />
+                <span style={{ fontSize: 9, letterSpacing: "0.45em" }} className="font-sans uppercase text-secondary/60 font-medium">Established</span>
+                <div className="h-px w-8 bg-secondary/35" />
               </div>
-              <span className="font-sans text-[9px] uppercase tracking-[0.4em] text-secondary/55">October 2017</span>
+              <span style={{ fontSize: 9, letterSpacing: "0.4em" }} className="font-sans uppercase text-secondary/55">October 2017</span>
             </motion.div>
 
             {/* ETERNAL US */}
             <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1.0, delay: 0.45 }}
-              className="font-cormorant italic leading-[0.88] mb-5 select-none"
-              style={{ fontSize: "clamp(4.5rem, 15vw, 8.5rem)", color: "#4C6635" }}
+              initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.9, delay: 0.3 }}
+              className="font-cormorant italic text-center leading-[0.88] mb-4"
+              style={{ fontSize: "clamp(4.8rem, 16vw, 8rem)", color: "#4C6635" }}
             >
               Eternal<br />Us
             </motion.h2>
 
-            {/* ∞  8 years */}
+            {/* Love in ∞ dimensions */}
             <motion.div
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.9, delay: 0.75 }}
-              className="flex items-center gap-2 mb-5"
+              initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.55 }}
+              className="flex items-center justify-center gap-2 mb-5"
             >
+              <div className="h-px w-8 bg-sage/50" />
+              <span className="font-cormorant italic text-secondary/70" style={{ fontSize: "0.85rem", letterSpacing: "0.15em" }}>Love in</span>
+              {/* số 8 nằm ngang = ∞ */}
               <span
-                className="font-cormorant font-semibold text-secondary select-none"
-                style={{ fontSize: "clamp(2.4rem, 8vw, 4.5rem)", display: "inline-block", transform: "rotate(90deg)", lineHeight: 1 }}
+                className="font-cormorant font-bold text-primary-dark"
+                style={{ fontSize: "1.6rem", display: "inline-block", transform: "rotate(90deg)", lineHeight: 1, margin: "0 2px" }}
               >8</span>
-              <span
-                className="font-cormorant font-semibold text-secondary select-none"
-                style={{ fontSize: "clamp(2.4rem, 8vw, 4.5rem)", lineHeight: 1 }}
-              >8 years</span>
+              <span className="font-cormorant italic text-secondary/70" style={{ fontSize: "0.85rem", letterSpacing: "0.15em" }}>dimensions</span>
+              <div className="h-px w-8 bg-sage/50" />
             </motion.div>
 
-            {/* Subtitle */}
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 1.0, delay: 1.0 }}
-              className="font-cormorant italic text-base md:text-lg text-secondary/65 mb-6 leading-relaxed"
-            >
-              A journey of{" "}
-              <span className="text-primary-dark font-semibold not-italic">eight years</span>
-              {" "}blossoming into forever.
-            </motion.p>
-
-            {/* Couple names */}
+            {/* Tên cô dâu chú rể – Great Vibes */}
             <motion.div
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.9, delay: 1.2 }}
-              className="flex items-center justify-center gap-3 mb-5"
+              initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.9, delay: 0.75 }}
+              className="flex items-center justify-center gap-3 mb-4"
             >
-              <span className="font-script text-3xl md:text-4xl text-secondary">Phương Anh</span>
+              <span className="font-script text-secondary" style={{ fontSize: "clamp(2rem, 7vw, 3rem)" }}>Phương Anh</span>
               <motion.span
-                animate={{ scale: [1, 1.3, 1] }}
+                animate={{ scale: [1, 1.35, 1] }}
                 transition={{ repeat: Infinity, duration: 2.2, ease: "easeInOut" }}
-                className="text-primary-dark text-base"
+                className="text-primary-dark"
+                style={{ fontSize: "1.1rem" }}
               >♥</motion.span>
-              <span className="font-script text-3xl md:text-4xl text-secondary">Công</span>
+              <span className="font-script text-secondary" style={{ fontSize: "clamp(2rem, 7vw, 3rem)" }}>Công</span>
             </motion.div>
 
-            {/* Date */}
+            {/* Ngày */}
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.9, delay: 1.35 }}
-              className="flex items-center gap-3 text-secondary/50 mb-10"
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.95 }}
+              className="flex items-center gap-3 mb-8"
             >
-              <div className="h-px w-8 bg-sage/40" />
-              <span className="font-cormorant italic text-sm tracking-widest">October 24, 2025</span>
-              <div className="h-px w-8 bg-sage/40" />
+              <div className="h-px w-8 bg-primary/50" />
+              <span className="font-cormorant italic text-secondary/55" style={{ fontSize: "0.9rem", letterSpacing: "0.2em" }}>October 24, 2025</span>
+              <div className="h-px w-8 bg-primary/50" />
             </motion.div>
 
-            {/* Scroll cue */}
+            {/* Scroll */}
             <motion.button
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1.5 }}
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+              transition={{ delay: 1.2 }}
               onClick={() => scrollTo("story")}
-              className="flex flex-col items-center gap-2 text-secondary/45 hover:text-secondary transition-colors"
+              className="flex flex-col items-center gap-2 text-secondary/40 hover:text-secondary/70 transition-colors"
             >
-              <span className="text-[9px] uppercase tracking-[0.35em]">Cuộn để xem tiếp</span>
+              <span style={{ fontSize: 9, letterSpacing: "0.35em" }} className="font-sans uppercase">Cuộn để xem tiếp</span>
               <motion.div animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}>
-                <ChevronRight className="rotate-90" size={20} />
+                <ChevronRight className="rotate-90" size={18} />
               </motion.div>
             </motion.button>
-          </motion.div>
+          </div>
         </section>
 
         {/* ── Story ── */}
