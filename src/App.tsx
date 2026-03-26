@@ -179,7 +179,7 @@ export default function App() {
             <motion.div
               initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.75, delay: 0.5 }}
-              className="flex items-center justify-center gap-2 mb-6"
+              className="flex items-center justify-center gap-2 mb-6 whitespace-nowrap"
             >
               <div className="h-px w-10 bg-sage/60" />
               <span className="font-cormorant italic text-secondary/80"
@@ -220,9 +220,10 @@ export default function App() {
               <motion.span
                 animate={{ scale: [1, 1.4, 1] }}
                 transition={{ repeat: Infinity, duration: 2.2, ease: "easeInOut" }}
-                className="text-primary-dark leading-none mx-1"
-                style={{ fontSize: "1.1rem" }}
-              >♥</motion.span>
+                className="inline-block text-primary not-italic leading-none mx-1"
+              >
+                <Heart size={16} className="fill-primary" />
+              </motion.span>
               <span className="font-serif italic text-secondary font-normal"
                 style={{
                   fontSize: "clamp(1.5rem, 4.2vw, 2.1rem)",
