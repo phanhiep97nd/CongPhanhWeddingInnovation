@@ -350,9 +350,11 @@ export default function App() {
                     className="w-full h-full object-cover object-top brightness-90" />
                   <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-white" />
                   <div className="absolute bottom-2 left-0 right-0 flex justify-center">
-                    <span className="font-script text-2xl text-secondary drop-shadow-sm">
-                      {COUPLE.bride} <span className="text-primary-dark">♥</span> {COUPLE.groom}
-                    </span>
+                    <h4 className="font-script text-2xl text-secondary drop-shadow-sm flex items-center gap-2">
+                      <span>{COUPLE.bride}</span>
+                      <Heart size={16} className="text-primary fill-primary" />
+                      <span>{COUPLE.groom}</span>
+                    </h4>
                   </div>
                   <div className="absolute top-0 left-0 right-0 h-0.5 bg-sage/40" />
                 </div>
@@ -504,6 +506,8 @@ function TimelineSection() {
 
 // ── Gallery ───────────────────────────────────────────────────────────────────
 function GallerySection() {
+  const [activePhoto, setActivePhoto] = useState<number | null>(null);
+
   const photos = [
     { title: "Khoảnh khắc ngọt ngào", desc: "Buổi chiều mùa xuân", img: IMAGES.gallery1 },
     { title: "Tình yêu nở hoa",       desc: "Chi tiết ngày cưới",  img: IMAGES.gallery2, full: true },
@@ -525,7 +529,15 @@ function GallerySection() {
           className="mt-6 mx-auto w-20 h-0.5 bg-gradient-to-r from-transparent via-sage/40 to-transparent" />
       </Reveal>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {photos.map((photo, i) => <GalleryCard key={i} photo={photo} index={i} />)}
+        {photos.map((photo, i) => (
+          <GalleryCard
+            key={i}
+            photo={photo}
+            index={i}
+            isActive={activePhoto === i}
+            onToggle={() => setActivePhoto(activePhoto === i ? null : i)}
+          />
+        ))}
       </div>
     </section>
   );
@@ -565,32 +577,44 @@ function TimelineItem({
 
 // ── Gallery Card ──────────────────────────────────────────────────────────────
 function GalleryCard({
-  photo, index,
-}: { photo: { title: string; desc: string; img: string; full?: boolean }; index: number; key?: React.Key }) {
+  photo, index, isActive, onToggle,
+}: {
+  photo: { title: string; desc: string; img: string; full?: boolean };
+  index: number; isActive: boolean; onToggle: () => void;
+}) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-60px" });
+
   return (
     <motion.div ref={ref}
       initial={{ opacity: 0, y: 50, scale: 0.95 }}
       animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
       transition={{ duration: 0.8, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
       whileHover={{ y: -8, transition: { duration: 0.3 } }}
-      className={`relative rounded-[2.5rem] overflow-hidden group cursor-pointer shadow-lg hover:shadow-2xl transition-shadow duration-500 ${photo.full ? "md:col-span-2 aspect-[16/9]" : "aspect-[4/5]"}`}
+      onClick={onToggle}
+      className={`relative rounded-[2.5rem] overflow-hidden cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-500 group ${photo.full ? "md:col-span-2 aspect-[16/9]" : "aspect-[4/5]"}`}
     >
       <motion.img src={photo.img} alt={photo.title}
         className="w-full h-full object-cover"
+        animate={{ scale: isActive ? 1.1 : 1 }}
         whileHover={{ scale: 1.07 }}
         transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-primary-deep/70 via-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-10">
-        <h4 className="font-serif text-2xl italic text-white mb-1 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+
+      {/* Info Overlay – Visible on hover (desktop) or isActive (tap/mobile) */}
+      <motion.div
+        animate={{ opacity: isActive ? 1 : 0 }}
+        className="absolute inset-0 bg-gradient-to-t from-primary-deep/80 via-primary/10 to-transparent flex flex-col justify-end p-8 md:p-10 opacity-0 md:group-hover:opacity-100 transition-opacity duration-500"
+      >
+        <h4 className="font-serif text-2xl md:text-3xl italic text-white mb-1">
           {photo.title}
         </h4>
-        <p className="text-sm text-white/80 translate-y-4 group-hover:translate-y-0 transition-transform duration-500 delay-75">
+        <p className="text-sm md:text-base text-white/80">
           {photo.desc}
         </p>
-      </div>
-      <div className="absolute top-4 right-4 w-8 h-8 rounded-full bg-primary/30 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+      </motion.div>
+
+      <div className="absolute top-4 right-4 w-8 h-8 rounded-full bg-primary/30 backdrop-blur-sm flex items-center justify-center opacity-0 md:group-hover:opacity-100 transition-opacity duration-300">
         <Heart size={14} className="text-white fill-white" />
       </div>
     </motion.div>
