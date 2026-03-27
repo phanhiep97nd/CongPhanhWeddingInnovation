@@ -7,22 +7,42 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useScroll, useTransform, useInView } from "motion/react";
 import {
   Heart, BookOpen, Calendar, Image as ImageIcon,
-  Bus, Camera, Utensils, ChevronRight, X, Mail,
+  Bus, Camera, Utensils, ChevronRight, X, MapPin, Phone, Users, Music, ExternalLink,
+  Info as InfoIcon, Volume2, VolumeX,
 } from "lucide-react";
 
+// ── Constants ─────────────────────────────────────────────────────────────────
 const IMAGES = {
-  hero:     "/images/DSCF7860.jpg",
-  story:    "/images/DSCF7944.jpg",
-  gallery1: "/images/AMV_3279.jpg",
-  gallery2: "/images/DSCF7944.jpg",
-  gallery3: "/images/DSCF7860.jpg",
-  gallery4: "/images/AMV_3279.jpg",
+  hero:  "/images/DSCF7860.jpg",
+  story: "/images/DSCF7944.jpg",
 };
+
+const GALLERY_PHOTOS = [
+  { src: "/images/AMV_3106.jpg", title: "Khoảnh khắc ngọt ngào", desc: "Buổi chiều mùa xuân" },
+  { src: "/images/AMV_3344.jpg", title: "Tình yêu nở hoa",       desc: "Chi tiết ngày cưới" },
+  { src: "/images/AMV_3561.jpg", title: "Ánh mắt yêu thương",    desc: "Kỷ niệm chương", full: true },
+  { src: "/images/AMV_4542.jpg", title: "Đêm tiệc rực rỡ",       desc: "Lễ kỷ niệm" },
+  { src: "/images/DSCF7860.jpg", title: "Hạnh phúc bên nhau",    desc: "Ngày trọng đại" },
+  { src: "/images/DSCF7944.jpg", title: "Mãi mãi cùng nhau",     desc: "Love story", full: true },
+];
 
 const COUPLE = { bride: "Phương Anh", groom: "Minh Công", short: "Ph.Anh & M.Công" };
 const WEDDING_DATE = "03 · 04 · 2026";
 
-// ── Shared animation variants ───────────────────────────────────────────────
+// TODO: Cập nhật link thực tế
+const ZALO_GROUP_LINK = "https://zalo.me/g/xxxxxxx";
+// TODO: Cập nhật YouTube video ID nhạc Thủy Hử (ví dụ: "uM5mFpEahDU")
+const YOUTUBE_MUSIC_ID = "";
+
+const ROOM_ASSIGNMENTS = [
+  { room: "Phòng 101", guests: "Nguyễn Văn A · Trần Thị B" },
+  { room: "Phòng 102", guests: "Lê Văn C · Phạm Thị D" },
+  { room: "Phòng 103", guests: "Hoàng Văn E · Vũ Thị F" },
+  { room: "Phòng 201", guests: "Đặng Văn G · Bùi Thị H" },
+  { room: "Phòng 202", guests: "Phan Văn I · Đỗ Thị K" },
+];
+
+// ── Shared animation variants ─────────────────────────────────────────────────
 const fadeUp    = { hidden: { opacity: 0, y: 60 },  visible: { opacity: 1, y: 0,  transition: { duration: 0.85, ease: [0.22, 1, 0.36, 1] } } };
 const fadeLeft  = { hidden: { opacity: 0, x: -70 }, visible: { opacity: 1, x: 0,  transition: { duration: 0.85, ease: [0.22, 1, 0.36, 1] } } };
 const fadeRight = { hidden: { opacity: 0, x: 70 },  visible: { opacity: 1, x: 0,  transition: { duration: 0.85, ease: [0.22, 1, 0.36, 1] } } };
@@ -30,17 +50,15 @@ const scaleIn   = { hidden: { opacity: 0, scale: 0.8 }, visible: { opacity: 1, s
 const stagger   = { hidden: {}, visible: { transition: { staggerChildren: 0.14, delayChildren: 0.05 } } };
 
 const NAV_ITEMS = [
-  { id: "story",        icon: BookOpen,   label: "Câu chuyện" },
-  { id: "timeline",     icon: Calendar,   label: "Lịch trình" },
-  { id: "gallery",      icon: ImageIcon,  label: "Bộ sưu tập" },
-  { id: "rsvp-section", icon: Mail,       label: "Xác nhận"   },
+  { id: "story",    icon: BookOpen,  label: "Câu chuyện" },
+  { id: "timeline", icon: Calendar,  label: "Lịch trình" },
+  { id: "gallery",  icon: ImageIcon, label: "Bộ sưu tập" },
+  { id: "info",     icon: InfoIcon,  label: "Thông tin"  },
 ] as const;
 
-// ── Animated wrapper – triggers when element enters scroll container ─────────
+// ── Reveal ─────────────────────────────────────────────────────────────────────
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function Reveal({
-  children, className = "", variants = stagger as any, delay = 0,
-}: {
+function Reveal({ children, className = "", variants = stagger as any, delay = 0 }: {
   children: React.ReactNode; className?: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   variants?: any; delay?: number;
@@ -50,27 +68,25 @@ function Reveal({
   return (
     <motion.div ref={ref} variants={variants}
       initial="hidden" animate={isInView ? "visible" : "hidden"}
-      transition={{ delay }}
-      className={className}>
+      transition={{ delay }} className={className}>
       {children}
     </motion.div>
   );
 }
 
-// ── App ─────────────────────────────────────────────────────────────────────
+// ── App ───────────────────────────────────────────────────────────────────────
 export default function App() {
   const [showRSVP, setShowRSVP] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
   const [activeSection, setActiveSection] = useState<string>("story");
+  const [bgPlaying, setBgPlaying] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const bgAudioRef = useRef<HTMLAudioElement>(null);
 
-  // Scroll progress inside the container (0 = top, 1 = bottom)
   const { scrollYProgress } = useScroll({ container: containerRef });
-
-  // Hero: Tăng cường hiệu ứng Zoom mạnh hơn (từ 1.0 lên 1.5)
   const heroZoom = useTransform(scrollYProgress, [0, 0.25], [1.0, 1.5]);
   const heroY    = useTransform(scrollYProgress, [0, 0.25], ["0%", "10%"]);
 
-  // Active section tracking
   useEffect(() => {
     const root = containerRef.current;
     if (!root) return;
@@ -93,8 +109,43 @@ export default function App() {
     return () => clearTimeout(t);
   }, []);
 
-  const scrollTo = (id: string) =>
+  // Autoplay background music at 60% volume on load
+  useEffect(() => {
+    const audio = bgAudioRef.current;
+    if (!audio) return;
+    audio.volume = 0.6;
+    audio.play().then(() => setBgPlaying(true)).catch(() => {});
+  }, []);
+
+  // Pause bg music while any popup is open; always resume when both are closed
+  useEffect(() => {
+    const audio = bgAudioRef.current;
+    if (!audio) return;
+    if (showRSVP || showConfirmation) {
+      audio.pause();
+    } else {
+      audio.volume = 0.6;
+      audio.play().then(() => setBgPlaying(true)).catch(() => {});
+    }
+  }, [showRSVP, showConfirmation]);
+
+  const toggleBgMusic = () => {
+    const audio = bgAudioRef.current;
+    if (!audio) return;
+    if (bgPlaying) {
+      audio.pause();
+      setBgPlaying(false);
+    } else {
+      audio.play().catch(() => {});
+      setBgPlaying(true);
+    }
+  };
+
+  // Clicking a nav item immediately updates the indicator, then scrolls
+  const scrollTo = (id: string) => {
+    setActiveSection(id);
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  };
 
   const activeIdx = NAV_ITEMS.findIndex((n) => n.id === activeSection);
 
@@ -125,25 +176,17 @@ export default function App() {
       <main>
         {/* ── Hero ── */}
         <section className="relative h-screen overflow-hidden">
-
-          {/* Photo layer – zoom-out khi cuộn */}
           <div className="absolute inset-0 z-0 overflow-hidden">
             <motion.img
-              src={IMAGES.hero}
-              alt="Wedding"
+              src={IMAGES.hero} alt="Wedding"
               style={{ scale: heroZoom, y: heroY, objectPosition: "62% center" }}
               className="w-full h-full object-cover"
             />
-            {/* Gradient overlay: subtle so photo stays vivid but text is readable */}
             <div className="absolute inset-0 bg-gradient-to-br from-white/55 via-white/45 to-white/30" />
-            {/* Bottom fade */}
             <div className="absolute bottom-0 left-0 right-0 h-36 bg-gradient-to-t from-petal to-transparent" />
           </div>
 
-          {/* Text layer – static z-10, entrance animations only */}
           <div className="absolute inset-0 z-10 flex flex-col items-center justify-center px-6 pt-16 pb-10 pointer-events-none">
-
-            {/* ESTABLISHED */}
             <motion.div
               initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.1 }}
@@ -159,23 +202,17 @@ export default function App() {
                 style={{ fontSize: 9, letterSpacing: "0.4em" }}>October 2017</span>
             </motion.div>
 
-            {/* ETERNAL US */}
             <motion.h2
               initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.9, delay: 0.28, ease: [0.22, 1, 0.36, 1] }}
               className="font-cormorant italic text-center leading-[1.05] mb-4"
               style={{
-                fontSize: "clamp(3rem, 20vw, 5.5rem)",
-                color: "#3a5029",
-                fontWeight: 400,
-                letterSpacing: "0.04em",
+                fontSize: "clamp(3rem, 20vw, 5.5rem)", color: "#3a5029",
+                fontWeight: 400, letterSpacing: "0.04em",
                 textShadow: "0 1px 0 rgba(255,255,255,0.9), 0 4px 20px rgba(255,255,255,0.6)",
               }}
-            >
-              Eternal Us
-            </motion.h2>
+            >Eternal Us</motion.h2>
 
-            {/* Love in ∞ dimensions */}
             <motion.div
               initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.75, delay: 0.5 }}
@@ -183,38 +220,27 @@ export default function App() {
             >
               <div className="h-px w-10 bg-sage/60" />
               <span className="font-cormorant italic text-secondary/80"
-                style={{ fontSize: "1.55rem", letterSpacing: "0.2em",
-                  textShadow: "0 1px 8px rgba(255,255,255,0.95)" }}>
+                style={{ fontSize: "1.55rem", letterSpacing: "0.2em", textShadow: "0 1px 8px rgba(255,255,255,0.95)" }}>
                 Love in
               </span>
-              {/* 8 xoay 90° = ∞ */}
-              <span
-                className="font-cormorant font-bold text-primary-deep"
-                style={{
-                  fontSize: "2rem", display: "inline-block",
-                  transform: "rotate(90deg)", lineHeight: 1,
-                  textShadow: "0 1px 6px rgba(255,255,255,0.85)",
-                }}
-              >8</span>
+              <span className="font-cormorant font-bold text-primary-deep"
+                style={{ fontSize: "2rem", display: "inline-block", transform: "rotate(90deg)", lineHeight: 1, textShadow: "0 1px 6px rgba(255,255,255,0.85)" }}>
+                8
+              </span>
               <span className="font-cormorant italic text-secondary/80"
-                style={{ fontSize: "1.55rem", letterSpacing: "0.2em",
-                  textShadow: "0 1px 8px rgba(255,255,255,0.95)" }}>
+                style={{ fontSize: "1.55rem", letterSpacing: "0.2em", textShadow: "0 1px 8px rgba(255,255,255,0.95)" }}>
                 dimensions
               </span>
               <div className="h-px w-10 bg-sage/60" />
             </motion.div>
 
-            {/* Couple names – 1 dòng, font serif đơn giản */}
             <motion.div
               initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.68, ease: [0.22, 1, 0.36, 1] }}
               className="flex items-center justify-center gap-2 mb-5 whitespace-nowrap"
             >
               <span className="font-serif italic text-secondary font-normal"
-                style={{
-                  fontSize: "clamp(1.5rem, 4.2vw, 2.1rem)",
-                  textShadow: "0 1px 0 rgba(255,255,255,0.95), 0 3px 12px rgba(255,255,255,0.8)",
-                }}>
+                style={{ fontSize: "clamp(1.5rem, 4.2vw, 2.1rem)", textShadow: "0 1px 0 rgba(255,255,255,0.95), 0 3px 12px rgba(255,255,255,0.8)" }}>
                 {COUPLE.bride}
               </span>
               <motion.span
@@ -225,15 +251,11 @@ export default function App() {
                 <Heart size={16} className="fill-primary" />
               </motion.span>
               <span className="font-serif italic text-secondary font-normal"
-                style={{
-                  fontSize: "clamp(1.5rem, 4.2vw, 2.1rem)",
-                  textShadow: "0 1px 0 rgba(255,255,255,0.95), 0 3px 12px rgba(255,255,255,0.8)",
-                }}>
+                style={{ fontSize: "clamp(1.5rem, 4.2vw, 2.1rem)", textShadow: "0 1px 0 rgba(255,255,255,0.95), 0 3px 12px rgba(255,255,255,0.8)" }}>
                 {COUPLE.groom}
               </span>
             </motion.div>
 
-            {/* Date */}
             <motion.div
               initial={{ opacity: 0 }} animate={{ opacity: 1 }}
               transition={{ duration: 0.7, delay: 0.85 }}
@@ -241,26 +263,22 @@ export default function App() {
             >
               <div className="h-px w-8 bg-primary-dark/40" />
               <span className="font-cormorant italic text-secondary/70"
-                style={{ fontSize: "1.5rem", letterSpacing: "0.32em",
-                  textShadow: "0 1px 8px rgba(255,255,255,0.98)" }}>
+                style={{ fontSize: "1.5rem", letterSpacing: "0.32em", textShadow: "0 1px 8px rgba(255,255,255,0.98)" }}>
                 {WEDDING_DATE}
               </span>
               <div className="h-px w-8 bg-primary-dark/40" />
             </motion.div>
 
-            {/* Scroll cue */}
             <motion.button
               initial={{ opacity: 0 }} animate={{ opacity: 1 }}
               transition={{ delay: 1.1 }}
               onClick={() => scrollTo("story")}
               className="pointer-events-auto flex flex-col items-center gap-2 text-secondary/45 hover:text-secondary/70 transition-colors"
             >
-              <span className="font-sans uppercase"
-                style={{ fontSize: 9, letterSpacing: "0.35em" }}>
+              <span className="font-sans uppercase" style={{ fontSize: 9, letterSpacing: "0.35em" }}>
                 Cuộn để xem tiếp
               </span>
-              <motion.div animate={{ y: [0, 8, 0] }}
-                transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}>
+              <motion.div animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}>
                 <ChevronRight className="rotate-90" size={18} />
               </motion.div>
             </motion.button>
@@ -282,12 +300,9 @@ export default function App() {
           <GallerySection />
         </div>
 
-        {/* ── RSVP ── */}
-        <div id="rsvp-section"
-          className="bg-gradient-to-br from-primary/30 via-blush to-primary/20 min-h-screen flex items-center py-32">
-          <div className="max-w-lg mx-auto px-6 w-full">
-            <RSVPForm />
-          </div>
+        {/* ── Info ── */}
+        <div id="info" className="bg-white">
+          <InfoSection />
         </div>
       </main>
 
@@ -363,7 +378,13 @@ export default function App() {
                   <X size={18} />
                 </button>
                 <div className="px-5 pb-8 pt-2 md:px-8">
-                  <RSVPForm onComplete={() => setShowRSVP(false)} />
+                  <RSVPForm
+                    onComplete={() => setShowRSVP(false)}
+                    onConfirm={() => {
+                      setShowRSVP(false);
+                      setTimeout(() => setShowConfirmation(true), 300);
+                    }}
+                  />
                 </div>
               </div>
             </motion.div>
@@ -371,13 +392,47 @@ export default function App() {
         )}
       </AnimatePresence>
 
+      {/* ── Confirmation Popup ── */}
+      <AnimatePresence>
+        {showConfirmation && (
+          <ConfirmationPopup
+            onClose={() => setShowConfirmation(false)}
+            onScrollToInfo={() => {
+              setShowConfirmation(false);
+              setTimeout(() => scrollTo("info"), 300);
+            }}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* ── Background Music ── */}
+      <audio ref={bgAudioRef} src="/audio/ngaytinhvechungdoi.mp3" loop />
+      <motion.button
+        onClick={toggleBgMusic}
+        title={bgPlaying ? "Tắt nhạc" : "Bật nhạc nền"}
+        whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}
+        className="fixed bottom-24 right-4 z-50 w-11 h-11 rounded-full bg-white/90 backdrop-blur-md shadow-xl border border-primary/20 flex items-center justify-center text-primary-dark transition-all"
+      >
+        <AnimatePresence mode="wait" initial={false}>
+          {bgPlaying ? (
+            <motion.div key="vol2" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
+              <Volume2 size={18} />
+            </motion.div>
+          ) : (
+            <motion.div key="volx" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
+              <VolumeX size={18} className="text-secondary/40" />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.button>
+
       {/* ── Bottom Nav ── */}
       <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
         <div className="relative flex items-center gap-1 px-5 py-3 bg-white/90 backdrop-blur-xl rounded-full shadow-2xl border border-primary/20">
           {activeIdx >= 0 && (
             <motion.div
               className="absolute -top-3.5 flex justify-center pointer-events-none"
-              animate={{ left: `calc(${activeIdx} * 48px + 20px + 16px)` }}
+              animate={{ left: `calc(${activeIdx} * 52px + 36px)` }}
               initial={false}
               transition={{ type: "spring", stiffness: 380, damping: 30 }}
               style={{ width: 16 }}
@@ -406,31 +461,24 @@ export default function App() {
   );
 }
 
-// ── Story ────────────────────────────────────────────────────────────────────
+// ── Story ─────────────────────────────────────────────────────────────────────
 function StorySection({ onRSVP }: { onRSVP: () => void }) {
   return (
     <section className="max-w-7xl mx-auto px-6 py-28 md:py-36">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
-
-        {/* Image – slides from left */}
         <Reveal variants={fadeLeft} className="relative">
-          <motion.div
-            variants={fadeLeft}
-            className="aspect-[4/5] rounded-[3rem] overflow-hidden shadow-2xl ring-4 ring-primary/20"
-          >
+          <motion.div variants={fadeLeft}
+            className="aspect-[4/5] rounded-[3rem] overflow-hidden shadow-2xl ring-4 ring-primary/20">
             <img src={IMAGES.story} alt="Our Story" className="w-full h-full object-cover" />
           </motion.div>
-          <motion.div
-            variants={scaleIn}
-            className="absolute bottom-4 right-4 md:-bottom-10 md:-right-8 bg-white rounded-3xl p-5 shadow-xl border border-primary/20 flex flex-col items-center gap-1"
-          >
+          <motion.div variants={scaleIn}
+            className="absolute bottom-4 right-4 md:-bottom-10 md:-right-8 bg-white rounded-3xl p-5 shadow-xl border border-primary/20 flex flex-col items-center gap-1">
             <Heart size={22} className="text-primary-dark fill-primary" />
             <span className="font-script text-xl text-secondary">2017 – 2026</span>
             <span className="text-[10px] uppercase tracking-widest text-sage">8 năm yêu thương</span>
           </motion.div>
         </Reveal>
 
-        {/* Text – slides from right */}
         <Reveal variants={stagger} className="flex flex-col gap-7">
           <motion.span variants={fadeRight}
             className="text-sage font-bold text-xs uppercase tracking-[0.35em] flex items-center gap-2">
@@ -444,7 +492,6 @@ function StorySection({ onRSVP }: { onRSVP: () => void }) {
             Từ những ngày đầu gặp gỡ vào năm 2017, chúng mình đã cùng nhau đi qua biết bao mùa nắng mưa.
             Mỗi khoảnh khắc sẻ chia, mỗi nụ cười và cả những thử thách đã gắn kết hai tâm hồn thành một.
           </motion.p>
-
           <motion.div variants={fadeUp} className="grid grid-cols-2 gap-5">
             {[{ year: "2017", label: "Nơi bắt đầu" }, { year: "2026", label: "Lễ thành hôn" }].map((item) => (
               <div key={item.year}
@@ -455,7 +502,6 @@ function StorySection({ onRSVP }: { onRSVP: () => void }) {
               </div>
             ))}
           </motion.div>
-
           <motion.button variants={fadeUp} onClick={onRSVP}
             whileHover={{ y: -3, boxShadow: "0 12px 40px rgba(201,132,139,0.4)" }}
             whileTap={{ scale: 0.97 }}
@@ -468,7 +514,7 @@ function StorySection({ onRSVP }: { onRSVP: () => void }) {
   );
 }
 
-// ── Timeline ─────────────────────────────────────────────────────────────────
+// ── Timeline ──────────────────────────────────────────────────────────────────
 function TimelineSection() {
   const items = [
     { time: "14:00", title: "Đón khách",          desc: "Chào đón những người thân yêu tại sảnh Glass Pavilion.", icon: <Bus size={20} /> },
@@ -492,7 +538,6 @@ function TimelineSection() {
             {WEDDING_DATE}
           </motion.p>
         </Reveal>
-
         <div className="relative">
           <div className="absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-sage/0 via-sage/30 to-sage/0 -translate-x-1/2 hidden md:block" />
           <div className="space-y-16">
@@ -508,13 +553,6 @@ function TimelineSection() {
 function GallerySection() {
   const [activePhoto, setActivePhoto] = useState<number | null>(null);
 
-  const photos = [
-    { title: "Khoảnh khắc ngọt ngào", desc: "Buổi chiều mùa xuân", img: IMAGES.gallery1 },
-    { title: "Tình yêu nở hoa",       desc: "Chi tiết ngày cưới",  img: IMAGES.gallery2, full: true },
-    { title: "Ánh mắt yêu thương",    desc: "Kỷ niệm chương",      img: IMAGES.gallery3 },
-    { title: "Đêm tiệc rực rỡ",       desc: "Lễ kỷ niệm",          img: IMAGES.gallery4 },
-  ];
-
   return (
     <section className="py-28 md:py-36 px-6 max-w-7xl mx-auto">
       <Reveal variants={stagger} className="text-center mb-20">
@@ -529,11 +567,9 @@ function GallerySection() {
           className="mt-6 mx-auto w-20 h-0.5 bg-gradient-to-r from-transparent via-sage/40 to-transparent" />
       </Reveal>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {photos.map((photo, i) => (
+        {GALLERY_PHOTOS.map((photo, i) => (
           <GalleryCard
-            key={i}
-            photo={photo}
-            index={i}
+            key={i} photo={photo} index={i}
             isActive={activePhoto === i}
             onToggle={() => setActivePhoto(activePhoto === i ? null : i)}
           />
@@ -544,9 +580,9 @@ function GallerySection() {
 }
 
 // ── Timeline Item ─────────────────────────────────────────────────────────────
-function TimelineItem({
-  item, index,
-}: { item: { time: string; title: string; desc: string; icon: React.ReactNode }; index: number; key?: React.Key }) {
+function TimelineItem({ item, index }: {
+  item: { time: string; title: string; desc: string; icon: React.ReactNode }; index: number; key?: React.Key;
+}) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-60px" });
   const fromLeft = index % 2 !== 0;
@@ -576,11 +612,9 @@ function TimelineItem({
 }
 
 // ── Gallery Card ──────────────────────────────────────────────────────────────
-function GalleryCard({
-  photo, index, isActive, onToggle,
-}: {
-  photo: { title: string; desc: string; img: string; full?: boolean };
-  index: number; isActive: boolean; onToggle: () => void;
+function GalleryCard({ photo, index, isActive, onToggle }: {
+  photo: { src: string; title: string; desc: string; full?: boolean };
+  index: number; isActive: boolean; onToggle: () => void; key?: React.Key;
 }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-60px" });
@@ -598,25 +632,18 @@ function GalleryCard({
       onMouseLeave={() => setIsHovered(false)}
       className={`relative rounded-[2.5rem] overflow-hidden cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-500 ${photo.full ? "md:col-span-2 aspect-[16/9]" : "aspect-[4/5]"}`}
     >
-      <motion.img src={photo.img} alt={photo.title}
+      <motion.img src={photo.src} alt={photo.title}
         className="w-full h-full object-cover"
         animate={{ scale: showOverlay ? 1.1 : 1 }}
         transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
       />
-
-      {/* Info Overlay – Visible on hover (desktop) or isActive (tap/mobile) */}
       <div
         style={{ opacity: showOverlay ? 1 : 0 }}
         className="absolute inset-0 bg-gradient-to-t from-primary-deep/80 via-primary/10 to-transparent flex flex-col justify-end p-8 md:p-10 transition-opacity duration-500"
       >
-        <h4 className="font-serif text-2xl md:text-3xl italic text-white mb-1">
-          {photo.title}
-        </h4>
-        <p className="text-sm md:text-base text-white/80">
-          {photo.desc}
-        </p>
+        <h4 className="font-serif text-2xl md:text-3xl italic text-white mb-1">{photo.title}</h4>
+        <p className="text-sm md:text-base text-white/80">{photo.desc}</p>
       </div>
-
       <div
         style={{ opacity: showOverlay ? 1 : 0 }}
         className="absolute top-4 right-4 w-8 h-8 rounded-full bg-primary/30 backdrop-blur-sm flex items-center justify-center transition-opacity duration-300"
@@ -628,43 +655,353 @@ function GalleryCard({
 }
 
 // ── RSVP Form ─────────────────────────────────────────────────────────────────
-function RSVPForm({ onComplete }: { onComplete?: () => void }) {
+function RSVPForm({ onComplete, onConfirm }: { onComplete?: () => void; onConfirm?: () => void }) {
+  const [attendance, setAttendance] = useState<"yes" | "no" | null>(null);
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [guests, setGuests] = useState(1);
+  const [wantRide, setWantRide] = useState<boolean | null>(null);
+  const [pickupPoint, setPickupPoint] = useState("BigC Thăng Long");
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (attendance === "yes") onConfirm?.();
+    else onComplete?.();
+  };
+
   return (
-    <Reveal variants={stagger}
-      className="w-full bg-white rounded-[2.5rem] p-10 shadow-xl border border-primary/20">
-      <motion.div variants={fadeUp} className="text-center mb-8">
+    <div className="w-full">
+      {/* Header */}
+      <div className="text-center mb-6 pt-2">
         <div className="w-14 h-14 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-4">
           <Heart className="text-primary-dark fill-primary" size={28} />
         </div>
         <h2 className="font-serif text-3xl text-secondary italic">Xác nhận tham dự</h2>
-        <p className="text-secondary/60 mt-2 text-sm">Vui lòng phản hồi trước ngày 20/03/2026</p>
+      </div>
+
+      {/* Departure time */}
+      <div className="bg-gradient-to-r from-primary/10 to-blush rounded-2xl p-4 mb-6 border border-primary/20">
+        <p className="text-[10px] font-bold uppercase tracking-widest text-secondary/40 mb-2">Thời gian khởi hành</p>
+        <div className="flex flex-col gap-1.5">
+          <p className="text-sm text-secondary font-medium">🚌 14:00 · 03/04/2026 <span className="text-secondary/50 font-normal">(Lượt đi)</span></p>
+          <p className="text-sm text-secondary font-medium">🏠 11:00 · 04/04/2026 <span className="text-secondary/50 font-normal">(Lượt về)</span></p>
+        </div>
+      </div>
+
+      {/* Attendance selector */}
+      <div className="mb-6">
+        <p className="text-[10px] font-bold uppercase tracking-widest text-secondary/40 mb-3">Bạn có tham dự không?</p>
+        <div className="grid grid-cols-2 gap-3">
+          <button type="button" onClick={() => setAttendance("yes")}
+            className={`flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all ${
+              attendance === "yes" ? "border-primary-dark bg-primary/15" : "border-primary/20 bg-blush hover:bg-primary/10"
+            }`}>
+            <span className="text-3xl">🥂</span>
+            <span className="font-bold text-sm text-secondary">Nhất định rồi!</span>
+          </button>
+          <button type="button" onClick={() => setAttendance("no")}
+            className={`flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all ${
+              attendance === "no" ? "border-secondary/40 bg-secondary/10" : "border-primary/20 bg-blush hover:bg-secondary/5"
+            }`}>
+            <span className="text-3xl">😔</span>
+            <span className="font-bold text-sm text-secondary">Sorry...</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Form – only if "yes" */}
+      <AnimatePresence>
+        {attendance === "yes" && (
+          <motion.form
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            onSubmit={handleSubmit} className="space-y-4"
+          >
+            <div>
+              <label className="block text-[10px] font-bold uppercase tracking-widest text-secondary/40 mb-2 ml-1">Họ và tên</label>
+              <input type="text" required value={name} onChange={(e) => setName(e.target.value)}
+                placeholder="Nhập tên của bạn"
+                className="w-full px-5 py-3.5 rounded-2xl bg-blush border border-primary/20 focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all outline-none text-secondary" />
+            </div>
+
+            <div>
+              <label className="block text-[10px] font-bold uppercase tracking-widest text-secondary/40 mb-2 ml-1 flex items-center gap-1">
+                <Phone size={10} className="inline" /> Số điện thoại
+              </label>
+              <input type="tel" required value={phone} onChange={(e) => setPhone(e.target.value)}
+                placeholder="0912 345 678"
+                className="w-full px-5 py-3.5 rounded-2xl bg-blush border border-primary/20 focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all outline-none text-secondary" />
+            </div>
+
+            <div>
+              <label className="block text-[10px] font-bold uppercase tracking-widest text-secondary/40 mb-2 ml-1 flex items-center gap-1">
+                <Users size={10} className="inline" /> Số lượng khách
+              </label>
+              <input type="number" required min={1} max={20} value={guests}
+                onChange={(e) => setGuests(Math.max(1, Number(e.target.value)))}
+                className="w-full px-5 py-3.5 rounded-2xl bg-blush border border-primary/20 focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all outline-none text-secondary" />
+            </div>
+
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-secondary/40 mb-3 ml-1 flex items-center gap-1">
+                <Bus size={10} className="inline" /> Có đi xe cùng đoàn không?
+              </p>
+              <div className="flex gap-3 mb-3">
+                <button type="button" onClick={() => setWantRide(true)}
+                  className={`flex-1 py-2.5 rounded-xl border-2 text-sm font-semibold transition-all ${
+                    wantRide === true ? "border-primary-dark bg-primary/15 text-secondary" : "border-primary/20 bg-blush text-secondary/60 hover:bg-primary/10"
+                  }`}>
+                  Có, đi chung 🚌
+                </button>
+                <button type="button" onClick={() => setWantRide(false)}
+                  className={`flex-1 py-2.5 rounded-xl border-2 text-sm font-semibold transition-all ${
+                    wantRide === false ? "border-secondary/30 bg-secondary/10 text-secondary" : "border-primary/20 bg-blush text-secondary/60 hover:bg-secondary/5"
+                  }`}>
+                  Tự đến 🚗
+                </button>
+              </div>
+
+              <AnimatePresence>
+                {wantRide === true && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.3 }}
+                  >
+                    <label className="block text-[10px] font-bold uppercase tracking-widest text-secondary/40 mb-2 ml-1">Điểm đón</label>
+                    <select value={pickupPoint} onChange={(e) => setPickupPoint(e.target.value)}
+                      className="w-full px-5 py-3.5 rounded-2xl bg-blush border border-primary/20 focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all outline-none appearance-none text-secondary cursor-pointer">
+                      <option value="BigC Thăng Long">📍 BigC Thăng Long</option>
+                      <option value="Hanoi Central Point">📍 Hanoi Central Point</option>
+                    </select>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            <motion.button type="submit"
+              whileHover={{ y: -2, boxShadow: "0 12px 40px rgba(201,132,139,0.4)" }}
+              whileTap={{ scale: 0.97 }}
+              className="w-full py-4 bg-primary-dark hover:bg-primary-deep text-white rounded-full font-bold tracking-widest transition-colors mt-2">
+              GỬI XÁC NHẬN 💌
+            </motion.button>
+          </motion.form>
+        )}
+      </AnimatePresence>
+
+      {/* "No" message */}
+      <AnimatePresence>
+        {attendance === "no" && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+            className="mt-4"
+          >
+            <p className="text-center text-sm text-secondary/60 mb-4">Tiếc quá, sẽ nhớ bạn nhiều 😢</p>
+            <button onClick={() => onComplete?.()}
+              className="w-full py-4 bg-secondary/20 hover:bg-secondary/30 text-secondary rounded-full font-bold tracking-widest transition-colors">
+              Đã hiểu, cảm ơn bạn
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+// ── Confirmation Popup ────────────────────────────────────────────────────────
+function ConfirmationPopup({ onClose, onScrollToInfo }: {
+  onClose: () => void; onScrollToInfo: () => void;
+}) {
+  const EMOJIS = ["🍻", "🎉", "🥂", "🎊", "🎶", "💃", "🕺", "✨", "🎈", "🍾"];
+  const [musicPlaying, setMusicPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement>(null);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.volume = 0.4;
+    audio.play().then(() => setMusicPlaying(true)).catch(() => {});
+  }, []);
+
+  const toggleMusic = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    if (musicPlaying) { audio.pause(); setMusicPlaying(false); }
+    else { audio.play().catch(() => {}); setMusicPlaying(true); }
+  };
+
+  return (
+    <>
+      <audio ref={audioRef} src="/audio/TuyHongNhan.mp3" loop />
+      <motion.div key="conf-backdrop"
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+        className="fixed inset-0 z-[110] bg-black/75"
+        onClick={onClose}
+      />
+      <motion.div key="conf-popup"
+        initial={{ opacity: 0, scale: 0.75, y: 50 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.75, y: 50 }}
+        transition={{ type: "spring", damping: 20, stiffness: 260 }}
+        className="fixed inset-0 z-[120] flex items-center justify-center p-4 pointer-events-none"
+      >
+        <div className="relative w-full max-w-sm bg-gradient-to-br from-primary/20 via-white to-blush rounded-[2.5rem] shadow-2xl overflow-hidden pointer-events-auto">
+
+          {/* Floating emoji background */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none select-none">
+            {EMOJIS.map((emoji, i) => (
+              <motion.span key={i} className="absolute text-xl"
+                style={{ left: `${(i * 11 + 4) % 88}%`, top: `${(i * 19 + 8) % 82}%` }}
+                animate={{ y: [0, -18, 0], rotate: [0, 12, -12, 0], opacity: [0.35, 0.9, 0.35] }}
+                transition={{ repeat: Infinity, duration: 2.2 + i * 0.28, delay: i * 0.22, ease: "easeInOut" }}
+              >{emoji}</motion.span>
+            ))}
+          </div>
+
+          {/* Content */}
+          <div className="relative z-10 p-8 text-center">
+            <button onClick={onClose}
+              className="absolute top-4 right-4 p-1.5 rounded-full bg-white/80 text-secondary/60 hover:bg-white hover:text-secondary transition-all shadow-md">
+              <X size={18} />
+            </button>
+
+            <motion.div className="text-6xl mb-3"
+              animate={{ scale: [1, 1.25, 1], rotate: [0, -8, 8, 0] }}
+              transition={{ repeat: Infinity, duration: 1.8, ease: "easeInOut" }}>
+              🍻
+            </motion.div>
+
+            <h2 className="font-serif text-3xl text-secondary italic mb-1">
+              Hãy uống hết mình nhé!
+            </h2>
+            <p className="text-secondary/60 text-sm mb-1 font-semibold">
+              Không say không về 🍺 Ai say mai về
+            </p>
+            <p className="text-secondary/40 text-xs mb-5">Cảm ơn bạn đã xác nhận tham dự 💕</p>
+
+            {/* Music toggle */}
+            <button onClick={toggleMusic}
+              className={`w-full mb-4 flex items-center justify-center gap-2 py-3 rounded-2xl border transition-all ${
+                musicPlaying
+                  ? "bg-primary/15 border-primary/30 text-secondary"
+                  : "bg-secondary/5 border-secondary/20 text-secondary/50"
+              }`}
+            >
+              <motion.div animate={musicPlaying ? { rotate: [0, 15, -15, 0] } : {}}
+                transition={{ repeat: Infinity, duration: 0.6 }}>
+                <Music size={15} className={musicPlaying ? "text-primary-dark" : "text-secondary/30"} />
+              </motion.div>
+              <span className="text-sm italic">
+                {musicPlaying ? "🎵 Nhạc Túy Hồng Nhan đang vang lên..." : "▶ Bật nhạc Túy Hồng Nhan"}
+              </span>
+              {musicPlaying ? <Volume2 size={13} className="text-primary-dark" /> : <VolumeX size={13} className="text-secondary/30" />}
+            </button>
+
+            {/* Both buttons scroll to Info */}
+            <button onClick={onScrollToInfo}
+              className="flex items-center justify-center gap-2 w-full py-3.5 bg-[#0068ff] hover:bg-[#0055cc] text-white rounded-full font-bold text-sm tracking-wide transition-colors mb-3 shadow-lg">
+              <ExternalLink size={15} />
+              Tham gia nhóm Zalo
+            </button>
+
+            <button onClick={onScrollToInfo}
+              className="flex items-center justify-center gap-2 w-full py-3.5 bg-primary/15 hover:bg-primary/25 text-secondary rounded-full font-semibold text-sm transition-colors">
+              <MapPin size={15} className="text-primary-dark" />
+              Xem bảng phân phòng ở Info
+            </button>
+          </div>
+        </div>
       </motion.div>
-      <form className="space-y-5" onSubmit={(e) => { e.preventDefault(); onComplete?.(); }}>
-        <motion.div variants={fadeUp}>
-          <label className="block text-[10px] font-bold uppercase tracking-widest text-secondary/40 mb-2 ml-1">Họ và tên</label>
-          <input type="text" required placeholder="Nhập tên của bạn"
-            className="w-full px-6 py-4 rounded-2xl bg-blush border border-primary/20 focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all outline-none text-secondary" />
-        </motion.div>
-        <motion.div variants={fadeUp}>
-          <label className="block text-[10px] font-bold uppercase tracking-widest text-secondary/40 mb-2 ml-1">Số lượng khách</label>
-          <select className="w-full px-6 py-4 rounded-2xl bg-blush border border-primary/20 focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all outline-none appearance-none text-secondary cursor-pointer">
-            <option>1 người</option>
-            <option>2 người</option>
-            <option>Cả gia đình</option>
-          </select>
-        </motion.div>
-        <motion.div variants={fadeUp}>
-          <label className="block text-[10px] font-bold uppercase tracking-widest text-secondary/40 mb-2 ml-1">Lời chúc</label>
-          <textarea rows={3} placeholder="Gửi lời chúc đến chúng mình..."
-            className="w-full px-6 py-4 rounded-2xl bg-blush border border-primary/20 focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all outline-none resize-none text-secondary" />
-        </motion.div>
-        <motion.button variants={fadeUp} type="submit"
-          whileHover={{ y: -2, boxShadow: "0 12px 40px rgba(201,132,139,0.4)" }}
-          whileTap={{ scale: 0.97 }}
-          className="w-full py-4 bg-primary-dark hover:bg-primary-deep text-white rounded-full font-bold tracking-widest transition-colors">
-          GỬI XÁC NHẬN
-        </motion.button>
-      </form>
-    </Reveal>
+    </>
+  );
+}
+
+// ── Info Section ──────────────────────────────────────────────────────────────
+function InfoSection() {
+  return (
+    <section className="py-28 md:py-36 px-6 max-w-4xl mx-auto">
+      <Reveal variants={stagger} className="text-center mb-16">
+        <motion.span variants={fadeUp}
+          className="text-sage font-bold text-xs uppercase tracking-[0.35em] mb-4 block flex items-center justify-center gap-2">
+          <span className="w-5 h-px bg-sage/50" />Thông tin<span className="w-5 h-px bg-sage/50" />
+        </motion.span>
+        <motion.h3 variants={fadeUp} className="font-serif text-5xl text-secondary italic">
+          Chi tiết chuyến đi
+        </motion.h3>
+        <motion.div variants={scaleIn}
+          className="mt-6 mx-auto w-20 h-0.5 bg-gradient-to-r from-transparent via-sage/40 to-transparent" />
+      </Reveal>
+
+      <div className="space-y-10">
+        {/* Zalo Group */}
+        <Reveal variants={fadeUp}>
+          <div className="bg-gradient-to-r from-primary/10 to-blush rounded-3xl p-8 border border-primary/20 text-center">
+            <div className="w-14 h-14 rounded-full bg-[#0068ff]/10 flex items-center justify-center mx-auto mb-4">
+              <Users size={26} className="text-[#0068ff]" />
+            </div>
+            <h4 className="font-serif text-2xl text-secondary italic mb-2">Nhóm Zalo chuyến đi</h4>
+            <p className="text-secondary/60 text-sm mb-5">Tham gia nhóm để cập nhật thông tin mới nhất về lịch trình và phòng ở.</p>
+            <a href={ZALO_GROUP_LINK} target="_blank" rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#0068ff] hover:bg-[#0055cc] text-white rounded-full font-bold text-sm tracking-wider transition-colors shadow-lg">
+              <ExternalLink size={15} />
+              Vào nhóm Zalo ngay
+            </a>
+          </div>
+        </Reveal>
+
+        {/* Room Assignments */}
+        <Reveal variants={fadeUp}>
+          <div className="bg-white rounded-3xl border border-primary/20 overflow-hidden shadow-lg">
+            <div className="bg-gradient-to-r from-sage/20 to-primary/10 px-8 py-5 border-b border-primary/15">
+              <h4 className="font-serif text-2xl text-secondary italic flex items-center gap-3">
+                <span>🛏️</span> Bảng phân phòng
+              </h4>
+              <p className="text-secondary/50 text-xs mt-1">Aman Villa · 03–04/04/2026</p>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="bg-blush/50">
+                    <th className="px-6 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-secondary/40">Phòng</th>
+                    <th className="px-6 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-secondary/40">Khách</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {ROOM_ASSIGNMENTS.map((row, i) => (
+                    <tr key={i} className={`border-t border-primary/10 ${i % 2 !== 0 ? "bg-blush/20" : ""}`}>
+                      <td className="px-6 py-4 font-semibold text-sm text-secondary whitespace-nowrap">{row.room}</td>
+                      <td className="px-6 py-4 text-sm text-secondary/70">{row.guests}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </Reveal>
+
+        {/* Google Maps */}
+        <Reveal variants={fadeUp}>
+          <div className="rounded-3xl overflow-hidden shadow-lg border border-primary/20">
+            <div className="bg-gradient-to-r from-sage/20 to-primary/10 px-8 py-5 border-b border-primary/15">
+              <h4 className="font-serif text-2xl text-secondary italic flex items-center gap-3">
+                <MapPin size={20} className="text-sage" /> Địa điểm tổ chức
+              </h4>
+              <p className="text-secondary/50 text-xs mt-1">Aman Villa</p>
+            </div>
+            <div className="relative w-full" style={{ paddingBottom: "55%" }}>
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4575.994936717507!2d105.4499651!3d21.078918399999996!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31345f5e387a80a9%3A0x1dde36d6a6dbdab3!2sAman%20Villa!5e1!3m2!1svi!2s!4v1774630261747!5m2!1svi!2s"
+                className="absolute inset-0 w-full h-full"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Aman Villa"
+              />
+            </div>
+          </div>
+        </Reveal>
+      </div>
+    </section>
   );
 }
