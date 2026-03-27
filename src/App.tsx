@@ -8,7 +8,7 @@ import { motion, AnimatePresence, useScroll, useTransform, useInView } from "mot
 import {
   Heart, BookOpen, Calendar, Image as ImageIcon,
   Bus, Camera, Utensils, ChevronRight, X, MapPin, Phone, Users, Music, ExternalLink,
-  Info as InfoIcon, Volume2, VolumeX,
+  Info as InfoIcon, Volume2, VolumeX, Plus, Upload,
 } from "lucide-react";
 
 // ── Constants ─────────────────────────────────────────────────────────────────
@@ -41,6 +41,45 @@ const ROOM_ASSIGNMENTS = [
   { room: "Phòng 201", guests: "Đặng Văn G · Bùi Thị H" },
   { room: "Phòng 202", guests: "Phan Văn I · Đỗ Thị K" },
 ];
+
+// ── Photo sharing ─────────────────────────────────────────────────────────────
+interface Photo {
+  id: string;
+  url: string;
+  caption: string;
+  author: string;
+  createdAt: number;
+}
+
+// TODO: Tạo tài khoản Cloudinary, lấy cloud name + tạo unsigned upload preset
+const CLOUDINARY_CLOUD_NAME    = "dkdl60kmn";
+const CLOUDINARY_UPLOAD_PRESET = "ml_default";
+
+async function uploadToCloudinary(file: File): Promise<string> {
+  if (!CLOUDINARY_CLOUD_NAME || !CLOUDINARY_UPLOAD_PRESET) {
+    // Fallback khi chưa config: dùng object URL tạm (mất khi reload)
+    return URL.createObjectURL(file);
+  }
+  const fd = new FormData();
+  fd.append("file", file);
+  fd.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+  const res = await fetch(
+    `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,
+    { method: "POST", body: fd },
+  );
+  const json = await res.json();
+  return json.secure_url as string;
+}
+
+function timeAgo(ts: number): string {
+  const diff = Date.now() - ts;
+  const mins = Math.floor(diff / 60000);
+  if (mins < 1) return "Vừa xong";
+  if (mins < 60) return `${mins} phút trước`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `${hrs} giờ trước`;
+  return `${Math.floor(hrs / 24)} ngày trước`;
+}
 
 // ── Shared animation variants ─────────────────────────────────────────────────
 const fadeUp    = { hidden: { opacity: 0, y: 60 },  visible: { opacity: 1, y: 0,  transition: { duration: 0.85, ease: [0.22, 1, 0.36, 1] } } };
@@ -899,7 +938,7 @@ function ConfirmationPopup({ onClose, onScrollToInfo }: {
 
             {/* Both buttons scroll to Info */}
             <button onClick={onScrollToInfo}
-              className="flex items-center justify-center gap-2 w-full py-3.5 bg-[#0068ff] hover:bg-[#0055cc] text-white rounded-full font-bold text-sm tracking-wide transition-colors mb-3 shadow-lg">
+              className="flex items-center justify-center gap-2 w-full py-3.5 bg-[#8DA06B] hover:bg-[#7a8e5c] text-primary rounded-full font-bold text-sm tracking-wide transition-colors mb-3 shadow-lg">
               <ExternalLink size={15} />
               Tham gia nhóm Zalo
             </button>
@@ -918,6 +957,19 @@ function ConfirmationPopup({ onClose, onScrollToInfo }: {
 
 // ── Info Section ──────────────────────────────────────────────────────────────
 function InfoSection() {
+  const [photos, setPhotos] = useState<Photo[]>(() => {
+    try { return JSON.parse(localStorage.getItem("wedding_photos") ?? "[]"); }
+    catch { return []; }
+  });
+  const [showUpload, setShowUpload] = useState(false);
+  const [showFeed, setShowFeed] = useState(false);
+
+  const addPhoto = (p: Photo) => {
+    const updated = [p, ...photos];
+    setPhotos(updated);
+    try { localStorage.setItem("wedding_photos", JSON.stringify(updated)); } catch {}
+  };
+
   return (
     <section className="py-28 md:py-36 px-6 max-w-4xl mx-auto">
       <Reveal variants={stagger} className="text-center mb-16">
@@ -933,16 +985,23 @@ function InfoSection() {
       </Reveal>
 
       <div className="space-y-10">
+        {/* Photo Sharing Slide */}
+        <PhotoSlide
+          photos={photos}
+          onUpload={() => setShowUpload(true)}
+          onOpenFeed={() => setShowFeed(true)}
+        />
+
         {/* Zalo Group */}
         <Reveal variants={fadeUp}>
           <div className="bg-gradient-to-r from-primary/10 to-blush rounded-3xl p-8 border border-primary/20 text-center">
-            <div className="w-14 h-14 rounded-full bg-[#0068ff]/10 flex items-center justify-center mx-auto mb-4">
-              <Users size={26} className="text-[#0068ff]" />
+            <div className="w-14 h-14 rounded-full bg-[#8DA06B]/15 flex items-center justify-center mx-auto mb-4">
+              <Users size={26} className="text-[#8DA06B]" />
             </div>
             <h4 className="font-serif text-2xl text-secondary italic mb-2">Nhóm Zalo chuyến đi</h4>
             <p className="text-secondary/60 text-sm mb-5">Tham gia nhóm để cập nhật thông tin mới nhất về lịch trình và phòng ở.</p>
             <a href={ZALO_GROUP_LINK} target="_blank" rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#0068ff] hover:bg-[#0055cc] text-white rounded-full font-bold text-sm tracking-wider transition-colors shadow-lg">
+              className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#8DA06B] hover:bg-[#7a8e5c] text-primary rounded-full font-bold text-sm tracking-wider transition-colors shadow-lg">
               <ExternalLink size={15} />
               Vào nhóm Zalo ngay
             </a>
@@ -1002,6 +1061,364 @@ function InfoSection() {
           </div>
         </Reveal>
       </div>
+
+      <AnimatePresence>
+        {showUpload && (
+          <UploadPopup onClose={() => setShowUpload(false)} onAdd={addPhoto} />
+        )}
+        {showFeed && (
+          <PhotoFeedPopup
+            photos={photos}
+            onClose={() => setShowFeed(false)}
+            onUpload={() => { setShowFeed(false); setTimeout(() => setShowUpload(true), 200); }}
+          />
+        )}
+      </AnimatePresence>
     </section>
+  );
+}
+
+// ── Photo Slide ───────────────────────────────────────────────────────────────
+function PhotoSlide({ photos, onUpload, onOpenFeed }: {
+  photos: Photo[]; onUpload: () => void; onOpenFeed: () => void;
+}) {
+  const [idx, setIdx] = useState(0);
+  const [dir, setDir] = useState(1);
+
+  useEffect(() => {
+    if (photos.length <= 1) return;
+    const t = setInterval(() => {
+      setDir(1);
+      setIdx((i) => (i + 1) % photos.length);
+    }, 3500);
+    return () => clearInterval(t);
+  }, [photos.length]);
+
+  const goTo = (next: number) => {
+    setDir(next > idx ? 1 : -1);
+    setIdx(next);
+  };
+
+  const variants = {
+    enter: (d: number) => ({ x: d > 0 ? "100%" : "-100%", opacity: 0 }),
+    center: { x: 0, opacity: 1 },
+    exit:  (d: number) => ({ x: d > 0 ? "-100%" : "100%", opacity: 0 }),
+  };
+
+  return (
+    <Reveal variants={fadeUp}>
+      <div className="bg-gradient-to-br from-blush via-white to-primary/10 rounded-3xl p-6 border border-primary/20 shadow-sm">
+        <div className="flex items-center justify-between gap-3 mb-4">
+          <h4 className="font-serif text-xl text-secondary italic flex items-center gap-2 min-w-0 shrink">
+            <Camera size={18} className="flex-shrink-0 text-sage" />
+            <span className="truncate">Khoảnh khắc ...</span>
+          </h4>
+          <button onClick={onUpload}
+            className="flex-shrink-0 whitespace-nowrap flex items-center gap-1.5 px-4 py-2 bg-primary-dark hover:bg-primary-deep text-white rounded-full text-xs font-bold shadow-md transition-colors">
+            <Plus size={13} /> Chia sẻ
+          </button>
+        </div>
+
+        {photos.length === 0 ? (
+          <button onClick={onUpload}
+            className="w-full py-10 flex flex-col items-center gap-3 text-secondary/40 hover:text-primary-dark transition-colors rounded-2xl border-2 border-dashed border-primary/20 hover:border-primary/40">
+            <span className="text-4xl">📸</span>
+            <span className="text-sm">Chưa có ảnh nào · Hãy là người đầu tiên chia sẻ!</span>
+          </button>
+        ) : (
+          <>
+            {/* Auto carousel */}
+            <div
+              className="relative rounded-2xl overflow-hidden cursor-pointer shadow-md"
+              style={{ aspectRatio: "4/3" }}
+              onClick={onOpenFeed}
+            >
+              <AnimatePresence custom={dir} mode="popLayout" initial={false}>
+                <motion.div key={photos[idx].id}
+                  custom={dir} variants={variants}
+                  initial="enter" animate="center" exit="exit"
+                  transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                  className="absolute inset-0"
+                >
+                  <img src={photos[idx].url} alt={photos[idx].caption}
+                    className="w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex flex-col justify-end p-4">
+                    <p className="text-white font-semibold text-sm leading-tight">{photos[idx].author}</p>
+                    {photos[idx].caption && (
+                      <p className="text-white/70 text-xs mt-0.5 line-clamp-2">{photos[idx].caption}</p>
+                    )}
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+
+              {/* Prev / Next */}
+              {photos.length > 1 && (
+                <>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); goTo((idx - 1 + photos.length) % photos.length); }}
+                    className="absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-black/30 hover:bg-black/50 text-white flex items-center justify-center transition-colors">
+                    <ChevronRight size={14} className="rotate-180" />
+                  </button>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); goTo((idx + 1) % photos.length); }}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-black/30 hover:bg-black/50 text-white flex items-center justify-center transition-colors">
+                    <ChevronRight size={14} />
+                  </button>
+                </>
+              )}
+            </div>
+
+            {/* Dots */}
+            {photos.length > 1 && (
+              <div className="flex justify-center gap-1.5 mt-3">
+                {photos.map((_, i) => (
+                  <button key={i} onClick={() => goTo(i)}
+                    className={`rounded-full transition-all ${i === idx ? "w-4 h-1.5 bg-primary-dark" : "w-1.5 h-1.5 bg-primary/30"}`} />
+                ))}
+              </div>
+            )}
+
+            <button onClick={onOpenFeed}
+              className="mt-3 flex items-center gap-1 text-xs font-semibold text-primary-dark hover:underline">
+              Xem tất cả {photos.length} ảnh <ChevronRight size={13} />
+            </button>
+          </>
+        )}
+      </div>
+    </Reveal>
+  );
+}
+
+// ── Upload Popup ──────────────────────────────────────────────────────────────
+function UploadPopup({ onClose, onAdd }: { onClose: () => void; onAdd: (p: Photo) => void }) {
+  const [file, setFile] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
+  const [author, setAuthor] = useState("");
+  const [caption, setCaption] = useState("");
+  const [loading, setLoading] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  const pickFile = (f: File) => {
+    setFile(f);
+    setPreview(URL.createObjectURL(f));
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    const f = e.dataTransfer.files[0];
+    if (f?.type.startsWith("image/")) pickFile(f);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!file) return;
+    setLoading(true);
+    try {
+      const url = await uploadToCloudinary(file);
+      onAdd({
+        id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+        url,
+        caption: caption.trim(),
+        author: author.trim() || "Ẩn danh",
+        createdAt: Date.now(),
+      });
+      onClose();
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <>
+      <motion.div key="up-bd"
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+        className="fixed inset-0 z-[130] bg-black/60" onClick={onClose} />
+      <motion.div key="up-modal"
+        initial={{ opacity: 0, scale: 0.9, y: 30 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.9, y: 30 }}
+        transition={{ type: "spring", damping: 26, stiffness: 280 }}
+        className="fixed inset-0 z-[140] flex items-end sm:items-center justify-center pointer-events-none"
+      >
+        <div className="relative w-full sm:max-w-sm bg-white rounded-t-[2rem] sm:rounded-[2rem] shadow-2xl pointer-events-auto max-h-[92vh] overflow-y-auto scrollbar-hide">
+          <div className="p-6">
+            <div className="flex items-center justify-between mb-5">
+              <h3 className="font-serif text-xl text-secondary italic">Chia sẻ khoảnh khắc 📸</h3>
+              <button onClick={onClose}
+                className="p-1.5 rounded-full hover:bg-secondary/10 text-secondary/50 transition-colors">
+                <X size={18} />
+              </button>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div
+                onClick={() => !preview && fileRef.current?.click()}
+                onDrop={handleDrop}
+                onDragOver={(e) => e.preventDefault()}
+                className={`relative rounded-2xl overflow-hidden border-2 border-dashed transition-colors ${
+                  preview ? "border-primary/20" : "border-primary/30 bg-blush hover:bg-primary/10 cursor-pointer"
+                }`}
+              >
+                {preview ? (
+                  <>
+                    <img src={preview} alt="preview" className="w-full object-cover max-h-52 rounded-2xl" />
+                    <button type="button"
+                      onClick={(e) => { e.stopPropagation(); setFile(null); setPreview(null); }}
+                      className="absolute top-2 right-2 p-1.5 bg-black/50 hover:bg-black/70 text-white rounded-full transition-colors">
+                      <X size={13} />
+                    </button>
+                    <button type="button"
+                      onClick={(e) => { e.stopPropagation(); fileRef.current?.click(); }}
+                      className="absolute bottom-2 right-2 text-[10px] bg-black/50 hover:bg-black/70 text-white rounded-full px-2.5 py-1 transition-colors">
+                      Đổi ảnh
+                    </button>
+                  </>
+                ) : (
+                  <div className="py-10 flex flex-col items-center gap-2 text-secondary/35">
+                    <Camera size={32} />
+                    <span className="text-sm">Chọn ảnh hoặc kéo thả vào đây</span>
+                  </div>
+                )}
+                <input ref={fileRef} type="file" accept="image/*" className="hidden"
+                  onChange={(e) => { const f = e.target.files?.[0]; if (f) pickFile(f); }} />
+              </div>
+
+              <div>
+                <label className="block text-[10px] font-bold uppercase tracking-widest text-secondary/40 mb-1.5 ml-1">Tên của bạn</label>
+                <input type="text" value={author} onChange={(e) => setAuthor(e.target.value)}
+                  placeholder="Nhập tên..."
+                  className="w-full px-4 py-3 rounded-xl bg-blush border border-primary/20 focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none text-secondary text-sm transition-all" />
+              </div>
+
+              <div>
+                <label className="block text-[10px] font-bold uppercase tracking-widest text-secondary/40 mb-1.5 ml-1">Nội dung</label>
+                <textarea value={caption} onChange={(e) => setCaption(e.target.value)}
+                  placeholder="Khoảnh khắc này thật..." rows={2}
+                  className="w-full px-4 py-3 rounded-xl bg-blush border border-primary/20 focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none text-secondary text-sm resize-none transition-all" />
+              </div>
+
+              <motion.button type="submit" disabled={!file || loading}
+                whileHover={!file || loading ? {} : { y: -2 }}
+                whileTap={!file || loading ? {} : { scale: 0.97 }}
+                className="w-full py-3.5 bg-primary-dark hover:bg-primary-deep disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-full font-bold text-sm tracking-wider transition-all flex items-center justify-center gap-2">
+                {loading ? (
+                  <>
+                    <span className="inline-block w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    Đang tải ảnh...
+                  </>
+                ) : (
+                  <><Upload size={15} /> Chia sẻ ngay</>
+                )}
+              </motion.button>
+            </form>
+          </div>
+        </div>
+      </motion.div>
+    </>
+  );
+}
+
+// ── Photo Feed Popup ──────────────────────────────────────────────────────────
+function PhotoFeedPopup({ photos, onClose, onUpload }: {
+  photos: Photo[]; onClose: () => void; onUpload: () => void;
+}) {
+  const sorted = [...photos].sort((a, b) => b.createdAt - a.createdAt);
+  const [lightbox, setLightbox] = useState<Photo | null>(null);
+
+  return (
+    <>
+      <motion.div key="feed-bd"
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+        className="fixed inset-0 z-[130] bg-black/80" onClick={onClose} />
+      <motion.div key="feed-panel"
+        initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }}
+        transition={{ type: "spring", damping: 30, stiffness: 280 }}
+        className="fixed inset-x-0 bottom-0 top-14 z-[140] bg-white rounded-t-[2rem] shadow-2xl flex flex-col pointer-events-auto overflow-hidden"
+      >
+        <div className="flex items-center justify-between px-5 py-4 border-b border-primary/10 flex-shrink-0">
+          <h3 className="font-serif text-lg text-secondary italic flex items-center gap-2">
+            <Camera size={16} className="text-sage" />
+            Khoảnh khắc chuyến đi
+            <span className="font-sans not-italic text-sm text-secondary/35">({photos.length})</span>
+          </h3>
+          <div className="flex items-center gap-2">
+            <button onClick={onUpload}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-primary-dark hover:bg-primary-deep text-white rounded-full text-xs font-bold shadow transition-colors">
+              <Plus size={12} /> Thêm ảnh
+            </button>
+            <button onClick={onClose}
+              className="p-1.5 rounded-full hover:bg-secondary/10 text-secondary/50 transition-colors">
+              <X size={20} />
+            </button>
+          </div>
+        </div>
+
+        <div className="flex-1 overflow-y-auto p-4 scrollbar-hide">
+          {sorted.length === 0 ? (
+            <div className="flex flex-col items-center justify-center h-48 text-secondary/35 gap-3">
+              <span className="text-5xl">📸</span>
+              <p className="text-sm">Chưa có ảnh nào cả!</p>
+              <button onClick={onUpload}
+                className="px-5 py-2 bg-primary-dark text-white rounded-full text-sm font-bold hover:bg-primary-deep transition-colors">
+                Chia sẻ ngay
+              </button>
+            </div>
+          ) : (
+            <div className="columns-2 md:columns-3 gap-3">
+              {sorted.map((p) => (
+                <div key={p.id}
+                  className="break-inside-avoid mb-3 rounded-2xl overflow-hidden shadow-md border border-primary/10 bg-white cursor-pointer"
+                  onClick={() => setLightbox(p)}
+                >
+                  <img src={p.url} alt={p.caption} className="w-full object-cover hover:opacity-95 transition-opacity" />
+                  <div className="p-3">
+                    <p className="font-semibold text-sm text-secondary">{p.author}</p>
+                    {p.caption && (
+                      <p className="text-xs text-secondary/60 mt-0.5 leading-relaxed">{p.caption}</p>
+                    )}
+                    <p className="text-[10px] text-secondary/30 mt-1.5">{timeAgo(p.createdAt)}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </motion.div>
+
+      {/* Lightbox */}
+      <AnimatePresence>
+        {lightbox && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[160] bg-black/95"
+              onClick={() => setLightbox(null)}
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ type: "spring", damping: 26, stiffness: 280 }}
+              className="fixed inset-0 z-[161] flex flex-col items-center justify-center p-4 pointer-events-none"
+            >
+              <div className="relative pointer-events-auto max-w-lg w-full">
+                <button onClick={() => setLightbox(null)}
+                  className="absolute -top-10 right-0 p-2 text-white/70 hover:text-white transition-colors">
+                  <X size={22} />
+                </button>
+                <img src={lightbox.url} alt={lightbox.caption}
+                  className="w-full rounded-2xl shadow-2xl object-contain max-h-[75vh]" />
+                {(lightbox.author || lightbox.caption) && (
+                  <div className="mt-3 text-center">
+                    <p className="text-white font-semibold text-sm">{lightbox.author}</p>
+                    {lightbox.caption && (
+                      <p className="text-white/60 text-xs mt-1">{lightbox.caption}</p>
+                    )}
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+    </>
   );
 }

@@ -8,7 +8,8 @@
       "Bash(cp \"E:\\\\Downloads\\\\DSCF7860.jpg\" \"E:\\\\My Project\\\\CongPhanhWeddingInnovation\\\\public\\\\images/\")",
       "Bash(cp \"E:\\\\Downloads\\\\DSCF7944.jpg\" \"E:\\\\My Project\\\\CongPhanhWeddingInnovation\\\\public\\\\images/\")",
       "Bash(cp \"E:\\\\Downloads\\\\AMV_3279.jpg\" \"E:\\\\My Project\\\\CongPhanhWeddingInnovation\\\\public\\\\images/\")",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(find 'E:/My Project/CongPhanhWeddingInnovation' -maxdepth 4 \\\\\\(-name *.png -o -name *.jpg -o -name *.jpeg -o -name *.webp -o -name *.gif \\\\\\))"
     ]
   }
 }
