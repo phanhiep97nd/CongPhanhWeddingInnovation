@@ -422,7 +422,7 @@ function StorySection({ onRSVP }: { onRSVP: () => void }) {
           </motion.div>
           <motion.div
             variants={scaleIn}
-            className="absolute -bottom-10 -right-8 bg-white rounded-3xl p-5 shadow-xl border border-primary/20 hidden md:flex flex-col items-center gap-1"
+            className="absolute bottom-4 right-4 md:-bottom-10 md:-right-8 bg-white rounded-3xl p-5 shadow-xl border border-primary/20 flex flex-col items-center gap-1"
           >
             <Heart size={22} className="text-primary-dark fill-primary" />
             <span className="font-script text-xl text-secondary">2017 – 2026</span>
@@ -584,6 +584,8 @@ function GalleryCard({
 }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-60px" });
+  const [isHovered, setIsHovered] = useState(false);
+  const showOverlay = isActive || isHovered;
 
   return (
     <motion.div ref={ref}
@@ -592,19 +594,20 @@ function GalleryCard({
       transition={{ duration: 0.8, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
       whileHover={{ y: -8, transition: { duration: 0.3 } }}
       onClick={onToggle}
-      className={`relative rounded-[2.5rem] overflow-hidden cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-500 group ${photo.full ? "md:col-span-2 aspect-[16/9]" : "aspect-[4/5]"}`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className={`relative rounded-[2.5rem] overflow-hidden cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-500 ${photo.full ? "md:col-span-2 aspect-[16/9]" : "aspect-[4/5]"}`}
     >
       <motion.img src={photo.img} alt={photo.title}
         className="w-full h-full object-cover"
-        animate={{ scale: isActive ? 1.1 : 1 }}
-        whileHover={{ scale: 1.07 }}
+        animate={{ scale: showOverlay ? 1.1 : 1 }}
         transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
       />
 
       {/* Info Overlay – Visible on hover (desktop) or isActive (tap/mobile) */}
-      <motion.div
-        animate={{ opacity: isActive ? 1 : 0 }}
-        className="absolute inset-0 bg-gradient-to-t from-primary-deep/80 via-primary/10 to-transparent flex flex-col justify-end p-8 md:p-10 opacity-0 md:group-hover:opacity-100 transition-opacity duration-500"
+      <div
+        style={{ opacity: showOverlay ? 1 : 0 }}
+        className="absolute inset-0 bg-gradient-to-t from-primary-deep/80 via-primary/10 to-transparent flex flex-col justify-end p-8 md:p-10 transition-opacity duration-500"
       >
         <h4 className="font-serif text-2xl md:text-3xl italic text-white mb-1">
           {photo.title}
@@ -612,9 +615,12 @@ function GalleryCard({
         <p className="text-sm md:text-base text-white/80">
           {photo.desc}
         </p>
-      </motion.div>
+      </div>
 
-      <div className="absolute top-4 right-4 w-8 h-8 rounded-full bg-primary/30 backdrop-blur-sm flex items-center justify-center opacity-0 md:group-hover:opacity-100 transition-opacity duration-300">
+      <div
+        style={{ opacity: showOverlay ? 1 : 0 }}
+        className="absolute top-4 right-4 w-8 h-8 rounded-full bg-primary/30 backdrop-blur-sm flex items-center justify-center transition-opacity duration-300"
+      >
         <Heart size={14} className="text-white fill-white" />
       </div>
     </motion.div>
