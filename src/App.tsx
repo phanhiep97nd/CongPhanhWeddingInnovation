@@ -1114,12 +1114,11 @@ function ConfirmationPopup({ onClose, onScrollToInfo }: {
               {musicPlaying ? <Volume2 size={13} className="text-primary-dark" /> : <VolumeX size={13} className="text-secondary/30" />}
             </button>
 
-            {/* Both buttons scroll to Info */}
-            <button onClick={onScrollToInfo}
-              className="flex items-center justify-center gap-2 w-full py-3.5 bg-[#8DA06B] hover:bg-[#7a8e5c] text-primary rounded-full font-bold text-sm tracking-wide transition-colors mb-3 shadow-lg">
+            <a href="https://zalo.me/g/jclcmu713" target="_blank" rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 w-full py-3.5 bg-[#8DA06B] hover:bg-[#7a8e5c] text-white rounded-full font-bold text-sm tracking-wide transition-colors mb-3 shadow-lg">
               <ExternalLink size={15} />
               Tham gia nhóm Zalo
-            </button>
+            </a>
 
             <button onClick={onScrollToInfo}
               className="flex items-center justify-center gap-2 w-full py-3.5 bg-primary/15 hover:bg-primary/25 text-secondary rounded-full font-semibold text-sm transition-colors">
