@@ -838,6 +838,7 @@ function RSVPForm({
   const [wantRide, setWantRide] = useState<boolean | null>(null);
   const [pickupPoint, setPickupPoint] = useState("Nhà gái 183 Vũ Tông Phan");
   const [submitting, setSubmitting] = useState(false);
+  const submittingRef = useRef(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const validate = () => {
@@ -856,7 +857,9 @@ function RSVPForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (submittingRef.current) return;
     if (!validate()) return;
+    submittingRef.current = true;
     setSubmitting(true);
     let newId: string | undefined;
     try {
@@ -886,6 +889,7 @@ function RSVPForm({
         if (res.ok) { const d = await res.json(); newId = d._id; }
       }
     } catch {}
+    submittingRef.current = false;
     setSubmitting(false);
     if (attendance === "yes") onConfirm?.(newId);
     else onComplete?.();

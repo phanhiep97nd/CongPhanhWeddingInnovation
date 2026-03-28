@@ -255,7 +255,7 @@
         <div class="flex justify-end gap-3 pt-2">
           <button type="button" id="modalCancelBtn"
             class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition text-sm">Hủy</button>
-          <button type="submit"
+          <button type="submit" id="modalSaveBtn"
             class="px-5 py-2 bg-rose-500 hover:bg-rose-600 text-white font-semibold rounded-lg transition text-sm">Lưu</button>
         </div>
       </form>
@@ -310,6 +310,7 @@
     const modalTitle       = document.getElementById('modalTitle');
     const guestForm        = document.getElementById('guestForm');
     const formError        = document.getElementById('formError');
+    const modalSaveBtn     = document.getElementById('modalSaveBtn');
     const modalCloseBtn    = document.getElementById('modalCloseBtn');
     const modalCancelBtn   = document.getElementById('modalCancelBtn');
     const inviteLinkRow    = document.getElementById('inviteLinkRow');
@@ -665,6 +666,9 @@
 
     guestForm.addEventListener('submit', async (e) => {
       e.preventDefault();
+      if (modalSaveBtn.disabled) return;
+      modalSaveBtn.disabled = true;
+      modalSaveBtn.textContent = 'Đang lưu...';
       formError.classList.add('hidden');
       const payload = {
         invitationName: document.getElementById('fInvitationName').value.trim(),
@@ -688,6 +692,8 @@
       } catch (err) {
         formError.textContent = err.message;
         formError.classList.remove('hidden');
+        modalSaveBtn.disabled = false;
+        modalSaveBtn.textContent = 'Lưu';
       }
     });
 
@@ -701,12 +707,19 @@
     }
 
     deleteConfirmBtn.addEventListener('click', async () => {
-      if (!deletingId) return;
+      if (!deletingId || deleteConfirmBtn.disabled) return;
+      deleteConfirmBtn.disabled = true;
+      deleteConfirmBtn.textContent = 'Đang xóa...';
       try {
         await apiFetch(`/guests/${deletingId}`, { method: 'DELETE' });
         deleteModal.classList.add('hidden'); deletingId = null;
         await loadGuests();
-      } catch (err) { alert('Lỗi khi xóa: ' + err.message); }
+      } catch (err) {
+        alert('Lỗi khi xóa: ' + err.message);
+      } finally {
+        deleteConfirmBtn.disabled = false;
+        deleteConfirmBtn.textContent = 'Xóa';
+      }
     });
   </script>
 </body>
