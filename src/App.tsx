@@ -1511,6 +1511,66 @@ function InfoSection({ guestName, refreshKey }: { guestName?: string; refreshKey
             </div>
           </div>
         </Reveal>
+
+        {/* Dress Code */}
+        <Reveal variants={fadeUp}>
+          <div className="rounded-3xl overflow-hidden shadow-lg border border-primary/20"
+            style={{ background: 'linear-gradient(160deg, #f8f4ef 0%, #fdf6f0 50%, #f0f5ec 100%)' }}>
+            {/* Color band */}
+            <div className="h-1.5 w-full flex">
+              <div className="flex-1" style={{ background: '#8DA06B' }}/>
+              <div className="flex-1" style={{ background: '#F2C8CD' }}/>
+              <div className="flex-1" style={{ background: '#1a1a1a' }}/>
+              <div className="flex-1" style={{ background: '#FFFFFF', borderTop: '1px solid #e5e7eb' }}/>
+            </div>
+            <div className="px-8 py-8">
+              <div className="text-center mb-6">
+                <p className="text-[10px] font-bold uppercase tracking-[0.35em] text-secondary/40 mb-1">Wedding</p>
+                <h4 className="font-serif text-3xl text-secondary italic">Dress Code</h4>
+                <p className="text-secondary/50 text-sm mt-1.5">Hãy diện trang phục theo gam màu chủ đề 💕</p>
+              </div>
+
+              {/* Figures */}
+              <div className="flex items-end justify-center gap-6 mb-7">
+                <div className="text-center">
+                  <BrideFigure />
+                  <p className="text-[10px] font-semibold text-secondary/40 mt-1 tracking-wide uppercase">Cô dâu</p>
+                </div>
+                <motion.div
+                  animate={{ scale: [1, 1.3, 1] }}
+                  transition={{ repeat: Infinity, duration: 1.6, ease: "easeInOut" }}
+                  className="mb-16 text-2xl select-none">🤍</motion.div>
+                <div className="text-center">
+                  <GroomFigure />
+                  <p className="text-[10px] font-semibold text-secondary/40 mt-1 tracking-wide uppercase">Chú rể</p>
+                </div>
+              </div>
+
+              {/* Swatches */}
+              <div className="grid grid-cols-4 gap-3 mb-6">
+                {[
+                  { hex: '#8DA06B', note: 'Xanh lá cổ điển' },
+                  { hex: '#F2C8CD', note: 'Hồng phấn nhẹ'   },
+                  { hex: '#1a1a1a', note: 'Đen thanh lịch'   },
+                  { hex: '#FFFFFF', note: 'Trắng tinh khôi', border: true },
+                ].map((c) => (
+                  <div key={c.hex} className="flex flex-col items-center gap-1.5">
+                    <div className="w-12 h-12 rounded-2xl shadow-md"
+                      style={{ background: c.hex, border: c.border ? '1.5px solid #e5e7eb' : 'none' }} />
+                    <p className="text-[9px] font-bold text-secondary/50 text-center leading-tight">{c.note}</p>
+                  </div>
+                ))}
+              </div>
+
+              {/* Note */}
+              <div className="bg-white/70 rounded-2xl px-4 py-3 text-center border border-black/5">
+                <p className="text-xs text-secondary/60 leading-relaxed">
+                  Trang phục không cần quá cứng nhắc — miễn là trong gam màu chủ đề và phù hợp với không gian tiệc cưới ngoài trời ✨
+                </p>
+              </div>
+            </div>
+          </div>
+        </Reveal>
       </div>
 
       <AnimatePresence>
