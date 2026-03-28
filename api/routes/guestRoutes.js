@@ -67,6 +67,28 @@ router.put('/:id/rsvp', async (req, res) => {
   }
 });
 
+// POST /guests/register - public self-registration (walk-in, no invite link)
+router.post('/register', async (req, res) => {
+  const { invitationName, phone, status, guestCount, joinGroup, pickupPoint } = req.body;
+  if (!invitationName) return res.status(400).json({ message: 'Tên là bắt buộc' });
+  try {
+    const guest = await Guest.create({
+      name: 'unknown',
+      invitationName,
+      phone: phone || '',
+      status: status || 'pending',
+      guestCount: guestCount ?? 1,
+      joinGroup: joinGroup ?? false,
+      pickupPoint: pickupPoint || '',
+      room: '',
+      note: 'Tự đăng ký qua trang web',
+    });
+    res.status(201).json(guest);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 // ─── ADMIN-PROTECTED ROUTES ──────────────────────────────────────────────────
 
 // GET /guests - get all guests (full data)

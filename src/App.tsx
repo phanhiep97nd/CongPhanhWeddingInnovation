@@ -122,6 +122,8 @@ export default function App() {
   const [showInvite, setShowInvite] = useState(false);
   const [guestId, setGuestId] = useState<string | null>(null);
   const [guestInfo, setGuestInfo] = useState<GuestInfo | null>(null);
+  const [roomsRefreshKey, setRoomsRefreshKey] = useState(0);
+  const refreshRooms = () => setRoomsRefreshKey((k) => k + 1);
   const [activeSection, setActiveSection] = useState<string>("story");
   const [bgPlaying, setBgPlaying] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -153,8 +155,8 @@ export default function App() {
     const params = new URLSearchParams(window.location.search);
     const id = params.get("id") || params.get("ID");
     if (!id) {
-      // No guest ID: show RSVP popup after delay
-      const t = setTimeout(() => setShowRSVP(true), 2500);
+      // No guest ID: show InvitePopup with generic greeting
+      const t = setTimeout(() => setShowInvite(true), 2500);
       return () => clearTimeout(t);
     }
     setGuestId(id);
@@ -368,7 +370,7 @@ export default function App() {
 
         {/* ── Info ── */}
         <div id="info" className="bg-white">
-          <InfoSection guestName={guestInfo?.name} />
+          <InfoSection guestName={guestInfo?.invitationName} refreshKey={roomsRefreshKey} />
         </div>
       </main>
 
@@ -439,7 +441,7 @@ export default function App() {
                   </div>
                   <div className="absolute top-0 left-0 right-0 h-0.5 bg-sage/40" />
                 </div>
-                <button onClick={() => setShowRSVP(false)}
+                <button onClick={() => { setShowRSVP(false); refreshRooms(); }}
                   className="fixed md:absolute top-6 right-6 md:top-3 md:right-3 z-30 p-1.5 rounded-full bg-white/90 text-secondary/60 hover:bg-white hover:text-secondary transition-all shadow-md">
                   <X size={18} />
                 </button>
@@ -447,9 +449,11 @@ export default function App() {
                   <RSVPForm
                     defaultName={guestInfo?.invitationName ?? ""}
                     guestId={guestId ?? undefined}
-                    onComplete={() => setShowRSVP(false)}
-                    onConfirm={() => {
+                    onComplete={() => { setShowRSVP(false); refreshRooms(); }}
+                    onConfirm={(newId) => {
+                      if (newId) setGuestId(newId);
                       setShowRSVP(false);
+                      refreshRooms();
                       setTimeout(() => setShowConfirmation(true), 300);
                     }}
                   />
@@ -464,9 +468,10 @@ export default function App() {
       <AnimatePresence>
         {showConfirmation && (
           <ConfirmationPopup
-            onClose={() => setShowConfirmation(false)}
+            onClose={() => { setShowConfirmation(false); refreshRooms(); }}
             onScrollToInfo={() => {
               setShowConfirmation(false);
+              refreshRooms();
               setTimeout(() => scrollTo("info"), 300);
             }}
           />
@@ -475,16 +480,16 @@ export default function App() {
 
       {/* ── Invite Popup ── */}
       <AnimatePresence>
-        {showInvite && guestInfo && (
+        {showInvite && (
           <InvitePopup
-            invitationName={guestInfo.invitationName}
-            alreadyConfirmed={guestInfo.status === "yes"}
+            invitationName={guestInfo?.invitationName ?? "Bạn"}
+            alreadyConfirmed={guestInfo?.status === "yes"}
             onConfirm={() => {
               setShowInvite(false);
-              if (guestInfo.status !== "yes") {
-                setTimeout(() => setShowRSVP(true), 300);
-              } else {
+              if (guestInfo?.status === "yes") {
                 setTimeout(() => setShowConfirmation(true), 300);
+              } else {
+                setTimeout(() => setShowRSVP(true), 300);
               }
             }}
           />
@@ -824,7 +829,7 @@ function RSVPForm({
   defaultName?: string;
   guestId?: string;
   onComplete?: () => void;
-  onConfirm?: () => void;
+  onConfirm?: (newId?: string) => void;
 }) {
   const [attendance, setAttendance] = useState<"yes" | "no" | null>(null);
   const [name, setName] = useState(defaultName);
@@ -852,9 +857,10 @@ function RSVPForm({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
-    if (guestId) {
-      setSubmitting(true);
-      try {
+    setSubmitting(true);
+    let newId: string | undefined;
+    try {
+      if (guestId) {
         await fetch(`${API_BASE}/guests/${guestId}/rsvp`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -864,10 +870,24 @@ function RSVPForm({
               : { status: "no",  guestCount: 0, joinGroup: false, pickupPoint: "" }
           ),
         });
-      } catch {}
-      setSubmitting(false);
-    }
-    if (attendance === "yes") onConfirm?.();
+      } else if (attendance === "yes") {
+        const res = await fetch(`${API_BASE}/guests/register`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            invitationName: name.trim(),
+            phone,
+            status: "yes",
+            guestCount: guests,
+            joinGroup: wantRide ?? false,
+            pickupPoint: wantRide ? pickupPoint : "",
+          }),
+        });
+        if (res.ok) { const d = await res.json(); newId = d._id; }
+      }
+    } catch {}
+    setSubmitting(false);
+    if (attendance === "yes") onConfirm?.(newId);
     else onComplete?.();
   };
 
@@ -1114,7 +1134,7 @@ function ConfirmationPopup({ onClose, onScrollToInfo }: {
               {musicPlaying ? <Volume2 size={13} className="text-primary-dark" /> : <VolumeX size={13} className="text-secondary/30" />}
             </button>
 
-            <a href="https://zalo.me/g/jclcmu713" target="_blank" rel="noopener noreferrer"
+            <a href="https://zalo.me/g/hqjq6rzs0b5ggcijwde5" target="_blank" rel="noopener noreferrer"
               className="flex items-center justify-center gap-2 w-full py-3.5 bg-[#8DA06B] hover:bg-[#7a8e5c] text-white rounded-full font-bold text-sm tracking-wide transition-colors mb-3 shadow-lg">
               <ExternalLink size={15} />
               Tham gia nhóm Zalo
@@ -1192,7 +1212,7 @@ function RoomTable({ rooms }: { rooms: RoomRow[] }) {
   );
 }
 
-function InfoSection({ guestName }: { guestName?: string }) {
+function InfoSection({ guestName, refreshKey }: { guestName?: string; refreshKey?: number }) {
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [showUpload, setShowUpload] = useState(false);
   const [showFeed, setShowFeed] = useState(false);
@@ -1203,6 +1223,9 @@ function InfoSection({ guestName }: { guestName?: string }) {
       .then((r) => r.ok ? r.json() : [])
       .then((data: RoomRow[]) => { if (Array.isArray(data)) setRooms(data); })
       .catch(() => {});
+  }, [refreshKey]);
+
+  useEffect(() => {
     fetch(`${API_BASE}/photos`)
       .then((r) => r.ok ? r.json() : [])
       .then((data) => { if (Array.isArray(data)) setPhotos(data.map((p: any) => ({ id: p._id, url: p.url, caption: p.caption, author: p.author, createdAt: new Date(p.createdAt).getTime() }))); })
