@@ -551,12 +551,14 @@
             ${g.room ? `<span>🛏️ ${esc(g.room)}</span>` : ''}
             ${g.status !== 'no' ? `<span>${transport}</span>` : ''}
           </div>
-          <!-- Row 3: invite link -->
+          <!-- Row 3: invite link + delete -->
           <div class="flex items-center gap-1.5 pt-1.5 border-t border-black/5" onclick="event.stopPropagation()">
             <input type="text" readonly value="${esc(link)}"
               class="flex-1 text-[10px] text-gray-400 bg-white/60 border border-black/10 rounded px-1.5 py-0.5 outline-none min-w-0" />
             <button class="copy-btn flex-shrink-0 text-[10px] bg-rose-500 text-white px-2 py-0.5 rounded font-medium"
               data-link="${esc(link)}">Copy</button>
+            <button onclick="event.stopPropagation(); openDelete('${g._id}', '${esc(g.invitationName)}')"
+              class="flex-shrink-0 text-[10px] text-red-400 hover:text-red-600 border border-red-200 hover:border-red-400 px-2 py-0.5 rounded font-medium transition">Xóa</button>
           </div>
         </div>`;
       }).join('');
