@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin - Công &amp; Phanh Wedding</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .status-pending { background-color: #e5e7eb; color: #374151; }
+    .status-yes     { background-color: #d1fae5; color: #065f46; }
+    .status-no      { background-color: #fee2e2; color: #991b1b; }
+    .card-yes     { background-color: #f0fdf4; border-color: #bbf7d0; }
+    .card-pending { background-color: #fafafa;  border-color: #e5e7eb; }
+    .card-no      { background-color: #fff5f5;  border-color: #fecaca; }
+    .modal-backdrop { background-color: rgba(0,0,0,0.5); }
+    .card-hover { transition: box-shadow 0.18s, transform 0.18s; }
+    .card-hover:active { transform: scale(0.985); }
+    th.sortable { cursor: pointer; user-select: none; }
+    th.sortable:hover { background-color: #f3f4f6; }
+    th.sort-asc::after  { content: ' ▲'; font-size: 10px; }
+    th.sort-desc::after { content: ' ▼'; font-size: 10px; }
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+    @media (min-width: 480px) { .xs\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  </style>
+</head>
+<body class="bg-gray-100 min-h-screen font-sans">
+
+  <!-- ─── LOGIN PAGE ──────────────────────────────────────────────────────── -->
+  <div id="loginPage" class="flex items-center justify-center min-h-screen">
+    <div class="bg-white rounded-2xl shadow-lg p-8 w-full max-w-sm">
+      <h1 class="text-2xl font-bold text-center text-rose-600 mb-2">Công &amp; Phanh</h1>
+      <p class="text-center text-gray-500 text-sm mb-6">Quản lý khách mời đám cưới</p>
+      <form id="loginForm" class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Tên đăng nhập</label>
+          <input id="loginUsername" type="text" required autocomplete="username"
+            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-rose-400" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Mật khẩu</label>
+          <input id="loginPassword" type="password" required autocomplete="current-password"
+            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-rose-400" />
+        </div>
+        <p id="loginError" class="text-red-500 text-sm hidden"></p>
+        <button type="submit"
+          class="w-full bg-rose-500 hover:bg-rose-600 text-white font-semibold py-2 rounded-lg transition">
+          Đăng nhập
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ─── ADMIN DASHBOARD ─────────────────────────────────────────────────── -->
+  <div id="adminPage" class="hidden min-h-screen">
+
+    <!-- Header -->
+    <header class="bg-white shadow sticky top-0 z-30">
+      <div class="max-w-screen-xl mx-auto px-4 py-3 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <h1 class="text-xl font-bold text-rose-600">Công &amp; Phanh</h1>
+          <span class="text-gray-400 text-sm hidden sm:inline">Quản lý khách mời</span>
+        </div>
+        <button id="logoutBtn"
+          class="text-sm text-gray-500 hover:text-red-500 border border-gray-200 rounded-lg px-3 py-1.5 transition">
+          Đăng xuất
+        </button>
+      </div>
+    </header>
+
+    <!-- ─── STATS PANEL ──────────────────────────────────────────────────── -->
+    <div class="max-w-screen-xl mx-auto px-4 pt-3 pb-1">
+      <!-- Wrap grid — no scroll -->
+      <div class="flex flex-wrap gap-2">
+        <div class="bg-white rounded-lg border border-gray-100 px-3 py-1.5 text-center min-w-[60px]">
+          <p class="text-lg font-bold text-gray-800 leading-none" id="statTotal">0</p>
+          <p class="text-[10px] text-gray-400 mt-0.5">Khách mời</p>
+        </div>
+        <div class="bg-green-50 rounded-lg border border-green-100 px-3 py-1.5 text-center min-w-[60px]">
+          <p class="text-lg font-bold text-green-700 leading-none" id="statYes">0</p>
+          <p class="text-[10px] text-green-500 mt-0.5">Tham dự</p>
+        </div>
+        <div class="bg-gray-50 rounded-lg border border-gray-200 px-3 py-1.5 text-center min-w-[60px]">
+          <p class="text-lg font-bold text-gray-500 leading-none" id="statPending">0</p>
+          <p class="text-[10px] text-gray-400 mt-0.5">Chờ</p>
+        </div>
+        <div class="bg-red-50 rounded-lg border border-red-100 px-3 py-1.5 text-center min-w-[60px]">
+          <p class="text-lg font-bold text-red-500 leading-none" id="statNo">0</p>
+          <p class="text-[10px] text-red-400 mt-0.5">Vắng</p>
+        </div>
+        <div class="bg-rose-50 rounded-lg border border-rose-100 px-3 py-1.5 text-center min-w-[60px]">
+          <p class="text-lg font-bold text-rose-600 leading-none" id="statTotalPeople">0</p>
+          <p class="text-[10px] text-rose-400 mt-0.5">Tổng người</p>
+        </div>
+        <div class="bg-blue-50 rounded-lg border border-blue-100 px-3 py-1.5 text-center min-w-[60px]">
+          <p class="text-lg font-bold text-blue-600 leading-none" id="statJoinGroup">0</p>
+          <p class="text-[10px] text-blue-400 mt-0.5">Xe chung</p>
+        </div>
+        <div class="bg-purple-50 rounded-lg border border-purple-100 px-3 py-1.5 text-center min-w-[60px]">
+          <p class="text-lg font-bold text-purple-600 leading-none" id="statSelfDrive">0</p>
+          <p class="text-[10px] text-purple-400 mt-0.5">Tự đến</p>
+        </div>
+        <div id="statPickupChips" class="contents"></div>
+      </div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="max-w-screen-xl mx-auto px-3 py-2 flex flex-wrap items-center gap-2">
+      <button id="addGuestBtn"
+        class="bg-rose-500 hover:bg-rose-600 text-white font-semibold px-4 py-2 rounded-lg transition flex items-center gap-2 text-sm">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+        </svg>
+        Thêm khách
+      </button>
+      <input id="searchInput" type="text" placeholder="Tìm tên, SĐT..."
+        class="flex-1 min-w-[160px] border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rose-300" />
+      <select id="filterStatus"
+        class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rose-300">
+        <option value="">Tất cả trạng thái</option>
+        <option value="yes">Tham dự</option>
+        <option value="pending">Chờ xác nhận</option>
+        <option value="no">Vắng mặt</option>
+      </select>
+      <select id="sortField"
+        class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rose-300">
+        <option value="status">Sắp xếp: Trạng thái</option>
+        <option value="invitationName">Sắp xếp: Tên thiệp</option>
+        <option value="name">Sắp xếp: Tên khách</option>
+        <option value="guestCount">Sắp xếp: Số người</option>
+        <option value="room">Sắp xếp: Phòng</option>
+      </select>
+      <button id="refreshBtn"
+        class="border border-gray-300 rounded-lg px-3 py-2 text-sm hover:bg-gray-50 transition" title="Làm mới">
+        <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- ─── MOBILE CARD GRID (< md) ──────────────────────────────────────── -->
+    <div id="cardGrid" class="md:hidden max-w-screen-xl mx-auto px-3 pb-10 grid grid-cols-1 xs:grid-cols-2 gap-2"></div>
+
+    <!-- ─── DESKTOP TABLE (>= md) ────────────────────────────────────────── -->
+    <div class="hidden md:block max-w-screen-xl mx-auto px-4 pb-10">
+      <div class="bg-white rounded-xl shadow overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead class="bg-gray-50 text-gray-600 uppercase text-xs">
+            <tr>
+              <th class="px-3 py-3 text-left whitespace-nowrap">Link mời</th>
+              <th class="px-3 py-3 text-left whitespace-nowrap sortable" data-col="invitationName">Tên trong thiệp</th>
+              <th class="px-3 py-3 text-left whitespace-nowrap sortable" data-col="name">Tên khách</th>
+              <th class="px-3 py-3 text-left whitespace-nowrap">SĐT</th>
+              <th class="px-3 py-3 text-left whitespace-nowrap sortable" data-col="status">Trạng thái</th>
+              <th class="px-3 py-3 text-center whitespace-nowrap sortable" data-col="guestCount">Người</th>
+              <th class="px-3 py-3 text-center whitespace-nowrap">Xe chung</th>
+              <th class="px-3 py-3 text-left whitespace-nowrap">Điểm đón</th>
+              <th class="px-3 py-3 text-left whitespace-nowrap sortable" data-col="room">Phòng</th>
+              <th class="px-3 py-3 text-left whitespace-nowrap">Ghi chú</th>
+              <th class="px-3 py-3 text-center whitespace-nowrap">Thao tác</th>
+            </tr>
+          </thead>
+          <tbody id="guestTableBody" class="divide-y divide-gray-100">
+            <tr><td colspan="11" class="text-center py-10 text-gray-400">Đang tải...</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p id="tableInfo" class="text-xs text-gray-400 mt-2 text-right"></p>
+    </div>
+  </div>
+
+  <!-- ─── GUEST MODAL (Add / Edit) ──────────────────────────────────────── -->
+  <div id="guestModal" class="fixed inset-0 z-50 hidden flex items-center justify-center modal-backdrop p-4">
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between p-5 border-b sticky top-0 bg-white z-10">
+        <h2 id="modalTitle" class="text-lg font-bold text-gray-800">Thêm khách mời</h2>
+        <button id="modalCloseBtn" class="text-gray-400 hover:text-gray-600 transition p-1">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <form id="guestForm" class="p-5 space-y-4">
+        <input type="hidden" id="guestId" />
+        <!-- Invite link (edit mode only) -->
+        <div id="inviteLinkRow" class="hidden bg-rose-50 border border-rose-200 rounded-xl p-3">
+          <p class="text-xs font-semibold text-rose-700 mb-1.5">Link mời cá nhân</p>
+          <div class="flex items-center gap-2">
+            <input id="inviteLinkInput" type="text" readonly
+              class="flex-1 text-xs bg-white border border-rose-200 rounded-lg px-2 py-1.5 text-gray-600 outline-none" />
+            <button type="button" id="copyLinkModalBtn"
+              class="text-xs bg-rose-500 hover:bg-rose-600 text-white px-3 py-1.5 rounded-lg font-medium transition whitespace-nowrap">
+              Sao chép
+            </button>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Tên trong thiệp <span class="text-red-500">*</span></label>
+            <input id="fInvitationName" type="text" required
+              class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-rose-300" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Tên khách <span class="text-red-500">*</span></label>
+            <input id="fName" type="text" required
+              class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-rose-300" />
+          </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Số điện thoại</label>
+            <input id="fPhone" type="tel"
+              class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-rose-300" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Trạng thái</label>
+            <select id="fStatus"
+              class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-rose-300">
+              <option value="pending">Chờ xác nhận</option>
+              <option value="yes">Tham dự</option>
+              <option value="no">Vắng mặt</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Số người tham dự</label>
+            <input id="fGuestCount" type="number" min="0" value="1"
+              class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-rose-300" />
+          </div>
+          <div class="flex items-center gap-3 pt-6">
+            <input id="fJoinGroup" type="checkbox" class="w-4 h-4 accent-rose-500" />
+            <label for="fJoinGroup" class="text-sm font-medium text-gray-700">Đi chung xe</label>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Điểm đón</label>
+            <input id="fPickupPoint" type="text"
+              class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-rose-300" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Phòng</label>
+            <input id="fRoom" type="text"
+              class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-rose-300" />
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Ghi chú</label>
+          <textarea id="fNote" rows="2"
+            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-rose-300 resize-none"></textarea>
+        </div>
+        <p id="formError" class="text-red-500 text-sm hidden"></p>
+        <div class="flex justify-end gap-3 pt-2">
+          <button type="button" id="modalCancelBtn"
+            class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition text-sm">Hủy</button>
+          <button type="submit"
+            class="px-5 py-2 bg-rose-500 hover:bg-rose-600 text-white font-semibold rounded-lg transition text-sm">Lưu</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ─── DELETE CONFIRM MODAL ───────────────────────────────────────────── -->
+  <div id="deleteModal" class="fixed inset-0 z-50 hidden flex items-center justify-center modal-backdrop p-4">
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6">
+      <h2 class="text-lg font-bold text-gray-800 mb-2">Xác nhận xóa</h2>
+      <p class="text-gray-600 text-sm mb-5">
+        Bạn có chắc muốn xóa khách <strong id="deleteGuestName"></strong>? Hành động này không thể hoàn tác.
+      </p>
+      <div class="flex justify-end gap-3">
+        <button id="deleteCancelBtn"
+          class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition text-sm">Hủy</button>
+        <button id="deleteConfirmBtn"
+          class="px-5 py-2 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-lg transition text-sm">Xóa</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE  = '/api';
+    const SITE_BASE = '%VITE_SITE_BASE%';
+    function inviteLink(id) { return `${SITE_BASE}/?id=${id}`; }
+
+    // ─── State ───────────────────────────────────────────────────────────────
+    let token = localStorage.getItem('wedding_admin_token') || '';
+    let guests = [];
+    let filteredGuests = [];
+    let editingId  = null;
+    let deletingId = null;
+    let sortCol = 'status';
+    let sortDir = 'asc'; // asc = yes → pending → no
+
+    // ─── DOM refs ─────────────────────────────────────────────────────────────
+    const loginPage        = document.getElementById('loginPage');
+    const adminPage        = document.getElementById('adminPage');
+    const loginForm        = document.getElementById('loginForm');
+    const loginError       = document.getElementById('loginError');
+    const logoutBtn        = document.getElementById('logoutBtn');
+    const addGuestBtn      = document.getElementById('addGuestBtn');
+    const refreshBtn       = document.getElementById('refreshBtn');
+    const searchInput      = document.getElementById('searchInput');
+    const filterStatus     = document.getElementById('filterStatus');
+    const sortField        = document.getElementById('sortField');
+    const guestTableBody   = document.getElementById('guestTableBody');
+    const cardGrid         = document.getElementById('cardGrid');
+    const tableInfo        = document.getElementById('tableInfo');
+    const guestModal       = document.getElementById('guestModal');
+    const modalTitle       = document.getElementById('modalTitle');
+    const guestForm        = document.getElementById('guestForm');
+    const formError        = document.getElementById('formError');
+    const modalCloseBtn    = document.getElementById('modalCloseBtn');
+    const modalCancelBtn   = document.getElementById('modalCancelBtn');
+    const inviteLinkRow    = document.getElementById('inviteLinkRow');
+    const inviteLinkInput  = document.getElementById('inviteLinkInput');
+    const copyLinkModalBtn = document.getElementById('copyLinkModalBtn');
+    const deleteModal      = document.getElementById('deleteModal');
+    const deleteGuestName  = document.getElementById('deleteGuestName');
+    const deleteCancelBtn  = document.getElementById('deleteCancelBtn');
+    const deleteConfirmBtn = document.getElementById('deleteConfirmBtn');
+
+    // ─── Status sort order ────────────────────────────────────────────────────
+    const STATUS_ORDER = { yes: 0, pending: 1, no: 2 };
+    const STATUS_LABEL = { pending: 'Chờ',    yes: 'Tham dự', no: 'Vắng' };
+    const STATUS_FULL  = { pending: 'Chờ xác nhận', yes: 'Tham dự', no: 'Vắng mặt' };
+    const STATUS_BADGE = { pending: 'status-pending', yes: 'status-yes', no: 'status-no' };
+    const CARD_BG      = { yes: 'card-yes', pending: 'card-pending', no: 'card-no' };
+
+    // ─── Init ────────────────────────────────────────────────────────────────
+    if (token) showAdmin();
+
+    // ─── Auth ────────────────────────────────────────────────────────────────
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      loginError.classList.add('hidden');
+      const username = document.getElementById('loginUsername').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      try {
+        const res = await fetch(`${API_BASE}/admin/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || 'Đăng nhập thất bại');
+        token = data.token;
+        localStorage.setItem('wedding_admin_token', token);
+        showAdmin();
+      } catch (err) {
+        loginError.textContent = err.message;
+        loginError.classList.remove('hidden');
+      }
+    });
+
+    logoutBtn.addEventListener('click', () => {
+      token = ''; localStorage.removeItem('wedding_admin_token');
+      guests = []; filteredGuests = [];
+      adminPage.classList.add('hidden');
+      loginPage.classList.remove('hidden');
+    });
+
+    function showAdmin() {
+      loginPage.classList.add('hidden');
+      adminPage.classList.remove('hidden');
+      loadGuests();
+    }
+
+    // ─── API helpers ──────────────────────────────────────────────────────────
+    async function apiFetch(path, options = {}) {
+      const res = await fetch(`${API_BASE}${path}`, {
+        ...options,
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`, ...(options.headers || {}) },
+      });
+      if (res.status === 401) {
+        token = ''; localStorage.removeItem('wedding_admin_token');
+        adminPage.classList.add('hidden'); loginPage.classList.remove('hidden');
+        throw new Error('Phiên đăng nhập hết hạn');
+      }
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Lỗi không xác định');
+      return data;
+    }
+
+    // ─── Copy to clipboard ────────────────────────────────────────────────────
+    async function copyText(text, btn) {
+      const origText = btn.textContent;
+      const origClass = btn.className;
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch {
+        const ta = document.createElement('textarea');
+        ta.value = text; document.body.appendChild(ta); ta.select();
+        document.execCommand('copy'); document.body.removeChild(ta);
+      }
+      btn.textContent = '✓ Đã copy';
+      btn.style.backgroundColor = '#16a34a';
+      setTimeout(() => { btn.textContent = origText; btn.style.backgroundColor = ''; }, 1800);
+    }
+
+    copyLinkModalBtn.addEventListener('click', () => copyText(inviteLinkInput.value, copyLinkModalBtn));
+
+    // ─── Load guests ──────────────────────────────────────────────────────────
+    async function loadGuests() {
+      cardGrid.innerHTML = `<div class="col-span-full text-center py-10 text-gray-400">Đang tải...</div>`;
+      guestTableBody.innerHTML = `<tr><td colspan="11" class="text-center py-10 text-gray-400">Đang tải...</td></tr>`;
+      try {
+        guests = await apiFetch('/guests');
+        applyFilter();
+      } catch (err) {
+        cardGrid.innerHTML = `<div class="col-span-full text-center py-10 text-red-400">${err.message}</div>`;
+        guestTableBody.innerHTML = `<tr><td colspan="11" class="text-center py-10 text-red-400">${err.message}</td></tr>`;
+      }
+    }
+
+    refreshBtn.addEventListener('click', loadGuests);
+    searchInput.addEventListener('input', applyFilter);
+    filterStatus.addEventListener('change', applyFilter);
+    sortField.addEventListener('change', () => { sortCol = sortField.value; sortDir = 'asc'; applyFilter(); });
+
+    // ─── Sort ──────────────────────────────────────────────────────────────────
+    function sortGuests(list) {
+      return [...list].sort((a, b) => {
+        let va, vb;
+        if (sortCol === 'status') {
+          va = STATUS_ORDER[a.status] ?? 9;
+          vb = STATUS_ORDER[b.status] ?? 9;
+        } else if (sortCol === 'guestCount') {
+          va = a.guestCount ?? 1; vb = b.guestCount ?? 1;
+        } else {
+          va = (a[sortCol] || '').toLowerCase();
+          vb = (b[sortCol] || '').toLowerCase();
+        }
+        if (va < vb) return sortDir === 'asc' ? -1 : 1;
+        if (va > vb) return sortDir === 'asc' ?  1 : -1;
+        return 0;
+      });
+    }
+
+    // ─── Filter & render ──────────────────────────────────────────────────────
+    function applyFilter() {
+      const q  = searchInput.value.trim().toLowerCase();
+      const st = filterStatus.value;
+      const filtered = guests.filter(g => {
+        const matchQ  = !q || g.invitationName.toLowerCase().includes(q) || g.name.toLowerCase().includes(q) || (g.phone || '').includes(q);
+        const matchSt = !st || g.status === st;
+        return matchQ && matchSt;
+      });
+      filteredGuests = sortGuests(filtered);
+      renderCards();
+      renderTable();
+      updateStats();
+      updateTableSortHeaders();
+    }
+
+    // ─── Stats ────────────────────────────────────────────────────────────────
+    function updateStats() {
+      const yes     = guests.filter(g => g.status === 'yes');
+      const total   = guests.length;
+      const yesCount= yes.length;
+      const noCount = guests.filter(g => g.status === 'no').length;
+      const pendingC= guests.filter(g => g.status === 'pending').length;
+
+      // Total people = sum of guestCount for "yes" attendees
+      const totalPeople  = yes.reduce((s, g) => s + (g.guestCount ?? 1), 0);
+      const joinGroup    = yes.filter(g => g.joinGroup).reduce((s, g) => s + (g.guestCount ?? 1), 0);
+      const selfDrive    = yes.filter(g => !g.joinGroup).reduce((s, g) => s + (g.guestCount ?? 1), 0);
+
+      // Pickup point breakdown
+      const pickupMap = {};
+      yes.filter(g => g.joinGroup && g.pickupPoint).forEach(g => {
+        const pt = g.pickupPoint.trim();
+        pickupMap[pt] = (pickupMap[pt] || 0) + (g.guestCount ?? 1);
+      });
+
+      document.getElementById('statTotal').textContent       = total;
+      document.getElementById('statYes').textContent         = yesCount;
+      document.getElementById('statNo').textContent          = noCount;
+      document.getElementById('statPending').textContent     = pendingC;
+      document.getElementById('statTotalPeople').textContent = totalPeople;
+      document.getElementById('statJoinGroup').textContent   = joinGroup;
+      document.getElementById('statSelfDrive').textContent   = selfDrive;
+
+      const chipsEl = document.getElementById('statPickupChips');
+      chipsEl.innerHTML = Object.entries(pickupMap).map(([pt, cnt]) => {
+        const short = pt.replace('Hanoi Central Point','Central Point').replace('BigC Thăng Long','BigC TL');
+        return `<div class="bg-orange-50 rounded-lg border border-orange-100 px-3 py-1.5 text-center min-w-[60px]">
+          <p class="text-lg font-bold text-orange-600 leading-none">${cnt}</p>
+          <p class="text-[10px] text-orange-400 mt-0.5">${esc(short)}</p>
+        </div>`;
+      }).join('');
+    }
+
+    // ─── Table sort header indicators ────────────────────────────────────────
+    function updateTableSortHeaders() {
+      document.querySelectorAll('th.sortable').forEach(th => {
+        th.classList.remove('sort-asc', 'sort-desc');
+        if (th.dataset.col === sortCol) {
+          th.classList.add(sortDir === 'asc' ? 'sort-asc' : 'sort-desc');
+        }
+      });
+    }
+
+    // Clicking column header toggles sort
+    document.querySelectorAll('th.sortable').forEach(th => {
+      th.addEventListener('click', () => {
+        if (sortCol === th.dataset.col) {
+          sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+        } else {
+          sortCol = th.dataset.col;
+          sortDir = 'asc';
+          // sync dropdown
+          if ([...sortField.options].some(o => o.value === sortCol)) sortField.value = sortCol;
+        }
+        applyFilter();
+      });
+    });
+
+    function esc(str) {
+      return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+    }
+
+    // ── Mobile card layout ────────────────────────────────────────────────────
+    function renderCards() {
+      if (filteredGuests.length === 0) {
+        cardGrid.innerHTML = `<div class="col-span-full text-center py-10 text-gray-400">Không có khách mời nào</div>`;
+        return;
+      }
+      cardGrid.innerHTML = filteredGuests.map(g => {
+        const link    = inviteLink(g._id);
+        const bgClass = CARD_BG[g.status] || 'card-pending';
+        const transport = g.joinGroup
+          ? `🚌 ${esc(g.pickupPoint || 'Đi chung')}`
+          : '🚗 Tự đến';
+        return `
+        <div class="rounded-xl shadow-sm border-2 px-3 py-2.5 card-hover cursor-pointer ${bgClass}"
+             onclick="openEdit('${g._id}')">
+          <!-- Row 1: names + badge -->
+          <div class="flex items-start justify-between gap-2 mb-1.5">
+            <div class="min-w-0 flex-1">
+              <p class="text-xs leading-tight truncate"><span class="text-[10px] text-gray-400">Thiệp: </span><span class="font-bold text-gray-800">${esc(g.invitationName)}</span> <span class="text-gray-300">·</span> <span class="text-[10px] text-gray-400">Khách: </span><span class="text-gray-600">${esc(g.name)}</span></p>
+            </div>
+            <span class="px-1.5 py-0.5 rounded-full text-[10px] font-semibold flex-shrink-0 ${STATUS_BADGE[g.status] || 'status-pending'}">
+              ${STATUS_LABEL[g.status] || g.status}
+            </span>
+          </div>
+          <!-- Row 2: details inline -->
+          <div class="flex flex-wrap gap-x-3 gap-y-0.5 text-[11px] text-gray-500 mb-2">
+            ${g.phone ? `<span>📞 ${esc(g.phone)}</span>` : ''}
+            ${g.status !== 'no' ? `<span>👥 ${g.guestCount ?? 1}</span>` : ''}
+            ${g.room ? `<span>🛏️ ${esc(g.room)}</span>` : ''}
+            ${g.status !== 'no' ? `<span>${transport}</span>` : ''}
+          </div>
+          <!-- Row 3: invite link -->
+          <div class="flex items-center gap-1.5 pt-1.5 border-t border-black/5" onclick="event.stopPropagation()">
+            <input type="text" readonly value="${esc(link)}"
+              class="flex-1 text-[10px] text-gray-400 bg-white/60 border border-black/10 rounded px-1.5 py-0.5 outline-none min-w-0" />
+            <button class="copy-btn flex-shrink-0 text-[10px] bg-rose-500 text-white px-2 py-0.5 rounded font-medium"
+              data-link="${esc(link)}">Copy</button>
+          </div>
+        </div>`;
+      }).join('');
+
+      cardGrid.querySelectorAll('.copy-btn').forEach(btn => {
+        btn.addEventListener('click', e => { e.stopPropagation(); copyText(btn.dataset.link, btn); });
+      });
+    }
+
+    // ── Desktop table layout ──────────────────────────────────────────────────
+    function renderTable() {
+      if (filteredGuests.length === 0) {
+        guestTableBody.innerHTML = `<tr><td colspan="11" class="text-center py-10 text-gray-400">Không có khách mời nào</td></tr>`;
+        tableInfo.textContent = '';
+        return;
+      }
+      const ROW_BG = { yes: 'bg-green-50/60', pending: '', no: 'bg-red-50/40' };
+      guestTableBody.innerHTML = filteredGuests.map(g => {
+        const link = inviteLink(g._id);
+        return `
+        <tr class="hover:brightness-95 transition cursor-pointer ${ROW_BG[g.status] || ''}" onclick="openEdit('${g._id}')">
+          <td class="px-3 py-2.5" onclick="event.stopPropagation()">
+            <div class="flex items-center gap-1.5">
+              <input type="text" readonly value="${esc(link)}"
+                class="text-[10px] text-gray-400 bg-gray-50 border border-gray-200 rounded px-1.5 py-1 outline-none w-28" />
+              <button class="copy-btn-table text-[10px] bg-rose-500 text-white px-2 py-1 rounded font-medium transition whitespace-nowrap"
+                data-link="${esc(link)}">Copy</button>
+            </div>
+          </td>
+          <td class="px-3 py-2.5">
+            <div class="text-[9px] uppercase tracking-wider text-gray-400 mb-0.5">Thiệp</div>
+            <div class="font-semibold text-gray-800 whitespace-nowrap">${esc(g.invitationName)}</div>
+          </td>
+          <td class="px-3 py-2.5">
+            <div class="text-[9px] uppercase tracking-wider text-gray-400 mb-0.5">Khách</div>
+            <div class="text-gray-600 whitespace-nowrap">${esc(g.name)}</div>
+          </td>
+          <td class="px-3 py-2.5 text-gray-500 text-sm">${esc(g.phone || '—')}</td>
+          <td class="px-3 py-2.5">
+            <span class="px-2 py-1 rounded-full text-xs font-medium ${STATUS_BADGE[g.status] || 'status-pending'}">
+              ${STATUS_FULL[g.status] || g.status}
+            </span>
+          </td>
+          <td class="px-3 py-2.5 text-center text-gray-600 font-medium">${g.status !== 'no' ? (g.guestCount ?? 1) : '—'}</td>
+          <td class="px-3 py-2.5 text-center">${g.status !== 'no' ? (g.joinGroup ? '✓' : '—') : '—'}</td>
+          <td class="px-3 py-2.5 text-gray-500 text-sm">${g.status !== 'no' ? esc(g.pickupPoint || '—') : '—'}</td>
+          <td class="px-3 py-2.5 text-gray-500 text-sm">${esc(g.room || '—')}</td>
+          <td class="px-3 py-2.5 text-gray-400 text-sm max-w-[120px] truncate" title="${esc(g.note || '')}">${esc(g.note || '—')}</td>
+          <td class="px-3 py-2.5 text-center whitespace-nowrap" onclick="event.stopPropagation()">
+            <button onclick="openEdit('${g._id}')"
+              class="text-blue-500 hover:text-blue-700 text-xs font-medium mr-2">Sửa</button>
+            <button onclick="openDelete('${g._id}', '${esc(g.invitationName)}')"
+              class="text-red-400 hover:text-red-600 text-xs font-medium">Xóa</button>
+          </td>
+        </tr>`;
+      }).join('');
+
+      tableInfo.textContent = `Hiển thị ${filteredGuests.length} / ${guests.length} khách mời`;
+
+      guestTableBody.querySelectorAll('.copy-btn-table').forEach(btn => {
+        btn.addEventListener('click', e => { e.stopPropagation(); copyText(btn.dataset.link, btn); });
+      });
+    }
+
+    // ─── Guest modal ──────────────────────────────────────────────────────────
+    addGuestBtn.addEventListener('click', openAdd);
+    modalCloseBtn.addEventListener('click', closeModal);
+    modalCancelBtn.addEventListener('click', closeModal);
+    guestModal.addEventListener('click', e => { if (e.target === guestModal) closeModal(); });
+
+    function openAdd() {
+      editingId = null;
+      modalTitle.textContent = 'Thêm khách mời';
+      guestForm.reset();
+      document.getElementById('fGuestCount').value = 1;
+      document.getElementById('fStatus').value = 'pending';
+      inviteLinkRow.classList.add('hidden');
+      formError.classList.add('hidden');
+      guestModal.classList.remove('hidden');
+    }
+
+    function openEdit(id) {
+      const g = guests.find(x => x._id === id);
+      if (!g) return;
+      editingId = id;
+      modalTitle.textContent = 'Sửa khách mời';
+      document.getElementById('guestId').value          = g._id;
+      document.getElementById('fInvitationName').value  = g.invitationName || '';
+      document.getElementById('fName').value            = g.name || '';
+      document.getElementById('fPhone').value           = g.phone || '';
+      document.getElementById('fStatus').value          = g.status || 'pending';
+      document.getElementById('fGuestCount').value      = g.guestCount ?? 1;
+      document.getElementById('fJoinGroup').checked     = !!g.joinGroup;
+      document.getElementById('fPickupPoint').value     = g.pickupPoint || '';
+      document.getElementById('fRoom').value            = g.room || '';
+      document.getElementById('fNote').value            = g.note || '';
+      inviteLinkInput.value = inviteLink(g._id);
+      inviteLinkRow.classList.remove('hidden');
+      formError.classList.add('hidden');
+      guestModal.classList.remove('hidden');
+    }
+
+    function closeModal() { guestModal.classList.add('hidden'); editingId = null; }
+
+    guestForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      formError.classList.add('hidden');
+      const payload = {
+        invitationName: document.getElementById('fInvitationName').value.trim(),
+        name:           document.getElementById('fName').value.trim(),
+        phone:          document.getElementById('fPhone').value.trim(),
+        status:         document.getElementById('fStatus').value,
+        guestCount:     parseInt(document.getElementById('fGuestCount').value, 10) || 0,
+        joinGroup:      document.getElementById('fJoinGroup').checked,
+        pickupPoint:    document.getElementById('fPickupPoint').value.trim(),
+        room:           document.getElementById('fRoom').value.trim(),
+        note:           document.getElementById('fNote').value.trim(),
+      };
+      try {
+        if (editingId) {
+          await apiFetch(`/guests/${editingId}`, { method: 'PUT', body: JSON.stringify(payload) });
+        } else {
+          await apiFetch('/guests', { method: 'POST', body: JSON.stringify(payload) });
+        }
+        closeModal();
+        await loadGuests();
+      } catch (err) {
+        formError.textContent = err.message;
+        formError.classList.remove('hidden');
+      }
+    });
+
+    // ─── Delete modal ─────────────────────────────────────────────────────────
+    deleteCancelBtn.addEventListener('click', () => { deleteModal.classList.add('hidden'); deletingId = null; });
+    deleteModal.addEventListener('click', e => { if (e.target === deleteModal) { deleteModal.classList.add('hidden'); deletingId = null; } });
+
+    function openDelete(id, name) {
+      deletingId = id; deleteGuestName.textContent = name;
+      deleteModal.classList.remove('hidden');
+    }
+
+    deleteConfirmBtn.addEventListener('click', async () => {
+      if (!deletingId) return;
+      try {
+        await apiFetch(`/guests/${deletingId}`, { method: 'DELETE' });
+        deleteModal.classList.add('hidden'); deletingId = null;
+        await loadGuests();
+      } catch (err) { alert('Lỗi khi xóa: ' + err.message); }
+    });
+  </script>
+</body>
+</html>

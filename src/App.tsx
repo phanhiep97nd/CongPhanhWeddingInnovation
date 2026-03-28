@@ -34,13 +34,7 @@ const ZALO_GROUP_LINK = "https://zalo.me/g/xxxxxxx";
 // TODO: Cập nhật YouTube video ID nhạc Thủy Hử (ví dụ: "uM5mFpEahDU")
 const YOUTUBE_MUSIC_ID = "";
 
-const ROOM_ASSIGNMENTS = [
-  { room: "Phòng 101", guests: "Nguyễn Văn A · Trần Thị B" },
-  { room: "Phòng 102", guests: "Lê Văn C · Phạm Thị D" },
-  { room: "Phòng 103", guests: "Hoàng Văn E · Vũ Thị F" },
-  { room: "Phòng 201", guests: "Đặng Văn G · Bùi Thị H" },
-  { room: "Phòng 202", guests: "Phan Văn I · Đỗ Thị K" },
-];
+const API_BASE = "/api";
 
 // ── Photo sharing ─────────────────────────────────────────────────────────────
 interface Photo {
@@ -114,9 +108,20 @@ function Reveal({ children, className = "", variants = stagger as any, delay = 0
 }
 
 // ── App ───────────────────────────────────────────────────────────────────────
+interface GuestInfo {
+  _id: string;
+  invitationName: string;
+  name: string;
+  status: "pending" | "yes" | "no";
+  room?: string;
+}
+
 export default function App() {
   const [showRSVP, setShowRSVP] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [showInvite, setShowInvite] = useState(false);
+  const [guestId, setGuestId] = useState<string | null>(null);
+  const [guestInfo, setGuestInfo] = useState<GuestInfo | null>(null);
   const [activeSection, setActiveSection] = useState<string>("story");
   const [bgPlaying, setBgPlaying] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -143,9 +148,31 @@ export default function App() {
     return () => observers.forEach((o) => o.disconnect());
   }, []);
 
+  // Parse ?id= or ?ID= from URL, fetch guest info
   useEffect(() => {
-    const t = setTimeout(() => setShowRSVP(true), 2500);
-    return () => clearTimeout(t);
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id") || params.get("ID");
+    if (!id) {
+      // No guest ID: show RSVP popup after delay
+      const t = setTimeout(() => setShowRSVP(true), 2500);
+      return () => clearTimeout(t);
+    }
+    setGuestId(id);
+    fetch(`${API_BASE}/guests/${id}`)
+      .then((r) => r.ok ? r.json() : null)
+      .then((data) => {
+        if (data) {
+          setGuestInfo(data);
+          setShowInvite(true);
+        } else {
+          const t = setTimeout(() => setShowRSVP(true), 2500);
+          return () => clearTimeout(t);
+        }
+      })
+      .catch(() => {
+        const t = setTimeout(() => setShowRSVP(true), 2500);
+        return () => clearTimeout(t);
+      });
   }, []);
 
   // Autoplay background music at 60% volume on load
@@ -156,17 +183,17 @@ export default function App() {
     audio.play().then(() => setBgPlaying(true)).catch(() => {});
   }, []);
 
-  // Pause bg music while any popup is open; always resume when both are closed
+  // Pause bg music while any popup is open; always resume when all are closed
   useEffect(() => {
     const audio = bgAudioRef.current;
     if (!audio) return;
-    if (showRSVP || showConfirmation) {
+    if (showRSVP || showConfirmation || showInvite) {
       audio.pause();
     } else {
       audio.volume = 0.6;
       audio.play().then(() => setBgPlaying(true)).catch(() => {});
     }
-  }, [showRSVP, showConfirmation]);
+  }, [showRSVP, showConfirmation, showInvite]);
 
   const toggleBgMusic = () => {
     const audio = bgAudioRef.current;
@@ -418,6 +445,8 @@ export default function App() {
                 </button>
                 <div className="px-5 pb-8 pt-2 md:px-8">
                   <RSVPForm
+                    defaultName={guestInfo?.invitationName ?? ""}
+                    guestId={guestId ?? undefined}
                     onComplete={() => setShowRSVP(false)}
                     onConfirm={() => {
                       setShowRSVP(false);
@@ -439,6 +468,24 @@ export default function App() {
             onScrollToInfo={() => {
               setShowConfirmation(false);
               setTimeout(() => scrollTo("info"), 300);
+            }}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* ── Invite Popup ── */}
+      <AnimatePresence>
+        {showInvite && guestInfo && (
+          <InvitePopup
+            invitationName={guestInfo.invitationName}
+            alreadyConfirmed={guestInfo.status === "yes"}
+            onConfirm={() => {
+              setShowInvite(false);
+              if (guestInfo.status !== "yes") {
+                setTimeout(() => setShowRSVP(true), 300);
+              } else {
+                setTimeout(() => setShowConfirmation(true), 300);
+              }
             }}
           />
         )}
@@ -497,6 +544,80 @@ export default function App() {
         </div>
       </nav>
     </div>
+  );
+}
+
+// ── Invite Popup ──────────────────────────────────────────────────────────────
+function InvitePopup({ invitationName, alreadyConfirmed, onConfirm }: { invitationName: string; alreadyConfirmed?: boolean; onConfirm: () => void }) {
+  return (
+    <>
+      <motion.div
+        key="invite-backdrop"
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+        transition={{ duration: 0.3 }}
+        className="fixed inset-0 z-[99] bg-black/60"
+      />
+      <motion.div
+        key="invite-modal"
+        initial={{ opacity: 0, scale: 0.85, y: 40 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.85, y: 40 }}
+        transition={{ type: "spring", damping: 26, stiffness: 280 }}
+        className="fixed inset-0 z-[100] flex items-center justify-center p-6 pointer-events-none"
+      >
+        <div className="relative w-full max-w-sm bg-white rounded-[2rem] shadow-2xl overflow-hidden pointer-events-auto text-center">
+          {/* Top image strip */}
+          <div className="h-36 overflow-hidden relative">
+            <img src="/images/DSCF7860.jpg" alt="" className="w-full h-full object-cover object-top brightness-90" />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-white" />
+            <div className="absolute bottom-2 left-0 right-0 flex justify-center">
+              <span className="font-script text-2xl text-secondary drop-shadow-sm flex items-center gap-2">
+                <span>Ph.Anh</span>
+                <Heart size={14} className="text-primary fill-primary" />
+                <span>M.Công</span>
+              </span>
+            </div>
+          </div>
+
+          <div className="px-8 py-8">
+            <motion.div
+              animate={{ scale: [1, 1.25, 1] }}
+              transition={{ repeat: Infinity, duration: 2.2, ease: "easeInOut" }}
+              className="inline-block text-primary mb-5"
+            >
+              <Heart size={40} className="fill-primary" />
+            </motion.div>
+
+            <h2 className="font-serif text-xl text-secondary italic leading-snug mb-6">
+              <span className="font-bold not-italic text-primary-deep">{invitationName}</span>
+              <br />
+              <span className="text-secondary/80">nhận được lời mời trân trọng từ</span>
+              <br />
+              <span className="text-sage font-medium not-italic">cô dâu Phương Anh</span>
+              <span className="text-secondary/60"> và </span>
+              <span className="text-sage font-medium not-italic">chú rể Minh Công</span>
+            </h2>
+
+            {alreadyConfirmed && (
+              <p className="text-sm font-semibold text-sage mb-3">
+                🎉 Bạn đã xác nhận tham gia, hãy nhớ lịch nhé!
+              </p>
+            )}
+
+            <p className="text-xs text-secondary/50 italic mb-8">Private Wedding — 03-04 · 04 · 2026 — Aman Villa</p>
+
+            <motion.button
+              onClick={onConfirm}
+              whileHover={{ y: -2, boxShadow: "0 12px 40px rgba(201,132,139,0.4)" }}
+              whileTap={{ scale: 0.97 }}
+              className="w-full py-4 bg-primary-dark hover:bg-primary-deep text-white rounded-full font-bold tracking-widest transition-colors"
+            >
+              {alreadyConfirmed ? "→ Tiếp tục khám phá" : "Xác nhận tham dự 💌"}
+            </motion.button>
+          </div>
+        </div>
+      </motion.div>
+    </>
   );
 }
 
@@ -694,16 +815,58 @@ function GalleryCard({ photo, index, isActive, onToggle }: {
 }
 
 // ── RSVP Form ─────────────────────────────────────────────────────────────────
-function RSVPForm({ onComplete, onConfirm }: { onComplete?: () => void; onConfirm?: () => void }) {
+function RSVPForm({
+  defaultName = "",
+  guestId,
+  onComplete,
+  onConfirm,
+}: {
+  defaultName?: string;
+  guestId?: string;
+  onComplete?: () => void;
+  onConfirm?: () => void;
+}) {
   const [attendance, setAttendance] = useState<"yes" | "no" | null>(null);
-  const [name, setName] = useState("");
+  const [name, setName] = useState(defaultName);
   const [phone, setPhone] = useState("");
   const [guests, setGuests] = useState(1);
   const [wantRide, setWantRide] = useState<boolean | null>(null);
   const [pickupPoint, setPickupPoint] = useState("BigC Thăng Long");
+  const [submitting, setSubmitting] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const validate = () => {
+    const errs: Record<string, string> = {};
+    if (!attendance) errs.attendance = "Vui lòng chọn tham dự hay không.";
+    if (attendance === "yes") {
+      if (!name.trim()) errs.name = "Vui lòng nhập họ tên.";
+      if (!phone.trim()) errs.phone = "Vui lòng nhập số điện thoại.";
+      else if (!/^[0-9]{9,11}$/.test(phone.replace(/\s/g, ""))) errs.phone = "Số điện thoại không hợp lệ.";
+      if (guests < 1) errs.guests = "Số khách ít nhất là 1.";
+      if (wantRide === null) errs.wantRide = "Vui lòng chọn hình thức di chuyển.";
+    }
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!validate()) return;
+    if (guestId) {
+      setSubmitting(true);
+      try {
+        await fetch(`${API_BASE}/guests/${guestId}/rsvp`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(
+            attendance === "yes"
+              ? { status: "yes", guestCount: guests, joinGroup: wantRide ?? false, pickupPoint: wantRide ? pickupPoint : "", phone, name }
+              : { status: "no",  guestCount: 0, joinGroup: false, pickupPoint: "" }
+          ),
+        });
+      } catch {}
+      setSubmitting(false);
+    }
     if (attendance === "yes") onConfirm?.();
     else onComplete?.();
   };
@@ -731,21 +894,22 @@ function RSVPForm({ onComplete, onConfirm }: { onComplete?: () => void; onConfir
       <div className="mb-6">
         <p className="text-[10px] font-bold uppercase tracking-widest text-secondary/40 mb-3">Bạn có tham dự không?</p>
         <div className="grid grid-cols-2 gap-3">
-          <button type="button" onClick={() => setAttendance("yes")}
+          <button type="button" onClick={() => { setAttendance("yes"); setErrors(e => ({...e, attendance: ""})); }}
             className={`flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all ${
-              attendance === "yes" ? "border-primary-dark bg-primary/15" : "border-primary/20 bg-blush hover:bg-primary/10"
+              attendance === "yes" ? "border-primary-dark bg-primary/15" : errors.attendance ? "border-red-300 bg-red-50" : "border-primary/20 bg-blush hover:bg-primary/10"
             }`}>
             <span className="text-3xl">🥂</span>
             <span className="font-bold text-sm text-secondary">Nhất định rồi!</span>
           </button>
-          <button type="button" onClick={() => setAttendance("no")}
+          <button type="button" onClick={() => { setAttendance("no"); setErrors(e => ({...e, attendance: ""})); }}
             className={`flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all ${
-              attendance === "no" ? "border-secondary/40 bg-secondary/10" : "border-primary/20 bg-blush hover:bg-secondary/5"
+              attendance === "no" ? "border-secondary/40 bg-secondary/10" : errors.attendance ? "border-red-300 bg-red-50" : "border-primary/20 bg-blush hover:bg-secondary/5"
             }`}>
             <span className="text-3xl">😔</span>
             <span className="font-bold text-sm text-secondary">Sorry...</span>
           </button>
         </div>
+        {errors.attendance && <p className="text-xs text-red-500 mt-2 ml-1">{errors.attendance}</p>}
       </div>
 
       {/* Form – only if "yes" */}
@@ -759,27 +923,40 @@ function RSVPForm({ onComplete, onConfirm }: { onComplete?: () => void; onConfir
           >
             <div>
               <label className="block text-[10px] font-bold uppercase tracking-widest text-secondary/40 mb-2 ml-1">Họ và tên</label>
-              <input type="text" required value={name} onChange={(e) => setName(e.target.value)}
+              <input type="text" value={name} onChange={(e) => { setName(e.target.value); setErrors(er => ({...er, name: ""})); }}
                 placeholder="Nhập tên của bạn"
-                className="w-full px-5 py-3.5 rounded-2xl bg-blush border border-primary/20 focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all outline-none text-secondary" />
+                className={`w-full px-5 py-3.5 rounded-2xl bg-blush border focus:bg-white focus:ring-2 focus:ring-primary/20 transition-all outline-none text-secondary ${errors.name ? "border-red-400" : "border-primary/20 focus:border-primary"}`} />
+              {errors.name && <p className="text-xs text-red-500 mt-1 ml-1">{errors.name}</p>}
             </div>
 
             <div>
               <label className="block text-[10px] font-bold uppercase tracking-widest text-secondary/40 mb-2 ml-1 flex items-center gap-1">
                 <Phone size={10} className="inline" /> Số điện thoại
               </label>
-              <input type="tel" required value={phone} onChange={(e) => setPhone(e.target.value)}
+              <input type="tel" value={phone} onChange={(e) => { setPhone(e.target.value); setErrors(er => ({...er, phone: ""})); }}
                 placeholder="0912 345 678"
-                className="w-full px-5 py-3.5 rounded-2xl bg-blush border border-primary/20 focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all outline-none text-secondary" />
+                className={`w-full px-5 py-3.5 rounded-2xl bg-blush border focus:bg-white focus:ring-2 focus:ring-primary/20 transition-all outline-none text-secondary ${errors.phone ? "border-red-400" : "border-primary/20 focus:border-primary"}`} />
+              {errors.phone && <p className="text-xs text-red-500 mt-1 ml-1">{errors.phone}</p>}
             </div>
 
             <div>
               <label className="block text-[10px] font-bold uppercase tracking-widest text-secondary/40 mb-2 ml-1 flex items-center gap-1">
                 <Users size={10} className="inline" /> Số lượng khách
               </label>
-              <input type="number" required min={1} max={20} value={guests}
-                onChange={(e) => setGuests(Math.max(1, Number(e.target.value)))}
-                className="w-full px-5 py-3.5 rounded-2xl bg-blush border border-primary/20 focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all outline-none text-secondary" />
+              <div className="flex items-center gap-0 rounded-2xl bg-blush border border-primary/20 overflow-hidden">
+                <button type="button"
+                  onClick={() => { setGuests(g => Math.max(1, g - 1)); setErrors(er => ({...er, guests: ""})); }}
+                  className="w-14 h-14 text-2xl text-secondary/60 hover:bg-primary/10 transition-colors flex-shrink-0 flex items-center justify-center">
+                  −
+                </button>
+                <span className="flex-1 text-center font-bold text-xl text-secondary select-none">{guests}</span>
+                <button type="button"
+                  onClick={() => { setGuests(g => Math.min(20, g + 1)); setErrors(er => ({...er, guests: ""})); }}
+                  className="w-14 h-14 text-2xl text-secondary/60 hover:bg-primary/10 transition-colors flex-shrink-0 flex items-center justify-center">
+                  +
+                </button>
+              </div>
+              {errors.guests && <p className="text-xs text-red-500 mt-1 ml-1">{errors.guests}</p>}
             </div>
 
             <div>
@@ -787,19 +964,20 @@ function RSVPForm({ onComplete, onConfirm }: { onComplete?: () => void; onConfir
                 <Bus size={10} className="inline" /> Có đi xe cùng đoàn không?
               </p>
               <div className="flex gap-3 mb-3">
-                <button type="button" onClick={() => setWantRide(true)}
+                <button type="button" onClick={() => { setWantRide(true); setErrors(er => ({...er, wantRide: ""})); }}
                   className={`flex-1 py-2.5 rounded-xl border-2 text-sm font-semibold transition-all ${
-                    wantRide === true ? "border-primary-dark bg-primary/15 text-secondary" : "border-primary/20 bg-blush text-secondary/60 hover:bg-primary/10"
+                    wantRide === true ? "border-primary-dark bg-primary/15 text-secondary" : errors.wantRide ? "border-red-300 bg-red-50 text-secondary/60" : "border-primary/20 bg-blush text-secondary/60 hover:bg-primary/10"
                   }`}>
                   Có, đi chung 🚌
                 </button>
-                <button type="button" onClick={() => setWantRide(false)}
+                <button type="button" onClick={() => { setWantRide(false); setErrors(er => ({...er, wantRide: ""})); }}
                   className={`flex-1 py-2.5 rounded-xl border-2 text-sm font-semibold transition-all ${
-                    wantRide === false ? "border-secondary/30 bg-secondary/10 text-secondary" : "border-primary/20 bg-blush text-secondary/60 hover:bg-secondary/5"
+                    wantRide === false ? "border-secondary/30 bg-secondary/10 text-secondary" : errors.wantRide ? "border-red-300 bg-red-50 text-secondary/60" : "border-primary/20 bg-blush text-secondary/60 hover:bg-secondary/5"
                   }`}>
                   Tự đến 🚗
                 </button>
               </div>
+              {errors.wantRide && <p className="text-xs text-red-500 mb-2 ml-1">{errors.wantRide}</p>}
 
               <AnimatePresence>
                 {wantRide === true && (
@@ -818,11 +996,11 @@ function RSVPForm({ onComplete, onConfirm }: { onComplete?: () => void; onConfir
               </AnimatePresence>
             </div>
 
-            <motion.button type="submit"
+            <motion.button type="submit" disabled={submitting}
               whileHover={{ y: -2, boxShadow: "0 12px 40px rgba(201,132,139,0.4)" }}
               whileTap={{ scale: 0.97 }}
-              className="w-full py-4 bg-primary-dark hover:bg-primary-deep text-white rounded-full font-bold tracking-widest transition-colors mt-2">
-              GỬI XÁC NHẬN 💌
+              className="w-full py-4 bg-primary-dark hover:bg-primary-deep text-white rounded-full font-bold tracking-widest transition-colors mt-2 disabled:opacity-60">
+              {submitting ? "Đang gửi..." : "GỬI XÁC NHẬN 💌"}
             </motion.button>
           </motion.form>
         )}
@@ -956,13 +1134,82 @@ function ConfirmationPopup({ onClose, onScrollToInfo }: {
 }
 
 // ── Info Section ──────────────────────────────────────────────────────────────
+interface RoomRow { invitationName: string; room: string; }
+
+function RoomTable({ rooms }: { rooms: RoomRow[] }) {
+  const [query, setQuery] = useState("");
+  const filtered = query.trim()
+    ? rooms.filter((r) => r.invitationName.toLowerCase().includes(query.toLowerCase()))
+    : rooms;
+
+  return (
+    <div className="bg-white rounded-3xl border border-primary/20 overflow-hidden shadow-lg">
+      <div className="bg-gradient-to-r from-sage/20 to-primary/10 px-6 py-4 border-b border-primary/15">
+        <h4 className="font-serif text-2xl text-secondary italic flex items-center gap-3 mb-3">
+          <span>🛏️</span> Bảng phân phòng
+        </h4>
+        <input
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Tìm tên..."
+          className="w-full px-4 py-2 rounded-xl bg-white/80 border border-primary/20 text-sm text-secondary outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+        />
+        <p className="text-secondary/50 text-xs mt-2">Aman Villa · 03–04/04/2026</p>
+      </div>
+      <div className="overflow-y-auto" style={{ maxHeight: "320px" }}>
+        <table className="w-full">
+          <thead className="sticky top-0">
+            <tr className="bg-blush/60 backdrop-blur-sm">
+              <th className="px-6 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-secondary/40">Tên trong thiệp</th>
+              <th className="px-6 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-secondary/40">Phòng nghỉ</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rooms.length === 0 ? (
+              <tr>
+                <td colSpan={2} className="px-6 py-6 text-center text-sm text-secondary/40 italic">
+                  Chưa có thông tin phân phòng
+                </td>
+              </tr>
+            ) : filtered.length === 0 ? (
+              <tr>
+                <td colSpan={2} className="px-6 py-6 text-center text-sm text-secondary/40 italic">
+                  Không tìm thấy kết quả
+                </td>
+              </tr>
+            ) : filtered.map((row, i) => (
+              <tr key={i} className={`border-t border-primary/10 ${i % 2 !== 0 ? "bg-blush/20" : ""}`}>
+                <td className="px-6 py-3 text-sm text-secondary/70">{row.invitationName}</td>
+                <td className="px-6 py-3 font-semibold text-sm text-secondary whitespace-nowrap">{row.room}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
 function InfoSection() {
   const [photos, setPhotos] = useState<Photo[]>(() => {
-    try { return JSON.parse(localStorage.getItem("wedding_photos") ?? "[]"); }
+    try {
+      const all: Photo[] = JSON.parse(localStorage.getItem("wedding_photos") ?? "[]");
+      // Blob URLs are session-only — discard them on reload
+      return all.filter((p) => !p.url.startsWith("blob:"));
+    }
     catch { return []; }
   });
   const [showUpload, setShowUpload] = useState(false);
   const [showFeed, setShowFeed] = useState(false);
+  const [rooms, setRooms] = useState<RoomRow[]>([]);
+
+  useEffect(() => {
+    fetch(`${API_BASE}/guests/rooms`)
+      .then((r) => r.ok ? r.json() : [])
+      .then((data: RoomRow[]) => { if (Array.isArray(data)) setRooms(data); })
+      .catch(() => {});
+  }, []);
 
   const addPhoto = (p: Photo) => {
     const updated = [p, ...photos];
@@ -1010,32 +1257,7 @@ function InfoSection() {
 
         {/* Room Assignments */}
         <Reveal variants={fadeUp}>
-          <div className="bg-white rounded-3xl border border-primary/20 overflow-hidden shadow-lg">
-            <div className="bg-gradient-to-r from-sage/20 to-primary/10 px-8 py-5 border-b border-primary/15">
-              <h4 className="font-serif text-2xl text-secondary italic flex items-center gap-3">
-                <span>🛏️</span> Bảng phân phòng
-              </h4>
-              <p className="text-secondary/50 text-xs mt-1">Aman Villa · 03–04/04/2026</p>
-            </div>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="bg-blush/50">
-                    <th className="px-6 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-secondary/40">Phòng</th>
-                    <th className="px-6 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-secondary/40">Khách</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {ROOM_ASSIGNMENTS.map((row, i) => (
-                    <tr key={i} className={`border-t border-primary/10 ${i % 2 !== 0 ? "bg-blush/20" : ""}`}>
-                      <td className="px-6 py-4 font-semibold text-sm text-secondary whitespace-nowrap">{row.room}</td>
-                      <td className="px-6 py-4 text-sm text-secondary/70">{row.guests}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
+          <RoomTable rooms={rooms} />
         </Reveal>
 
         {/* Google Maps */}
@@ -1141,7 +1363,8 @@ function PhotoSlide({ photos, onUpload, onOpenFeed }: {
                   className="absolute inset-0"
                 >
                   <img src={photos[idx].url} alt={photos[idx].caption}
-                    className="w-full h-full object-cover" />
+                    className="w-full h-full object-cover"
+                    onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }} />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex flex-col justify-end p-4">
                     <p className="text-white font-semibold text-sm leading-tight">{photos[idx].author}</p>
                     {photos[idx].caption && (
@@ -1370,7 +1593,8 @@ function PhotoFeedPopup({ photos, onClose, onUpload }: {
                   className="break-inside-avoid mb-3 rounded-2xl overflow-hidden shadow-md border border-primary/10 bg-white cursor-pointer"
                   onClick={() => setLightbox(p)}
                 >
-                  <img src={p.url} alt={p.caption} className="w-full object-cover hover:opacity-95 transition-opacity" />
+                  <img src={p.url} alt={p.caption} className="w-full object-cover hover:opacity-95 transition-opacity"
+                    onError={(e) => { (e.currentTarget as HTMLImageElement).closest("div")?.remove(); }} />
                   <div className="p-3">
                     <p className="font-semibold text-sm text-secondary">{p.author}</p>
                     {p.caption && (
