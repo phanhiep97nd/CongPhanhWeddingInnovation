@@ -1185,7 +1185,7 @@ function ConfirmationPopup({ onClose, onScrollToInfo, onNext }: {
 // ── Dress Code Popup ──────────────────────────────────────────────────────────
 function BrideFigure() {
   return (
-    <svg viewBox="0 0 100 210" className="w-24 h-auto drop-shadow-lg" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 100 212" className="w-24 h-auto drop-shadow-lg" fill="none" xmlns="http://www.w3.org/2000/svg">
       {/* Veil */}
       <path d="M50 12 Q72 2 84 22 Q80 45 74 58" stroke="white" strokeWidth="2.5" strokeLinecap="round" opacity="0.9"/>
       <path d="M50 12 Q28 2 16 22 Q20 45 26 58" stroke="white" strokeWidth="2.5" strokeLinecap="round" opacity="0.9"/>
@@ -1196,12 +1196,12 @@ function BrideFigure() {
       <circle cx="50" cy="34" r="16" fill="#f5c9a0"/>
       {/* Neck */}
       <path d="M44 48 L56 48 L57 60 L43 60 Z" fill="#f5c9a0"/>
-      {/* Bodice */}
+      {/* Bodice — Hồng */}
       <path d="M30 58 Q50 50 70 58 L73 92 Q50 98 27 92 Z" fill="#F2C8CD"/>
-      {/* Waist ribbon */}
-      <path d="M27 90 Q50 96 73 90" stroke="white" strokeWidth="2" opacity="0.6"/>
-      {/* Skirt */}
-      <path d="M27 88 Q50 96 73 88 L90 200 L10 200 Z" fill="#8DA06B"/>
+      {/* Waist ribbon — Be */}
+      <path d="M27 90 Q50 97 73 90" stroke="#D4C5A9" strokeWidth="4" strokeLinecap="round" opacity="0.95"/>
+      {/* Skirt — Xanh lá */}
+      <path d="M27 88 Q50 96 73 88 L90 198 L10 198 Z" fill="#8DA06B"/>
       {/* Skirt overlay highlight */}
       <path d="M40 105 Q50 108 65 103 L72 155 Q50 165 30 155 Z" fill="white" opacity="0.08"/>
       {/* Left arm */}
@@ -1215,6 +1215,9 @@ function BrideFigure() {
       <circle cx="18" cy="94" r="6" fill="white"   opacity="0.6"/>
       {/* Neckline detail */}
       <path d="M40 58 Q50 54 60 58" stroke="white" strokeWidth="1.5" opacity="0.5"/>
+      {/* Shoes — Đen */}
+      <ellipse cx="29" cy="201" rx="13" ry="5" fill="#1a1a1a"/>
+      <ellipse cx="71" cy="201" rx="13" ry="5" fill="#1a1a1a"/>
     </svg>
   );
 }
@@ -1228,48 +1231,53 @@ function GroomFigure() {
       <circle cx="45" cy="30" r="15" fill="#d4956a"/>
       {/* Neck */}
       <path d="M39 43 L51 43 L52 54 L38 54 Z" fill="#d4956a"/>
-      {/* White shirt */}
-      <path d="M30 52 Q45 46 60 52 L62 100 Q45 104 28 100 Z" fill="white"/>
-      {/* Suit jacket left panel */}
+      {/* Shirt — Be */}
+      <path d="M30 52 Q45 46 60 52 L62 100 Q45 104 28 100 Z" fill="#D4C5A9"/>
+      {/* Suit jacket left panel — Đen */}
       <path d="M14 58 L30 52 L30 118 L14 118 Z" fill="#1a1a1a"/>
-      {/* Suit jacket right panel */}
+      {/* Suit jacket right panel — Đen */}
       <path d="M60 52 L76 58 L76 118 L60 118 Z" fill="#1a1a1a"/>
-      {/* Left lapel */}
+      {/* Left lapel — Đen */}
       <path d="M30 52 L20 58 L28 76 L34 66 Z" fill="#1a1a1a"/>
-      {/* Right lapel */}
+      {/* Right lapel — Đen */}
       <path d="M60 52 L70 58 L62 76 L56 66 Z" fill="#1a1a1a"/>
-      {/* Tie */}
+      {/* Tie — Xanh lá */}
       <path d="M42 52 L48 52 L50 78 L45 92 L40 78 Z" fill="#8DA06B"/>
       {/* Tie knot */}
       <path d="M42 52 Q45 56 48 52 L46 60 L44 60 Z" fill="#6d7d52"/>
-      {/* Belt */}
+      {/* Belt — Đen */}
       <rect x="14" y="116" width="62" height="7" rx="2" fill="#111"/>
-      {/* Left trouser */}
+      {/* Left trouser — Đen */}
       <rect x="14" y="120" width="28" height="82" rx="3" fill="#222"/>
-      {/* Right trouser */}
+      {/* Right trouser — Đen */}
       <rect x="48" y="120" width="28" height="82" rx="3" fill="#222"/>
       {/* Trouser crease */}
       <line x1="28" y1="125" x2="28" y2="200" stroke="#333" strokeWidth="1"/>
       <line x1="62" y1="125" x2="62" y2="200" stroke="#333" strokeWidth="1"/>
-      {/* Left arm */}
+      {/* Left arm — Đen */}
       <path d="M14 62 Q2 84 6 108" stroke="#1a1a1a" strokeWidth="13" strokeLinecap="round"/>
-      {/* Right arm */}
+      {/* Right arm — Đen */}
       <path d="M76 62 Q88 84 84 108" stroke="#1a1a1a" strokeWidth="13" strokeLinecap="round"/>
-      {/* Shirt cuffs */}
-      <circle cx="6"  cy="109" r="5.5" fill="white"/>
-      <circle cx="84" cy="109" r="5.5" fill="white"/>
-      {/* Pocket square */}
-      <path d="M16 72 L22 70 L23 78 L17 78 Z" fill="white" opacity="0.7"/>
+      {/* Shirt cuffs — Be */}
+      <circle cx="6"  cy="109" r="5.5" fill="#D4C5A9"/>
+      <circle cx="84" cy="109" r="5.5" fill="#D4C5A9"/>
+      {/* Pocket square — Be */}
+      <path d="M16 72 L22 70 L23 78 L17 78 Z" fill="#D4C5A9" opacity="0.9"/>
     </svg>
   );
 }
 
 function DressCodePopup({ onClose }: { onClose: () => void }) {
-  const PALETTE = [
-    { hex: '#8DA06B', label: 'Sage Green',  note: 'Xanh lá cổ điển' },
-    { hex: '#F2C8CD', label: 'Blush Pink',  note: 'Hồng phấn nhẹ'   },
-    { hex: '#1a1a1a', label: 'Black',       note: 'Đen thanh lịch'   },
-    { hex: '#FFFFFF', label: 'White',       note: 'Trắng tinh khôi', border: true },
+  const FEMALE_PALETTE = [
+    { hex: '#F2C8CD', note: 'Hồng'    },
+    { hex: '#8DA06B', note: 'Xanh lá' },
+    { hex: '#D4C5A9', note: 'Be'      },
+    { hex: '#1a1a1a', note: 'Đen'     },
+  ];
+  const MALE_PALETTE = [
+    { hex: '#8DA06B', note: 'Xanh lá' },
+    { hex: '#D4C5A9', note: 'Be'      },
+    { hex: '#1a1a1a', note: 'Đen'     },
   ];
 
   return (
@@ -1291,10 +1299,10 @@ function DressCodePopup({ onClose }: { onClose: () => void }) {
 
           {/* Decorative top band */}
           <div className="h-2 w-full flex">
-            <div className="flex-1" style={{ background: '#8DA06B' }}/>
             <div className="flex-1" style={{ background: '#F2C8CD' }}/>
+            <div className="flex-1" style={{ background: '#8DA06B' }}/>
+            <div className="flex-1" style={{ background: '#D4C5A9' }}/>
             <div className="flex-1" style={{ background: '#1a1a1a' }}/>
-            <div className="flex-1" style={{ background: '#FFFFFF', borderTop: '1px solid #e5e7eb' }}/>
           </div>
 
           <div className="px-7 pb-8 pt-5">
@@ -1332,12 +1340,18 @@ function DressCodePopup({ onClose }: { onClose: () => void }) {
             </div>
 
             {/* Palette swatches */}
-            <div className="grid grid-cols-4 gap-2 mb-6">
-              {PALETTE.map((c) => (
-                <div key={c.hex} className="flex flex-col items-center gap-1.5">
-                  <div className="w-12 h-12 rounded-2xl shadow-md"
-                    style={{ background: c.hex, border: c.border ? '1.5px solid #e5e7eb' : 'none' }} />
-                  <p className="text-[9px] font-bold text-secondary/60 text-center leading-tight">{c.note}</p>
+            <div className="flex flex-col gap-3 mb-6">
+              {[{ label: 'Nữ', palette: FEMALE_PALETTE }, { label: 'Nam', palette: MALE_PALETTE }].map(({ label, palette }) => (
+                <div key={label} className="flex items-center gap-3">
+                  <span className="text-[9px] font-bold text-secondary/50 uppercase tracking-widest w-7 text-right shrink-0">{label}</span>
+                  <div className="flex gap-2">
+                    {palette.map((c) => (
+                      <div key={c.note} className="flex flex-col items-center gap-1">
+                        <div className="w-11 h-11 rounded-xl shadow-md" style={{ background: c.hex, border: c.hex === '#D4C5A9' ? '1px solid #c8b99a' : 'none' }} />
+                        <p className="text-[8px] font-bold text-secondary/60 text-center leading-tight">{c.note}</p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               ))}
             </div>
@@ -1518,10 +1532,10 @@ function InfoSection({ guestName, refreshKey }: { guestName?: string; refreshKey
             style={{ background: 'linear-gradient(160deg, #f8f4ef 0%, #fdf6f0 50%, #f0f5ec 100%)' }}>
             {/* Color band */}
             <div className="h-1.5 w-full flex">
-              <div className="flex-1" style={{ background: '#8DA06B' }}/>
               <div className="flex-1" style={{ background: '#F2C8CD' }}/>
+              <div className="flex-1" style={{ background: '#8DA06B' }}/>
+              <div className="flex-1" style={{ background: '#D4C5A9' }}/>
               <div className="flex-1" style={{ background: '#1a1a1a' }}/>
-              <div className="flex-1" style={{ background: '#FFFFFF', borderTop: '1px solid #e5e7eb' }}/>
             </div>
             <div className="px-8 py-8">
               <div className="text-center mb-6">
@@ -1547,17 +1561,31 @@ function InfoSection({ guestName, refreshKey }: { guestName?: string; refreshKey
               </div>
 
               {/* Swatches */}
-              <div className="grid grid-cols-4 gap-3 mb-6">
+              <div className="flex flex-col gap-3 mb-6">
                 {[
-                  { hex: '#8DA06B', note: 'Xanh lá cổ điển' },
-                  { hex: '#F2C8CD', note: 'Hồng phấn nhẹ'   },
-                  { hex: '#1a1a1a', note: 'Đen thanh lịch'   },
-                  { hex: '#FFFFFF', note: 'Trắng tinh khôi', border: true },
-                ].map((c) => (
-                  <div key={c.hex} className="flex flex-col items-center gap-1.5">
-                    <div className="w-12 h-12 rounded-2xl shadow-md"
-                      style={{ background: c.hex, border: c.border ? '1.5px solid #e5e7eb' : 'none' }} />
-                    <p className="text-[9px] font-bold text-secondary/50 text-center leading-tight">{c.note}</p>
+                  { label: 'Nữ', palette: [
+                    { hex: '#F2C8CD', note: 'Hồng'    },
+                    { hex: '#8DA06B', note: 'Xanh lá' },
+                    { hex: '#D4C5A9', note: 'Be'      },
+                    { hex: '#1a1a1a', note: 'Đen'     },
+                  ]},
+                  { label: 'Nam', palette: [
+                    { hex: '#8DA06B', note: 'Xanh lá' },
+                    { hex: '#D4C5A9', note: 'Be'      },
+                    { hex: '#1a1a1a', note: 'Đen'     },
+                  ]},
+                ].map(({ label, palette }) => (
+                  <div key={label} className="flex items-center gap-3">
+                    <span className="text-[9px] font-bold text-secondary/50 uppercase tracking-widest w-7 text-right shrink-0">{label}</span>
+                    <div className="flex gap-2">
+                      {palette.map((c) => (
+                        <div key={c.note} className="flex flex-col items-center gap-1.5">
+                          <div className="w-12 h-12 rounded-2xl shadow-md"
+                            style={{ background: c.hex, border: c.hex === '#D4C5A9' ? '1px solid #c8b99a' : 'none' }} />
+                          <p className="text-[9px] font-bold text-secondary/50 text-center leading-tight">{c.note}</p>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 ))}
               </div>
