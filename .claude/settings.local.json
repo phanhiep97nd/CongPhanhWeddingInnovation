@@ -9,7 +9,26 @@
       "Bash(cp \"E:\\\\Downloads\\\\DSCF7944.jpg\" \"E:\\\\My Project\\\\CongPhanhWeddingInnovation\\\\public\\\\images/\")",
       "Bash(cp \"E:\\\\Downloads\\\\AMV_3279.jpg\" \"E:\\\\My Project\\\\CongPhanhWeddingInnovation\\\\public\\\\images/\")",
       "Bash(npx tsc:*)",
-      "Bash(find 'E:/My Project/CongPhanhWeddingInnovation' -maxdepth 4 \\\\\\(-name *.png -o -name *.jpg -o -name *.jpeg -o -name *.webp -o -name *.gif \\\\\\))"
+      "Bash(find 'E:/My Project/CongPhanhWeddingInnovation' -maxdepth 4 \\\\\\(-name *.png -o -name *.jpg -o -name *.jpeg -o -name *.webp -o -name *.gif \\\\\\))",
+      "Read(//e/My Project/DongNat/DongNatXanh/dong-nat-api/**)",
+      "Bash(node -e \":*)",
+      "Bash(node api/seed.js)",
+      "Bash(curl -s -X POST http://localhost:3001/admin/login -H \"Content-Type: application/json\" -d '{\"\"username\"\":\"\"a\"\",\"\"password\"\":\"\"a\"\"}')",
+      "Bash(TOKEN=\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImEiLCJyb2xlIjoiYWRtaW4iLCJuYW1lIjoiQWRtaW4iLCJpYXQiOjE3NzQ2NjU5MTEsImV4cCI6MTc3NDY5NDcxMX0.eSF7AzHCfdXy28YPD3M35Zk5D9OCXivgM0ItF9BnVOk\")",
+      "Bash(curl -s http://localhost:3001/guests -H \"Authorization: Bearer $TOKEN\")",
+      "Bash(curl -s -X POST http://localhost:3002/api/admin/login -H \"Content-Type: application/json\" -d '{\"\"username\"\":\"\"a\"\",\"\"password\"\":\"\"a\"\"}')",
+      "Bash(TOKEN2=\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImEiLCJyb2xlIjoiYWRtaW4iLCJuYW1lIjoiQWRtaW4iLCJpYXQiOjE3NzQ2NjU5NTMsImV4cCI6MTc3NDY5NDc1M30.HeQscUob8eKIA5OrCBHMlhCBE48pMCCdlMesa5E1VAY\" curl -s http://localhost:3002/api/guests -H \"Authorization: Bearer $TOKEN2\")",
+      "Bash(curl -sv -X POST http://localhost:3002/api/admin/login -H \"Content-Type: application/json\" -H \"Origin: http://localhost:3002\" -d '{\"\"\"\"username\"\"\"\":\"\"\"\"a\"\"\"\",\"\"\"\"password\"\"\"\":\"\"\"\"a\"\"\"\"}')",
+      "Bash(curl -sv -X POST http://localhost:3001/admin/login -H \"Content-Type: application/json\" -H \"Origin: http://localhost:3002\" -d '{\"\"\"\"username\"\"\"\":\"\"\"\"a\"\"\"\",\"\"\"\"password\"\"\"\":\"\"\"\"a\"\"\"\"}')",
+      "Bash(curl -sv http://localhost:3001/admin/login)",
+      "Bash(netstat -ano)",
+      "Bash(\"E:/My Project/CongPhanhWeddingInnovation/.env\":*)",
+      "Bash(curl -s https://congphanhweddinginnovation-api.up.railway.app/)",
+      "Bash(curl -s -X POST https://congphanhweddinginnovation-api.up.railway.app/admin/login -H \"Content-Type: application/json\" -d '{\"\"\"\"username\"\"\"\":\"\"\"\"a\"\"\"\",\"\"\"\"password\"\"\"\":\"\"\"\"a\"\"\"\"}')",
+      "Bash(magick --version)",
+      "Bash(convert --version)",
+      "Bash(node -e \"require\\(''sharp''\\); console.log\\(''sharp ok''\\)\")",
+      "Bash(sharp-cli --version)"
     ]
   }
 }
