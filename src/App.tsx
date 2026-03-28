@@ -368,7 +368,7 @@ export default function App() {
 
         {/* ── Info ── */}
         <div id="info" className="bg-white">
-          <InfoSection />
+          <InfoSection guestName={guestInfo?.name} />
         </div>
       </main>
 
@@ -1192,15 +1192,8 @@ function RoomTable({ rooms }: { rooms: RoomRow[] }) {
   );
 }
 
-function InfoSection() {
-  const [photos, setPhotos] = useState<Photo[]>(() => {
-    try {
-      const all: Photo[] = JSON.parse(localStorage.getItem("wedding_photos") ?? "[]");
-      // Blob URLs are session-only — discard them on reload
-      return all.filter((p) => !p.url.startsWith("blob:"));
-    }
-    catch { return []; }
-  });
+function InfoSection({ guestName }: { guestName?: string }) {
+  const [photos, setPhotos] = useState<Photo[]>([]);
   const [showUpload, setShowUpload] = useState(false);
   const [showFeed, setShowFeed] = useState(false);
   const [rooms, setRooms] = useState<RoomRow[]>([]);
@@ -1210,13 +1203,13 @@ function InfoSection() {
       .then((r) => r.ok ? r.json() : [])
       .then((data: RoomRow[]) => { if (Array.isArray(data)) setRooms(data); })
       .catch(() => {});
+    fetch(`${API_BASE}/photos`)
+      .then((r) => r.ok ? r.json() : [])
+      .then((data) => { if (Array.isArray(data)) setPhotos(data.map((p: any) => ({ id: p._id, url: p.url, caption: p.caption, author: p.author, createdAt: new Date(p.createdAt).getTime() }))); })
+      .catch(() => {});
   }, []);
 
-  const addPhoto = (p: Photo) => {
-    const updated = [p, ...photos];
-    setPhotos(updated);
-    try { localStorage.setItem("wedding_photos", JSON.stringify(updated)); } catch {}
-  };
+  const addPhoto = (p: Photo) => setPhotos((prev) => [p, ...prev]);
 
   return (
     <section className="py-28 md:py-36 px-6 max-w-4xl mx-auto">
@@ -1287,7 +1280,7 @@ function InfoSection() {
 
       <AnimatePresence>
         {showUpload && (
-          <UploadPopup onClose={() => setShowUpload(false)} onAdd={addPhoto} />
+          <UploadPopup onClose={() => setShowUpload(false)} onAdd={addPhoto} defaultAuthor={guestName} />
         )}
         {showFeed && (
           <PhotoFeedPopup
@@ -1414,10 +1407,10 @@ function PhotoSlide({ photos, onUpload, onOpenFeed }: {
 }
 
 // ── Upload Popup ──────────────────────────────────────────────────────────────
-function UploadPopup({ onClose, onAdd }: { onClose: () => void; onAdd: (p: Photo) => void }) {
+function UploadPopup({ onClose, onAdd, defaultAuthor }: { onClose: () => void; onAdd: (p: Photo) => void; defaultAuthor?: string }) {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
-  const [author, setAuthor] = useState("");
+  const [author, setAuthor] = useState(defaultAuthor ?? "");
   const [caption, setCaption] = useState("");
   const [loading, setLoading] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -1439,12 +1432,19 @@ function UploadPopup({ onClose, onAdd }: { onClose: () => void; onAdd: (p: Photo
     setLoading(true);
     try {
       const url = await uploadToCloudinary(file);
+      const body = { url, caption: caption.trim(), author: author.trim() || "Ẩn danh" };
+      const res = await fetch(`${API_BASE}/photos`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      const saved = res.ok ? await res.json() : null;
       onAdd({
-        id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+        id: saved?._id ?? `${Date.now()}-${Math.random().toString(36).slice(2)}`,
         url,
-        caption: caption.trim(),
-        author: author.trim() || "Ẩn danh",
-        createdAt: Date.now(),
+        caption: body.caption,
+        author: body.author,
+        createdAt: saved ? new Date(saved.createdAt).getTime() : Date.now(),
       });
       onClose();
     } finally {

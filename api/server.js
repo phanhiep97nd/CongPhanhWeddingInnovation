@@ -65,6 +65,9 @@ app.use('/guests', guestRoutes);
 const adminRoutes = require('./routes/adminRoutes');
 app.use('/admin', adminRoutes);
 
+const photoRoutes = require('./routes/photoRoutes');
+app.use('/photos', photoRoutes);
+
 // Global error handler
 app.use((err, req, res, next) => {
   const status = err.status || 500;
