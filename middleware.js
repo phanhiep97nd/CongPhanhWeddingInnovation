@@ -3,7 +3,7 @@ export const config = {
 }
 
 const OG_BOTS =
-  /facebookexternalhit|Facebot|Twitterbot|WhatsApp|TelegramBot|Slackbot|Discordbot|Zalo|LinkedInBot|Pinterest|Googlebot|bingbot|Applebot/i
+  /facebookexternalhit|Facebot|Twitterbot|TelegramBot|Slackbot|Discordbot|LinkedInBot|Pinterest|Googlebot|bingbot|Applebot/i
 
 export default function middleware(request) {
   const ua = request.headers.get('user-agent') ?? ''
