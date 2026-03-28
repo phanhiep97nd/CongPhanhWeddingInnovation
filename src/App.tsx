@@ -30,7 +30,7 @@ const COUPLE = { bride: "Phương Anh", groom: "Minh Công", short: "Ph.Anh & M.
 const WEDDING_DATE = "03 · 04 · 2026";
 
 // TODO: Cập nhật link thực tế
-const ZALO_GROUP_LINK = "https://zalo.me/g/xxxxxxx";
+const ZALO_GROUP_LINK = "https://zalo.me/g/hqjq6rzs0b5ggcijwde5";
 // TODO: Cập nhật YouTube video ID nhạc Thủy Hử (ví dụ: "uM5mFpEahDU")
 const YOUTUBE_MUSIC_ID = "";
 
