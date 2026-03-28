@@ -6,10 +6,10 @@ const router = express.Router();
 
 // ─── PUBLIC ROUTES (no auth) ─────────────────────────────────────────────────
 
-// GET /guests/rooms - get all guests with a room assigned (order matters: before /:id)
+// GET /guests/rooms - get all confirmed guests (status=yes), sorted: assigned rooms first
 router.get('/rooms', async (req, res) => {
   try {
-    const guests = await Guest.find({ room: { $ne: '' } })
+    const guests = await Guest.find({ status: 'yes' })
       .select('invitationName room')
       .sort({ room: 1, invitationName: 1 });
     res.json(guests);

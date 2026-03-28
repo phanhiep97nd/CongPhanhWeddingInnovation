@@ -831,7 +831,7 @@ function RSVPForm({
   const [phone, setPhone] = useState("");
   const [guests, setGuests] = useState(1);
   const [wantRide, setWantRide] = useState<boolean | null>(null);
-  const [pickupPoint, setPickupPoint] = useState("BigC Thăng Long");
+  const [pickupPoint, setPickupPoint] = useState("Nhà gái 183 Vũ Tông Phan");
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -988,8 +988,8 @@ function RSVPForm({
                     <label className="block text-[10px] font-bold uppercase tracking-widest text-secondary/40 mb-2 ml-1">Điểm đón</label>
                     <select value={pickupPoint} onChange={(e) => setPickupPoint(e.target.value)}
                       className="w-full px-5 py-3.5 rounded-2xl bg-blush border border-primary/20 focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all outline-none appearance-none text-secondary cursor-pointer">
-                      <option value="BigC Thăng Long">📍 BigC Thăng Long</option>
-                      <option value="Hanoi Central Point">📍 Hanoi Central Point</option>
+                      <option value="Nhà gái 183 Vũ Tông Phan">📍 Nhà gái — 183 Vũ Tông Phan</option>
+                      <option value="Nhà trai ngõ 4 Cầu Bươu">📍 Nhà trai — ngõ 4 Cầu Bươu</option>
                     </select>
                   </motion.div>
                 )}
@@ -1134,7 +1134,7 @@ function ConfirmationPopup({ onClose, onScrollToInfo }: {
 }
 
 // ── Info Section ──────────────────────────────────────────────────────────────
-interface RoomRow { invitationName: string; room: string; }
+interface RoomRow { invitationName: string; room?: string; }
 
 function RoomTable({ rooms }: { rooms: RoomRow[] }) {
   const [query, setQuery] = useState("");
@@ -1161,7 +1161,7 @@ function RoomTable({ rooms }: { rooms: RoomRow[] }) {
         <table className="w-full">
           <thead className="sticky top-0">
             <tr className="bg-blush/60 backdrop-blur-sm">
-              <th className="px-6 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-secondary/40">Tên trong thiệp</th>
+              <th className="px-6 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-secondary/40">Tên khách</th>
               <th className="px-6 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-secondary/40">Phòng nghỉ</th>
             </tr>
           </thead>
@@ -1181,7 +1181,9 @@ function RoomTable({ rooms }: { rooms: RoomRow[] }) {
             ) : filtered.map((row, i) => (
               <tr key={i} className={`border-t border-primary/10 ${i % 2 !== 0 ? "bg-blush/20" : ""}`}>
                 <td className="px-6 py-3 text-sm text-secondary/70">{row.invitationName}</td>
-                <td className="px-6 py-3 font-semibold text-sm text-secondary whitespace-nowrap">{row.room}</td>
+                <td className="px-6 py-3 font-semibold text-sm whitespace-nowrap">
+                {row.room ? <span className="text-secondary">{row.room}</span> : <span className="text-secondary/30 italic">Chưa phân phòng</span>}
+              </td>
               </tr>
             ))}
           </tbody>
