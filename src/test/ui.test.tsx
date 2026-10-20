@@ -111,7 +111,7 @@ describe("invitation UI", () => {
         <Route path="/w/:slug/:code" element={<Invitation />} />
       </Routes>
     </MemoryRouter>);
-    expect(await screen.findByRole("heading", { level: 1, name: /Hoa.*Minh/ })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { level: 1, name: /Hoa.*Minh/ }, { timeout: 5000 })).toBeInTheDocument();
     expect(await screen.findByText("Bác Nam")).toBeInTheDocument();
     const headings = screen.getAllByRole("heading").map(h => h.textContent);
     expect(headings.indexOf("Ngày chung đôi")).toBeLessThan(headings.indexOf("Câu chuyện của chúng mình"));

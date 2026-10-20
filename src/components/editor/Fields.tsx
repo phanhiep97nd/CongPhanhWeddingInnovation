@@ -3,12 +3,13 @@ import { useEffect, useRef, useState } from "react";
 import { api } from "../../lib/api";
 import { uploadAudio } from "../../lib/images";
 import LockedFeature from "../billing/LockedFeature";
+import SharePreview from "./SharePreview";
 type Change = (patch: Partial<Wedding>) => void;
 
-export function Field({ label, value, onChange, type = "text", textarea = false }: { label: string; value: string; onChange: (value: string) => void; type?: string; textarea?: boolean; key?: string; }) {
+export function Field({ label, value, onChange, type = "text", textarea = false, autoComplete, inputMode }: { label: string; value: string; onChange: (value: string) => void; type?: string; textarea?: boolean; autoComplete?: string; inputMode?: "numeric" | "tel" | "url" | "email"; key?: string; }) {
   return <label>
     {label}
-    {textarea ? <textarea value={value} onChange={e => onChange(e.target.value)} rows={4} /> : <input type={type} value={value} onChange={e => onChange(e.target.value)} />}
+    {textarea ? <textarea value={value} onChange={e => onChange(e.target.value)} rows={4} /> : <input type={type} inputMode={inputMode || (type === "tel" || type === "url" || type === "email" ? type : undefined)} autoComplete={autoComplete} enterKeyHint="next" value={value} onChange={e => onChange(e.target.value)} />}
   </label>;
 }
 
@@ -38,11 +39,12 @@ export function InfoTab({ wedding: w, change, onUpgrade }: { wedding: Wedding; c
   }
 
   return <div className="form-grid">
-    <Field label="Tên chú rể" value={w.couple.groom} onChange={groom => change({ couple: { ...w.couple, groom } })} />
+    <Field label="Tên chú rể" autoComplete="given-name" value={w.couple.groom} onChange={groom => change({ couple: { ...w.couple, groom } })} />
     <Field label="Tên cô dâu" value={w.couple.bride} onChange={bride => change({ couple: { ...w.couple, bride } })} />
     <Field label="Họ tên chú rể" value={w.couple.groomFull} onChange={groomFull => change({ couple: { ...w.couple, groomFull } })} />
     <Field label="Họ tên cô dâu" value={w.couple.brideFull} onChange={brideFull => change({ couple: { ...w.couple, brideFull } })} />
     <Field label="Ngày cưới" type="date" value={w.eventDate?.slice(0, 10) || ""} onChange={eventDate => change({ eventDate: eventDate || null })} />
+    <Field label="Giờ làm lễ" type="time" value={w.eventTime || ""} onChange={eventTime => change({ eventTime })} />
     <Field label="Ngày hiển thị" value={w.dateText} onChange={dateText => change({ dateText })} />
     <Field label="Tên địa điểm" value={w.venue.name} onChange={name => change({ venue: { ...w.venue, name } })} />
     <Field label="Địa chỉ" value={w.venue.address} onChange={address => change({ venue: { ...w.venue, address } })} />
@@ -71,11 +73,37 @@ export function InfoTab({ wedding: w, change, onUpgrade }: { wedding: Wedding; c
     <label>Màu chủ đạo
       <input type="color" value={w.theme.primary || "#b76e79"} onChange={e => change({ theme: { primary: e.target.value } })} />
     </label>
-    <Field label="Tiêu đề chia sẻ (để trống = tự tạo)" value={w.meta.title} onChange={title => change({ meta: { ...w.meta, title } })} />
-    <Field label="Mô tả chia sẻ (để trống = tự tạo)" value={w.meta.description} onChange={description => change({ meta: { ...w.meta, description } })} />
+    <ShareField label="Tiêu đề chia sẻ (để trống = tự tạo)" value={w.meta.title} onChange={title => change({ meta: { ...w.meta, title } })} />
+    <ShareField label="Mô tả chia sẻ (để trống = tự tạo)" value={w.meta.description} onChange={description => change({ meta: { ...w.meta, description } })} />
+    <div className="full"><SharePreview wedding={w} /></div>
     <label className="checkbox-row full">
       <input type="checkbox" checked={w.published} onChange={e => change({ published: e.target.checked })} /> Xuất bản thiệp
     </label>
+  </div>;
+}
+
+const placeholders = ["khach", "chure", "codau", "ngay", "thu", "gio", "diadiem", "diachi"];
+
+export function ShareField({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {
+  const input = useRef<HTMLInputElement>(null);
+  function insert(token: string) {
+    const element = input.current;
+    const start = element?.selectionStart ?? value.length;
+    const end = element?.selectionEnd ?? value.length;
+    onChange(`${value.slice(0, start)}{${token}}${value.slice(end)}`);
+    requestAnimationFrame(() => {
+      element?.focus();
+      element?.setSelectionRange(start + token.length + 2, start + token.length + 2);
+    });
+  }
+  return <div className="share-field">
+    <label>{label}
+      <input ref={input} value={value} onChange={event => onChange(event.target.value)} />
+    </label>
+    <small>Chạm để chèn tên khách, cặp đôi, ngày, giờ hoặc địa điểm:</small>
+    <div className="placeholder-chips">
+      {placeholders.map(token => <button key={token} type="button" onMouseDown={event => event.preventDefault()} onClick={() => insert(token)}>{`{${token}}`}</button>)}
+    </div>
   </div>;
 }
 

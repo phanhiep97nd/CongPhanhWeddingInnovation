@@ -1,6 +1,6 @@
 export type SectionKey = "story" | "timeline" | "gallery" | "info" | "rsvp" | "photoWall" | "rooms" | "dressCode" | "giftBox";
 export type Plan = "free" | "basic" | "premium";
-export type Template = "classic" | "minimal";
+export type Template = "classic" | "minimal" | "hy3d";
 export type FeatureKey = "unlimitedGuests" | "removeBranding" | "largeGallery" | "excelExport" | "guestQr" | "giftBox" | "photoWall" | "customMusic" | "permanent" | "premiumTemplates";
 export type Entitlements = Record<FeatureKey, boolean>;
 
@@ -89,6 +89,7 @@ export interface Wedding {
   published: boolean;
   couple: { groom: string; bride: string; groomFull: string; brideFull: string };
   eventDate: string | null;
+  eventTime?: string;
   dateText: string;
   venue: { name: string; address: string; mapUrl: string };
   coverImage: string;

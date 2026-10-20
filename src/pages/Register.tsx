@@ -1,3 +1,5 @@
+import { BRAND_NAME } from "../lib/brand";
+import BrandLogo from "../components/BrandLogo";
 import { useState, type FormEvent } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "../lib/auth";
@@ -32,7 +34,7 @@ export default function Register() {
   }
   return (
     <main className="auth-page">
-      <Link className="brand" to="/">Thiệp Cưới
+      <Link className="brand" to="/" aria-label={BRAND_NAME}><BrandLogo />
       </Link>
       <form className="auth-card" onSubmit={submit} noValidate>
         <h1>Tạo tài khoản
@@ -40,16 +42,16 @@ export default function Register() {
         <p>Mở một nơi dành riêng cho tấm thiệp của hai bạn.
         </p>
         <label>Tên của bạn
-          <input aria-label="Tên của bạn" autoComplete="name" value={name} onChange={(event) => setName(event.target.value)} />
+          <input aria-label="Tên của bạn" autoComplete="name" enterKeyHint="next" value={name} onChange={(event) => setName(event.target.value)} />
           {errorField === "name" && <span role="alert" className="error">{error}</span>}
         </label>
         <label>Email
-          <input aria-label="Email" type="email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} />
+          <input aria-label="Email" type="email" inputMode="email" autoComplete="email" enterKeyHint="next" value={email} onChange={(event) => setEmail(event.target.value)} />
           {errorField === "email" && <span role="alert" className="error">{error}</span>}
         </label>
         <label>Mật khẩu (ít nhất 8 ký tự)
           <span className="password-field">
-            <input aria-label="Mật khẩu (ít nhất 8 ký tự)" type={visible ? "text" : "password"} autoComplete="new-password" value={password} onChange={(event) => setPassword(event.target.value)} />
+            <input aria-label="Mật khẩu (ít nhất 8 ký tự)" type={visible ? "text" : "password"} autoComplete="new-password" enterKeyHint="done" value={password} onChange={(event) => setPassword(event.target.value)} />
             <button type="button" onClick={() => setVisible(!visible)} aria-label={visible ? "Ẩn mật khẩu" : "Hiện mật khẩu"}>
               {visible ? "Ẩn" : "Hiện"}
             </button>

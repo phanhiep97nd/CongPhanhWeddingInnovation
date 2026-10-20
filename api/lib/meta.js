@@ -86,8 +86,9 @@ function buildMeta(wedding, guestName = '', options = {}) {
   return {
     title: limitText(title, 90),
     description: limitText(description, 200),
-    image: personalizedOgImage(wedding.ogImage || wedding.coverImage || '', guestName),
-    siteName: process.env.BRAND_NAME || 'Thiệp Cưới',
+    // Weddings without a photo fall back to the Hỷ Thiệp brand card (the middleware makes it absolute).
+    image: personalizedOgImage(wedding.ogImage || wedding.coverImage || '', guestName) || '/brand/og-default.png',
+    siteName: process.env.BRAND_NAME || 'Hỷ Thiệp',
     guestName,
     url: `${siteOrigin}/w/${encodeURIComponent(wedding.slug)}${guestPath}`
   };

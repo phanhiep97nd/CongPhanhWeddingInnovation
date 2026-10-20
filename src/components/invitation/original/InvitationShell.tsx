@@ -15,6 +15,7 @@ import Photo from "../Photo";
 import { useReducedMotion } from "motion/react";
 import type { PublicGuest, Wedding } from "../../../lib/types";
 import type { CSSProperties } from "react";
+import { BRAND_NAME } from "../../../lib/brand";
 import { InvitePopup } from "./InvitePopup";
 import { StorySection } from "./StorySection";
 import { TimelineSection } from "./TimelineSection";
@@ -47,6 +48,11 @@ export default function InvitationShell({ wedding, guest, slug }: { wedding: Wed
   const [bgPlaying, setBgPlaying] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const bgAudioRef = useRef<HTMLAudioElement>(null);
+  const mutedRef = useRef(false);
+  const startedRef = useRef(false);
+  const resumeRef = useRef(false);
+  const popupOpenRef = useRef(false);
+  popupOpenRef.current = showRSVP || showConfirmation || showInvite || showDressCode;
 
   const { scrollYProgress } = useScroll({ container: containerRef });
   const heroZoom = useTransform(scrollYProgress, [0, 0.25], [1.0, reducedMotion ? 1 : 1.5]);
@@ -75,35 +81,86 @@ export default function InvitationShell({ wedding, guest, slug }: { wedding: Wed
     return () => clearTimeout(timer);
   }, [guest]);
 
-  // Autoplay background music at 60% volume on load
+  // In-app browsers require a user gesture before audio can play.
   useEffect(() => {
     const audio = bgAudioRef.current;
     if (!audio) return;
     audio.volume = 0.6;
-    audio.play().then(() => setBgPlaying(true)).catch(() => {});
+    const start = (event: Event) => {
+      if (startedRef.current || mutedRef.current) return;
+      startedRef.current = true;
+      if (event.target instanceof Element && event.target.closest(".invitation-music")) return;
+      audio.play().then(() => {
+        if (popupOpenRef.current) {
+          audio.pause();
+          resumeRef.current = true;
+          setBgPlaying(false);
+        } else setBgPlaying(true);
+      }).catch(() => setBgPlaying(false));
+    };
+    document.addEventListener("pointerdown", start, { once: true });
+    document.addEventListener("touchstart", start, { once: true });
+    return () => {
+      document.removeEventListener("pointerdown", start);
+      document.removeEventListener("touchstart", start);
+    };
   }, []);
 
-  // Pause bg music while any popup is open; always resume when all are closed
+  // Pause while a popup is open and resume only if music was already playing.
   useEffect(() => {
     const audio = bgAudioRef.current;
     if (!audio) return;
     if (showRSVP || showConfirmation || showInvite || showDressCode) {
+      resumeRef.current = resumeRef.current || !audio.paused;
       audio.pause();
-    } else {
-      audio.volume = 0.6;
-      audio.play().then(() => setBgPlaying(true)).catch(() => {});
+      setBgPlaying(false);
+    } else if (resumeRef.current && !mutedRef.current) {
+      resumeRef.current = false;
+      audio.play().then(() => setBgPlaying(true)).catch(() => setBgPlaying(false));
     }
   }, [showRSVP, showConfirmation, showInvite, showDressCode]);
+
+  useEffect(() => {
+    const open = showRSVP || showConfirmation || showInvite || showDressCode;
+    if (!open) return;
+    const previous = document.body.style.overflow;
+    const root = containerRef.current;
+    const previousRoot = root?.style.overflowY || "";
+    document.body.style.overflow = "hidden";
+    if (root) root.style.overflowY = "hidden";
+    return () => {
+      document.body.style.overflow = previous;
+      if (root) root.style.overflowY = previousRoot;
+    };
+  }, [showRSVP, showConfirmation, showInvite, showDressCode]);
+
+  useEffect(() => {
+    const audio = bgAudioRef.current;
+    if (!audio) return;
+    const visibility = () => {
+      if (document.hidden) {
+        resumeRef.current = resumeRef.current || !audio.paused;
+        audio.pause();
+        setBgPlaying(false);
+      } else if (resumeRef.current && !mutedRef.current && !popupOpenRef.current) {
+        resumeRef.current = false;
+        audio.play().then(() => setBgPlaying(true)).catch(() => setBgPlaying(false));
+      }
+    };
+    document.addEventListener("visibilitychange", visibility);
+    return () => document.removeEventListener("visibilitychange", visibility);
+  }, []);
 
   const toggleBgMusic = () => {
     const audio = bgAudioRef.current;
     if (!audio) return;
     if (bgPlaying) {
+      mutedRef.current = true;
       audio.pause();
       setBgPlaying(false);
     } else {
-      audio.play().catch(() => {});
-      setBgPlaying(true);
+      mutedRef.current = false;
+      audio.play().then(() => setBgPlaying(true)).catch(() => setBgPlaying(false));
     }
   };
 
@@ -144,7 +201,7 @@ export default function InvitationShell({ wedding, guest, slug }: { wedding: Wed
 
       <main>
         {/* ── Hero ── */}
-        <section className="relative h-screen overflow-hidden">
+        <section className="invitation-hero relative h-screen overflow-hidden">
           <div className="absolute inset-0 z-0 overflow-hidden">
             <motion.div style={{ scale: heroZoom, y: heroY, objectPosition: "62% center" }} className="w-full h-full">
               <Photo src={IMAGES.hero} alt="Wedding" className="w-full h-full object-cover" hero />
@@ -240,7 +297,7 @@ export default function InvitationShell({ wedding, guest, slug }: { wedding: Wed
               initial={{ opacity: 0 }} animate={{ opacity: 1 }}
               transition={{ delay: 1.1 }}
               onClick={() => scrollTo(firstSection)}
-              className="pointer-events-auto flex flex-col items-center gap-2 text-secondary/45 hover:text-secondary/70 transition-colors"
+              className="pointer-events-auto min-h-11 min-w-11 flex flex-col items-center justify-center gap-2 text-secondary/45 hover:text-secondary/70 transition-colors"
             >
               <span className="font-sans uppercase" style={{ fontSize: 9, letterSpacing: "0.35em" }}>
                 Cuộn để xem tiếp
@@ -296,7 +353,7 @@ export default function InvitationShell({ wedding, guest, slug }: { wedding: Wed
           <div className="flex gap-4">
             {[Heart, Camera].map((Icon, i) => (
               <div key={i}
-                className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary-deep hover:bg-primary transition-all cursor-pointer">
+                className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary-deep">
                 <Icon size={16} />
               </div>
             ))}
@@ -304,7 +361,7 @@ export default function InvitationShell({ wedding, guest, slug }: { wedding: Wed
           <p className="text-[10px] text-secondary/40 tracking-[0.3em] uppercase">
             © {wedding.eventDate?.slice(0, 4) || new Date().getFullYear()} {COUPLE.short} — Made with love
           </p>
-          {wedding.showBranding && <a href="/" className="font-serif text-xs text-secondary/60 underline underline-offset-4">Tạo bởi Thiệp Cưới</a>}
+          {wedding.showBranding && <a href="/" className="font-serif text-xs text-secondary/60 underline underline-offset-4">Tạo bởi {BRAND_NAME}</a>}
         </div>
       </footer>
 
@@ -339,8 +396,8 @@ export default function InvitationShell({ wedding, guest, slug }: { wedding: Wed
                   </div>
                   <div className="absolute top-0 left-0 right-0 h-0.5 bg-sage/40" />
                 </div>
-                <button onClick={() => { setShowRSVP(false); refreshRooms(); }}
-                  className="fixed md:absolute top-6 right-6 md:top-3 md:right-3 z-30 p-1.5 rounded-full bg-white/90 text-secondary/60 hover:bg-white hover:text-secondary transition-all shadow-md">
+                <button onClick={() => { setShowRSVP(false); refreshRooms(); }} aria-label="Đóng xác nhận tham dự"
+                  className="fixed md:absolute top-6 right-6 md:top-3 md:right-3 z-30 w-11 h-11 rounded-full bg-white/90 text-secondary/60 hover:bg-white hover:text-secondary transition-all shadow-md flex items-center justify-center">
                   <X size={18} />
                 </button>
                 <div className="px-5 pb-8 pt-2 md:px-8">
@@ -392,6 +449,7 @@ export default function InvitationShell({ wedding, guest, slug }: { wedding: Wed
         {showInvite && (
           <InvitePopup
             invitationName={guestInfo?.invitationName ?? "Bạn"}
+            onClose={() => setShowInvite(false)}
             alreadyConfirmed={guestInfo?.status === "yes"}
             rsvpEnabled={rsvpEnabled}
             onConfirm={() => {
@@ -412,7 +470,7 @@ export default function InvitationShell({ wedding, guest, slug }: { wedding: Wed
         onClick={toggleBgMusic}
         title={bgPlaying ? "Tắt nhạc" : "Bật nhạc nền"}
         whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}
-        className="fixed bottom-24 right-4 z-50 w-11 h-11 rounded-full bg-white/90 backdrop-blur-md shadow-xl border border-primary/20 flex items-center justify-center text-primary-dark transition-all"
+        className="invitation-music fixed bottom-24 right-4 z-50 w-11 h-11 rounded-full bg-white/90 backdrop-blur-md shadow-xl border border-primary/20 flex items-center justify-center text-primary-dark transition-all"
       >
         <AnimatePresence mode="wait" initial={false}>
           {bgPlaying ? (
@@ -428,7 +486,7 @@ export default function InvitationShell({ wedding, guest, slug }: { wedding: Wed
       </motion.button>
 
       {/* ── Bottom Nav ── */}
-      <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50" aria-label="Các hạng mục thiệp">
+      <nav className="invitation-bottom-nav fixed bottom-6 left-1/2 -translate-x-1/2 z-50" aria-label="Các hạng mục thiệp">
         <div className="relative flex items-center gap-1 px-5 py-3 bg-white/90 backdrop-blur-xl rounded-full shadow-2xl border border-primary/20">
           {activeIdx >= 0 && (
             <motion.div
@@ -446,13 +504,13 @@ export default function InvitationShell({ wedding, guest, slug }: { wedding: Wed
           )}
           {NAV_ITEMS.map(({ id, icon: Icon, label }) => (
             <button key={id} onClick={() => scrollTo(id)} title={label}
-              className="relative flex flex-col items-center justify-center w-12 h-10 rounded-full transition-colors group">
+              className="relative flex flex-col items-center justify-center w-12 h-11 rounded-full transition-colors group">
               <Icon size={20} className={`transition-all duration-300 ${activeSection === id ? "text-primary-dark scale-110" : "text-secondary/50 group-hover:text-secondary/80"}`} />
             </button>
           ))}
           <div className="w-px h-5 bg-primary/30 mx-1" />
           {rsvpEnabled && <button onClick={() => setShowRSVP(true)}
-            className="w-10 h-10 rounded-full bg-primary-dark hover:bg-primary-deep text-white flex items-center justify-center shadow-md active:scale-90 transition-all pink-glow"
+            className="w-11 h-11 rounded-full bg-primary-dark hover:bg-primary-deep text-white flex items-center justify-center shadow-md active:scale-90 transition-all pink-glow"
             title="Xác nhận tham dự">
             <Heart size={16} className="fill-white" />
           </button>}

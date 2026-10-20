@@ -1,3 +1,6 @@
+import { BRAND_NAME } from "../lib/brand";
+import BrandLogo from "../components/BrandLogo";
+import { useConfirmSheet } from "../components/ConfirmSheet";
 import { useEffect, useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { api, json } from "../lib/api";
@@ -20,6 +23,8 @@ export default function Dashboard() {
   const [availability, setAvailability] = useState<{ available: boolean; valid: boolean; } | null>(null);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const [openMenu, setOpenMenu] = useState<string | null>(null);
+  const { confirm, sheet } = useConfirmSheet();
   useEffect(() => {
     api<WeddingSummary[]>("/weddings", {}, true).then(setItems).catch(e => setError(e.message));
   }, []);
@@ -59,7 +64,7 @@ export default function Dashboard() {
     }
   }
   async function remove(item: WeddingSummary) {
-    if (!window.confirm(`Xóa thiệp của ${item.couple.groom} & ${item.couple.bride}? Khách mời và ảnh cũng sẽ bị xóa.`)) return;
+    if (!await confirm(`Xóa thiệp của ${item.couple.groom} & ${item.couple.bride}? Khách mời và ảnh cũng sẽ bị xóa.`)) return;
     try {
       await api<void>(`/weddings/${item.id}`, { method: "DELETE" }, true);
       setItems(old => old.filter(w => w.id !== item.id));
@@ -76,8 +81,9 @@ export default function Dashboard() {
     }
   }
   return <main className="dashboard">
+    {sheet}
     <header className="dash-header">
-      <Link className="brand" to="/">Thiệp Cưới
+      <Link className="brand" to="/" aria-label={BRAND_NAME}><BrandLogo />
       </Link>
       <span>Xin chào,{" "}
         {user?.name}
@@ -97,13 +103,13 @@ export default function Dashboard() {
         </h2>
         <div className="form-grid">
           <label>Tên chú rể
-            <input value={groom} onChange={e => setGroom(e.target.value)} />
+            <input autoComplete="given-name" enterKeyHint="next" value={groom} onChange={e => setGroom(e.target.value)} />
           </label>
           <label>Tên cô dâu
-            <input value={bride} onChange={e => setBride(e.target.value)} />
+            <input autoComplete="given-name" enterKeyHint="next" value={bride} onChange={e => setBride(e.target.value)} />
           </label>
           <label className="full">Đường dẫn thiệp
-            <input aria-label="Đường dẫn thiệp" value={slug} onChange={e => {
+            <input aria-label="Đường dẫn thiệp" inputMode="url" autoComplete="off" enterKeyHint="done" value={slug} onChange={e => {
               setEditedSlug(true);
               setSlug(e.target.value.toLowerCase());
             }} aria-describedby="slug-status" />
@@ -146,9 +152,13 @@ export default function Dashboard() {
               </Link>
               <a className="button-outline" href={`/w/${item.slug}`} target="_blank" rel="noreferrer">Xem thiệp
               </a>
-              <button className="text-button" onClick={() => void copyLink(item)}>Copy link</button>
-              <button className="text-button" onClick={() => void remove(item)}>Xóa
-              </button>
+              <div className="wedding-more">
+                <button className="text-button wedding-more-toggle" aria-expanded={openMenu === item.id} aria-label="Thêm thao tác" onClick={() => setOpenMenu(openMenu === item.id ? null : item.id)}>⋯</button>
+                <div className={openMenu === item.id ? "wedding-more-actions open" : "wedding-more-actions"}>
+                  <button className="text-button" onClick={() => { setOpenMenu(null); void copyLink(item); }}>Copy link</button>
+                  <button className="text-button" onClick={() => { setOpenMenu(null); void remove(item); }}>Xóa</button>
+                </div>
+              </div>
             </div>
           </div>
         </article>)}

@@ -4,8 +4,8 @@ const bots = /facebookexternalhit|Facebot|Zalo|Twitterbot|TelegramBot|Slackbot|D
 const fallbackMeta = {
   title: 'Thiệp cưới',
   description: 'Trân trọng kính mời bạn đến chung vui.',
-  siteName: 'Thiệp cưới',
-  image: ''
+  siteName: 'Hỷ Thiệp',
+  image: '/brand/og-default.png'
 };
 
 export function isCrawler(userAgent) {

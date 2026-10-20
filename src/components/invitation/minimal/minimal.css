@@ -8,7 +8,7 @@
 .minimal-hero img { width: 100%; height: 90dvh; object-fit: cover; }
 .minimal-hero > div { padding: 3rem; }
 .minimal-prose { white-space: pre-line; max-width: 65ch; line-height: 1.8; }
-.minimal-story-image { width: min(100%, 560px); margin-bottom: 2rem; }
+.minimal-story-image { width: min(100%, 560px); aspect-ratio: 4 / 5; object-fit: cover; margin-bottom: 2rem; }
 .minimal-gallery { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; }
 .minimal-gallery img { width: 100%; aspect-ratio: 4/5; object-fit: cover; }
 .minimal-gallery figcaption { padding-top: .5rem; }
@@ -20,3 +20,13 @@
 .minimal-swatches span { width: 3rem; height: 3rem; border-radius: 50%; border: 1px solid #777; }
 .minimal-invite audio { position: fixed; bottom: 1rem; right: 1rem; max-width: min(18rem, 80vw); }
 @media (max-width: 650px) { .minimal-hero { display: block; } .minimal-hero img { height: 55dvh; } .minimal-hero > div { padding: 3rem 1.25rem; } .minimal-invite section { padding: 4rem 1.25rem; } .minimal-gallery { gap: .6rem; } }
+.minimal-hero { min-height: 100vh; }
+.minimal-hero img { height: 100vh; }
+@supports (height: 100svh) { .minimal-hero { min-height: 100svh; } .minimal-hero img { height: 100svh; } }
+@media (max-width: 650px) {
+  .minimal-hero img { height: 55vh; aspect-ratio: 4 / 5; }
+  @supports (height: 100svh) { .minimal-hero img { height: 55svh; } }
+  .minimal-invite audio { bottom: calc(1rem + env(safe-area-inset-bottom)); }
+}
+.minimal-invite button, .minimal-invite a { touch-action: manipulation; -webkit-tap-highlight-color: #c9848b40; }
+.minimal-invite input, .minimal-invite select, .minimal-invite textarea { font-size: 16px; min-height: 44px; }

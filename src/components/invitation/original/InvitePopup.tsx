@@ -13,7 +13,7 @@ import {  } from "./shared";
 import { useWedding } from "./WeddingContext";
 import Photo from "../Photo";
 // ── Invite Popup ──────────────────────────────────────────────────────────────
-export function InvitePopup({ invitationName, alreadyConfirmed, onConfirm, rsvpEnabled = true }: { invitationName: string; alreadyConfirmed?: boolean; onConfirm: () => void; rsvpEnabled?: boolean }) {
+export function InvitePopup({ invitationName, alreadyConfirmed, onConfirm, onClose, rsvpEnabled = true }: { invitationName: string; alreadyConfirmed?: boolean; onConfirm: () => void; onClose?: () => void; rsvpEnabled?: boolean }) {
   const { wedding } = useWedding();
   return (
     <>
@@ -31,7 +31,8 @@ export function InvitePopup({ invitationName, alreadyConfirmed, onConfirm, rsvpE
         transition={{ type: "spring", damping: 26, stiffness: 280 }}
         className="fixed inset-0 z-[100] flex items-center justify-center p-6 pointer-events-none"
       >
-        <div className="relative w-full max-w-sm bg-white rounded-[2rem] shadow-2xl overflow-hidden pointer-events-auto text-center">
+        <div className="invitation-popup-card relative w-full max-w-sm bg-white rounded-[2rem] shadow-2xl overflow-hidden pointer-events-auto text-center">
+          {onClose && <button type="button" aria-label="Đóng lời mời" onClick={onClose} className="absolute top-2 right-2 z-10 w-11 h-11 rounded-full bg-white/90 flex items-center justify-center"><X size={20} /></button>}
           {/* Top image strip */}
           <div className="h-36 overflow-hidden relative">
             <Photo src={wedding.coverImage} alt="" className="w-full h-full object-cover object-top brightness-90" />
@@ -54,7 +55,7 @@ export function InvitePopup({ invitationName, alreadyConfirmed, onConfirm, rsvpE
               <Heart size={40} className="fill-primary" />
             </motion.div>
 
-            <h2 className="font-serif text-xl text-secondary italic leading-snug mb-6">
+            <h2 className="invitation-popup-headline font-serif text-xl text-secondary italic leading-snug mb-6">
               <span className="font-bold not-italic text-primary-deep">{invitationName}</span>
               <br />
               <span className="text-secondary/80">nhận được lời mời trân trọng từ</span>

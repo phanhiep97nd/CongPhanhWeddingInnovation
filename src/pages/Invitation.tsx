@@ -4,6 +4,7 @@ import { api, ApiError } from "../lib/api";
 import type { PublicGuest, Wedding } from "../lib/types";
 const ClassicInvitation = lazy(() => import("../components/invitation/original/InvitationShell"));
 const MinimalInvitation = lazy(() => import("../components/invitation/minimal/InvitationShell"));
+const Hy3dInvitation = lazy(() => import("../components/invitation/hy3d/InvitationShell"));
 
 export default function Invitation() {
   const { slug = "", code } = useParams();
@@ -66,7 +67,9 @@ export default function Invitation() {
       </main>
     );
   }
-  const Shell = wedding.template === "minimal" ? MinimalInvitation : ClassicInvitation;
+  const Shell = wedding.template === "minimal"
+    ? MinimalInvitation
+    : wedding.template === "hy3d" ? Hy3dInvitation : ClassicInvitation;
   return <Suspense fallback={<p className="page-loading">Đang mở thiệp...</p>}>
     <Shell wedding={wedding} guest={guest} slug={slug} />
   </Suspense>;

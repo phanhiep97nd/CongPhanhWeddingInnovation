@@ -62,8 +62,8 @@ export function ConfirmationPopup({ onClose, onScrollToInfo, onNext }: {
 
           {/* Content */}
           <div className="relative z-10 p-8 text-center">
-            <button onClick={onClose}
-              className="absolute top-4 right-4 p-1.5 rounded-full bg-white/80 text-secondary/60 hover:bg-white hover:text-secondary transition-all shadow-md">
+            <button onClick={onClose} aria-label="Đóng"
+              className="absolute top-4 right-4 w-11 h-11 flex items-center justify-center rounded-full bg-white/80 text-secondary/60 hover:bg-white hover:text-secondary transition-all shadow-md">
               <X size={18} />
             </button>
 

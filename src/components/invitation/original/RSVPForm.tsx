@@ -130,7 +130,7 @@ export function RSVPForm({
           >
             <div>
               <label className="block text-[10px] font-bold uppercase tracking-widest text-secondary/40 mb-2 ml-1">Họ và tên</label>
-              <input type="text" value={name} onChange={(e) => { setName(e.target.value); setErrors(er => ({...er, name: ""})); }}
+              <input type="text" autoComplete="name" value={name} onChange={(e) => { setName(e.target.value); setErrors(er => ({...er, name: ""})); }}
                 placeholder="Nhập tên của bạn"
                 className={`w-full px-5 py-3.5 rounded-2xl bg-blush border focus:bg-white focus:ring-2 focus:ring-primary/20 transition-all outline-none text-secondary ${errors.name ? "border-red-400" : "border-primary/20 focus:border-primary"}`} />
               {errors.name && <p className="text-xs text-red-500 mt-1 ml-1">{errors.name}</p>}
@@ -140,7 +140,7 @@ export function RSVPForm({
               <label className="block text-[10px] font-bold uppercase tracking-widest text-secondary/40 mb-2 ml-1 flex items-center gap-1">
                 <Phone size={10} className="inline" /> Số điện thoại
               </label>
-              <input type="tel" value={phone} onChange={(e) => { setPhone(e.target.value); setErrors(er => ({...er, phone: ""})); }}
+              <input type="tel" inputMode="tel" autoComplete="tel" value={phone} onChange={(e) => { setPhone(e.target.value); setErrors(er => ({...er, phone: ""})); }}
                 placeholder="0912 345 678"
                 className={`w-full px-5 py-3.5 rounded-2xl bg-blush border focus:bg-white focus:ring-2 focus:ring-primary/20 transition-all outline-none text-secondary ${errors.phone ? "border-red-400" : "border-primary/20 focus:border-primary"}`} />
               {errors.phone && <p className="text-xs text-red-500 mt-1 ml-1">{errors.phone}</p>}

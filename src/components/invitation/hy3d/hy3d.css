@@ -1,0 +1,313 @@
+/* Hỷ 3D template: fixed WebGL scene behind paper cards. Brand tokens from the Hỷ Thiệp identity. */
+.hy3d {
+  --hy-son: #a23b48;
+  --hy-paper: #fdf5f6;
+  --hy-blush: #f2c8cd;
+  --hy-moss: #3f5a2e;
+  --hy-gold: #c9a46a;
+  position: relative;
+  min-height: 100svh;
+  color: var(--hy-moss);
+  font-family: "Plus Jakarta Sans", sans-serif;
+  background: var(--hy-paper);
+  -webkit-tap-highlight-color: rgba(162, 59, 72, 0.15);
+}
+
+.hy3d-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100lvh;
+  display: block;
+  opacity: 0;
+  transition: opacity 600ms ease-out;
+  touch-action: pan-y;
+}
+
+.hy3d-canvas.is-ready {
+  opacity: 1;
+}
+
+/* Content above the canvas lets taps through except on the cards themselves. */
+.hy3d-opening,
+.hy3d-stop,
+.hy3d-end {
+  position: relative;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.hy3d-card,
+.hy3d-end a,
+.hy3d-flat-only {
+  pointer-events: auto;
+}
+
+.hy3d-opening {
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 20px calc(28px + env(safe-area-inset-bottom));
+}
+
+.hy3d-hint {
+  margin: 0 auto;
+  max-width: 22rem;
+  text-align: center;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--hy-moss);
+  background: rgba(253, 245, 246, 0.86);
+  border-radius: 999px;
+  padding: 10px 18px;
+}
+
+/* Each stop leaves the top of the screen to the scene, then shows its card. */
+.hy3d-stop {
+  padding: 56svh 16px 14svh;
+}
+
+.hy3d-card {
+  margin: 0 auto;
+  max-width: 34rem;
+  background: var(--hy-paper);
+  border-radius: 20px;
+  padding: 22px 20px 24px;
+  box-shadow: 0 18px 40px -18px rgba(90, 45, 52, 0.35);
+}
+
+.hy3d-card h2 {
+  margin: 0 0 12px;
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 600;
+  font-size: clamp(1.75rem, 7vw, 2.25rem);
+  line-height: 1.1;
+  color: var(--hy-son);
+  text-wrap: balance;
+}
+
+.hy3d-prose {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.7;
+  white-space: pre-line;
+}
+
+.hy3d-timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 14px;
+}
+
+.hy3d-timeline li {
+  display: grid;
+  grid-template-columns: 4.2rem 1fr;
+  gap: 12px;
+  align-items: baseline;
+}
+
+.hy3d-timeline time {
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 600;
+  font-size: 1.4rem;
+  color: var(--hy-son);
+  font-variant-numeric: tabular-nums;
+}
+
+.hy3d-timeline p {
+  margin: 2px 0 0;
+  font-size: 15px;
+  opacity: 0.85;
+}
+
+.hy3d-strip {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  margin: 0 -20px;
+  padding: 2px 20px 6px;
+}
+
+.hy3d-strip img {
+  flex: 0 0 62%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: 14px;
+  scroll-snap-align: center;
+}
+
+.hy3d-date {
+  margin: 0;
+  font-size: 1.25rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.hy3d-venue {
+  margin: 8px 0 2px;
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 600;
+  font-size: 1.5rem;
+}
+
+.hy3d-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.hy3d-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 22px;
+  border-radius: 999px;
+  background: var(--hy-son);
+  color: var(--hy-paper);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.hy3d-button.is-quiet {
+  background: transparent;
+  color: var(--hy-son);
+  box-shadow: inset 0 0 0 1.5px var(--hy-son);
+}
+
+.hy3d-button:focus-visible,
+.hy3d-end a:focus-visible {
+  outline: 3px solid var(--hy-gold);
+  outline-offset: 3px;
+}
+
+.hy3d-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.hy3d-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 44px;
+  align-items: center;
+  border-bottom: 1px solid rgba(162, 59, 72, 0.15);
+}
+
+.hy3d-swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.hy3d-swatches span {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+
+.hy3d-custom-image {
+  width: 100%;
+  border-radius: 14px;
+  margin-bottom: 12px;
+}
+
+.hy3d-end {
+  min-height: 70svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  text-align: center;
+  padding: 0 20px calc(40px + env(safe-area-inset-bottom));
+  gap: 6px;
+}
+
+.hy3d-end-names {
+  margin: 0;
+  font-family: "Great Vibes", cursive;
+  font-size: 2.6rem;
+  color: var(--hy-son);
+}
+
+.hy3d-end p {
+  margin: 0;
+}
+
+.hy3d-end a {
+  margin-top: 10px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  color: var(--hy-moss);
+  text-underline-offset: 4px;
+}
+
+/* 2D fallback: no scene, so stops collapse into a normal reading page. */
+.hy3d.is-flat .hy3d-opening {
+  min-height: 70svh;
+  justify-content: flex-end;
+  padding-top: 24px;
+  overflow: hidden;
+}
+
+.hy3d.is-flat .hy3d-cover {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.85;
+}
+
+.hy3d.is-flat .hy3d-opening-text {
+  position: relative;
+  background: rgba(253, 245, 246, 0.92);
+  border-radius: 20px;
+  padding: 18px;
+  text-align: center;
+}
+
+.hy3d-opening-text h1 {
+  margin: 4px 0;
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 600;
+  font-size: clamp(2.2rem, 10vw, 3.4rem);
+  color: var(--hy-son);
+  line-height: 1.05;
+}
+
+.hy3d-opening-text p {
+  margin: 0;
+}
+
+.hy3d.is-flat .hy3d-stop {
+  padding: 16px;
+}
+
+.hy3d.is-flat .hy3d-end {
+  min-height: 0;
+  padding-top: 40px;
+}
+
+@media (min-width: 900px) {
+  .hy3d-stop {
+    padding-top: 62vh;
+  }
+
+  .hy3d-card {
+    margin-left: auto;
+    margin-right: 6vw;
+  }
+}

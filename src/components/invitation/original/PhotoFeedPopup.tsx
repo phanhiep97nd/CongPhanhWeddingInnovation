@@ -15,6 +15,17 @@ import WeddingPhoto from "../Photo";
 export function PhotoFeedPopup({ photos, onClose, onUpload }: {
   photos: Photo[]; onClose: () => void; onUpload: () => void;
 }) {
+  useEffect(() => {
+    const previous = document.body.style.overflow;
+    const root = document.querySelector<HTMLElement>(".scroll-container");
+    const previousRoot = root?.style.overflowY || "";
+    document.body.style.overflow = "hidden";
+    if (root) root.style.overflowY = "hidden";
+    return () => {
+      document.body.style.overflow = previous;
+      if (root) root.style.overflowY = previousRoot;
+    };
+  }, []);
   const sorted = [...photos].sort((a, b) => b.createdAt - a.createdAt);
   const [lightbox, setLightbox] = useState<Photo | null>(null);
 
@@ -26,7 +37,7 @@ export function PhotoFeedPopup({ photos, onClose, onUpload }: {
       <motion.div key="feed-panel"
         initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }}
         transition={{ type: "spring", damping: 30, stiffness: 280 }}
-        className="fixed inset-x-0 bottom-0 top-14 z-[140] bg-white rounded-t-[2rem] shadow-2xl flex flex-col pointer-events-auto overflow-hidden"
+        className="invitation-feed-panel fixed inset-x-0 bottom-0 top-14 z-[140] bg-white rounded-t-[2rem] shadow-2xl flex flex-col pointer-events-auto overflow-hidden"
       >
         <div className="flex items-center justify-between px-5 py-4 border-b border-primary/10 flex-shrink-0">
           <h3 className="font-serif text-lg text-secondary italic flex items-center gap-2">
@@ -39,8 +50,8 @@ export function PhotoFeedPopup({ photos, onClose, onUpload }: {
               className="flex items-center gap-1.5 px-3 py-1.5 bg-primary-dark hover:bg-primary-deep text-white rounded-full text-xs font-bold shadow transition-colors">
               <Plus size={12} /> Thêm ảnh
             </button>
-            <button onClick={onClose}
-              className="p-1.5 rounded-full hover:bg-secondary/10 text-secondary/50 transition-colors">
+            <button onClick={onClose} aria-label="Đóng"
+              className="w-11 h-11 flex items-center justify-center rounded-full hover:bg-secondary/10 text-secondary/50 transition-colors">
               <X size={20} />
             </button>
           </div>
@@ -94,8 +105,8 @@ export function PhotoFeedPopup({ photos, onClose, onUpload }: {
               className="fixed inset-0 z-[161] flex flex-col items-center justify-center p-4 pointer-events-none"
             >
               <div className="relative pointer-events-auto max-w-lg w-full">
-                <button onClick={() => setLightbox(null)}
-                  className="absolute -top-10 right-0 p-2 text-white/70 hover:text-white transition-colors">
+                <button onClick={() => setLightbox(null)} aria-label="Đóng ảnh"
+                  className="absolute -top-12 right-0 w-11 h-11 flex items-center justify-center text-white/70 hover:text-white transition-colors">
                   <X size={22} />
                 </button>
                 <WeddingPhoto src={lightbox.url} alt={lightbox.caption}
