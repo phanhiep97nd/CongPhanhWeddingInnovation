@@ -1,19 +1,19 @@
 import { ACESFilmicToneMapping, Color, DirectionalLight, Fog, HemisphereLight, PCFShadowMap, PMREMGenerator, Scene, SRGBColorSpace, WebGLRenderer } from "three";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import { PALETTE } from "./materials";
-import type { SceneOptions } from "./sceneData";
+import { sceneOptionsFor, type SceneOptions } from "./sceneData";
 
 export function setupRenderer(canvas: HTMLCanvasElement, scene: Scene, sun: DirectionalLight, options: SceneOptions) {
+  const settings = sceneOptionsFor(options);
   const renderer = new WebGLRenderer({ canvas, antialias: window.devicePixelRatio < 2, alpha: false, powerPreference: "default" });
   renderer.outputColorSpace = SRGBColorSpace;
-  const cap = options.pixelRatioCap ?? (options.lowPower ? 1.25 : 1.75);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, cap));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, settings.pixelRatioCap));
 
   // Filmic tone mapping + a generated environment give PBR surfaces natural highlights and bounce.
   renderer.toneMapping = ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.05;
+  renderer.toneMappingExposure = settings.exposure;
   scene.background = new Color(PALETTE.skyHorizon);
-  scene.fog = new Fog(PALETTE.skyHorizon, 10, 34);
+  scene.fog = new Fog(PALETTE.skyHorizon, settings.fogNear, settings.fogFar);
   const pmrem = new PMREMGenerator(renderer);
   const environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
   scene.environment = environment;

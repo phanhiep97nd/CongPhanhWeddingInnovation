@@ -17,7 +17,7 @@ import { PALETTE, disposeMaterials, isDark, windUniform } from "./materials";
 import { ensureFonts } from "./textures";
 import { Petals, buildWorld, clamp01, disposeWorld, floatProps, frameAt, redEnvelope, type Station } from "./world";
 
-import type { SceneData, SceneOptions } from "./sceneData";
+import { sceneOptionsFor, type SceneData, type SceneOptions } from "./sceneData";
 export type { SceneData, SceneOptions } from "./sceneData";
 
 // Scroll progress p ∈ [0, 1] (from the HTML overlay) maps to the walk parameter u along the path.
@@ -73,9 +73,12 @@ export class WeddingScene {
   private visible = true;
   private progress = 0;
   private viewShift = 0;      // fraction of the screen height the image is shifted (portrait phones)
+  private readonly settings: ReturnType<typeof sceneOptionsFor>;
+  private lastFrameTime: number | null = null;
 
   constructor(private readonly canvas: HTMLCanvasElement, private readonly data: SceneData, private readonly options: SceneOptions = {}) {
-    this.envelope = new EnvelopeIntro(this.scene, data, options.skipIntro ?? false, () => this.snapCamera(), () => this.applyViewOffset());
+    this.settings = sceneOptionsFor(options);
+    this.envelope = new EnvelopeIntro(this.scene, data, this.settings.skipIntro, () => this.snapCamera(), () => this.applyViewOffset());
     const rendering = setupRenderer(canvas, this.scene, this.sun, options);
     this.renderer = rendering.renderer;
     this.environment = rendering.environment;
@@ -151,6 +154,7 @@ export class WeddingScene {
 
   // Taps on the canvas: open the envelope, or make the couple react.
   tap(clientX: number, clientY: number) {
+    if (!this.settings.taps) return;
     if (this.intro === "envelope" || this.intro === "opening") {
       this.envelope.phase = "opening";
       return;
@@ -170,6 +174,7 @@ export class WeddingScene {
   }
 
   setTilt(x: number, y: number) {
+    if (!this.settings.tilt) return;
     this.tilt.set(MathUtils.clamp(x, -1, 1), MathUtils.clamp(y, -1, 1));
   }
 
@@ -204,6 +209,7 @@ export class WeddingScene {
   }
 
   private updateViewShift(dt: number) {
+    if (!this.settings.viewShift) return;
     const openingEnd = 0.5 / (this.stations.length + 1);
     // The envelope sits lower than the couple so the hero text above stays clear.
     const opening = this.intro === "done" ? -0.08 : -0.15;
@@ -218,8 +224,9 @@ export class WeddingScene {
   start() {
     if (this.running || this.disposed || !this.visible) return;
     this.running = true;
+    this.lastFrameTime = null;
     this.timer.reset();
-    this.renderer.setAnimationLoop(() => this.frame());
+    this.renderer.setAnimationLoop((time) => this.frame(time));
   }
 
   stop() {
@@ -247,7 +254,10 @@ export class WeddingScene {
   }
 
   // ── Frame ─────────────────────────────────────────────────────────────────
-  private frame() {
+  private frame(time: number) {
+    const fps = this.settings.fpsCap;
+    if (fps && this.lastFrameTime !== null && time - this.lastFrameTime < 1000 / fps - 0.5) return;
+    this.lastFrameTime = time;
     this.timer.update();
     const dt = Math.min(this.timer.getDelta(), 1 / 20);
     this.update(dt, this.timer.getElapsed());

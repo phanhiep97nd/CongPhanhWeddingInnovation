@@ -1,5 +1,5 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import Invitation from "../../../pages/Invitation";
 import InvitationShell from "./InvitationShell";
@@ -8,6 +8,16 @@ import * as capability from "./capability";
 import { scrollToProgress } from "./progress";
 import { premiumEntitlements, response, wedding } from "../../../test/plan-fixtures";
 import type { PublicGuest, Wedding } from "../../../lib/types";
+
+vi.mock("./Hy3dCanvas", async () => {
+  const { createElement, forwardRef, useImperativeHandle } = await import("react");
+  return {
+    default: forwardRef(function Canvas(_props, ref) {
+      useImperativeHandle(ref, () => ({ setProgress: vi.fn() }), []);
+      return createElement("canvas");
+    }),
+  };
+});
 
 const hy3dWedding: Wedding = {
   ...wedding,
@@ -28,6 +38,10 @@ const hy3dWedding: Wedding = {
 };
 
 const guest: PublicGuest = { code: "abc", invitationName: "Chị Thu Hà", status: "pending", guestCount: 1, joinGroup: false, pickupPoint: "", room: "" };
+
+beforeEach(() => {
+  vi.spyOn(window, "scrollTo").mockImplementation(() => {});
+});
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -88,12 +102,14 @@ describe("3D / normal modes", () => {
     expect(await screen.findByLabelText("Các hạng mục thiệp")).toBeInTheDocument();
     expect(container.querySelector(".hy3d")).toBeNull();
     expect(screen.queryByRole("group", { name: "Chế độ xem thiệp" })).toBeNull();
+    expect(screen.queryByRole("button", { name: /Chế độ xem thiệp:/ })).toBeNull();
   });
 
   it("starts in 3D and switches to the normal mode, remembering the choice", async () => {
     vi.spyOn(capability, "canRender3d").mockReturnValue(true);
     const { container, unmount } = render(<Hy3dModes wedding={hy3dWedding} guest={guest} slug="pa-mc" />);
     expect(await screen.findByRole("button", { name: /Cuộn để đi cùng chúng mình/ })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Chế độ xem thiệp: 3D" }));
     expect(screen.getByRole("button", { name: "3D" })).toHaveAttribute("aria-pressed", "true");
 
     fireEvent.click(screen.getByRole("button", { name: "Thường" }));
@@ -104,7 +120,68 @@ describe("3D / normal modes", () => {
 
     render(<Hy3dModes wedding={hy3dWedding} guest={guest} slug="pa-mc" />);
     expect(await screen.findByLabelText("Các hạng mục thiệp")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Xem thiệp chế độ 3D" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Chế độ xem thiệp: Thường" })).toBeInTheDocument();
+  });
+
+  it("offers three modes and remembers the mixed classic backdrop", async () => {
+    vi.spyOn(capability, "canRender3d").mockReturnValue(true);
+    const { container, unmount } = render(<Hy3dModes wedding={hy3dWedding} guest={null} slug="pa-mc" />);
+    fireEvent.click(screen.getByRole("button", { name: "Chế độ xem thiệp: 3D" }));
+    const menu = screen.getByRole("dialog", { name: "Chọn chế độ xem thiệp" });
+    expect(within(menu).getAllByRole("button")).toHaveLength(3);
+    expect(within(menu).getByRole("button", { name: "3D" })).toHaveAttribute("aria-pressed", "true");
+    expect(within(menu).getByRole("button", { name: "Thường" })).toHaveAttribute("aria-pressed", "false");
+    fireEvent.click(within(menu).getByRole("button", { name: "Kết hợp" }));
+    expect(await screen.findByLabelText("Các hạng mục thiệp")).toBeInTheDocument();
+    expect(container.querySelector(".classic-over-3d > .classic-3d-backdrop canvas")).toBeInTheDocument();
+    expect(localStorage.getItem("hy3d-mode")).toBe("mixed");
+    expect(screen.queryByRole("dialog", { name: "Chọn chế độ xem thiệp" })).toBeNull();
+    unmount();
+
+    render(<Hy3dModes wedding={hy3dWedding} guest={null} slug="pa-mc" />);
+    expect(await screen.findByLabelText("Các hạng mục thiệp")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Chế độ xem thiệp: Kết hợp" }));
+    expect(screen.getByRole("button", { name: "Kết hợp" })).toHaveAttribute("aria-pressed", "true");
+  });
+
+  it.each(["3d", "normal"])("accepts the old stored %s mode", async (mode) => {
+    vi.spyOn(capability, "canRender3d").mockReturnValue(true);
+    localStorage.setItem("hy3d-mode", mode);
+    render(<Hy3dModes wedding={hy3dWedding} guest={null} slug="pa-mc" />);
+    if (mode === "3d") {
+      expect(await screen.findByRole("button", { name: /Cuộn để đi cùng chúng mình/ })).toBeInTheDocument();
+    } else {
+      expect(await screen.findByLabelText("Các hạng mục thiệp")).toBeInTheDocument();
+    }
+  });
+
+  it("closes on Escape and restores focus to the trigger", () => {
+    vi.spyOn(capability, "canRender3d").mockReturnValue(true);
+    render(<Hy3dModes wedding={hy3dWedding} guest={null} slug="pa-mc" />);
+    const trigger = screen.getByRole("button", { name: "Chế độ xem thiệp: 3D" });
+    fireEvent.click(trigger);
+    expect(screen.getByRole("button", { name: "3D" })).toHaveFocus();
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(screen.queryByRole("dialog")).toBeNull();
+    expect(trigger).toHaveAttribute("aria-expanded", "false");
+    expect(trigger).toHaveFocus();
+  });
+
+  it("closes on an outside tap", () => {
+    vi.spyOn(capability, "canRender3d").mockReturnValue(true);
+    render(<Hy3dModes wedding={hy3dWedding} guest={null} slug="pa-mc" />);
+    fireEvent.click(screen.getByRole("button", { name: "Chế độ xem thiệp: 3D" }));
+    fireEvent.click(screen.getByRole("dialog").parentElement!);
+    expect(screen.queryByRole("dialog")).toBeNull();
+  });
+
+  it.each(["3d", "mixed"])("falls back from stored %s when 3D is unavailable", async (mode) => {
+    vi.spyOn(capability, "canRender3d").mockReturnValue(false);
+    localStorage.setItem("hy3d-mode", mode);
+    const { container } = render(<Hy3dModes wedding={hy3dWedding} guest={null} slug="pa-mc" />);
+    expect(await screen.findByLabelText("Các hạng mục thiệp")).toBeInTheDocument();
+    expect(container.querySelector(".classic-3d-backdrop")).toBeNull();
+    expect(screen.queryByRole("button", { name: /Chế độ xem thiệp:/ })).toBeNull();
   });
 
   it("is used by the invitation page for the hy3d template", async () => {

@@ -1,45 +1,8 @@
-/* 3D / Thường switch, shared by both modes so it is styled even when the 3D CSS is not loaded. */
-.mode-switch {
-  position: fixed;
-  top: calc(10px + env(safe-area-inset-top));
-  right: 10px;
-  z-index: 70;
-  display: inline-flex;
-  padding: 3px;
-  gap: 2px;
-  border-radius: 999px;
-  background: rgba(253, 245, 246, 0.94);
-  box-shadow: 0 6px 18px -8px rgba(90, 45, 52, 0.45);
-}
-
-.mode-switch button {
-  min-width: 52px;
-  min-height: 38px;
-  padding: 0 12px;
-  border: 0;
-  border-radius: 999px;
-  background: transparent;
-  color: #3f5a2e;
-  font: 600 14px "Plus Jakarta Sans", sans-serif;
-  cursor: pointer;
-  touch-action: manipulation;
-}
-
-/* The pill itself is 44px tall: 38px buttons + 3px padding on both sides. */
-.mode-switch button[aria-pressed="true"] {
-  background: #a23b48;
-  color: #fdf5f6;
-}
-
-.mode-switch button:focus-visible {
-  outline: 3px solid #c9a46a;
-  outline-offset: 2px;
-}
-
+/* Mode picker shared by all three viewing modes. */
 .mode-switch-compact {
   position: fixed;
   top: calc(8px + env(safe-area-inset-top));
-  right: 8px;
+  right: calc(8px + env(safe-area-inset-right));
   z-index: 70;
   width: 44px;
   height: 44px;
@@ -53,7 +16,61 @@
   touch-action: manipulation;
 }
 
-.mode-switch-compact:focus-visible {
+.mode-menu-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  align-items: flex-end;
+  background: rgba(50, 35, 40, 0.22);
+  overscroll-behavior: contain;
+}
+
+.mode-menu {
+  width: 100%;
+  padding: 12px 16px calc(16px + env(safe-area-inset-bottom));
+  border-radius: 20px 20px 0 0;
+  background: #fdf5f6;
+  box-shadow: 0 -6px 24px rgba(90, 45, 52, 0.12);
+}
+
+.mode-menu button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: #3f5a2e;
+  font: 600 14px "Plus Jakarta Sans", sans-serif;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.mode-menu button[aria-pressed="true"] {
+  background: #a23b48;
+  color: #fdf5f6;
+}
+
+.mode-switch-compact:focus-visible,
+.mode-menu button:focus-visible {
   outline: 3px solid #c9a46a;
   outline-offset: 2px;
+}
+
+@media (min-width: 640px) {
+  .mode-menu-overlay {
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding: calc(60px + env(safe-area-inset-top)) calc(8px + env(safe-area-inset-right)) 0 8px;
+  }
+
+  .mode-menu {
+    width: 240px;
+    padding: 8px;
+    border-radius: 16px;
+  }
 }

@@ -1,6 +1,7 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { observeResize } from "./observeResize";
-import type { SceneData, WeddingScene } from "./scene/WeddingScene";
+import type { SceneData, SceneOptions, WeddingScene } from "./scene/WeddingScene";
+import "./hy3d.css";
 
 export interface Hy3dCanvasHandle {
   setProgress: (progress: number) => void;
@@ -9,6 +10,7 @@ export interface Hy3dCanvasHandle {
 interface Props {
   data: SceneData;
   onUnavailable: () => void;
+  options?: SceneOptions;
 }
 
 interface DeviceOrientationPermission {
@@ -23,7 +25,7 @@ function isLowPower() {
 }
 
 // ── Canvas ────────────────────────────────────────────────────────────────────
-const Hy3dCanvas = forwardRef<Hy3dCanvasHandle, Props>(function Hy3dCanvas({ data, onUnavailable }, ref) {
+const Hy3dCanvas = forwardRef<Hy3dCanvasHandle, Props>(function Hy3dCanvas({ data, onUnavailable, options }, ref) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const sceneRef = useRef<WeddingScene | null>(null);
   const pendingProgress = useRef(0);
@@ -46,7 +48,7 @@ const Hy3dCanvas = forwardRef<Hy3dCanvasHandle, Props>(function Hy3dCanvas({ dat
         .then(async ({ WeddingScene }) => {
           const canvas = canvasRef.current;
           if (disposed || !canvas) return;
-          const scene = new WeddingScene(canvas, data, { lowPower: isLowPower() });
+          const scene = new WeddingScene(canvas, data, { ...options, lowPower: options?.lowPower ?? isLowPower() });
           await scene.init();
           if (disposed) {
             scene.dispose();
@@ -54,7 +56,7 @@ const Hy3dCanvas = forwardRef<Hy3dCanvasHandle, Props>(function Hy3dCanvas({ dat
           }
           sceneRef.current = scene;
           if (pendingProgress.current) scene.setProgress(pendingProgress.current);
-          scene.start();
+          scene.setVisible(document.visibilityState === "visible");
           setReady(true);
 
           const stopObserving = observeResize(canvas, () => scene.resize());
@@ -98,7 +100,7 @@ const Hy3dCanvas = forwardRef<Hy3dCanvasHandle, Props>(function Hy3dCanvas({ dat
   }
 
   async function enableTilt() {
-    if (orientationAsked.current || typeof DeviceOrientationEvent === "undefined") return;
+    if (options?.background || orientationAsked.current || typeof DeviceOrientationEvent === "undefined") return;
     orientationAsked.current = true;
     const permission = (DeviceOrientationEvent as unknown as DeviceOrientationPermission).requestPermission;
     try {
@@ -117,10 +119,11 @@ const Hy3dCanvas = forwardRef<Hy3dCanvasHandle, Props>(function Hy3dCanvas({ dat
       className={`hy3d-canvas${ready ? " is-ready" : ""}`}
       aria-label="Khung cảnh 3D: cô dâu và chú rể đi trên con đường hoa"
       role="img"
-      onPointerDown={(event) => {
+      style={options?.background ? { pointerEvents: "none" } : undefined}
+      onPointerDown={options?.background ? undefined : (event) => {
         pointerStart.current = { x: event.clientX, y: event.clientY };
       }}
-      onPointerUp={(event) => {
+      onPointerUp={options?.background ? undefined : (event) => {
         const start = pointerStart.current;
         pointerStart.current = null;
         if (!start || Math.hypot(event.clientX - start.x, event.clientY - start.y) > 12) return;

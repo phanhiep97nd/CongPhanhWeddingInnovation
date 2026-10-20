@@ -14,7 +14,7 @@ import { WeddingContext } from "./WeddingContext";
 import Photo from "../Photo";
 import { useReducedMotion } from "motion/react";
 import type { PublicGuest, Wedding } from "../../../lib/types";
-import type { CSSProperties } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { BRAND_NAME } from "../../../lib/brand";
 import { InvitePopup } from "./InvitePopup";
 import { StorySection } from "./StorySection";
@@ -27,7 +27,14 @@ import { ConfirmationPopup } from "./ConfirmationPopup";
 import { DressCodePopup } from "./DressCodePopup";
 
 // ── App ───────────────────────────────────────────────────────────────────────
-export default function InvitationShell({ wedding, guest, slug }: { wedding: Wedding; guest: PublicGuest | null; slug: string }) {
+export default function InvitationShell({ wedding, guest, slug, backdrop, onScrollContainer }: {
+  wedding: Wedding;
+  guest: PublicGuest | null;
+  slug: string;
+  backdrop?: ReactNode;
+  onScrollContainer?: (element: HTMLDivElement | null) => void;
+}) {
+  const hasBackdrop = backdrop != null;
   const IMAGES = weddingImages(wedding);
   const COUPLE = couple(wedding);
   const WEDDING_DATE = weddingDate(wedding);
@@ -57,6 +64,11 @@ export default function InvitationShell({ wedding, guest, slug }: { wedding: Wed
   const { scrollYProgress } = useScroll({ container: containerRef });
   const heroZoom = useTransform(scrollYProgress, [0, 0.25], [1.0, reducedMotion ? 1 : 1.5]);
   const heroY    = useTransform(scrollYProgress, [0, 0.25], ["0%", reducedMotion ? "0%" : "10%"]);
+
+  useEffect(() => {
+    onScrollContainer?.(containerRef.current);
+    return () => onScrollContainer?.(null);
+  }, [onScrollContainer]);
 
   useEffect(() => {
     const root = containerRef.current;
@@ -176,7 +188,8 @@ export default function InvitationShell({ wedding, guest, slug }: { wedding: Wed
 
   return (
     <WeddingContext.Provider value={{ wedding, guest, slug }}>
-    <div ref={containerRef} className="scroll-container bg-petal selection:bg-primary" style={themeVariables(wedding.theme.primary) as CSSProperties}>
+    <div ref={containerRef} className={`scroll-container bg-petal selection:bg-primary${hasBackdrop ? " classic-over-3d" : ""}`} style={themeVariables(wedding.theme.primary) as CSSProperties}>
+      {hasBackdrop && <div className="classic-3d-backdrop" aria-hidden="true">{backdrop}</div>}
 
       {/* ── Header ── */}
       <header className="fixed top-0 w-full z-50 bg-white/65 backdrop-blur-md border-b border-primary/20">
@@ -312,6 +325,8 @@ export default function InvitationShell({ wedding, guest, slug }: { wedding: Wed
         {enabled.map((section) => {
           const id = section.key.replace(":", "-");
           switch (section.key) {
+            // RSVP lives in a popup; mixed mode only needs a scroll anchor for its station.
+            case "rsvp": return hasBackdrop ? <div key={id} id={id} aria-hidden="true" /> : null;
             case "story": return <div key={id} id={id} className="bg-petal"><StorySection onRSVP={() => setShowRSVP(true)} /></div>;
             case "timeline": return <div key={id} id={id} className="bg-white"><TimelineSection /></div>;
             case "gallery": return <div key={id} id={id} className="bg-blush"><GallerySection /></div>;

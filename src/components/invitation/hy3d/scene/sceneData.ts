@@ -11,8 +11,27 @@ export interface SceneData {
 }
 
 export interface SceneOptions {
+  background?: boolean;
   pixelRatioCap?: number;
   skipIntro?: boolean;
   lowPower?: boolean;
+}
+
+// ── Rendering policy ──
+export function sceneOptionsFor(options: SceneOptions = {}) {
+  const background = options.background ?? false;
+  return {
+    ...options,
+    background,
+    skipIntro: background || (options.skipIntro ?? false),
+    taps: !background,
+    tilt: !background,
+    viewShift: !background,
+    fpsCap: background ? 30 : undefined,
+    pixelRatioCap: Math.min(options.pixelRatioCap ?? (options.lowPower ? 1.25 : 1.75), background ? 1.25 : Infinity),
+    exposure: background ? 1.12 : 1.05,
+    fogNear: background ? 8 : 10,
+    fogFar: background ? 28 : 34,
+  };
 }
 

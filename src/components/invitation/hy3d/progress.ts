@@ -16,3 +16,25 @@ export function scrollToProgress(scrollY: number, stopOffsets: number[], maxScro
   }
   return 1;
 }
+
+// ── Classic scroll container ──
+export function containerStopOffsets(container: HTMLElement, sectionIds: string[]) {
+  const sections = new Map(Array.from(container.querySelectorAll<HTMLElement>("[id]"), (element) => [element.id, element]));
+  return sectionIds.flatMap((id) => {
+    const section = sections.get(id);
+    if (!section) return [];
+    let offset = 0;
+    let element: HTMLElement | null = section;
+    while (element && element !== container) {
+      offset += element.offsetTop;
+      element = element.offsetParent as HTMLElement | null;
+    }
+    return [offset];
+  });
+}
+
+export function containerProgress(container: HTMLElement, sectionIds: string[], offsets = containerStopOffsets(container, sectionIds)) {
+  const maxScroll = Math.max(0, container.scrollHeight - container.clientHeight);
+  if (!maxScroll) return 0;
+  return scrollToProgress(container.scrollTop, offsets, maxScroll);
+}

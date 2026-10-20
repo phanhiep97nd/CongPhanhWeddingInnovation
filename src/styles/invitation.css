@@ -107,3 +107,52 @@
   .gift-qr-dialog { position: fixed; inset: auto 0 0; margin: 0; max-width: none; border-radius: 18px 18px 0 0; padding-bottom: calc(1rem + env(safe-area-inset-bottom)); }
 }
 .scroll-container footer nav button { min-height: 44px; padding: .5rem; }
+
+/* ── Classic invitation with an optional 3D backdrop ── */
+.classic-over-3d {
+  position: relative;
+  background: transparent;
+}
+
+.classic-over-3d > .classic-3d-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.classic-over-3d > .classic-3d-backdrop > canvas {
+  height: 100%;
+  pointer-events: none;
+}
+
+.classic-over-3d > main,
+.classic-over-3d > footer {
+  position: relative;
+  z-index: 1;
+}
+
+.classic-over-3d > main > div[id],
+.classic-over-3d > footer {
+  background: linear-gradient(to bottom, rgba(253, 245, 246, 0.06), rgba(253, 245, 246, 0.78) 64px, rgba(253, 245, 246, 0.78) calc(100% - 64px), rgba(253, 245, 246, 0.06));
+}
+
+/* Nested section surfaces must also let the scene show through; cards stay opaque. */
+.classic-over-3d > main > div[id] > section.bg-white,
+.classic-over-3d > main > div[id] > section.bg-blush,
+.classic-over-3d > main > div[id] > section.bg-petal {
+  background: transparent;
+}
+
+.classic-over-3d .invitation-hero > div:first-child {
+  display: none;
+}
+
+.classic-over-3d .invitation-hero {
+  background: linear-gradient(to bottom, rgba(253, 245, 246, 0.25), transparent 80%);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.95), 0 2px 14px rgba(253, 245, 246, 0.9);
+}
+
+.classic-over-3d > main > #rsvp {
+  min-height: 1px;
+}
