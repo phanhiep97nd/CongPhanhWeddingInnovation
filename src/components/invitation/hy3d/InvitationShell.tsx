@@ -5,8 +5,9 @@ import { cldUrl } from "../../../lib/images";
 import { WeddingContext } from "../original/WeddingContext";
 import { RSVPForm } from "../original/RSVPForm";
 import GiftBoxSection from "../original/GiftBoxSection";
-import { canRender3d } from "./capability";
+import { ChevronDown, Heart } from "lucide-react";
 import type { Hy3dCanvasHandle } from "./Hy3dCanvas";
+import { observeResize } from "./observeResize";
 import { scrollToProgress } from "./progress";
 import type { SceneData } from "./scene/WeddingScene";
 import "./hy3d.css";
@@ -28,9 +29,13 @@ const STOP_TITLES: Record<string, string> = {
 // ── Hỷ 3D template ────────────────────────────────────────────────────────────
 // A fixed 3D scene behind the page; each enabled section is a "stop": an empty band where the scene
 // plays, then a paper card with the section content in the lower, thumb-friendly half of the screen.
-export default function InvitationShell({ wedding, guest, slug }: { wedding: Wedding; guest: PublicGuest | null; slug: string }) {
+export default function InvitationShell({ wedding, guest, slug, onUnavailable }: {
+  wedding: Wedding;
+  guest: PublicGuest | null;
+  slug: string;
+  onUnavailable: () => void;   // WebGL failed: the parent switches to the normal (classic) mode
+}) {
   const stops = useMemo(() => wedding.sections.filter((section) => section.enabled).map((section) => section.key), [wedding.sections]);
-  const [use3d, setUse3d] = useState(() => canRender3d());
   const canvasRef = useRef<Hy3dCanvasHandle>(null);
   const stopRefs = useRef<(HTMLElement | null)[]>([]);
   const publicBase = `/public/weddings/${encodeURIComponent(slug)}`;
@@ -56,7 +61,6 @@ export default function InvitationShell({ wedding, guest, slug }: { wedding: Wed
 
   // Scroll -> walk progress, measured against each stop's position (re-measured on resize).
   useEffect(() => {
-    if (!use3d) return;
     let frame = 0;
     let offsets: number[] = [];
     const measure = () => {
@@ -72,44 +76,53 @@ export default function InvitationShell({ wedding, guest, slug }: { wedding: Wed
     };
     measure();
     update();
-    const resizeObserver = new ResizeObserver(() => {
+    const stopObserving = observeResize(document.body, () => {
       measure();
       onScroll();
     });
-    resizeObserver.observe(document.body);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => {
       window.removeEventListener("scroll", onScroll);
-      resizeObserver.disconnect();
+      stopObserving();
       if (frame) window.cancelAnimationFrame(frame);
     };
-  }, [use3d, stops.length]);
+  }, [stops.length]);
 
   return (
     <WeddingContext.Provider value={{ wedding, guest, slug }}>
-      <main className={`hy3d${use3d ? " has-scene" : " is-flat"}`}>
-        {use3d && (
-          <Suspense fallback={null}>
-            <Hy3dCanvas ref={canvasRef} data={sceneData} onUnavailable={() => setUse3d(false)} />
-          </Suspense>
-        )}
+      <main className="hy3d">
+        <Suspense fallback={null}>
+          <Hy3dCanvas ref={canvasRef} data={sceneData} onUnavailable={onUnavailable} />
+        </Suspense>
 
+        {/* Opening screen: the same facts as the classic hero, above the 3D couple. */}
         <header className="hy3d-opening">
-          {!use3d && wedding.coverImage && <img className="hy3d-cover" src={cldUrl(wedding.coverImage, 1200)} alt="" fetchPriority="high" />}
-          <div className="hy3d-opening-text">
-            {!use3d && (
-              <>
-                <p>{guest ? `Thân mời ${guest.invitationName}` : "Trân trọng kính mời"}</p>
-                <h1>
-                  {wedding.couple.groom}
-                  <span> & </span>
-                  {wedding.couple.bride}
-                </h1>
-                <p>{wedding.dateText}</p>
-              </>
+          <div className="hy3d-hero">
+            <p className="hy3d-hero-invite">
+              {guest ? "Trân trọng kính mời" : "Trân trọng kính mời bạn"}
+              {guest && <span className="hy3d-hero-guest">{guest.invitationName}</span>}
+            </p>
+            <h1 className="hy3d-hero-names">
+              <span>{wedding.couple.bride}</span>
+              <Heart aria-hidden="true" className="hy3d-hero-heart" />
+              <span>{wedding.couple.groom}</span>
+            </h1>
+            <p className="hy3d-hero-date">{dateLine(wedding)}</p>
+            {wedding.venue.name && (
+              <p className="hy3d-hero-venue">
+                {wedding.venue.name}
+                {wedding.venue.address && `, ${wedding.venue.address}`}
+              </p>
             )}
           </div>
-          {use3d && <p className="hy3d-hint">Chạm vào thiệp để mở, rồi vuốt lên để đi cùng chúng mình</p>}
+          <button
+            type="button"
+            className="hy3d-scroll-cue"
+            onClick={() => stopRefs.current[0]?.scrollIntoView({ behavior: "smooth" })}
+          >
+            Cuộn để đi cùng chúng mình
+            <ChevronDown aria-hidden="true" />
+          </button>
         </header>
 
         {stops.map((key, index) => (
@@ -139,6 +152,19 @@ export default function InvitationShell({ wedding, guest, slug }: { wedding: Wed
       </main>
     </WeddingContext.Provider>
   );
+}
+
+// Time, weekday and date, e.g. "18:00 · Thứ Bảy · 12 · 12 · 2026".
+function dateLine(wedding: Wedding) {
+  let weekday = "";
+  if (wedding.eventDate) {
+    const date = new Date(wedding.eventDate);
+    if (!Number.isNaN(date.getTime())) {
+      const name = new Intl.DateTimeFormat("vi-VN", { weekday: "long", timeZone: "Asia/Ho_Chi_Minh" }).format(date);
+      weekday = name.charAt(0).toUpperCase() + name.slice(1);
+    }
+  }
+  return [wedding.eventTime, weekday, wedding.dateText].filter(Boolean).join(" · ");
 }
 
 // ── Stop content ──────────────────────────────────────────────────────────────

@@ -1,16 +1,22 @@
-import { describe, expect, it, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import Invitation from "../../../pages/Invitation";
 import InvitationShell from "./InvitationShell";
+import Hy3dModes from "./Hy3dModes";
+import * as capability from "./capability";
 import { scrollToProgress } from "./progress";
 import { premiumEntitlements, response, wedding } from "../../../test/plan-fixtures";
-import type { Wedding } from "../../../lib/types";
+import type { PublicGuest, Wedding } from "../../../lib/types";
 
 const hy3dWedding: Wedding = {
   ...wedding,
   template: "hy3d",
   entitlements: premiumEntitlements,
+  couple: { groom: "Minh Công", bride: "Phương Anh", groomFull: "", brideFull: "" },
+  eventDate: "2026-12-12",
+  eventTime: "18:00",
+  dateText: "12 · 12 · 2026",
   sections: [
     { key: "story", enabled: true },
     { key: "timeline", enabled: true },
@@ -20,6 +26,13 @@ const hy3dWedding: Wedding = {
   timeline: [{ id: "t1", time: "18:00", title: "Lễ thành hôn", desc: "" }],
   venue: { name: "Aman Villa", address: "Ba Vì", mapUrl: "https://maps.example/aman" },
 };
+
+const guest: PublicGuest = { code: "abc", invitationName: "Chị Thu Hà", status: "pending", guestCount: 1, joinGroup: false, pickupPoint: "", room: "" };
+
+afterEach(() => {
+  vi.restoreAllMocks();
+  localStorage.clear();
+});
 
 describe("scroll to walk progress", () => {
   const stops = [800, 1600, 2400];
@@ -45,34 +58,65 @@ describe("scroll to walk progress", () => {
   });
 });
 
-describe("Hỷ 3D template", () => {
-  it("falls back to a readable 2D page without WebGL", () => {
-    // jsdom has no WebGL context, which is exactly the fallback path.
-    const { container } = render(<InvitationShell wedding={hy3dWedding} guest={{ code: "abc", invitationName: "Chị Thu Hà", status: "pending", guestCount: 1, joinGroup: false, pickupPoint: "", room: "" }} slug="hoa-minh" />);
-    expect(container.querySelector(".hy3d.is-flat")).not.toBeNull();
-    expect(container.querySelector("canvas")).toBeNull();
-    expect(screen.getByText("Thân mời Chị Thu Hà")).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Câu chuyện" })).toBeInTheDocument();
-    expect(screen.getByText("Lễ thành hôn")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Xem bản đồ" })).toHaveAttribute("href", "https://maps.example/aman");
+describe("Hỷ 3D mode", () => {
+  it("opens with the classic hero facts above the scene", () => {
+    render(<InvitationShell wedding={hy3dWedding} guest={guest} slug="pa-mc" onUnavailable={vi.fn()} />);
+    expect(screen.getByText("Chị Thu Hà")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Phương Anh");
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Minh Công");
+    expect(screen.getByText("18:00 · Thứ Bảy · 12 · 12 · 2026")).toBeInTheDocument();
+    expect(screen.getByText("Aman Villa, Ba Vì")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Cuộn để đi cùng chúng mình/ })).toBeInTheDocument();
+  });
+
+  it("invites 'bạn' when there is no guest", () => {
+    render(<InvitationShell wedding={hy3dWedding} guest={null} slug="pa-mc" onUnavailable={vi.fn()} />);
+    expect(screen.getByText("Trân trọng kính mời bạn")).toBeInTheDocument();
   });
 
   it("renders only enabled sections, in order", () => {
-    const { container } = render(<InvitationShell wedding={hy3dWedding} guest={null} slug="hoa-minh" />);
+    const { container } = render(<InvitationShell wedding={hy3dWedding} guest={null} slug="pa-mc" onUnavailable={vi.fn()} />);
     const ids = [...container.querySelectorAll(".hy3d-stop")].map((element) => element.id);
     expect(ids).toEqual(["story", "timeline", "info"]);
   });
+});
 
-  it("is chosen by the invitation page when the template is hy3d", async () => {
+describe("3D / normal modes", () => {
+  it("uses the normal (classic) invitation without a switch when 3D is unavailable", async () => {
+    vi.spyOn(capability, "canRender3d").mockReturnValue(false);
+    const { container } = render(<Hy3dModes wedding={hy3dWedding} guest={guest} slug="pa-mc" />);
+    expect(await screen.findByLabelText("Các hạng mục thiệp")).toBeInTheDocument();
+    expect(container.querySelector(".hy3d")).toBeNull();
+    expect(screen.queryByRole("group", { name: "Chế độ xem thiệp" })).toBeNull();
+  });
+
+  it("starts in 3D and switches to the normal mode, remembering the choice", async () => {
+    vi.spyOn(capability, "canRender3d").mockReturnValue(true);
+    const { container, unmount } = render(<Hy3dModes wedding={hy3dWedding} guest={guest} slug="pa-mc" />);
+    expect(await screen.findByRole("button", { name: /Cuộn để đi cùng chúng mình/ })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "3D" })).toHaveAttribute("aria-pressed", "true");
+
+    fireEvent.click(screen.getByRole("button", { name: "Thường" }));
+    expect(await screen.findByLabelText("Các hạng mục thiệp")).toBeInTheDocument();
+    expect(container.querySelector(".hy3d")).toBeNull();
+    expect(localStorage.getItem("hy3d-mode")).toBe("normal");
+    unmount();
+
+    render(<Hy3dModes wedding={hy3dWedding} guest={guest} slug="pa-mc" />);
+    expect(await screen.findByLabelText("Các hạng mục thiệp")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Thường" })).toHaveAttribute("aria-pressed", "true");
+  });
+
+  it("is used by the invitation page for the hy3d template", async () => {
     vi.spyOn(globalThis, "fetch").mockResolvedValue(response(hy3dWedding));
-    const { container } = render(
-      <MemoryRouter initialEntries={["/w/hoa-minh"]}>
+    render(
+      <MemoryRouter initialEntries={["/w/pa-mc"]}>
         <Routes>
           <Route path="/w/:slug" element={<Invitation />} />
         </Routes>
       </MemoryRouter>,
     );
-    expect(await screen.findByRole("heading", { name: "Câu chuyện" })).toBeInTheDocument();
-    expect(container.querySelector(".hy3d")).not.toBeNull();
+    // jsdom has no WebGL, so the page lands on the normal mode.
+    expect(await screen.findByLabelText("Các hạng mục thiệp")).toBeInTheDocument();
   });
 });

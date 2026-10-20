@@ -1,4 +1,5 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
+import { observeResize } from "./observeResize";
 import type { SceneData, WeddingScene } from "./scene/WeddingScene";
 
 export interface Hy3dCanvasHandle {
@@ -56,8 +57,7 @@ const Hy3dCanvas = forwardRef<Hy3dCanvasHandle, Props>(function Hy3dCanvas({ dat
           scene.start();
           setReady(true);
 
-          const resizeObserver = new ResizeObserver(() => scene.resize());
-          resizeObserver.observe(canvas);
+          const stopObserving = observeResize(canvas, () => scene.resize());
           const onVisibility = () => scene.setVisible(document.visibilityState === "visible");
           document.addEventListener("visibilitychange", onVisibility);
           const onLost = (event: Event) => {
@@ -67,7 +67,7 @@ const Hy3dCanvas = forwardRef<Hy3dCanvasHandle, Props>(function Hy3dCanvas({ dat
           canvas.addEventListener("webglcontextlost", onLost);
 
           cleanup = () => {
-            resizeObserver.disconnect();
+            stopObserving();
             document.removeEventListener("visibilitychange", onVisibility);
             canvas.removeEventListener("webglcontextlost", onLost);
             window.removeEventListener("deviceorientation", onOrientation);

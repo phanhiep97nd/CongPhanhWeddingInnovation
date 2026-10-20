@@ -111,6 +111,9 @@ export class WeddingScene {
   private celebrated = false;
   private tapReaction = 0;
   private visible = true;
+  private progress = 0;
+  private viewShift = 0;      // fraction of the screen height the image is shifted (portrait phones)
+  private cardShownAt = 0;
 
   constructor(private readonly canvas: HTMLCanvasElement, private readonly data: SceneData, options: SceneOptions = {}) {
     this.options = options;
@@ -164,6 +167,7 @@ export class WeddingScene {
   }
 
   setProgress(progress: number) {
+    this.progress = progress;
     this.targetU = progressToU(progress);
     if (progress > 0.01) this.leaveIntro();
   }
@@ -213,14 +217,26 @@ export class WeddingScene {
 
   // On portrait phones the content cards cover the lower half, so after the intro the rendered
   // image is shifted up: the couple sits in the top half of the screen.
+  // Portrait phones: at the opening the HTML hero text sits at the top, so the image moves down a little;
+  // at the stops the content card covers the lower half, so the couple moves up into the top half.
   private applyViewOffset() {
     const { clientWidth: width, clientHeight: height } = this.canvas;
-    if (width && height && this.camera.aspect < 0.8 && this.intro === "done") {
-      this.camera.setViewOffset(width, height, 0, height * 0.17, width, height);
+    if (width && height && this.camera.aspect < 0.8 && Math.abs(this.viewShift) > 0.001) {
+      this.camera.setViewOffset(width, height, 0, height * this.viewShift, width, height);
     } else {
       this.camera.clearViewOffset();
     }
     this.camera.updateProjectionMatrix();
+  }
+
+  private updateViewShift(dt: number) {
+    const openingEnd = 0.5 / (this.stations.length + 1);
+    const target = this.progress < openingEnd ? -0.08 : 0.17;
+    const next = MathUtils.damp(this.viewShift, target, 3, dt);
+    if (Math.abs(next - this.viewShift) > 0.0005) {
+      this.viewShift = next;
+      this.applyViewOffset();
+    }
   }
 
   start() {
@@ -271,6 +287,7 @@ export class WeddingScene {
     floatProps(this.stations, time);
     this.updateParticles(dt);
     this.updateCamera(direction, dt);
+    this.updateViewShift(dt);
   }
 
   // ── Couple ────────────────────────────────────────────────────────────────
@@ -571,9 +588,13 @@ export class WeddingScene {
         // Once the flap is up, the card rises above the pocket and comes forward.
         this.card.position.y = MathUtils.damp(this.card.position.y, 0.66, 2.6, dt);
         this.card.position.z = 0.09;
-        if (this.card.position.y > 0.6) this.intro = "card";
+        if (this.card.position.y > 0.6) {
+          this.intro = "card";
+          this.cardShownAt = this.introTime;
+        }
       }
     }
+    if (this.intro === "card" && this.introTime - this.cardShownAt > 2.6) this.leaveIntro();
     if (this.intro === "leaving") {
       this.introGroup.position.y += dt * 2.4;
       this.introGroup.scale.multiplyScalar(1 - dt * 1.1);

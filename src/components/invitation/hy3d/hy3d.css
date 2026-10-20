@@ -40,29 +40,115 @@
 
 .hy3d-card,
 .hy3d-end a,
-.hy3d-flat-only {
+.hy3d-scroll-cue {
   pointer-events: auto;
 }
 
+/* Opening screen: classic-hero facts over the paper sky, the 3D couple below them. */
 .hy3d-opening {
   min-height: 100vh;
   min-height: 100svh;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  padding: 0 20px calc(28px + env(safe-area-inset-bottom));
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+  padding: calc(64px + env(safe-area-inset-top)) 20px calc(20px + env(safe-area-inset-bottom));
 }
 
-.hy3d-hint {
-  margin: 0 auto;
-  max-width: 22rem;
-  text-align: center;
+.hy3d-hero {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  max-width: 30rem;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.9), 0 2px 14px rgba(253, 245, 246, 0.95);
+}
+
+.hy3d-hero-invite {
+  margin: 0;
+  display: grid;
+  font-size: 15px;
+  letter-spacing: 0.02em;
+}
+
+.hy3d-hero-guest {
+  font-family: "Great Vibes", cursive;
+  font-size: clamp(2rem, 9vw, 2.6rem);
+  line-height: 1.15;
+  color: var(--hy-son);
+}
+
+.hy3d-hero-names {
+  margin: 6px 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 4px 10px;
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic;
+  font-weight: 600;
+  font-size: clamp(2.1rem, 10vw, 3.2rem);
+  line-height: 1.05;
+  color: var(--hy-moss);
+  text-wrap: balance;
+}
+
+.hy3d-hero-heart {
+  width: 0.5em;
+  height: 0.5em;
+  color: var(--hy-son);
+  fill: currentColor;
+}
+
+.hy3d-hero-date {
+  margin: 4px 0 0;
+  font-size: 16px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--hy-son);
+}
+
+.hy3d-hero-venue {
+  margin: 0;
   font-size: 15px;
   line-height: 1.5;
-  color: var(--hy-moss);
-  background: rgba(253, 245, 246, 0.86);
+}
+
+.hy3d-scroll-cue {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-height: 48px;
+  padding: 6px 18px;
+  border: 0;
   border-radius: 999px;
-  padding: 10px 18px;
+  background: rgba(253, 245, 246, 0.9);
+  color: var(--hy-moss);
+  font: 500 14px "Plus Jakarta Sans", sans-serif;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.hy3d-scroll-cue svg {
+  width: 18px;
+  height: 18px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hy3d-scroll-cue svg {
+    animation: hy3d-nudge 1.8s ease-in-out infinite;
+  }
+}
+
+@keyframes hy3d-nudge {
+  50% { transform: translateY(3px); }
+}
+
+.hy3d-scroll-cue:focus-visible {
+  outline: 3px solid var(--hy-gold);
+  outline-offset: 3px;
 }
 
 /* Each stop leaves the top of the screen to the scene, then shows its card. */
@@ -252,53 +338,6 @@
   align-items: center;
   color: var(--hy-moss);
   text-underline-offset: 4px;
-}
-
-/* 2D fallback: no scene, so stops collapse into a normal reading page. */
-.hy3d.is-flat .hy3d-opening {
-  min-height: 70svh;
-  justify-content: flex-end;
-  padding-top: 24px;
-  overflow: hidden;
-}
-
-.hy3d.is-flat .hy3d-cover {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0.85;
-}
-
-.hy3d.is-flat .hy3d-opening-text {
-  position: relative;
-  background: rgba(253, 245, 246, 0.92);
-  border-radius: 20px;
-  padding: 18px;
-  text-align: center;
-}
-
-.hy3d-opening-text h1 {
-  margin: 4px 0;
-  font-family: "Cormorant Garamond", serif;
-  font-weight: 600;
-  font-size: clamp(2.2rem, 10vw, 3.4rem);
-  color: var(--hy-son);
-  line-height: 1.05;
-}
-
-.hy3d-opening-text p {
-  margin: 0;
-}
-
-.hy3d.is-flat .hy3d-stop {
-  padding: 16px;
-}
-
-.hy3d.is-flat .hy3d-end {
-  min-height: 0;
-  padding-top: 40px;
 }
 
 @media (min-width: 900px) {
