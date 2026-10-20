@@ -212,7 +212,7 @@ export class WeddingScene {
     const openingEnd = 0.5 / (this.stations.length + 1);
     if (!this.settings.viewShift) {
       // Background (mixed) mode: only on the classic hero move the couple below the big title text.
-      this.dampViewShift(this.progress < openingEnd ? -0.16 : 0, dt);
+      this.dampViewShift(this.progress < openingEnd ? -0.27 : 0, dt);
       return;
     }
     // The envelope sits lower than the couple so the hero text above stays clear.
