@@ -4,7 +4,8 @@ import { api, ApiError } from "../lib/api";
 import type { PublicGuest, Wedding } from "../lib/types";
 const ClassicInvitation = lazy(() => import("../components/invitation/original/InvitationShell"));
 const MinimalInvitation = lazy(() => import("../components/invitation/minimal/InvitationShell"));
-const Hy3dInvitation = lazy(() => import("../components/invitation/hy3d/InvitationShell"));
+// The Hỷ 3D template offers two modes (3D / classic), chosen inside Hy3dModes.
+const Hy3dInvitation = lazy(() => import("../components/invitation/hy3d/Hy3dModes"));
 
 export default function Invitation() {
   const { slug = "", code } = useParams();
