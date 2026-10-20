@@ -156,3 +156,10 @@
 .classic-over-3d > main > #rsvp {
   min-height: 1px;
 }
+
+/* Frosted cards were designed over a flat petal background; over the moving scene they need to be almost opaque
+   so their text stays readable. */
+.classic-over-3d main [class*="bg-white/"],
+.classic-over-3d main [class*="backdrop-blur"] {
+  background-color: rgba(255, 255, 255, 0.93) !important;
+}

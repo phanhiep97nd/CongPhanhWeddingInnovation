@@ -209,11 +209,18 @@ export class WeddingScene {
   }
 
   private updateViewShift(dt: number) {
-    if (!this.settings.viewShift) return;
     const openingEnd = 0.5 / (this.stations.length + 1);
+    if (!this.settings.viewShift) {
+      // Background (mixed) mode: only on the classic hero move the couple below the big title text.
+      this.dampViewShift(this.progress < openingEnd ? -0.16 : 0, dt);
+      return;
+    }
     // The envelope sits lower than the couple so the hero text above stays clear.
     const opening = this.intro === "done" ? -0.08 : -0.15;
-    const target = this.progress < openingEnd ? opening : 0.17;
+    this.dampViewShift(this.progress < openingEnd ? opening : 0.17, dt);
+  }
+
+  private dampViewShift(target: number, dt: number) {
     const next = MathUtils.damp(this.viewShift, target, 3, dt);
     if (Math.abs(next - this.viewShift) > 0.0005) {
       this.viewShift = next;
