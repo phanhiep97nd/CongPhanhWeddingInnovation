@@ -104,7 +104,7 @@ describe("3D / normal modes", () => {
 
     render(<Hy3dModes wedding={hy3dWedding} guest={guest} slug="pa-mc" />);
     expect(await screen.findByLabelText("Các hạng mục thiệp")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Thường" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("button", { name: "Xem thiệp chế độ 3D" })).toBeInTheDocument();
   });
 
   it("is used by the invitation page for the hy3d template", async () => {

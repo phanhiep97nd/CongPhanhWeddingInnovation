@@ -43,11 +43,17 @@ export default function Hy3dModes(props: { wedding: Wedding; guest: PublicGuest 
           ? <Hy3dInvitation {...props} onUnavailable={() => setMode("normal")} />
           : <ClassicInvitation {...props} />}
       </Suspense>
-      {available && (
+      {available && mode === "3d" && (
         <div className="mode-switch" role="group" aria-label="Chế độ xem thiệp">
-          <button type="button" aria-pressed={mode === "3d"} onClick={() => choose("3d")}>3D</button>
-          <button type="button" aria-pressed={mode === "normal"} onClick={() => choose("normal")}>Thường</button>
+          <button type="button" aria-pressed="true" onClick={() => choose("3d")}>3D</button>
+          <button type="button" aria-pressed="false" onClick={() => choose("normal")}>Thường</button>
         </div>
+      )}
+      {/* The classic header centres the couple's names, so normal mode only gets a compact round button. */}
+      {available && mode === "normal" && (
+        <button type="button" className="mode-switch-compact" aria-label="Xem thiệp chế độ 3D" onClick={() => choose("3d")}>
+          3D
+        </button>
       )}
     </>
   );
