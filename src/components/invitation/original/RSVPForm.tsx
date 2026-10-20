@@ -8,8 +8,11 @@ import {
   Bus, Camera, Utensils, ChevronRight, X, MapPin, Phone, Users, Music, ExternalLink,
   Info as InfoIcon, Volume2, VolumeX, Plus, Upload,
 } from "lucide-react";
-import { API_BASE } from "./shared";
 
+
+import { api, json } from "../../../lib/api";
+import type { PublicGuest } from "../../../lib/types";
+import { publicPath, useWedding } from "./WeddingContext";
 // ── RSVP Form ─────────────────────────────────────────────────────────────────
 export function RSVPForm({
   defaultName = "",
@@ -22,12 +25,13 @@ export function RSVPForm({
   onComplete?: () => void;
   onConfirm?: (newId?: string) => void;
 }) {
+  const { wedding, slug } = useWedding();
   const [attendance, setAttendance] = useState<"yes" | "no" | null>(null);
   const [name, setName] = useState(defaultName);
   const [phone, setPhone] = useState("");
   const [guests, setGuests] = useState(1);
   const [wantRide, setWantRide] = useState<boolean | null>(null);
-  const [pickupPoint, setPickupPoint] = useState("Nhà gái 183 Vũ Tông Phan");
+  const [pickupPoint, setPickupPoint] = useState(wedding.venue.address);
   const [submitting, setSubmitting] = useState(false);
   const submittingRef = useRef(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -46,8 +50,8 @@ export function RSVPForm({
     return Object.keys(errs).length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (e?: React.FormEvent) => {
+    e?.preventDefault();
     if (submittingRef.current) return;
     if (!validate()) return;
     submittingRef.current = true;
@@ -55,31 +59,19 @@ export function RSVPForm({
     let newId: string | undefined;
     try {
       if (guestId) {
-        await fetch(`${API_BASE}/guests/${guestId}/rsvp`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(
-            attendance === "yes"
-              ? { status: "yes", guestCount: guests, joinGroup: wantRide ?? false, pickupPoint: wantRide ? pickupPoint : "", phone, name }
-              : { status: "no",  guestCount: 0, joinGroup: false, pickupPoint: "" }
-          ),
-        });
-      } else if (attendance === "yes") {
-        const res = await fetch(`${API_BASE}/guests/register`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            invitationName: name.trim(),
-            phone,
-            status: "yes",
-            guestCount: guests,
-            joinGroup: wantRide ?? false,
-            pickupPoint: wantRide ? pickupPoint : "",
-          }),
-        });
-        if (res.ok) { const d = await res.json(); newId = d._id; }
+        await api(publicPath(slug, `/guests/${encodeURIComponent(guestId)}/rsvp`), json("PUT", attendance === "yes"
+          ? { status: "yes", guestCount: guests, joinGroup: wantRide ?? false, pickupPoint: wantRide ? pickupPoint : "", phone, name }
+          : { status: "no", guestCount: 0, joinGroup: false, pickupPoint: "" }));
+      } else {
+        const saved = await api<PublicGuest>(publicPath(slug, "/register"), json("POST", { invitationName: name.trim(), phone, status: attendance, guestCount: attendance === "yes" ? guests : 0, joinGroup: attendance === "yes" && (wantRide ?? false), pickupPoint: attendance === "yes" && wantRide ? pickupPoint : "" }));
+        newId = saved.code;
       }
-    } catch {}
+    } catch {
+      setErrors({ submit: "Không gửi được xác nhận. Vui lòng thử lại." });
+      submittingRef.current = false;
+      setSubmitting(false);
+      return;
+    }
     submittingRef.current = false;
     setSubmitting(false);
     if (attendance === "yes") onConfirm?.(newId);
@@ -100,8 +92,8 @@ export function RSVPForm({
       <div className="bg-gradient-to-r from-primary/10 to-blush rounded-2xl p-4 mb-6 border border-primary/20">
         <p className="text-[10px] font-bold uppercase tracking-widest text-secondary/40 mb-2">Thời gian khởi hành</p>
         <div className="flex flex-col gap-1.5">
-          <p className="text-sm text-secondary font-medium">🚌 14:00 · 03/04/2026 <span className="text-secondary/50 font-normal">(Lượt đi)</span></p>
-          <p className="text-sm text-secondary font-medium">🏠 11:00 · 04/04/2026 <span className="text-secondary/50 font-normal">(Lượt về)</span></p>
+          <p className="text-sm text-secondary font-medium">🚌 {wedding.timeline[0]?.time || ""} · {wedding.dateText} <span className="text-secondary/50 font-normal">(Lượt đi)</span></p>
+          <p className="text-sm text-secondary font-medium">🏠 {wedding.timeline.at(-1)?.time || ""} · {wedding.dateText} <span className="text-secondary/50 font-normal">(Lượt về)</span></p>
         </div>
       </div>
 
@@ -203,8 +195,8 @@ export function RSVPForm({
                     <label className="block text-[10px] font-bold uppercase tracking-widest text-secondary/40 mb-2 ml-1">Điểm đón</label>
                     <select value={pickupPoint} onChange={(e) => setPickupPoint(e.target.value)}
                       className="w-full px-5 py-3.5 rounded-2xl bg-blush border border-primary/20 focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all outline-none appearance-none text-secondary cursor-pointer">
-                      <option value="Nhà gái 183 Vũ Tông Phan">📍 Nhà gái — 183 Vũ Tông Phan</option>
-                      <option value="Nhà trai ngõ 4 Cầu Bươu">📍 Nhà trai — ngõ 4 Cầu Bươu</option>
+                      <option value={wedding.venue.address}>📍 {wedding.venue.address}</option>
+
                     </select>
                   </motion.div>
                 )}
@@ -229,10 +221,11 @@ export function RSVPForm({
             className="mt-4"
           >
             <p className="text-center text-sm text-secondary/60 mb-4">Tiếc quá, sẽ nhớ bạn nhiều 😢</p>
-            <button onClick={() => onComplete?.()}
+            <button onClick={() => void handleSubmit()}
               className="w-full py-4 bg-secondary/20 hover:bg-secondary/30 text-secondary rounded-full font-bold tracking-widest transition-colors">
               Đã hiểu, cảm ơn bạn
             </button>
+            {errors.submit && <p role="alert" className="text-xs text-red-500 mt-2">{errors.submit}</p>}
           </motion.div>
         )}
       </AnimatePresence>

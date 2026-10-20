@@ -8,10 +8,11 @@ import {
   Bus, Camera, Utensils, ChevronRight, X, MapPin, Phone, Users, Music, ExternalLink,
   Info as InfoIcon, Volume2, VolumeX, Plus, Upload,
 } from "lucide-react";
-import {  } from "./shared";
+import { useWedding } from "./WeddingContext";
 
 // ── Dress Code Popup ──────────────────────────────────────────────────────────
 export function BrideFigure() {
+  const { wedding } = useWedding();
   return (
     <svg viewBox="0 0 100 212" className="w-24 h-auto drop-shadow-lg" fill="none" xmlns="http://www.w3.org/2000/svg">
       {/* Veil */}
@@ -25,11 +26,11 @@ export function BrideFigure() {
       {/* Neck */}
       <path d="M44 48 L56 48 L57 60 L43 60 Z" fill="#f5c9a0"/>
       {/* Bodice — Hồng */}
-      <path d="M30 58 Q50 50 70 58 L73 92 Q50 98 27 92 Z" fill="#F2C8CD"/>
+      <path d="M30 58 Q50 50 70 58 L73 92 Q50 98 27 92 Z" fill={wedding.dressCode.colors[0] || "#F2C8CD"}/>
       {/* Waist ribbon — Be */}
-      <path d="M27 90 Q50 97 73 90" stroke="#D4C5A9" strokeWidth="4" strokeLinecap="round" opacity="0.95"/>
+      <path d="M27 90 Q50 97 73 90" stroke={wedding.dressCode.colors[2] || "#D4C5A9"} strokeWidth="4" strokeLinecap="round" opacity="0.95"/>
       {/* Skirt — Xanh lá */}
-      <path d="M27 88 Q50 96 73 88 L90 198 L10 198 Z" fill="#8DA06B"/>
+      <path d="M27 88 Q50 96 73 88 L90 198 L10 198 Z" fill={wedding.dressCode.colors[1] || "#8DA06B"}/>
       {/* Skirt overlay highlight */}
       <path d="M40 105 Q50 108 65 103 L72 155 Q50 165 30 155 Z" fill="white" opacity="0.08"/>
       {/* Left arm */}
@@ -37,9 +38,9 @@ export function BrideFigure() {
       {/* Right arm */}
       <path d="M70 64 Q86 80 84 100" stroke="#f5c9a0" strokeWidth="10" strokeLinecap="round"/>
       {/* Bouquet */}
-      <circle cx="14" cy="106" r="10" fill="#F2C8CD" opacity="0.9"/>
-      <circle cx="23" cy="99" r="8" fill="#8DA06B" opacity="0.85"/>
-      <circle cx="8"  cy="98" r="7" fill="#F2C8CD" opacity="0.7"/>
+      <circle cx="14" cy="106" r="10" fill={wedding.dressCode.colors[0] || "#F2C8CD"} opacity="0.9"/>
+      <circle cx="23" cy="99" r="8" fill={wedding.dressCode.colors[1] || "#8DA06B"} opacity="0.85"/>
+      <circle cx="8"  cy="98" r="7" fill={wedding.dressCode.colors[0] || "#F2C8CD"} opacity="0.7"/>
       <circle cx="18" cy="94" r="6" fill="white"   opacity="0.6"/>
       {/* Neckline detail */}
       <path d="M40 58 Q50 54 60 58" stroke="white" strokeWidth="1.5" opacity="0.5"/>
@@ -51,6 +52,7 @@ export function BrideFigure() {
 }
 
 export function GroomFigure() {
+  const { wedding } = useWedding();
   return (
     <svg viewBox="0 0 90 210" className="w-20 h-auto drop-shadow-lg" fill="none" xmlns="http://www.w3.org/2000/svg">
       {/* Hair */}
@@ -60,7 +62,7 @@ export function GroomFigure() {
       {/* Neck */}
       <path d="M39 43 L51 43 L52 54 L38 54 Z" fill="#d4956a"/>
       {/* Shirt — Be */}
-      <path d="M30 52 Q45 46 60 52 L62 100 Q45 104 28 100 Z" fill="#D4C5A9"/>
+      <path d="M30 52 Q45 46 60 52 L62 100 Q45 104 28 100 Z" fill={wedding.dressCode.colors[2] || "#D4C5A9"}/>
       {/* Suit jacket left panel — Đen */}
       <path d="M14 58 L30 52 L30 118 L14 118 Z" fill="#1a1a1a"/>
       {/* Suit jacket right panel — Đen */}
@@ -70,7 +72,7 @@ export function GroomFigure() {
       {/* Right lapel — Đen */}
       <path d="M60 52 L70 58 L62 76 L56 66 Z" fill="#1a1a1a"/>
       {/* Tie — Xanh lá */}
-      <path d="M42 52 L48 52 L50 78 L45 92 L40 78 Z" fill="#8DA06B"/>
+      <path d="M42 52 L48 52 L50 78 L45 92 L40 78 Z" fill={wedding.dressCode.colors[1] || "#8DA06B"}/>
       {/* Tie knot */}
       <path d="M42 52 Q45 56 48 52 L46 60 L44 60 Z" fill="#6d7d52"/>
       {/* Belt — Đen */}
@@ -87,26 +89,19 @@ export function GroomFigure() {
       {/* Right arm — Đen */}
       <path d="M76 62 Q88 84 84 108" stroke="#1a1a1a" strokeWidth="13" strokeLinecap="round"/>
       {/* Shirt cuffs — Be */}
-      <circle cx="6"  cy="109" r="5.5" fill="#D4C5A9"/>
-      <circle cx="84" cy="109" r="5.5" fill="#D4C5A9"/>
+      <circle cx="6"  cy="109" r="5.5" fill={wedding.dressCode.colors[2] || "#D4C5A9"}/>
+      <circle cx="84" cy="109" r="5.5" fill={wedding.dressCode.colors[2] || "#D4C5A9"}/>
       {/* Pocket square — Be */}
-      <path d="M16 72 L22 70 L23 78 L17 78 Z" fill="#D4C5A9" opacity="0.9"/>
+      <path d="M16 72 L22 70 L23 78 L17 78 Z" fill={wedding.dressCode.colors[2] || "#D4C5A9"} opacity="0.9"/>
     </svg>
   );
 }
 
 export function DressCodePopup({ onClose }: { onClose: () => void }) {
-  const FEMALE_PALETTE = [
-    { hex: '#F2C8CD', note: 'Hồng'    },
-    { hex: '#8DA06B', note: 'Xanh lá' },
-    { hex: '#D4C5A9', note: 'Be'      },
-    { hex: '#1a1a1a', note: 'Đen'     },
-  ];
-  const MALE_PALETTE = [
-    { hex: '#8DA06B', note: 'Xanh lá' },
-    { hex: '#D4C5A9', note: 'Be'      },
-    { hex: '#1a1a1a', note: 'Đen'     },
-  ];
+  const { wedding } = useWedding();
+  const palette = wedding.dressCode.colors.map((hex) => ({ hex, note: hex }));
+  const FEMALE_PALETTE = palette;
+  const MALE_PALETTE = palette;
 
   return (
     <>
@@ -127,10 +122,10 @@ export function DressCodePopup({ onClose }: { onClose: () => void }) {
 
           {/* Decorative top band */}
           <div className="h-2 w-full flex">
-            <div className="flex-1" style={{ background: '#F2C8CD' }}/>
-            <div className="flex-1" style={{ background: '#8DA06B' }}/>
-            <div className="flex-1" style={{ background: '#D4C5A9' }}/>
-            <div className="flex-1" style={{ background: '#1a1a1a' }}/>
+            <div className="flex-1" style={{ background: wedding.dressCode.colors[0] }}/>
+            <div className="flex-1" style={{ background: wedding.dressCode.colors[1] }}/>
+            <div className="flex-1" style={{ background: wedding.dressCode.colors[2] }}/>
+            <div className="flex-1" style={{ background: wedding.dressCode.colors[3] }}/>
           </div>
 
           <div className="px-7 pb-8 pt-5">
@@ -187,7 +182,7 @@ export function DressCodePopup({ onClose }: { onClose: () => void }) {
             {/* Tip */}
             <div className="bg-white/70 rounded-2xl px-4 py-3 mb-5 text-center border border-black/5">
               <p className="text-xs text-secondary/60 leading-relaxed">
-                Trang phục không cần quá cứng nhắc — miễn là trong gam màu chủ đề và phù hợp với không gian tiệc cưới ngoài trời ✨
+                {wedding.dressCode.note}
               </p>
             </div>
 

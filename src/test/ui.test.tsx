@@ -112,12 +112,12 @@ describe("invitation UI", () => {
       </Routes>
     </MemoryRouter>);
     expect(await screen.findByRole("heading", { level: 1, name: /Hoa.*Minh/ })).toBeInTheDocument();
-    expect(screen.getByText("Bác Nam")).toBeInTheDocument();
+    expect(await screen.findByText("Bác Nam")).toBeInTheDocument();
     const headings = screen.getAllByRole("heading").map(h => h.textContent);
     expect(headings.indexOf("Ngày chung đôi")).toBeLessThan(headings.indexOf("Câu chuyện của chúng mình"));
-    expect(screen.queryByText("Bộ sưu tập ảnh")).not.toBeInTheDocument();
+    expect(screen.queryByText("Khoảnh khắc hạnh phúc")).not.toBeInTheDocument();
     const nav = screen.getByRole("navigation", { name: "Các hạng mục thiệp" });
-    expect(nav.querySelectorAll("a")).toHaveLength(2);
+    expect(nav.querySelectorAll("button")).toHaveLength(2);
     expect(screen.queryByRole("button", { name: "Xác nhận tham dự" })).not.toBeInTheDocument();
     expect(document.title).toContain("Minh & Hoa");
   });
@@ -150,7 +150,7 @@ describe("invitation UI", () => {
     vi.spyOn(globalThis, "fetch").mockResolvedValue(response(customWedding));
     render(<MemoryRouter initialEntries={["/w/hoa-minh"]}><Routes><Route path="/w/:slug" element={<Invitation />} /></Routes></MemoryRouter>);
     expect(await screen.findByRole("heading", { name: "Lời nhắn riêng" })).toBeInTheDocument();
-    expect(screen.getByRole("navigation", { name: "Các hạng mục thiệp" }).querySelector('a[href="#custom-note"]')).toBeInTheDocument();
+    expect(screen.getByRole("navigation", { name: "Các hạng mục thiệp" }).querySelector('button[title="Lời nhắn riêng"]')).toBeInTheDocument();
   });
 });
 describe("editor UI", () => {

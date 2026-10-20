@@ -8,10 +8,14 @@ import {
   Bus, Camera, Utensils, ChevronRight, X, MapPin, Phone, Users, Music, ExternalLink,
   Info as InfoIcon, Volume2, VolumeX, Plus, Upload,
 } from "lucide-react";
-import { GALLERY_PHOTOS, fadeUp, scaleIn, stagger, Reveal } from "./shared";
+import { galleryPhotos, fadeUp, scaleIn, stagger, Reveal } from "./shared";
 
+import { useWedding } from "./WeddingContext";
+import Photo from "../Photo";
 // ── Gallery ───────────────────────────────────────────────────────────────────
 export function GallerySection() {
+  const { wedding } = useWedding();
+  const GALLERY_PHOTOS = galleryPhotos(wedding);
   const [activePhoto, setActivePhoto] = useState<number | null>(null);
 
   return (
@@ -62,11 +66,9 @@ export function GalleryCard({ photo, index, isActive, onToggle }: {
       onMouseLeave={() => setIsHovered(false)}
       className={`relative rounded-[2.5rem] overflow-hidden cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-500 ${photo.full ? "md:col-span-2 aspect-[16/9]" : "aspect-[4/5]"}`}
     >
-      <motion.img src={photo.src} alt={photo.title}
-        className="w-full h-full object-cover"
-        animate={{ scale: showOverlay ? 1.1 : 1 }}
-        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-      />
+      <motion.div animate={{ scale: showOverlay ? 1.1 : 1 }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }} className="w-full h-full">
+        <Photo src={photo.src} alt={photo.title} className="w-full h-full object-cover" />
+      </motion.div>
       <div
         style={{ opacity: showOverlay ? 1 : 0 }}
         className="absolute inset-0 bg-gradient-to-t from-primary-deep/80 via-primary/10 to-transparent flex flex-col justify-end p-8 md:p-10 transition-opacity duration-500"

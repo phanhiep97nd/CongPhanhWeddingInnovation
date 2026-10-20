@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { fadeUp, Reveal, type Photo } from "./shared";
 
+import WeddingPhoto from "../Photo";
 // ── Photo Slide ───────────────────────────────────────────────────────────────
 export function PhotoSlide({ photos, onUpload, onOpenFeed }: {
   photos: Photo[]; onUpload: () => void; onOpenFeed: () => void;
@@ -72,7 +73,7 @@ export function PhotoSlide({ photos, onUpload, onOpenFeed }: {
                   transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                   className="absolute inset-0"
                 >
-                  <img src={photos[idx].url} alt={photos[idx].caption}
+                  <WeddingPhoto src={photos[idx].url} alt={photos[idx].caption}
                     className="w-full h-full object-cover"
                     onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }} />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex flex-col justify-end p-4">

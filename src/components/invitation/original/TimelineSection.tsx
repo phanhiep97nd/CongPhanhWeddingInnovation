@@ -8,16 +8,15 @@ import {
   Bus, Camera, Utensils, ChevronRight, X, MapPin, Phone, Users, Music, ExternalLink,
   Info as InfoIcon, Volume2, VolumeX, Plus, Upload,
 } from "lucide-react";
-import { WEDDING_DATE, fadeUp, scaleIn, stagger, Reveal } from "./shared";
+import { weddingDate, fadeUp, scaleIn, stagger, Reveal } from "./shared";
 
+import { useWedding } from "./WeddingContext";
 // ── Timeline ──────────────────────────────────────────────────────────────────
 export function TimelineSection() {
-  const items = [
-    { time: "14:00", title: "Đón khách",          desc: "Chào đón những người thân yêu tại sảnh Glass Pavilion.", icon: <Bus size={20} /> },
-    { time: "15:30", title: "Chụp hình lưu niệm", desc: "Cùng nhau lưu giữ những khoảnh khắc đẹp trước giờ làm lễ.", icon: <Camera size={20} /> },
-    { time: "17:00", title: "Lễ thành hôn",        desc: "Khoảnh khắc thiêng liêng trao nhau lời thề nguyện.", icon: <Heart size={20} /> },
-    { time: "18:00", title: "Tiệc tối",            desc: "Thưởng thức ẩm thực và chung vui cùng cô dâu chú rể.", icon: <Utensils size={20} /> },
-  ];
+  const { wedding } = useWedding();
+  const WEDDING_DATE = weddingDate(wedding);
+  const icons = [<Bus size={20} />, <Camera size={20} />, <Heart size={20} />, <Utensils size={20} />];
+  const items = wedding.timeline.map((item, index) => ({ ...item, icon: icons[index % icons.length] }));
 
   return (
     <section className="bg-white py-28 md:py-36">

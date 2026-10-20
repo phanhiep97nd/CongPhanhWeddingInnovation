@@ -10,8 +10,11 @@ import {
 } from "lucide-react";
 import {  } from "./shared";
 
+import { useWedding } from "./WeddingContext";
+import Photo from "../Photo";
 // ── Invite Popup ──────────────────────────────────────────────────────────────
-export function InvitePopup({ invitationName, alreadyConfirmed, onConfirm }: { invitationName: string; alreadyConfirmed?: boolean; onConfirm: () => void }) {
+export function InvitePopup({ invitationName, alreadyConfirmed, onConfirm, rsvpEnabled = true }: { invitationName: string; alreadyConfirmed?: boolean; onConfirm: () => void; rsvpEnabled?: boolean }) {
+  const { wedding } = useWedding();
   return (
     <>
       <motion.div
@@ -31,13 +34,13 @@ export function InvitePopup({ invitationName, alreadyConfirmed, onConfirm }: { i
         <div className="relative w-full max-w-sm bg-white rounded-[2rem] shadow-2xl overflow-hidden pointer-events-auto text-center">
           {/* Top image strip */}
           <div className="h-36 overflow-hidden relative">
-            <img src="/images/DSCF7860.jpg" alt="" className="w-full h-full object-cover object-top brightness-90" />
+            <Photo src={wedding.coverImage} alt="" className="w-full h-full object-cover object-top brightness-90" />
             <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-white" />
             <div className="absolute bottom-2 left-0 right-0 flex justify-center">
               <span className="font-script text-2xl text-secondary drop-shadow-sm flex items-center gap-2">
-                <span>Ph.Anh</span>
+                <span>{wedding.couple.bride}</span>
                 <Heart size={14} className="text-primary fill-primary" />
-                <span>M.Công</span>
+                <span>{wedding.couple.groom}</span>
               </span>
             </div>
           </div>
@@ -56,9 +59,9 @@ export function InvitePopup({ invitationName, alreadyConfirmed, onConfirm }: { i
               <br />
               <span className="text-secondary/80">nhận được lời mời trân trọng từ</span>
               <br />
-              <span className="text-sage font-medium not-italic">cô dâu Phương Anh</span>
+              <span className="text-sage font-medium not-italic">cô dâu {wedding.couple.bride}</span>
               <span className="text-secondary/60"> và </span>
-              <span className="text-sage font-medium not-italic">chú rể Minh Công</span>
+              <span className="text-sage font-medium not-italic">chú rể {wedding.couple.groom}</span>
             </h2>
 
             {alreadyConfirmed && (
@@ -67,16 +70,16 @@ export function InvitePopup({ invitationName, alreadyConfirmed, onConfirm }: { i
               </p>
             )}
 
-            <p className="text-xs text-secondary/50 italic mb-8">Private Wedding — 03-04 · 04 · 2026 — Aman Villa</p>
+            <p className="text-xs text-secondary/50 italic mb-8">Private Wedding — {wedding.dateText} — {wedding.venue.name}</p>
 
-            <motion.button
+            {rsvpEnabled && <motion.button
               onClick={onConfirm}
               whileHover={{ y: -2, boxShadow: "0 12px 40px rgba(201,132,139,0.4)" }}
               whileTap={{ scale: 0.97 }}
               className="w-full py-4 bg-primary-dark hover:bg-primary-deep text-white rounded-full font-bold tracking-widest transition-colors"
             >
               {alreadyConfirmed ? "→ Okays đã sẵn sàng" : "Xác nhận tham dự 💌"}
-            </motion.button>
+            </motion.button>}
           </div>
         </div>
       </motion.div>

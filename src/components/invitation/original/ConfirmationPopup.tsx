@@ -34,7 +34,7 @@ export function ConfirmationPopup({ onClose, onScrollToInfo, onNext }: {
 
   return (
     <>
-      <audio ref={audioRef} src="/audio/TuyHongNhan.mp3" loop />
+      <audio ref={audioRef} src="/audio/TuyHongNhan.mp3" preload="none" loop />
       <motion.div key="conf-backdrop"
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
         className="fixed inset-0 z-[110] bg-black/75"

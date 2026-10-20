@@ -1,39 +1,45 @@
 // Ported verbatim from b47f907:src/App.tsx lines 110-566.
 // Keep JSX structure and classNames; only swap hardcoded content for wedding data.
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { motion, AnimatePresence, useScroll, useTransform, useInView } from "motion/react";
 import {
   Heart, BookOpen, Calendar, Image as ImageIcon,
   Bus, Camera, Utensils, ChevronRight, X, MapPin, Phone, Users, Music, ExternalLink,
   Info as InfoIcon, Volume2, VolumeX, Plus, Upload,
 } from "lucide-react";
-import { IMAGES, COUPLE, WEDDING_DATE, API_BASE, NAV_ITEMS } from "./shared";
+import { weddingImages, couple, weddingDate, navItems, themeVariables } from "./shared";
+import { WeddingContext } from "./WeddingContext";
+import Photo from "../Photo";
+import { useReducedMotion } from "motion/react";
+import type { PublicGuest, Wedding } from "../../../lib/types";
+import type { CSSProperties } from "react";
 import { InvitePopup } from "./InvitePopup";
 import { StorySection } from "./StorySection";
 import { TimelineSection } from "./TimelineSection";
 import { GallerySection } from "./GallerySection";
 import { InfoSection } from "./InfoSection";
+import { CustomSection } from "./CustomSection";
 import { RSVPForm } from "./RSVPForm";
 import { ConfirmationPopup } from "./ConfirmationPopup";
 import { DressCodePopup } from "./DressCodePopup";
 
 // ── App ───────────────────────────────────────────────────────────────────────
-export interface GuestInfo {
-  _id: string;
-  invitationName: string;
-  name: string;
-  status: "pending" | "yes" | "no";
-  room?: string;
-}
-
-export default function App() {
+export default function InvitationShell({ wedding, guest, slug }: { wedding: Wedding; guest: PublicGuest | null; slug: string }) {
+  const IMAGES = weddingImages(wedding);
+  const COUPLE = couple(wedding);
+  const WEDDING_DATE = weddingDate(wedding);
+  // Memoised so the IntersectionObservers below are not rebuilt on every scroll-driven render.
+  const NAV_ITEMS = useMemo(() => navItems(wedding), [wedding.sections, wedding.customSections]);
+  const navKey = NAV_ITEMS.map(({ id }) => id).join("|");
+  const reducedMotion = useReducedMotion();
+  const rsvpEnabled = wedding.sections.some((section) => section.key === "rsvp" && section.enabled);
   const [showRSVP, setShowRSVP] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [showDressCode, setShowDressCode] = useState(false);
   const [showInvite, setShowInvite] = useState(false);
-  const [guestId, setGuestId] = useState<string | null>(null);
-  const [guestInfo, setGuestInfo] = useState<GuestInfo | null>(null);
+  const [guestId, setGuestId] = useState<string | null>(guest?.code || null);
+  const [guestInfo, setGuestInfo] = useState<PublicGuest | null>(guest);
   const [roomsRefreshKey, setRoomsRefreshKey] = useState(0);
   const refreshRooms = () => setRoomsRefreshKey((k) => k + 1);
   const [activeSection, setActiveSection] = useState<string>("story");
@@ -42,8 +48,8 @@ export default function App() {
   const bgAudioRef = useRef<HTMLAudioElement>(null);
 
   const { scrollYProgress } = useScroll({ container: containerRef });
-  const heroZoom = useTransform(scrollYProgress, [0, 0.25], [1.0, 1.5]);
-  const heroY    = useTransform(scrollYProgress, [0, 0.25], ["0%", "10%"]);
+  const heroZoom = useTransform(scrollYProgress, [0, 0.25], [1.0, reducedMotion ? 1 : 1.5]);
+  const heroY    = useTransform(scrollYProgress, [0, 0.25], ["0%", reducedMotion ? "0%" : "10%"]);
 
   useEffect(() => {
     const root = containerRef.current;
@@ -60,34 +66,13 @@ export default function App() {
       observers.push(obs);
     });
     return () => observers.forEach((o) => o.disconnect());
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navKey]);
 
-  // Parse ?id= or ?ID= from URL, fetch guest info
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const id = params.get("id") || params.get("ID");
-    if (!id) {
-      // No guest ID: show InvitePopup with generic greeting
-      const t = setTimeout(() => setShowInvite(true), 2500);
-      return () => clearTimeout(t);
-    }
-    setGuestId(id);
-    fetch(`${API_BASE}/guests/${id}`)
-      .then((r) => r.ok ? r.json() : null)
-      .then((data) => {
-        if (data) {
-          setGuestInfo(data);
-          setShowInvite(true);
-        } else {
-          const t = setTimeout(() => setShowRSVP(true), 2500);
-          return () => clearTimeout(t);
-        }
-      })
-      .catch(() => {
-        const t = setTimeout(() => setShowRSVP(true), 2500);
-        return () => clearTimeout(t);
-      });
-  }, []);
+    const timer = setTimeout(() => setShowInvite(true), guest ? 0 : 2500);
+    return () => clearTimeout(timer);
+  }, [guest]);
 
   // Autoplay background music at 60% volume on load
   useEffect(() => {
@@ -128,9 +113,12 @@ export default function App() {
   };
 
   const activeIdx = NAV_ITEMS.findIndex((n) => n.id === activeSection);
+  const enabled = wedding.sections.filter((section) => section.enabled);
+  const firstSection = enabled.find((section) => section.key !== "rsvp")?.key.replace(":", "-") || "info";
 
   return (
-    <div ref={containerRef} className="scroll-container bg-petal selection:bg-primary">
+    <WeddingContext.Provider value={{ wedding, guest, slug }}>
+    <div ref={containerRef} className="scroll-container bg-petal selection:bg-primary" style={themeVariables(wedding.theme.primary) as CSSProperties}>
 
       {/* ── Header ── */}
       <header className="fixed top-0 w-full z-50 bg-white/65 backdrop-blur-md border-b border-primary/20">
@@ -140,7 +128,7 @@ export default function App() {
             className="font-script text-[1.65rem] md:text-[1.9rem] text-secondary cursor-pointer select-none flex items-center gap-2"
             style={{ lineHeight: 1.4 }}
           >
-            <span>Ph.Anh</span>
+            <span>{COUPLE.bride}</span>
             <motion.span
               animate={{ scale: [1, 1.35, 1] }}
               transition={{ repeat: Infinity, duration: 2.4, ease: "easeInOut" }}
@@ -148,7 +136,7 @@ export default function App() {
             >
               <Heart size={16} className="fill-primary" />
             </motion.span>
-            <span>M.Công</span>
+            <span>{COUPLE.groom}</span>
           </h1>
         </div>
       </header>
@@ -157,11 +145,9 @@ export default function App() {
         {/* ── Hero ── */}
         <section className="relative h-screen overflow-hidden">
           <div className="absolute inset-0 z-0 overflow-hidden">
-            <motion.img
-              src={IMAGES.hero} alt="Wedding"
-              style={{ scale: heroZoom, y: heroY, objectPosition: "62% center" }}
-              className="w-full h-full object-cover"
-            />
+            <motion.div style={{ scale: heroZoom, y: heroY, objectPosition: "62% center" }} className="w-full h-full">
+              <Photo src={IMAGES.hero} alt="Wedding" className="w-full h-full object-cover" hero />
+            </motion.div>
             <div className="absolute inset-0 bg-gradient-to-br from-white/55 via-white/45 to-white/30" />
             <div className="absolute bottom-0 left-0 right-0 h-36 bg-gradient-to-t from-petal to-transparent" />
           </div>
@@ -179,7 +165,7 @@ export default function App() {
                 <div className="h-px w-10 bg-secondary/35" />
               </div>
               <span className="font-sans uppercase text-secondary/50"
-                style={{ fontSize: 9, letterSpacing: "0.4em" }}>October 2017</span>
+                style={{ fontSize: 9, letterSpacing: "0.4em" }}>{WEDDING_DATE}</span>
             </motion.div>
 
             <motion.h2
@@ -252,7 +238,7 @@ export default function App() {
             <motion.button
               initial={{ opacity: 0 }} animate={{ opacity: 1 }}
               transition={{ delay: 1.1 }}
-              onClick={() => scrollTo("story")}
+              onClick={() => scrollTo(firstSection)}
               className="pointer-events-auto flex flex-col items-center gap-2 text-secondary/45 hover:text-secondary/70 transition-colors"
             >
               <span className="font-sans uppercase" style={{ fontSize: 9, letterSpacing: "0.35em" }}>
@@ -265,25 +251,22 @@ export default function App() {
           </div>
         </section>
 
-        {/* ── Story ── */}
-        <div id="story" className="bg-petal">
-          <StorySection onRSVP={() => setShowRSVP(true)} />
-        </div>
-
-        {/* ── Timeline ── */}
-        <div id="timeline" className="bg-white">
-          <TimelineSection />
-        </div>
-
-        {/* ── Gallery ── */}
-        <div id="gallery" className="bg-blush">
-          <GallerySection />
-        </div>
-
-        {/* ── Info ── */}
-        <div id="info" className="bg-white">
-          <InfoSection guestName={guestInfo?.invitationName} refreshKey={roomsRefreshKey} />
-        </div>
+        {enabled.map((section) => {
+          const id = section.key.replace(":", "-");
+          switch (section.key) {
+            case "story": return <div key={id} id={id} className="bg-petal"><StorySection onRSVP={() => setShowRSVP(true)} /></div>;
+            case "timeline": return <div key={id} id={id} className="bg-white"><TimelineSection /></div>;
+            case "gallery": return <div key={id} id={id} className="bg-blush"><GallerySection /></div>;
+            case "info": return <div key={id} id={id} className="bg-white"><InfoSection guestName={guestInfo?.invitationName} refreshKey={roomsRefreshKey} /></div>;
+            case "rooms": return <div key={id} id={id} className="bg-white"><InfoSection mode="rooms" refreshKey={roomsRefreshKey} /></div>;
+            case "photoWall": return <div key={id} id={id} className="bg-white"><InfoSection mode="photoWall" guestName={guestInfo?.invitationName} /></div>;
+            case "dressCode": return <div key={id} id={id} className="bg-white"><InfoSection mode="dressCode" /></div>;
+            default: {
+              const custom = wedding.customSections.find((item) => section.key === `custom:${item.id}`);
+              return custom ? <div key={id} id={id} className="bg-petal"><CustomSection section={custom} /></div> : null;
+            }
+          }
+        })}
       </main>
 
       {/* ── Footer ── */}
@@ -317,14 +300,14 @@ export default function App() {
             ))}
           </div>
           <p className="text-[10px] text-secondary/40 tracking-[0.3em] uppercase">
-            © 2026 {COUPLE.short} — Made with love
+            © {wedding.eventDate?.slice(0, 4) || new Date().getFullYear()} {COUPLE.short} — Made with love
           </p>
         </div>
       </footer>
 
       {/* ── RSVP Modal ── */}
       <AnimatePresence>
-        {showRSVP && (
+        {rsvpEnabled && showRSVP && (
           <>
             <motion.div key="backdrop"
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
@@ -341,7 +324,7 @@ export default function App() {
             >
               <div className="relative w-full max-w-md max-h-[90vh] bg-white rounded-[2rem] shadow-2xl overflow-y-auto pointer-events-auto scrollbar-hide">
                 <div className="sticky top-0 z-20 h-32 md:h-36 overflow-hidden">
-                  <img src={IMAGES.hero} alt=""
+                  <Photo src={IMAGES.hero} alt=""
                     className="w-full h-full object-cover object-top brightness-90" />
                   <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-white" />
                   <div className="absolute bottom-2 left-0 right-0 flex justify-center">
@@ -378,7 +361,7 @@ export default function App() {
 
       {/* ── Confirmation Popup ── */}
       <AnimatePresence>
-        {showConfirmation && (
+        {rsvpEnabled && showConfirmation && (
           <ConfirmationPopup
             onClose={() => { setShowConfirmation(false); refreshRooms(); }}
             onScrollToInfo={() => {
@@ -407,12 +390,13 @@ export default function App() {
           <InvitePopup
             invitationName={guestInfo?.invitationName ?? "Bạn"}
             alreadyConfirmed={guestInfo?.status === "yes"}
+            rsvpEnabled={rsvpEnabled}
             onConfirm={() => {
               setShowInvite(false);
               if (guestInfo?.status === "yes") {
                 setTimeout(() => setShowConfirmation(true), 300);
               } else {
-                setTimeout(() => setShowRSVP(true), 300);
+                if (rsvpEnabled) setTimeout(() => setShowRSVP(true), 300);
               }
             }}
           />
@@ -420,7 +404,7 @@ export default function App() {
       </AnimatePresence>
 
       {/* ── Background Music ── */}
-      <audio ref={bgAudioRef} src="/audio/ngaytinhvechungdoi.mp3" loop />
+      <audio ref={bgAudioRef} src={wedding.musicUrl || "/audio/ngaytinhvechungdoi.mp3"} preload="none" loop />
       <motion.button
         onClick={toggleBgMusic}
         title={bgPlaying ? "Tắt nhạc" : "Bật nhạc nền"}
@@ -441,7 +425,7 @@ export default function App() {
       </motion.button>
 
       {/* ── Bottom Nav ── */}
-      <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
+      <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50" aria-label="Các hạng mục thiệp">
         <div className="relative flex items-center gap-1 px-5 py-3 bg-white/90 backdrop-blur-xl rounded-full shadow-2xl border border-primary/20">
           {activeIdx >= 0 && (
             <motion.div
@@ -464,14 +448,15 @@ export default function App() {
             </button>
           ))}
           <div className="w-px h-5 bg-primary/30 mx-1" />
-          <button onClick={() => setShowRSVP(true)}
+          {rsvpEnabled && <button onClick={() => setShowRSVP(true)}
             className="w-10 h-10 rounded-full bg-primary-dark hover:bg-primary-deep text-white flex items-center justify-center shadow-md active:scale-90 transition-all pink-glow"
             title="Xác nhận tham dự">
             <Heart size={16} className="fill-white" />
-          </button>
+          </button>}
         </div>
       </nav>
     </div>
+    </WeddingContext.Provider>
   );
 }
 

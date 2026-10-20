@@ -57,7 +57,7 @@ export default function Login() {
         <button className="button" disabled={busy}>
           {busy ? "Đang đăng nhập..." : "Đăng nhập"}
         </button>
-        <p>Chưa có tài khoản?
+        <p>Chưa có tài khoản?{" "}
           <Link to="/register">Đăng ký
           </Link>
         </p>

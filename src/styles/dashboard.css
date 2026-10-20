@@ -1,0 +1,76 @@
+.wedding-cards {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.wedding-card {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  align-items: stretch;
+}
+
+.wedding-card img {
+  height: 100%;
+  min-height: 150px;
+}
+
+.wedding-card > div {
+  padding: 1.4rem;
+}
+
+.dashboard-empty {
+  padding: 2rem 0 3rem;
+  max-width: 42rem;
+}
+
+.dashboard-empty h2 {
+  font: italic 2.4rem var(--font-cormorant);
+  margin: 0 0 .5rem;
+}
+
+.save-state {
+  color: #4c6635;
+  font-size: .8rem;
+  white-space: nowrap;
+}
+
+.status-chip {
+  display: inline-flex;
+  border-radius: 1rem;
+  padding: .15rem .55rem;
+  background: #f9e8ea;
+  color: #4c6635;
+  font-size: .75rem;
+  font-weight: 700;
+}
+
+.status-yes { background: #e6eddd; }
+.status-no { background: #f8e5e5; }
+.room-list-head { background: #f9e8ea; }
+.guest-table-head { display: none; }
+
+@media (min-width: 900px) {
+  .guest-list { gap: 0; }
+  .guest-table-head,
+  .guest-list > .editor-item {
+    display: grid;
+    grid-template-columns: minmax(140px, 1.1fr) minmax(160px, 1fr) minmax(150px, 1fr) minmax(230px, 1.5fr);
+    align-items: center;
+    gap: 1rem;
+  }
+  .guest-table-head {
+    padding: .6rem 1rem;
+    color: #4c6635;
+    font-size: .75rem;
+    font-weight: 700;
+  }
+  .guest-list > .editor-item {
+    border: 0;
+    border-top: 1px solid #f2c8cd;
+    border-radius: 0;
+    box-shadow: none;
+    padding: .7rem 1rem;
+  }
+  .guest-list > .editor-item h3,
+  .guest-list > .editor-item p { margin: 0; }
+}

@@ -62,7 +62,7 @@ export default function Register() {
         <button className="button" disabled={busy}>
           {busy ? "Đang tạo tài khoản..." : "Tạo tài khoản"}
         </button>
-        <p>Đã có tài khoản?
+        <p>Đã có tài khoản?{" "}
           <Link to="/login">Đăng nhập tài khoản
           </Link>
         </p>

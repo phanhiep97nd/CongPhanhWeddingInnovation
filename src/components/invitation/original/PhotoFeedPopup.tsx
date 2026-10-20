@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { timeAgo, type Photo } from "./shared";
 
+import WeddingPhoto from "../Photo";
 // ── Photo Feed Popup ──────────────────────────────────────────────────────────
 export function PhotoFeedPopup({ photos, onClose, onUpload }: {
   photos: Photo[]; onClose: () => void; onUpload: () => void;
@@ -62,7 +63,7 @@ export function PhotoFeedPopup({ photos, onClose, onUpload }: {
                   className="break-inside-avoid mb-3 rounded-2xl overflow-hidden shadow-md border border-primary/10 bg-white cursor-pointer"
                   onClick={() => setLightbox(p)}
                 >
-                  <img src={p.url} alt={p.caption} className="w-full object-cover hover:opacity-95 transition-opacity"
+                  <WeddingPhoto src={p.url} alt={p.caption} className="w-full object-cover hover:opacity-95 transition-opacity"
                     onError={(e) => { (e.currentTarget as HTMLImageElement).closest("div")?.remove(); }} />
                   <div className="p-3">
                     <p className="font-semibold text-sm text-secondary">{p.author}</p>
@@ -97,7 +98,7 @@ export function PhotoFeedPopup({ photos, onClose, onUpload }: {
                   className="absolute -top-10 right-0 p-2 text-white/70 hover:text-white transition-colors">
                   <X size={22} />
                 </button>
-                <img src={lightbox.url} alt={lightbox.caption}
+                <WeddingPhoto src={lightbox.url} alt={lightbox.caption}
                   className="w-full rounded-2xl shadow-2xl object-contain max-h-[75vh]" />
                 {(lightbox.author || lightbox.caption) && (
                   <div className="mt-3 text-center">

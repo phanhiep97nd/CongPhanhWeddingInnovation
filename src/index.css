@@ -1,9 +1,7 @@
-@import url("https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400;1,600&family=Noto+Serif:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap");
-@import "tailwindcss";
-@import "./styles/part1.css";
-@import "./styles/part2.css";
-@import "./styles/part3.css";
-@import "./styles/part4.css";
-@import "./styles/part5.css";
-@import "./styles/part6.css";
+@import "./styles/invitation.css";
+@import "./styles/app-base.css";
+@import "./styles/landing.css";
+@import "./styles/auth.css";
+@import "./styles/dashboard.css";
+@import "./styles/editor.css";
 @import "./styles/photo.css";

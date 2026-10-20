@@ -8,10 +8,15 @@ import {
   Bus, Camera, Utensils, ChevronRight, X, MapPin, Phone, Users, Music, ExternalLink,
   Info as InfoIcon, Volume2, VolumeX, Plus, Upload,
 } from "lucide-react";
-import { API_BASE, uploadToCloudinary, type Photo } from "./shared";
+import { uploadToCloudinary, type Photo } from "./shared";
 
+import { api, json } from "../../../lib/api";
+import type { Photo as ApiPhoto } from "../../../lib/types";
+import { publicPath, useWedding } from "./WeddingContext";
+import WeddingPhoto from "../Photo";
 // ── Upload Popup ──────────────────────────────────────────────────────────────
 export function UploadPopup({ onClose, onAdd, defaultAuthor }: { onClose: () => void; onAdd: (p: Photo) => void; defaultAuthor?: string }) {
+  const { slug } = useWedding();
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [author, setAuthor] = useState(defaultAuthor ?? "");
@@ -37,14 +42,9 @@ export function UploadPopup({ onClose, onAdd, defaultAuthor }: { onClose: () => 
     try {
       const url = await uploadToCloudinary(file);
       const body = { url, caption: caption.trim(), author: author.trim() || "Ẩn danh" };
-      const res = await fetch(`${API_BASE}/photos`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-      const saved = res.ok ? await res.json() : null;
+      const saved = await api<ApiPhoto>(publicPath(slug, "/photos"), json("POST", body));
       onAdd({
-        id: saved?._id ?? `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+        id: saved?.id ?? `${Date.now()}-${Math.random().toString(36).slice(2)}`,
         url,
         caption: body.caption,
         author: body.author,
@@ -89,7 +89,7 @@ export function UploadPopup({ onClose, onAdd, defaultAuthor }: { onClose: () => 
               >
                 {preview ? (
                   <>
-                    <img src={preview} alt="preview" className="w-full object-cover max-h-52 rounded-2xl" />
+                    <WeddingPhoto src={preview} alt="preview" className="w-full object-cover max-h-52 rounded-2xl" />
                     <button type="button"
                       onClick={(e) => { e.stopPropagation(); setFile(null); setPreview(null); }}
                       className="absolute top-2 right-2 p-1.5 bg-black/50 hover:bg-black/70 text-white rounded-full transition-colors">
