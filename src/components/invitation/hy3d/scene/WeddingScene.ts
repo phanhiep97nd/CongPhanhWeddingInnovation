@@ -1,54 +1,24 @@
+import { disposeModel } from "./disposeTree";
+import { swapCharacters } from "./swapCharacters";
+import { cameraPose } from "./cameraPose";
+import { setupRenderer } from "./renderSetup";
+import { EnvelopeIntro } from "./envelopeIntro";
+import { CelebrationParticles } from "./celebrationParticles";
+import { direct, type Direction } from "./choreography";
+import { cullPlanting } from "./chunkInstances";
+import type { GlbCharacter } from "./glbCharacter";
+import { modelsAvailable } from "./modelProbe";
 import {
-  ACESFilmicToneMapping,
-  BoxGeometry,
-  CircleGeometry,
-  Color,
-  DirectionalLight,
-  DoubleSide,
-  Fog,
-  Group,
-  HemisphereLight,
-  MathUtils,
-  Mesh,
-  MeshBasicMaterial,
-  PerspectiveCamera,
-  PCFShadowMap,
-  PlaneGeometry,
-  PMREMGenerator,
-  Raycaster,
-  Scene,
-  Shape,
-  ShapeGeometry,
-  SRGBColorSpace,
-  Texture,
-  Timer,
-  Vector2,
-  Vector3,
-  WebGLRenderer,
+  CircleGeometry, DirectionalLight, Group, MathUtils, Mesh, MeshBasicMaterial,
+  PerspectiveCamera, Raycaster, Scene, Texture, Timer, Vector2, Vector3, WebGLRenderer,
 } from "three";
 import { buildBride, buildGroom, disposeCharacterGeometries, type Character } from "./characters";
-import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
-import { PALETTE, disposeMaterials, flat, toon, windUniform } from "./materials";
-import { FONTS, ensureFonts, textCard } from "./textures";
-import { Petals, buildWorld, clamp01, disposeWorld, floatProps, frameAt, heart, hySign, redEnvelope, type Station } from "./world";
+import { PALETTE, disposeMaterials, isDark, windUniform } from "./materials";
+import { ensureFonts } from "./textures";
+import { Petals, buildWorld, clamp01, disposeWorld, floatProps, frameAt, redEnvelope, type Station } from "./world";
 
-export interface SceneData {
-  groom: string;
-  bride: string;
-  guestName: string;
-  dateText: string;
-  venueName: string;
-  colors: string[];
-  stations: string[];          // enabled section keys in display order
-  timeline: { time: string; title: string }[];
-  photos: string[];            // gallery image URLs (already sized for textures)
-}
-
-export interface SceneOptions {
-  pixelRatioCap?: number;
-  skipIntro?: boolean;
-  lowPower?: boolean;
-}
+import type { SceneData, SceneOptions } from "./sceneData";
+export type { SceneData, SceneOptions } from "./sceneData";
 
 // Scroll progress p ∈ [0, 1] (from the HTML overlay) maps to the walk parameter u along the path.
 // Station i sits at p = (i + 1) / (n + 1), which is where the overlay centres section i.
@@ -64,44 +34,28 @@ export function stationProgress(index: number, count: number) {
   return (index + 1) / (count + 1);
 }
 
-type IntroPhase = "envelope" | "opening" | "card" | "leaving" | "done";
-
-interface Direction {
-  key: string;
-  station?: Station;
-  faceGroom: Vector3 | "partner" | "path";
-  faceBride: Vector3 | "partner" | "path";
-  wave: number;
-  waveBride: number;
-  point: number;
-  hold: number;
-  hug: number;
-  celebrate: number;
-  orbit: number;          // camera angle around the couple: 0 = straight ahead, ±π/2 = beside
-  distance: number;
-  lookBias: number;       // 0 = look at the couple, 1 = look at the station prop
-}
-
 // ── Scene ─────────────────────────────────────────────────────────────────────
 export class WeddingScene {
   readonly renderer: WebGLRenderer;
   readonly scene = new Scene();
   readonly camera = new PerspectiveCamera(42, 1, 0.1, 120);
-  readonly groom: Character;
-  readonly bride: Character;
+  groom: Character;
+  bride: Character;
   readonly stations: Station[];
+  private readonly planting: Group;
+  private readonly modelAbort = new AbortController();
+  private models?: { bride: GlbCharacter; groom: GlbCharacter };
+  private characterScale = 1;
   private readonly timer = new Timer();
   private readonly sun = new DirectionalLight("#FFE4CC", 2.6);
   private environment?: Texture;
   private readonly petals: Petals;
-  private readonly hearts: { mesh: Mesh; life: number; velocity: Vector3 }[] = [];
-  private readonly confetti: { mesh: Mesh; life: number; velocity: Vector3; spin: Vector3 }[] = [];
+  private readonly particles: CelebrationParticles;
   private readonly raycaster = new Raycaster();
   private readonly cameraGoal = new Vector3();
   private readonly lookGoal = new Vector3();
   private readonly look = new Vector3();
   private readonly tilt = new Vector2();
-  private readonly options: SceneOptions;
   private targetU = START_U;
   private coupleU = START_U;
   private walkDistance = 0;
@@ -110,56 +64,21 @@ export class WeddingScene {
   private lookBias = 0;
   private running = false;
   private disposed = false;
-  private intro: IntroPhase;
-  private introTime = 0;
-  private introGroup?: Group;
-  private flap?: Group;
-  private card?: Mesh;
+  private readonly envelope: EnvelopeIntro;
+  private get intro() {
+    return this.envelope.phase;
+  }
   private celebrated = false;
   private tapReaction = 0;
   private visible = true;
   private progress = 0;
   private viewShift = 0;      // fraction of the screen height the image is shifted (portrait phones)
-  private cardShownAt = 0;
 
-  constructor(private readonly canvas: HTMLCanvasElement, private readonly data: SceneData, options: SceneOptions = {}) {
-    this.options = options;
-    this.intro = options.skipIntro ? "done" : "envelope";
-    this.renderer = new WebGLRenderer({ canvas, antialias: window.devicePixelRatio < 2, alpha: false, powerPreference: "default" });
-    this.renderer.outputColorSpace = SRGBColorSpace;
-    const cap = options.pixelRatioCap ?? (options.lowPower ? 1.25 : 1.75);
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, cap));
-
-    // Filmic tone mapping + a generated environment give PBR surfaces natural highlights and bounce.
-    this.renderer.toneMapping = ACESFilmicToneMapping;
-    this.renderer.toneMappingExposure = 1.05;
-    this.scene.background = new Color(PALETTE.skyHorizon);
-    this.scene.fog = new Fog(PALETTE.skyHorizon, 10, 34);
-    const pmrem = new PMREMGenerator(this.renderer);
-    this.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-    this.scene.environment = this.environment;
-    this.scene.environmentIntensity = 0.45;
-    pmrem.dispose();
-
-    const sky = new HemisphereLight("#FFF1EC", "#6E8F4E", 0.55);
-    this.sun.position.set(-4, 9, -5);
-    this.scene.add(sky, this.sun, this.sun.target);
-    if (!options.lowPower) {
-      // Soft sun shadows that follow the couple (a small shadow box keeps the map sharp on phones).
-      this.renderer.shadowMap.enabled = true;
-      this.renderer.shadowMap.type = PCFShadowMap;
-      this.sun.castShadow = true;
-      this.sun.shadow.mapSize.set(1024, 1024);
-      this.sun.shadow.camera.left = -5;
-      this.sun.shadow.camera.right = 5;
-      this.sun.shadow.camera.top = 5;
-      this.sun.shadow.camera.bottom = -5;
-      this.sun.shadow.camera.near = 1;
-      this.sun.shadow.camera.far = 30;
-      this.sun.shadow.bias = -0.0006;
-      this.sun.shadow.normalBias = 0.02;
-      this.sun.shadow.radius = 4;
-    }
+  constructor(private readonly canvas: HTMLCanvasElement, private readonly data: SceneData, private readonly options: SceneOptions = {}) {
+    this.envelope = new EnvelopeIntro(this.scene, data, options.skipIntro ?? false, () => this.snapCamera(), () => this.applyViewOffset());
+    const rendering = setupRenderer(canvas, this.scene, this.sun, options);
+    this.renderer = rendering.renderer;
+    this.environment = rendering.environment;
 
     const suit = data.colors.find(isDark) || PALETTE.suit;
     const light = data.colors.filter((color) => !isDark(color));
@@ -177,6 +96,8 @@ export class WeddingScene {
 
     const world = buildWorld(this.scene, data, options.lowPower);
     this.stations = world.stations;
+    this.planting = world.planting;
+    this.particles = new CelebrationParticles(this.scene, options.lowPower ?? false);
     this.petals = new Petals(options.lowPower ? 60 : 140);
     this.scene.add(this.petals.mesh);
 
@@ -196,23 +117,46 @@ export class WeddingScene {
   // ── Public API ────────────────────────────────────────────────────────────
   async init() {
     await ensureFonts();
-    if (this.intro !== "done") this.buildIntro();
+    if (this.disposed) return;
+    if (this.intro !== "done") this.envelope.build();
+    void this.tryCharacters();
+  }
+
+  private async tryCharacters() {
+    // Probe first: the GLTF loader + Meshopt decoder are fetched only when both models exist.
+    if (!(await modelsAvailable(this.modelAbort.signal)) || this.disposed) return;
+    const { loadCharacterPair } = await import("./glbCharacter");
+    const pair = await loadCharacterPair(undefined, undefined, this.modelAbort.signal);
+    if (!pair) return;
+    if (this.disposed) {
+      pair.bride.dispose();
+      pair.groom.dispose();
+      return;
+    }
+    this.characterScale = swapCharacters(this.scene, { bride: this.bride, groom: this.groom }, pair);
+    this.bride = pair.bride;
+    this.groom = pair.groom;
+    this.models = pair;
+    if (this.options.lowPower) {
+      this.addShadow(this.bride.root, 0.42);
+      this.addShadow(this.groom.root, 0.32);
+    }
   }
 
   setProgress(progress: number) {
     this.progress = progress;
     this.targetU = progressToU(progress);
-    if (progress > 0.01) this.leaveIntro();
+    if (progress > 0.01) this.envelope.leave();
   }
 
   // Taps on the canvas: open the envelope, or make the couple react.
   tap(clientX: number, clientY: number) {
     if (this.intro === "envelope" || this.intro === "opening") {
-      this.intro = "opening";
+      this.envelope.phase = "opening";
       return;
     }
     if (this.intro === "card") {
-      this.leaveIntro();
+      this.envelope.leave();
       return;
     }
     const rect = this.canvas.getBoundingClientRect();
@@ -221,7 +165,7 @@ export class WeddingScene {
     const hits = this.raycaster.intersectObjects([this.groom.root, this.bride.root], true);
     if (hits.length) {
       this.tapReaction = 1.8;
-      this.spawnHearts(this.coupleCentre().setY(1.25), 5);
+      this.particles.spawnHearts(this.coupleCentre().setY(1.25), 5);
     }
   }
 
@@ -248,10 +192,7 @@ export class WeddingScene {
     this.applyViewOffset();
   }
 
-  // On portrait phones the content cards cover the lower half, so after the intro the rendered
-  // image is shifted up: the couple sits in the top half of the screen.
-  // Portrait phones: at the opening the HTML hero text sits at the top, so the image moves down a little;
-  // at the stops the content card covers the lower half, so the couple moves up into the top half.
+  // Shift the couple above the content cards on portrait phones.
   private applyViewOffset() {
     const { clientWidth: width, clientHeight: height } = this.canvas;
     if (width && height && this.camera.aspect < 0.8 && Math.abs(this.viewShift) > 0.001) {
@@ -287,8 +228,17 @@ export class WeddingScene {
   }
 
   dispose() {
+    if (this.disposed) return;
     this.stop();
     this.disposed = true;
+    this.modelAbort.abort();
+    this.models?.bride.dispose();
+    this.models?.groom.dispose();
+    this.models?.bride.root.removeFromParent();
+    this.models?.groom.root.removeFromParent();
+    this.envelope.dispose();
+    disposeModel(this.scene);
+    this.particles.dispose();
     disposeCharacterGeometries();
     disposeWorld();
     disposeMaterials();
@@ -312,7 +262,7 @@ export class WeddingScene {
 
   private update(dt: number, time: number) {
     windUniform.value = time;
-    if (this.intro !== "done") this.updateIntro(dt);
+    if (this.intro !== "done") this.envelope.update(dt);
 
     const previous = this.coupleU;
     this.coupleU = MathUtils.damp(this.coupleU, this.targetU, 2.2, dt);
@@ -321,17 +271,21 @@ export class WeddingScene {
     const walking = MathUtils.clamp(travelled / Math.max(dt, 1e-4) / 0.9, 0, 1);
     this.placeCouple(this.coupleU, walking);
 
-    const direction = this.direct(walking);
+    const direction = direct({ stations: this.stations, coupleU: this.coupleU, cameraGoal: this.cameraGoal, camera: this.camera, tapReaction: this.tapReaction }, walking);
     this.perform(direction, dt);
 
     this.groom.update(dt, time);
     this.bride.update(dt, time);
     this.petals.update(dt, time, this.coupleCentre());
     floatProps(this.stations, time);
-    this.updateParticles(dt);
+    this.particles.update(dt, this.camera);
     this.updateCamera(direction, dt);
     this.updateViewShift(dt);
     this.followSun();
+    cullPlanting(this.planting, this.camera.position);
+    this.stations.forEach((station) => {
+      station.object.visible = station.focus.distanceToSquared(this.camera.position) <= 22 * 22;
+    });
   }
 
   // ── Couple ────────────────────────────────────────────────────────────────
@@ -347,111 +301,6 @@ export class WeddingScene {
 
   private coupleCentre() {
     return this.groom.root.position.clone().lerp(this.bride.root.position, 0.5);
-  }
-
-  // Decides what the couple does and where the camera should be, from the nearest station.
-  private direct(walking: number): Direction {
-    let station: Station | undefined;
-    let nearest = Infinity;
-    for (const candidate of this.stations) {
-      const distance = Math.abs(candidate.u - this.coupleU);
-      if (distance < nearest) {
-        nearest = distance;
-        station = candidate;
-      }
-    }
-    const settled = walking < 0.35;
-    const atStation = station && nearest < 0.035 && settled ? station : undefined;
-    const atEnd = this.coupleU > END_U - 0.02 && settled;
-    const camera = this.cameraGoal;
-
-    const direction: Direction = {
-      key: atEnd ? "end" : atStation?.key ?? "walk",
-      station: atStation,
-      faceGroom: "path",
-      faceBride: "path",
-      wave: 0,
-      waveBride: 0,
-      point: 0,
-      hold: 0,
-      hug: 0,
-      celebrate: 0,
-      orbit: -0.55,
-      distance: this.camera.aspect < 0.8 ? 4.1 : 3.4,
-      lookBias: 0,
-    };
-    // Camera sits on the opposite side of the prop so both the couple and the prop are framed.
-    const away = atStation ? -atStation.side : -1;
-
-    switch (direction.key) {
-      case "story":
-        direction.faceGroom = "partner";
-        direction.faceBride = "partner";
-        direction.orbit = away * 0.4;
-        direction.lookBias = 0.12;
-        break;
-      case "timeline":
-        direction.faceGroom = atStation!.focus;
-        direction.faceBride = atStation!.focus;
-        direction.point = 1;
-        direction.orbit = away * 0.6;
-        direction.lookBias = 0.35;
-        break;
-      case "gallery":
-        direction.faceGroom = atStation!.focus;
-        direction.faceBride = atStation!.focus;
-        direction.orbit = away * 0.65;
-        direction.lookBias = 0.4;
-        break;
-      case "info":
-        direction.faceGroom = camera;
-        direction.faceBride = camera;
-        direction.waveBride = 1;
-        direction.orbit = 0.15;
-        direction.distance += 1.2;
-        direction.lookBias = 0.2;
-        break;
-      case "giftBox":
-        direction.faceGroom = camera;
-        direction.faceBride = camera;
-        direction.hold = 1;
-        direction.orbit = away * 0.5;
-        direction.lookBias = 0.15;
-        break;
-      case "dressCode":
-        direction.faceGroom = camera;
-        direction.faceBride = camera;
-        direction.celebrate = 0.6;
-        direction.orbit = away * 0.55;
-        direction.lookBias = 0.2;
-        break;
-      case "end":
-        direction.faceGroom = "partner";
-        direction.faceBride = "partner";
-        direction.hug = 1;
-        direction.celebrate = 0.25;
-        direction.orbit = 0.0;
-        direction.distance -= 0.6;
-        break;
-      case "walk":
-        break;
-      default:
-        // rsvp, photoWall, rooms, custom sections: greet the guest.
-        direction.faceGroom = camera;
-        direction.faceBride = camera;
-        direction.wave = 1;
-        direction.waveBride = 1;
-        direction.orbit = away * 0.35;
-        direction.lookBias = 0.1;
-    }
-
-    if (this.tapReaction > 0) {
-      direction.faceGroom = camera;
-      direction.faceBride = camera;
-      direction.wave = 1;
-      direction.waveBride = 1;
-    }
-    return direction;
   }
 
   private perform(direction: Direction, dt: number) {
@@ -483,12 +332,12 @@ export class WeddingScene {
       this.bride.root.position.lerp(middle, 0.42 * bride.hug);
       if (!this.celebrated && groom.hug > 0.6) {
         this.celebrated = true;
-        this.spawnConfetti(middle.clone().setY(1.6));
-        this.spawnHearts(middle.clone().setY(1.3), 6);
+        this.particles.spawnConfetti(middle.clone().setY(1.6));
+        this.particles.spawnHearts(middle.clone().setY(1.3), 6);
       }
     }
     if (direction.key === "story" && Math.random() < dt * 0.9) {
-      this.spawnHearts(this.coupleCentre().setY(1.3), 1);
+      this.particles.spawnHearts(this.coupleCentre().setY(1.3), 1);
     }
   }
 
@@ -521,27 +370,13 @@ export class WeddingScene {
   // ── Camera ────────────────────────────────────────────────────────────────
   // The camera orbits the couple: ahead of them (seeing their faces), swinging aside at stations.
   private computeCamera(direction: Direction | undefined, position: Vector3, look: Vector3) {
-    const { tangent, side } = frameAt(this.coupleU);
-    const centre = this.coupleCentre();
-    const orbit = this.orbit + this.tilt.x * 0.25;
-    const offset = tangent.clone().multiplyScalar(Math.cos(orbit)).addScaledVector(side, Math.sin(orbit));
-    position.copy(centre).addScaledVector(offset, this.distance);
-    position.y = 1.35 + this.tilt.y * 0.25 + (this.camera.aspect < 0.8 ? 0.15 : 0);
-    look.copy(centre).setY(0.62);
-    const prop = direction?.station?.focus;
-    if (prop) look.lerp(prop.clone().setY(0.8), this.lookBias);
-
-    if (this.intro !== "done" && this.introGroup) {
-      // Fit the 1.5-wide envelope to the screen width (portrait phones are the narrow case).
-      const halfFov = MathUtils.degToRad(this.camera.fov / 2);
-      const fitWidth = 0.95 / (Math.tan(halfFov) * this.camera.aspect);
-      const fitHeight = 1.0 / Math.tan(halfFov);
-      const distance = Math.max(fitWidth, fitHeight, 2.2);
-      // The envelope's front faces along the path, toward the camera that waits ahead of the couple.
-      const front = frameAt(START_U).tangent;
-      position.copy(this.introGroup.position).addScaledVector(front, distance).add(new Vector3(0, 0.05, 0));
-      look.copy(this.introGroup.position).add(new Vector3(0, 0.12, 0));
-    }
+    cameraPose({
+      coupleU: this.coupleU, centre: this.coupleCentre(), orbit: this.orbit,
+      tilt: this.tilt, distance: this.distance, characterScale: this.characterScale,
+      aspect: this.camera.aspect, fov: this.camera.fov, lookBias: this.lookBias,
+      focus: direction?.station?.focus,
+      envelope: this.intro !== "done" ? this.envelope.group : undefined,
+    }, position, look);
   }
 
   private snapCamera() {
@@ -566,179 +401,4 @@ export class WeddingScene {
     this.camera.lookAt(this.look);
   }
 
-  // ── Intro: the envelope opens and the personal card slides out ────────────
-  private buildIntro() {
-    const group = new Group();
-    const start = frameAt(START_U);
-    // Hover just in front of the couple, facing the camera that waits ahead of them.
-    group.position.copy(start.point).addScaledVector(start.tangent, 1.4).setY(1.25);
-    group.rotation.y = Math.atan2(start.tangent.x, start.tangent.z);
-
-    const body = new Mesh(new BoxGeometry(1.5, 1.0, 0.05), toon("#FBEFEA"));
-    group.add(body);
-
-    const texture = textCard(
-      [
-        { text: "Thân mời", font: FONTS.sans, weight: 500, color: PALETTE.moss, size: 30, gap: 2 },
-        { text: this.data.guestName || "bạn", font: FONTS.script, color: PALETTE.son, size: 92, gap: 10 },
-        { text: `${this.data.groom} & ${this.data.bride}`, font: FONTS.serif, weight: 600, color: PALETTE.moss, size: 44, gap: 4 },
-        { text: this.data.dateText, font: FONTS.sans, weight: 500, color: PALETTE.moss, size: 26 },
-      ],
-      { width: 560, height: 400, background: PALETTE.paper, border: PALETTE.gold },
-    );
-    const card = new Mesh(new PlaneGeometry(1.32, 0.94), new MeshBasicMaterial({ map: texture }));
-    card.position.set(0, 0, 0.03);
-    this.card = card;
-    group.add(card);
-
-    // Front pocket with a V-shaped mouth like a real envelope; it hides the lower card until it rises.
-    const pocketShape = new Shape();
-    pocketShape.moveTo(-0.75, -0.5);
-    pocketShape.lineTo(0.75, -0.5);
-    pocketShape.lineTo(0.75, 0.2);
-    pocketShape.lineTo(0, -0.12);
-    pocketShape.lineTo(-0.75, 0.2);
-    pocketShape.closePath();
-    const pocket = new Mesh(new ShapeGeometry(pocketShape), new MeshBasicMaterial({ color: "#F4DAD3" }));
-    pocket.position.z = 0.05;
-    group.add(pocket);
-    const foldShape = new Shape();
-    foldShape.moveTo(-0.75, -0.5);
-    foldShape.lineTo(0.75, -0.5);
-    foldShape.lineTo(0, -0.02);
-    foldShape.closePath();
-    const fold = new Mesh(new ShapeGeometry(foldShape), new MeshBasicMaterial({ color: "#EDC8C0" }));
-    fold.position.z = 0.052;
-    group.add(fold);
-
-    const flap = new Group();
-    flap.position.set(0, 0.5, 0.055);
-    const flapMesh = new Mesh(new ShapeGeometry(triangle(1.5, 0.62)), new MeshBasicMaterial({ color: "#F3D9D1", side: DoubleSide }));
-    flap.add(flapMesh);
-    const seal = hySign(0.2);
-    seal.position.set(0, -0.48, 0.02);
-    flap.add(seal);
-    group.add(flap);
-    this.flap = flap;
-
-    this.introGroup = group;
-    this.scene.add(group);
-    this.introTime = 0;
-    this.snapCamera();
-  }
-
-  private updateIntro(dt: number) {
-    if (!this.introGroup || !this.flap || !this.card) return;
-    this.introTime += dt;
-
-    if (this.intro === "envelope" && this.introTime > 1.0) this.intro = "opening";
-    if (this.intro === "opening" || this.intro === "card") {
-      // Swing the flap backwards so it ends behind the rising card.
-      this.flap.rotation.x = MathUtils.damp(this.flap.rotation.x, Math.PI * 0.97, 3.5, dt);
-      if (this.flap.rotation.x > Math.PI * 0.55) {
-        // Once the flap is up, the card rises above the pocket and comes forward.
-        this.card.position.y = MathUtils.damp(this.card.position.y, 0.66, 2.6, dt);
-        this.card.position.z = 0.09;
-        // Record the moment only once: this block keeps running while the card is shown.
-        if (this.card.position.y > 0.6 && this.intro !== "card") {
-          this.intro = "card";
-          this.cardShownAt = this.introTime;
-        }
-      }
-    }
-    if (this.intro === "card" && this.introTime - this.cardShownAt > 2.6) this.leaveIntro();
-    if (this.intro === "leaving") {
-      this.introGroup.position.y += dt * 2.4;
-      this.introGroup.scale.multiplyScalar(1 - dt * 1.1);
-      if (this.introGroup.scale.x < 0.12) {
-        this.scene.remove(this.introGroup);
-        this.introGroup = undefined;
-        this.intro = "done";
-        this.applyViewOffset();
-      }
-    }
-  }
-
-  private leaveIntro() {
-    if (this.intro === "done" || this.intro === "leaving") return;
-    this.intro = "leaving";
-  }
-
-  // ── Particles ─────────────────────────────────────────────────────────────
-  private spawnHearts(origin: Vector3, count: number) {
-    for (let index = 0; index < count; index++) {
-      const mesh = new Mesh(HEART_GEOMETRY, flat(index % 2 ? PALETTE.son : "#F28FA0"));
-      mesh.position.copy(origin).add(new Vector3((Math.random() - 0.5) * 0.4, Math.random() * 0.2, (Math.random() - 0.5) * 0.2));
-      mesh.quaternion.copy(this.camera.quaternion);
-      this.scene.add(mesh);
-      this.hearts.push({ mesh, life: 1.6 + Math.random() * 0.6, velocity: new Vector3((Math.random() - 0.5) * 0.2, 0.55 + Math.random() * 0.3, 0) });
-    }
-  }
-
-  private spawnConfetti(origin: Vector3) {
-    const colors = [PALETTE.son, PALETTE.blush, PALETTE.gold, "#FFFFFF", "#9BC27F"];
-    const count = this.options.lowPower ? 40 : 90;
-    for (let index = 0; index < count; index++) {
-      const mesh = new Mesh(CONFETTI_GEOMETRY, flat(colors[index % colors.length]));
-      mesh.position.copy(origin);
-      this.scene.add(mesh);
-      const angle = Math.random() * Math.PI * 2;
-      const speed = 1 + Math.random() * 1.8;
-      this.confetti.push({
-        mesh,
-        life: 2.5 + Math.random(),
-        velocity: new Vector3(Math.cos(angle) * speed, 2 + Math.random() * 1.5, Math.sin(angle) * speed),
-        spin: new Vector3(Math.random() * 8, Math.random() * 8, Math.random() * 8),
-      });
-    }
-  }
-
-  private updateParticles(dt: number) {
-    for (let index = this.hearts.length - 1; index >= 0; index--) {
-      const item = this.hearts[index];
-      item.life -= dt;
-      item.mesh.position.addScaledVector(item.velocity, dt);
-      item.mesh.quaternion.copy(this.camera.quaternion);
-      item.mesh.scale.setScalar(Math.min(1, item.life));
-      if (item.life <= 0) {
-        this.scene.remove(item.mesh);
-        this.hearts.splice(index, 1);
-      }
-    }
-    for (let index = this.confetti.length - 1; index >= 0; index--) {
-      const item = this.confetti[index];
-      item.life -= dt;
-      item.velocity.y -= 3.2 * dt;
-      item.velocity.multiplyScalar(1 - dt * 0.8);
-      item.mesh.position.addScaledVector(item.velocity, dt);
-      if (item.mesh.position.y < 0.02) item.mesh.position.y = 0.02;
-      item.mesh.rotation.x += item.spin.x * dt;
-      item.mesh.rotation.y += item.spin.y * dt;
-      if (item.life <= 0) {
-        this.scene.remove(item.mesh);
-        this.confetti.splice(index, 1);
-      }
-    }
-  }
-}
-
-const HEART_GEOMETRY = new ShapeGeometry(heart(0.09));
-const CONFETTI_GEOMETRY = new PlaneGeometry(0.05, 0.08);
-
-function triangle(width: number, height: number) {
-  const shape = new Shape();
-  shape.moveTo(-width / 2, 0);
-  shape.lineTo(width / 2, 0);
-  shape.lineTo(0, -height);
-  shape.closePath();
-  return shape;
-}
-
-function isDark(hex: string) {
-  const value = parseInt(hex.replace("#", ""), 16);
-  if (Number.isNaN(value)) return false;
-  const r = (value >> 16) & 255;
-  const g = (value >> 8) & 255;
-  const b = value & 255;
-  return 0.2126 * r + 0.7152 * g + 0.0722 * b < 110;
 }

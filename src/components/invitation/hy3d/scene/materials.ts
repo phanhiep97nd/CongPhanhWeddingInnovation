@@ -123,3 +123,12 @@ export function disposeMaterials() {
   flatCache.clear();
   OUTLINE.dispose();
 }
+
+export function isDark(hex: string) {
+  const value = parseInt(hex.replace("#", ""), 16);
+  if (Number.isNaN(value)) return false;
+  const r = (value >> 16) & 255;
+  const g = (value >> 8) & 255;
+  const b = value & 255;
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b < 110;
+}

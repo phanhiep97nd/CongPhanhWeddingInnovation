@@ -46,3 +46,15 @@ Triển khai frontend trên Vercel. `vercel.json` chuyển `/api/*` sang API Rai
 ### Quản trị
 
 Đặt `ADMIN_EMAILS` (danh sách email phân tách bằng dấu phẩy) trên Railway để tự cấp quyền admin khi đăng ký/đăng nhập. Với tài khoản đã có, chạy `npm run make-admin -- <email>` trong môi trường backend có kết nối MongoDB. Quản trị viên mở `/admin` để xem thống kê, người dùng, đơn hàng và cài đặt giá, giới hạn.
+
+## Hỷ 3D
+
+Template `hy3d` dùng three.js với cây hoa chia theo đoạn đường, culling ở 22 m,
+props PBR gộp theo material và cấu hình nhẹ cho điện thoại. Trang dev
+`/__hy3d?intro=0&p=0.43&stats=1` hiện số tam giác, draw call và frame;
+thêm `&lowPower=1` để kiểm tra chế độ nhẹ.
+
+Có thể thay chibi bằng `public/models/bride.glb` và `groom.glb` mà không sửa code.
+Model tải nền, thay cả cặp khi sẵn sàng và giữ chibi nếu tải lỗi.
+Xem [hướng dẫn tạo hình, rig và animation](public/models/README.md).
+

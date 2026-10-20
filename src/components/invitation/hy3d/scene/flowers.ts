@@ -11,7 +11,7 @@ import {
   SphereGeometry,
   Vector3,
 } from "three";
-import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
+import { mergeGeometries, mergeVertices } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 
 // ── Botanical geometry ────────────────────────────────────────────────────────
 // Flowers are built petal by petal and merged into one geometry per species, so a whole bed is a
@@ -31,7 +31,7 @@ function paint(geometry: BufferGeometry, color: (y: number, x: number) => Color)
 
 // A petal is a plane bent into a spoon: narrow at the base, cupped across, curled at the tip.
 // 2 x 3 segments per petal: enough to read as a curved petal at phone distances, 12 triangles each.
-function petal(length: number, width: number, cup: number, curl: number, columns = 2, rows = 3) {
+export function petal(length: number, width: number, cup: number, curl: number, columns = 2, rows = 3) {
   const geometry = new PlaneGeometry(width, length, columns, rows);
   geometry.translate(0, length / 2, 0);
   const positions = geometry.getAttribute("position");
@@ -161,9 +161,20 @@ export function grassTuftGeometry(blades = 6) {
   return finish(parts);
 }
 
+// Icosahedra come without an index, so normals would be per face (faceted, low-poly look). Welding the
+// vertices first gives one shared normal per vertex: smooth, organic shading after the bumps are applied.
+export function smoothSphere(radius: number, detail: number) {
+  const raw = new IcosahedronGeometry(radius, detail);
+  raw.deleteAttribute("normal");
+  raw.deleteAttribute("uv");
+  const welded = mergeVertices(raw);
+  raw.dispose();
+  return welded;
+}
+
 // Blossom cluster for tree canopies: lumpy sphere with pink vertex shading.
 export function blossomCanopyGeometry() {
-  const geometry = new IcosahedronGeometry(0.9, 2);
+  const geometry = smoothSphere(0.9, 2);
   const positions = geometry.getAttribute("position");
   for (let index = 0; index < positions.count; index++) {
     const vertex = new Vector3().fromBufferAttribute(positions, index);
@@ -187,4 +198,10 @@ function finish(parts: BufferGeometry[]) {
   parts.forEach((part) => part.dispose());
   merged.computeBoundingSphere();
   return merged;
+}
+
+// Airborne rose petal with a darker base and a translucent-looking pale rim.
+export function fallingPetalGeometry() {
+  return paint(petal(0.1, 0.075, 0.65, 0.24, 3, 4), (y) =>
+    new Color("#C96C83").lerp(new Color("#FFE3EB"), Math.min(1, y / 0.1)));
 }
