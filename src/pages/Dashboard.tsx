@@ -79,7 +79,7 @@ export default function Dashboard() {
     <header className="dash-header">
       <Link className="brand" to="/">Thiệp Cưới
       </Link>
-      <span>Xin chào,
+      <span>Xin chào,{" "}
         {user?.name}
       </span>
       <button className="button-outline" onClick={() => {
@@ -128,11 +128,11 @@ export default function Dashboard() {
           {item.coverImage && <img src={cldUrl(item.coverImage, 640)} alt="Ảnh bìa" loading="lazy" decoding="async" />}
           <div>
             <h2>
-              {item.couple.groom} &
+              {item.couple.groom} &{" "}
               {item.couple.bride}
             </h2>
             <p>
-              {item.dateText || "Chưa đặt ngày"} ·
+              {item.dateText || "Chưa đặt ngày"} ·{" "}
               {item.guestCount} khách
             </p>
             <p>

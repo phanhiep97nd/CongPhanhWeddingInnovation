@@ -6,6 +6,33 @@
   background: #fdf5f6;
 }
 
+.editor-title .button,
+.save-state {
+  white-space: nowrap;
+}
+
+/* Phones: one field per row, and the couple name already shows in the page title. */
+@media (max-width: 640px) {
+  .editor .form-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .editor .dash-header-title {
+    display: none;
+  }
+  .editor-title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .5rem 1rem;
+  }
+  .editor-title > div {
+    flex-basis: 100%;
+  }
+  .editor-title h1 {
+    font-size: clamp(2rem, 9vw, 2.6rem);
+  }
+}
+
 @media (min-width: 900px) {
   .editor .shell {
     display: grid;

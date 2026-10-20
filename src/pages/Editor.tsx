@@ -79,8 +79,8 @@ export default function Editor() {
     <header className="dash-header">
       <button className="text-button" onClick={back}>← Thiệp của tôi
       </button>
-      <strong>
-        {draft.couple.groom} &
+      <strong className="dash-header-title">
+        {draft.couple.groom} &{" "}
         {draft.couple.bride}
       </strong>
       <a href={`/w/${draft.slug}`} target="_blank" rel="noreferrer">Xem thiệp ↗
@@ -90,7 +90,7 @@ export default function Editor() {
       <div className="editor-title">
         <div>
           <h1>
-            {draft.couple.groom} &
+            {draft.couple.groom} &{" "}
             {draft.couple.bride}
           </h1>
           <p>/w/
@@ -98,7 +98,7 @@ export default function Editor() {
           </p>
         </div>
         <button className="button" disabled={!dirty || saving} onClick={() => void save()}>
-          {saving ? "Đang lưu..." : dirty ? "Lưu thay đổi" : "Đã lưu"}
+          {saving ? "Đang lưu..." : "Lưu thay đổi"}
         </button>
         <span className="save-state" role="status">{dirty ? "Chưa lưu" : "Đã lưu"}</span>
       </div>

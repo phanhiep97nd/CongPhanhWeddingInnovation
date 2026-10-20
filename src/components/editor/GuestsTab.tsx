@@ -97,19 +97,19 @@ export default function GuestsTab({ weddingId, slug }: { weddingId: string; slug
   return <div className="editor-stack">
     <div className="stats">
       {stats && <>
-        <span>Tổng:
+        <span>Tổng:{" "}
           {stats.total}
         </span>
-        <span>Tham dự:
+        <span>Tham dự:{" "}
           {stats.yes}
         </span>
-        <span>Không đến:
+        <span>Không đến:{" "}
           {stats.no}
         </span>
-        <span>Chờ:
+        <span>Chờ:{" "}
           {stats.pending}
         </span>
-        <span>Số người:
+        <span>Số người:{" "}
           {stats.attendees}
         </span>
       </>}
@@ -169,7 +169,7 @@ export default function GuestsTab({ weddingId, slug }: { weddingId: string; slug
           {g.invitationName}
         </h3>
         <p>
-          {g.name} ·
+          {g.name} ·{" "}
           {g.phone}
         </p>
         <p><span className={`status-chip status-${g.status}`}>{g.status === "yes" ? "Tham dự" : g.status === "no" ? "Không đến" : "Chờ"}</span> · {g.guestCount} người · {g.room}</p>

@@ -175,6 +175,15 @@
   gap: 4rem;
 }
 
+/* Declared after the base rule above, so it must restate the mobile stack itself. */
+@media (max-width: 768px) {
+  .landing-story {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+    padding-bottom: 4rem;
+  }
+}
+
 .landing-story h2 {
   font: italic clamp(2.5rem, 4vw, 4rem) var(--font-cormorant);
 }
