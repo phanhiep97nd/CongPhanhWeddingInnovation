@@ -20,6 +20,7 @@ const schema = new mongoose.Schema({
     brideFull: { type: String, default: '' }
   },
   eventDate: { type: Date, default: null },
+  eventTime: { type: String, default: '' },
   dateText: { type: String, default: '' },
   venue: {
     name: { type: String, default: '' },

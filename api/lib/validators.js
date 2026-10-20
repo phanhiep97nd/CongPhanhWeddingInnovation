@@ -15,6 +15,14 @@ function eventDate(value) {
   return new Date(value);
 }
 
+function eventTime(value) {
+  if (value === '') return '';
+  if (typeof value !== 'string' || !/^([01]\d|2[0-3]):[0-5]\d$/.test(value)) {
+    fail('Giờ không hợp lệ');
+  }
+  return value;
+}
+
 function timeline(value) {
   return items(value, 50, {
     id: item => string(item, 100),
@@ -73,6 +81,7 @@ const weddingFields = {
     brideFull: item => string(item, 100)
   }),
   eventDate,
+  eventTime,
   dateText: value => string(value, 100),
   venue: value => shape(value, {
     name: item => string(item, 100),
@@ -155,4 +164,4 @@ function normalizeSections(sectionsToNormalize, customSections) {
   return result;
 }
 
-module.exports = { weddingFields, guestFields, normalizeSections, eventDate, slug };
+module.exports = { weddingFields, guestFields, normalizeSections, eventDate, eventTime, slug };

@@ -67,7 +67,24 @@ describe('public wedding routes', () => {
     const { wedding, base } = await setup({ couple: { groom: 'Minh', bride: 'Lan' } });
     await Guest.create({ wedding: wedding.id, code: 'abcdefgh', name: 'An', invitationName: 'Anh An' });
     const result = await request(app).get(`${base}/meta?g=abcdefgh`);
-    expect(result.body.description).toContain('Anh An');
+    expect(result.body.title).toBe('Gửi Anh An · Thiệp cưới Minh & Lan');
+    expect(result.body.description).toBe('Trân trọng kính mời Anh An đến dự lễ thành hôn của Minh & Lan.');
+  });
+
+  it('returns distinct titles and images for two guests', async () => {
+    const { wedding, base } = await setup({
+      couple: { groom: 'Minh', bride: 'Lan' },
+      coverImage: 'https://res.cloudinary.com/demo/image/upload/cover.jpg'
+    });
+    await Guest.create({ wedding: wedding.id, code: 'abcdefgh', name: 'An', invitationName: 'Anh An' });
+    await Guest.create({ wedding: wedding.id, code: 'ijklmnop', name: 'Bình', invitationName: 'Chị Bình' });
+    const first = await request(app).get(`${base}/meta?g=abcdefgh`);
+    const second = await request(app).get(`${base}/meta?g=ijklmnop`);
+    expect(first.body.title).toBe('Gửi Anh An · Thiệp cưới Minh & Lan');
+    expect(second.body.title).toBe('Gửi Chị Bình · Thiệp cưới Minh & Lan');
+    expect(first.body.image).toContain('Anh%20An');
+    expect(second.body.image).toContain('Ch%E1%BB%8B%20B%C3%ACnh');
+    expect(first.body.image).not.toBe(second.body.image);
   });
 
   it('uses explicit meta title and description overrides', async () => {

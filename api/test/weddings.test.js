@@ -116,6 +116,45 @@ describe('weddings', () => {
     expect(result.body.eventDate).toBeNull();
   });
 
+  it('creates, edits, and returns eventTime in owner and public views', async () => {
+    const account = await register();
+    const wedding = (await createWedding(account.token, { eventTime: '18:30' })).body;
+    expect(wedding.eventTime).toBe('18:30');
+    expect((await request(app).get('/weddings').set(authorized(account.token))).body[0].eventTime).toBe('18:30');
+    expect((await request(app).get(`/public/weddings/${wedding.slug}`)).body.eventTime).toBe('18:30');
+    const edited = await request(app).put(`/weddings/${wedding.id}`)
+      .set(authorized(account.token)).send({ eventTime: '' });
+    expect(edited.body.eventTime).toBe('');
+  });
+
+  it.each(['24:00', '9:00', '12:60', 'tomorrow', null])('rejects invalid eventTime %s', async value => {
+    const account = await register();
+    expect((await createWedding(account.token, { eventTime: value })).status).toBe(400);
+  });
+
+  it('previews unpublished metadata for the owner with a guest code', async () => {
+    const owner = await register();
+    const other = await register('other@example.com');
+    const wedding = (await createWedding(owner.token, {
+      published: false,
+      couple: { groom: 'Minh', bride: 'Lan' },
+      coverImage: 'https://res.cloudinary.com/demo/image/upload/cover.jpg'
+    })).body;
+    await Guest.create({ wedding: wedding.id, code: 'abcdefgh', name: 'An', invitationName: 'Anh An' });
+    const path = `/weddings/${wedding.id}/preview-meta?g=abcdefgh`;
+    const result = await request(app).get(path).set(authorized(owner.token));
+    expect(result.status).toBe(200);
+    expect(result.body.title).toBe('Gửi Anh An · Thiệp cưới Minh & Lan');
+    expect(result.body.image).toContain('Anh%20An');
+    expect((await request(app).get(`/public/weddings/${wedding.slug}/meta`)).status).toBe(404);
+    const unknown = await request(app).get(`/weddings/${wedding.id}/preview-meta?g=unknown`)
+      .set(authorized(owner.token));
+    expect(unknown.body.guestName).toBe('');
+    expect(unknown.body.title).toBe('Thiệp cưới Minh & Lan');
+    expect((await request(app).get(path)).status).toBe(401);
+    expect((await request(app).get(path).set(authorized(other.token))).status).toBe(404);
+  });
+
   it('rejects a malformed eventDate with 400', async () => {
     const account = await register();
     expect((await createWedding(account.token, { eventDate: 'next Friday' })).status).toBe(400);

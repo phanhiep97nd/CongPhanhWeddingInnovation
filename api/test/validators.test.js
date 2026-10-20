@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
-const { eventDate, slug, weddingFields, guestFields, normalizeSections } = require('../lib/validators');
+const { eventDate, eventTime, slug, weddingFields, guestFields, normalizeSections } = require('../lib/validators');
 
 describe('eventDate', () => {
   it.each([null, ''])('accepts empty value %s as null', value => {
@@ -21,6 +21,16 @@ describe('eventDate', () => {
 
   it.each(['03/04/2026', '2026-99-03', '2026-04-03oops', 123, undefined])('rejects %s', value => {
     expect(() => eventDate(value)).toThrow('Ngày không hợp lệ');
+  });
+});
+
+describe('eventTime', () => {
+  it.each(['', '00:00', '09:05', '18:30', '23:59'])('accepts %s', value => {
+    expect(eventTime(value)).toBe(value);
+  });
+
+  it.each(['24:00', '9:00', '12:60', '18:30:00', null, 123])('rejects %s', value => {
+    expect(() => eventTime(value)).toThrow('Giờ không hợp lệ');
   });
 });
 

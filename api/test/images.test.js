@@ -1,16 +1,49 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, afterEach } from 'vitest';
 import { createRequire } from 'node:module';
 import { useDatabase, app, request, register, createWedding, authorized, Photo, Wedding } from './helpers/db';
 
 const require = createRequire(import.meta.url);
-const { ogImageUrl } = require('../lib/images');
-useDatabase();
+const { ogImageUrl, personalizedOgImage } = require('../lib/images');
 
-describe('photos and preview images', () => {
+afterEach(() => {
+  delete process.env.OG_GUEST_OVERLAY;
+  delete process.env.OG_FONT;
+});
+
+describe('preview images', () => {
   it('converts Cloudinary image URLs for social previews', () => {
     expect(ogImageUrl('https://res.cloudinary.com/demo/image/upload/photo.jpg'))
-      .toContain('/upload/c_fill,w_1200,h_630,f_jpg,q_auto/');
+      .toBe('https://res.cloudinary.com/demo/image/upload/c_fill,g_auto,w_1200,h_630,f_jpg,q_auto/photo.jpg');
   });
+
+  it('adds a personalized overlay with encoded Vietnamese text', () => {
+    expect(personalizedOgImage('https://res.cloudinary.com/demo/image/upload/photo.jpg', 'Anh An'))
+      .toBe('https://res.cloudinary.com/demo/image/upload/c_fill,g_auto,w_1200,h_630,f_jpg,q_auto/l_text:Roboto_58_bold:Th%C3%A2n%20m%E1%BB%9Di%20Anh%20An,co_rgb:FFFFFF/e_shadow:60,x_0,y_3,co_rgb:000000/fl_layer_apply,g_south,y_60/photo.jpg');
+  });
+
+  it('double encodes commas and slashes inside the overlay text', () => {
+    process.env.OG_FONT = 'Arial';
+    expect(personalizedOgImage('https://res.cloudinary.com/demo/image/upload/p.jpg', 'An, Bình/Chi'))
+      .toBe('https://res.cloudinary.com/demo/image/upload/c_fill,g_auto,w_1200,h_630,f_jpg,q_auto/l_text:Arial_58_bold:Th%C3%A2n%20m%E1%BB%9Di%20An%252C%20B%C3%ACnh%252FChi,co_rgb:FFFFFF/e_shadow:60,x_0,y_3,co_rgb:000000/fl_layer_apply,g_south,y_60/p.jpg');
+  });
+
+  it('omits the overlay when disabled and preserves non-Cloudinary URLs', () => {
+    process.env.OG_GUEST_OVERLAY = 'off';
+    expect(personalizedOgImage('https://res.cloudinary.com/demo/image/upload/p.jpg', 'An'))
+      .toBe('https://res.cloudinary.com/demo/image/upload/c_fill,g_auto,w_1200,h_630,f_jpg,q_auto/p.jpg');
+    expect(personalizedOgImage('https://example.com/p.jpg', 'An')).toBe('https://example.com/p.jpg');
+    expect(personalizedOgImage('/cover.jpg', 'An')).toBe('/cover.jpg');
+  });
+
+  it('truncates long guest names to 40 characters', () => {
+    const image = personalizedOgImage('https://res.cloudinary.com/demo/image/upload/p.jpg', 'a'.repeat(41));
+    expect(image).toContain(`m%E1%BB%9Di%20${'a'.repeat(40)},`);
+    expect(image).not.toContain('a'.repeat(41));
+  });
+});
+
+describe('photos', () => {
+  useDatabase();
 
   it('rejects an insecure photo URL', async () => {
     const account = await register();

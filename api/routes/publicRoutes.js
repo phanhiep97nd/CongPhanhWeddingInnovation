@@ -7,7 +7,7 @@ const { fail, string, pick, url } = require('../lib/common');
 const { serialize, publicGuest } = require('../lib/serialize');
 const { guestFields, normalizeSections } = require('../lib/validators');
 const { createGuest } = require('../lib/guestCodes');
-const { ogImageUrl } = require('../lib/images');
+const { buildMeta } = require('../lib/meta');
 const { getSettings } = require('../models/Settings');
 const { FEATURES, entitlementsFor, isExpired } = require('../lib/plans');
 
@@ -185,24 +185,8 @@ router.get('/weddings/:slug/meta', async (request, response, next) => {
       guestName = guest?.invitationName || '';
     }
 
-    const groom = wedding.couple?.groom || '';
-    const bride = wedding.couple?.bride || '';
-    const venue = wedding.venue?.name || '';
-    const title = wedding.meta?.title ||
-      `Thiệp cưới ${groom} & ${bride}${wedding.dateText ? ` — ${wedding.dateText}` : ''}`;
-    const description = wedding.meta?.description ||
-      `Trân trọng kính mời ${guestName || 'bạn'} đến chung vui trong ngày trọng đại của ${groom} & ${bride}${venue ? ` tại ${venue}` : ''}.`;
-    const siteOrigin = (process.env.SITE_ORIGIN || process.env.VITE_SITE_BASE || 'https://congphanh.vercel.app').replace(/\/$/, '');
-    const guestPath = request.query.g ? `/${encodeURIComponent(request.query.g)}` : '';
-
-    response.json({
-      title,
-      description,
-      image: ogImageUrl(wedding.ogImage || wedding.coverImage || ''),
-      siteName: `${groom} & ${bride}`,
-      guestName,
-      url: `${siteOrigin}/w/${encodeURIComponent(wedding.slug)}${guestPath}`
-    });
+    const code = typeof request.query.g === 'string' ? request.query.g : '';
+    response.json(buildMeta(wedding, guestName, { code }));
   } catch (error) {
     next(error);
   }

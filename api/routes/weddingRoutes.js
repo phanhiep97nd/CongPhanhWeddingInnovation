@@ -12,6 +12,7 @@ const guestRoutes = require('./guestRoutes');
 const orderRoutes = require('./orderRoutes');
 const { getSettings } = require('../models/Settings');
 const { entitlementsFor, limitsFor, expiresAt, paywall } = require('../lib/plans');
+const { buildMeta } = require('../lib/meta');
 
 const router = express.Router();
 router.use(auth);
@@ -74,6 +75,7 @@ router.get('/', async (request, response, next) => {
       slug: wedding.slug,
       couple: wedding.couple,
       dateText: wedding.dateText,
+      eventTime: wedding.eventTime,
       coverImage: wedding.coverImage,
       published: wedding.published,
       plan: wedding.plan || 'free',
@@ -135,6 +137,17 @@ router.use('/:id', owned);
 router.get('/:id', async (request, response, next) => {
   try {
     response.json(await ownerView(request.wedding));
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get('/:id/preview-meta', async (request, response, next) => {
+  try {
+    const code = typeof request.query.g === 'string' ? request.query.g : '';
+    const selector = /^[a-f0-9]{24}$/i.test(code) ? { _id: code } : { code };
+    const guest = code ? await Guest.findOne({ wedding: request.wedding._id, ...selector }).lean() : null;
+    response.json(buildMeta(request.wedding, guest?.invitationName || '', { code }));
   } catch (error) {
     next(error);
   }
