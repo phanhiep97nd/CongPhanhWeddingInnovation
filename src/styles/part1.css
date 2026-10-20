@@ -1,0 +1,237 @@
+@theme {
+  --font-serif: "Noto Serif", serif;
+  --font-sans: "Plus Jakarta Sans", sans-serif;
+  --font-script: "Great Vibes", cursive;
+  --font-cormorant: "Cormorant Garamond", serif;
+  --color-primary: #F2C8CD;
+  --color-primary-dark: #C9848B;
+  --color-primary-deep: #A85E65;
+  --color-secondary: #4C6635;
+  --color-sage: #8DA06B;
+  --color-sage-light: #d4e0c4;
+  --color-petal: #fdf5f6;
+  --color-blush: #f9e8ea;
+  --color-background-light: #fdf5f6;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.5rem;
+  --radius-4xl: 2rem;
+  --radius-5xl: 3rem;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-petal text-secondary font-sans antialiased;
+    overflow-x: hidden;
+  }
+  ::selection {
+    background-color: #F2C8CD;
+    color: #4C6635;
+  }
+}
+
+.hero-mask {
+  mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+}
+
+.editorial-text-shadow {
+  text-shadow: 0 4px 20px rgba(0,0,0,0.45);
+}
+
+.name-shadow {
+  text-shadow: 0 2px 24px rgba(0,0,0,0.5), 0 0 60px rgba(242,200,205,0.25);
+}
+
+.pink-glow {
+  box-shadow: 0 8px 40px rgba(242, 200, 205, 0.5);
+}
+
+.scroll-container {
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 100dvh;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Smooth scrollbar */
+
+.scroll-container::-webkit-scrollbar {
+  width: 4px;
+}
+
+.scroll-container::-webkit-scrollbar-track {
+  background: #fdf5f6;
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+  background: #F2C8CD;
+  border-radius: 2px;
+}
+
+/* Infinity "8" rotated */
+
+.infinity-8 {
+  display: inline-block;
+  transform: rotate(90deg);
+  line-height: 1;
+  font-style: normal;
+}
+
+:root {
+  --wedding-primary: #b76e79;
+}
+
+button, a, input, select, textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+.shell {
+  max-width: 1100px;
+  margin: auto;
+  padding: 2rem 1.2rem 5rem;
+}
+
+.page-loading {
+  min-height: 70vh;
+  display: grid;
+  place-items: center;
+}
+
+.brand {
+  font: 2rem var(--font-script);
+  color: #a85e65;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  font-size: .72rem;
+  letter-spacing: .3em;
+  color: #8da06b;
+  font-weight: 700;
+}
+
+.button, .button-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.8rem;
+  padding: .65rem 1.3rem;
+  border-radius: 3rem;
+  text-decoration: none;
+  font-size: .9rem;
+  font-weight: 700;
+}
+
+.button {
+  color: white;
+  background: #b76e79;
+  border: 1px solid #b76e79;
+}
+
+.button:hover {
+  background: #a85e65;
+}
+
+.button-outline {
+  border: 1px solid #b76e79;
+  color: #a85e65;
+  background: white;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .6rem;
+}
+
+.text-button {
+  border: 0;
+  background: transparent;
+  color: #a85e65;
+  padding: .5rem;
+}
+
+.topbar, .dash-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem max(1.2rem, calc((100vw - 1100px)/2));
+  background: #fff9f9;
+  border-bottom: 1px solid #f2c8cd;
+}
+
+.topbar > div {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.landing-hero {
+  max-width: 1200px;
+  margin: auto;
+  min-height: 68vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 4rem;
+  padding: 4rem 1.5rem;
+}
+
+.landing-hero h1, .shell h1, .auth-card h1, .editor-title h1 {
+  font: clamp(2.7rem, 5vw, 5rem)/1.08 var(--font-cormorant);
+  color: #4c6635;
+  margin: .7rem 0 1.3rem;
+}
+
+.landing-hero p {
+  max-width: 33rem;
+  line-height: 1.8;
+  margin-bottom: 2rem;
+}
+
+.landing-art {
+  border-radius: 48% 48% 12px 12px;
+  min-height: 450px;
+  background: linear-gradient(145deg, #f4d4d6, #fdf5f6 55%, #d4e0c4);
+  display: grid;
+  place-content: center;
+  text-align: center;
+  box-shadow: 0 20px 55px #b76e7930;
+}
+
+.landing-art span {
+  color: #b76e79;
+  font-size: 5rem;
+}
+
+.landing-art p {
+  font: italic 3rem var(--font-cormorant);
+  color: #4c6635;
+}
+
+.landing-features {
+  max-width: 1100px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  padding: 2rem 1.2rem 6rem;
+}

@@ -6,7 +6,6 @@ import { csvCell, guestsCsv } from '../lib/csv';
 import { parseBulkGuests } from '../lib/guests';
 import { api, ApiError, setToken } from '../lib/api';
 import type { Guest, Section } from '../lib/types';
-
 describe('data helpers', () => {
   it('transforms only Cloudinary upload URLs', () => {
     expect(cldUrl('https://res.cloudinary.com/demo/image/upload/v1/a.jpg', 640)).toBe('https://res.cloudinary.com/demo/image/upload/f_auto,q_auto,w_640/v1/a.jpg');
@@ -35,19 +34,28 @@ describe('data helpers', () => {
     expect(parseBulkGuests(' A | B | 090\nC\n | Empty')).toEqual([{ invitationName: 'A', name: 'B', phone: '090' }, { invitationName: 'C' }]);
   });
 });
-
 describe('API client', () => {
-  beforeEach(() => { setToken(null); vi.restoreAllMocks(); });
+  beforeEach(() => {
+    setToken(null);
+    vi.restoreAllMocks();
+  });
   it('sends bearer token and JSON', async () => {
-    setToken('secret'); const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue({ ok: true, status: 200, json: async () => ({ id: '1' }) } as Response);
+    setToken('secret');
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue({ ok: true, status: 200, json: async () => ({ id: '1' }) } as Response);
     await api('/weddings', { method: 'POST', body: '{}' }, true);
     const [url, options] = fetchMock.mock.calls[0];
-    expect(url).toBe('/api/weddings'); expect(new Headers(options?.headers).get('Authorization')).toBe('Bearer secret'); expect(new Headers(options?.headers).get('Content-Type')).toBe('application/json');
+    expect(url).toBe('/api/weddings');
+    expect(new Headers(options?.headers).get('Authorization')).toBe('Bearer secret');
+    expect(new Headers(options?.headers).get('Content-Type')).toBe('application/json');
   });
   it('throws API message and clears token on authenticated 401', async () => {
-    setToken('secret'); const event = vi.fn(); window.addEventListener('wi:unauthorized', event);
+    setToken('secret');
+    const event = vi.fn();
+    window.addEventListener('wi:unauthorized', event);
     vi.spyOn(globalThis, 'fetch').mockResolvedValue({ ok: false, status: 401, json: async () => ({ message: 'Hết phiên' }) } as Response);
     await expect(api('/weddings', {}, true)).rejects.toEqual(new ApiError(401, 'Hết phiên'));
-    expect(localStorage.getItem('wi_token')).toBeNull(); expect(event).toHaveBeenCalledOnce(); window.removeEventListener('wi:unauthorized', event);
+    expect(localStorage.getItem('wi_token')).toBeNull();
+    expect(event).toHaveBeenCalledOnce();
+    window.removeEventListener('wi:unauthorized', event);
   });
 });

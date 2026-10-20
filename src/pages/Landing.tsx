@@ -1,3 +1,63 @@
-import { Link } from 'react-router-dom';
-export default function Landing() { return <main className="landing"><nav className="topbar"><a className="brand" href="/">Thiệp Cưới</a><div><Link to="/login">Đăng nhập</Link><Link className="button" to="/register">Tạo thiệp</Link></div></nav><section className="landing-hero"><div><span className="eyebrow">Dành cho ngày trọng đại</span><h1>Một tấm thiệp, ngàn khoảnh khắc yêu thương</h1><p>Tạo thiệp cưới mang câu chuyện riêng của hai bạn. Mời từng người thân bằng liên kết cá nhân, nhận lời xác nhận và lưu lại ảnh từ khách mời.</p><div className="actions"><Link className="button" to="/register">Bắt đầu tạo thiệp</Link><Link className="button-outline" to="/login">Đã có tài khoản</Link></div></div><div className="landing-art" aria-hidden="true"><span>♥</span><p>Mãi mãi<br />bên nhau</p></div></section><section className="landing-features"><article><h2>Thiệp của riêng bạn</h2><p>Chọn ảnh, màu sắc, nội dung và sắp xếp các hạng mục theo ý muốn.</p></article><article><h2>Khách mời cá nhân</h2><p>Mỗi khách nhận một đường dẫn riêng với lời chào mang tên mình.</p></article><article><h2>Cùng lưu kỷ niệm</h2><p>Nhận phản hồi tham dự và ảnh do khách gửi ngay trên thiệp.</p></article></section></main>; }
+import { Link } from "react-router-dom";
 
+export default function Landing() {
+  return (
+    <main className="landing">
+      <nav className="topbar" aria-label="Điều hướng chính">
+        <Link className="brand" to="/">Thiệp Cưới
+        </Link>
+        <div>
+          <Link to="/login" aria-label="Đăng nhập tài khoản">Đăng nhập
+          </Link>
+          <Link className="button" to="/register">Tạo thiệp miễn phí
+          </Link>
+        </div>
+      </nav>
+      <section className="landing-hero">
+        <div className="landing-copy">
+          <h1>Một lời mời dành riêng cho từng người thương
+          </h1>
+          <p>Kể câu chuyện của hai bạn bằng ảnh và lời riêng. Gửi đường dẫn có tên từng khách, nhận xác nhận tham dự và cùng lưu ảnh sau ngày vui.
+          </p>
+          <div className="actions">
+            <Link className="button" to="/register">Tạo thiệp miễn phí
+            </Link>
+            <Link className="text-button" to="/login">Đăng nhập
+            </Link>
+          </div>
+        </div>
+        <div className="landing-preview" aria-label="Bản xem trước thiệp cưới">
+          <img src="/images/DSCF7944.jpg" alt="Ảnh cưới trong bản xem trước thiệp" />
+          <div className="landing-preview-copy">
+            <p>Trân trọng kính mời chị Thu Hà
+            </p>
+            <h2>Phương Anh
+              <span>&amp;
+              </span> Minh Công
+            </h2>
+            <p>03 · 04 · 2026
+            </p>
+          </div>
+        </div>
+      </section>
+      <section className="landing-story">
+        <h2>Thiệp đi cùng ngày cưới
+        </h2>
+        <div>
+          <p>
+            <strong>Mời đúng người.
+            </strong> Mỗi khách có một liên kết riêng và nhìn thấy tên mình ngay khi mở thiệp.
+          </p>
+          <p>
+            <strong>Biết ai sẽ đến.
+            </strong> Khách xác nhận tham dự trên thiệp; danh sách được cập nhật cho hai bạn.
+          </p>
+          <p>
+            <strong>Giữ trọn khoảnh khắc.
+            </strong> Bật hoặc ẩn từng phần của thiệp, rồi đón ảnh khách gửi vào cùng một nơi.
+          </p>
+        </div>
+      </section>
+    </main>
+  );
+}

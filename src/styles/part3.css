@@ -1,0 +1,235 @@
+.invite-hero {
+  position: relative;
+  height: 100vh;
+  min-height: 550px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: #f9e8ea;
+}
+
+.invite-hero-image, .invite-hero-shade {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.invite-hero-shade {
+  background: linear-gradient(120deg, #fff9 0%, #fffb 60%, #fff7);
+}
+
+.invite-hero-copy {
+  position: relative;
+  text-align: center;
+  padding: 1rem;
+}
+
+.invite-hero h1 {
+  font: italic clamp(3.2rem, 8vw, 7rem)/1.12 var(--font-cormorant);
+  margin: .8rem 0;
+  text-shadow: 0 2px 12px #fff;
+}
+
+.inline-heart {
+  color: var(--wedding-primary);
+  fill: var(--wedding-primary);
+  vertical-align: middle;
+}
+
+.invite-guest {
+  font: 2rem var(--font-script);
+  color: var(--wedding-primary);
+}
+
+.invite-date {
+  font: italic 1.7rem var(--font-cormorant);
+  letter-spacing: .1em;
+}
+
+.invitation .button {
+  background: var(--wedding-primary);
+  border-color: var(--wedding-primary);
+  margin-top: 1rem;
+}
+
+.invite-nav {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: #fffe;
+  backdrop-filter: blur(12px);
+  display: flex;
+  gap: 1.2rem;
+  overflow-x: auto;
+  justify-content: safe center;
+  padding: .9rem;
+  box-shadow: 0 2px 12px #b76e7920;
+}
+
+.invite-nav a {
+  white-space: nowrap;
+  font-size: .8rem;
+  text-decoration: none;
+}
+
+.invite-section {
+  text-align: center;
+  padding: 6rem max(1.2rem, calc((100vw - 1100px)/2));
+}
+
+.invite-section h2 {
+  font: italic clamp(2.8rem, 5vw, 4rem) var(--font-cormorant);
+  margin: .7rem 0 2rem;
+}
+
+.invite-section p {
+  line-height: 1.8;
+}
+
+.invite-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+  text-align: left;
+}
+
+.story-section {
+  background: #fdf5f6;
+}
+
+.story-image {
+  width: 100%;
+  max-height: 620px;
+  min-height: 250px;
+  object-fit: cover;
+  border-radius: 3rem;
+  box-shadow: 0 20px 50px #4c66352a;
+}
+
+.white-section {
+  background: white;
+}
+
+.blush-section {
+  background: #f9e8ea;
+}
+
+.preserve-lines {
+  white-space: pre-line;
+}
+
+.timeline-list {
+  max-width: 640px;
+  margin: auto;
+  text-align: left;
+  border-left: 2px solid var(--wedding-primary);
+}
+
+.timeline-item {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 1rem;
+  margin: 1.5rem 0;
+  padding-left: 1.5rem;
+}
+
+.timeline-item time {
+  color: var(--wedding-primary);
+  font-weight: bold;
+}
+
+.timeline-item h3 {
+  font: italic 1.7rem var(--font-cormorant);
+}
+
+.gallery-grid, .photo-wall {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.gallery-card {
+  position: relative;
+  border: 0;
+  padding: 0;
+  overflow: hidden;
+  border-radius: 1.5rem;
+  min-height: 240px;
+  background: #eee;
+}
+
+.gallery-card img {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0;
+  object-fit: cover;
+  transition: transform .4s;
+}
+
+.gallery-card:hover img {
+  transform: scale(1.06);
+}
+
+.gallery-card span {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: grid;
+  padding: 2rem 1rem 1rem;
+  color: white;
+  text-align: left;
+  background: linear-gradient(transparent, #0009);
+}
+
+.gallery-card small {
+  display: block;
+}
+
+.gallery-wide {
+  grid-column: span 2;
+}
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: #000e;
+  display: grid;
+  place-items: center;
+  padding: 3rem 1rem;
+}
+
+.lightbox img {
+  max-width: 100%;
+  max-height: 85vh;
+  object-fit: contain;
+}
+
+.lightbox button {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  color: white;
+  font-size: 2rem;
+}
+
+.info-card {
+  max-width: 620px;
+  margin: auto;
+  border: 1px solid #f2c8cd;
+  border-radius: 2rem;
+  padding: 2rem;
+}
+
+.info-card h3 {
+  font: 2rem var(--font-cormorant);
+}
+
+.info-card .button-outline {
+  margin: .5rem;
+}
