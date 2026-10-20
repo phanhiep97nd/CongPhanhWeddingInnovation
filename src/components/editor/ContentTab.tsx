@@ -33,7 +33,7 @@ export default function ContentTab({ wedding: w, change }: { wedding: Wedding; c
     <button className="button-outline" onClick={() => change({ timeline: [...timeline, { id: clientId(), time: "", title: "", desc: "" }] })}>Thêm mốc thời gian
     </button>
     <Field label="Ghi chú trang phục" value={w.dressCode.note} textarea onChange={note => change({ dressCode: { ...w.dressCode, note } })} />
-    <DressColors colors={w.dressCode.colors} onChange={colors => change({ dressCode: { ...w.dressCode, colors } })} />
+    <DressColors colors={w.dressCode.colors} wedding={w} onChange={colors => change({ dressCode: { ...w.dressCode, colors } })} />
   </div>;
 }
 

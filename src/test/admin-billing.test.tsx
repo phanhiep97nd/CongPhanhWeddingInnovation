@@ -88,15 +88,15 @@ describe("admin users", () => {
 
   it("asks before locking an account", async () => {
     const fetchMock = mount();
-    vi.spyOn(window, "confirm").mockReturnValue(false);
     fireEvent.click(await screen.findByRole("button", { name: "Khoá" }));
+    fireEvent.click(screen.getByRole("button", { name: "Hủy" }));
     expect(fetchMock.mock.calls.some(([, options]) => options?.method === "PATCH")).toBe(false);
   });
 
   it("patches a confirmed lock", async () => {
     const fetchMock = mount();
-    vi.spyOn(window, "confirm").mockReturnValue(true);
     fireEvent.click(await screen.findByRole("button", { name: "Khoá" }));
+    fireEvent.click(screen.getByRole("button", { name: "Tiếp tục" }));
     await waitFor(() => expect(fetchMock.mock.calls.some(([, options]) => options?.method === "PATCH")).toBe(true));
   });
 });
@@ -105,18 +105,18 @@ describe("admin orders and settings", () => {
   it("confirms before marking an order paid", async () => {
     const fetchMock = vi.fn().mockResolvedValue(response({ items: [{ id: "o1", orderCode: 123, plan: "basic", amount: 30000, status: "pending", userEmail: "a@test.vn", weddingSlug: "hoa-minh" }], total: 1, page: 1, limit: 20 }));
     vi.stubGlobal("fetch", fetchMock);
-    vi.spyOn(window, "confirm").mockReturnValue(false);
     render(<Orders />);
     fireEvent.click(await screen.findByRole("button", { name: "Xác nhận đã thanh toán" }));
+    fireEvent.click(screen.getByRole("button", { name: "Hủy" }));
     expect(fetchMock.mock.calls.some(([, options]) => options?.method === "POST")).toBe(false);
   });
 
   it("posts a confirmed mark-paid action", async () => {
     const fetchMock = vi.fn().mockResolvedValue(response({ items: [{ id: "o1", orderCode: 123, plan: "basic", amount: 30000, status: "pending" }], total: 1, page: 1, limit: 20 }));
     vi.stubGlobal("fetch", fetchMock);
-    vi.spyOn(window, "confirm").mockReturnValue(true);
     render(<Orders />);
     fireEvent.click(await screen.findByRole("button", { name: "Xác nhận đã thanh toán" }));
+    fireEvent.click(screen.getByRole("button", { name: "Tiếp tục" }));
     await waitFor(() => expect(fetchMock.mock.calls.some(([url, options]) => String(url).includes("/123/mark-paid") && options?.method === "POST")).toBe(true));
   });
 

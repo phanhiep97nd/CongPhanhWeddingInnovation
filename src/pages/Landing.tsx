@@ -1,10 +1,11 @@
+import { BRAND_NAME } from "../lib/brand";
 import { Link } from "react-router-dom";
 
 export default function Landing() {
   return (
     <main className="landing">
       <nav className="topbar" aria-label="Điều hướng chính">
-        <Link className="brand" to="/">Thiệp Cưới
+        <Link className="brand" to="/">{BRAND_NAME}
         </Link>
         <div>
           <Link to="/login" aria-label="Đăng nhập tài khoản">Đăng nhập
@@ -85,7 +86,7 @@ export default function Landing() {
         <h2>Ngày vui bắt đầu từ một lời mời thật riêng.</h2>
         <Link className="button" to="/register">Tạo thiệp miễn phí</Link>
       </section>
-      <footer className="landing-footer"><span>Thiệp Cưới</span><span>Một nơi nhỏ cho ngày trọng đại của hai bạn.</span></footer>
+      <footer className="landing-footer"><span>{BRAND_NAME}</span><span>Một nơi nhỏ cho ngày trọng đại của hai bạn.</span></footer>
     </main>
   );
 }

@@ -7,6 +7,7 @@ import Settings from "../pages/admin/Settings";
 import GuestQrPrint from "../pages/GuestQrPrint";
 import { exportGuestExcel } from "../lib/excel";
 import { guest, pricing, premiumEntitlements, response, wedding } from "./plan-fixtures";
+import { BRAND_NAME } from "../lib/brand";
 
 const { toFile } = vi.hoisted(() => ({ toFile: vi.fn().mockResolvedValue(undefined) }));
 vi.mock("write-excel-file/browser", () => ({ default: vi.fn(() => ({ toFile })) }));
@@ -68,13 +69,13 @@ describe("public template and branding", () => {
 
   it("renders branding for free invitations", async () => {
     openWedding({ ...wedding, sections: [], showBranding: true });
-    expect(await screen.findByRole("link", { name: "Tạo bởi Thiệp Cưới" })).toHaveAttribute("href", "/");
+    expect(await screen.findByRole("link", { name: `Tạo bởi ${BRAND_NAME}` })).toHaveAttribute("href", "/");
   });
 
   it("removes branding for paid invitations", async () => {
     openWedding({ ...wedding, sections: [], plan: "basic", showBranding: false });
     await screen.findByText(/Made with love/);
-    expect(screen.queryByRole("link", { name: "Tạo bởi Thiệp Cưới" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: `Tạo bởi ${BRAND_NAME}` })).not.toBeInTheDocument();
   });
 
   it("loads the minimal template from the public response", async () => {

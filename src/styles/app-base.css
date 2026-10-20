@@ -145,6 +145,7 @@ input:not([type=checkbox]):not([type=color]), textarea, select {
   padding: .65rem .8rem;
   color: #4c6635;
   outline-color: #b76e79;
+  font-size: max(16px, 1rem);
 }
 
 textarea {
@@ -155,6 +156,7 @@ textarea {
   display: flex;
   align-items: center;
   gap: .6rem;
+  min-height: 44px;
 }
 
 .checkbox-row input {

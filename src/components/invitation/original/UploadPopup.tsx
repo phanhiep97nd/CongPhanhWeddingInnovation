@@ -16,6 +16,17 @@ import { publicPath, useWedding } from "./WeddingContext";
 import WeddingPhoto from "../Photo";
 // ── Upload Popup ──────────────────────────────────────────────────────────────
 export function UploadPopup({ onClose, onAdd, defaultAuthor }: { onClose: () => void; onAdd: (p: Photo) => void; defaultAuthor?: string }) {
+  useEffect(() => {
+    const previous = document.body.style.overflow;
+    const root = document.querySelector<HTMLElement>(".scroll-container");
+    const previousRoot = root?.style.overflowY || "";
+    document.body.style.overflow = "hidden";
+    if (root) root.style.overflowY = "hidden";
+    return () => {
+      document.body.style.overflow = previous;
+      if (root) root.style.overflowY = previousRoot;
+    };
+  }, []);
   const { slug } = useWedding();
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
@@ -68,12 +79,12 @@ export function UploadPopup({ onClose, onAdd, defaultAuthor }: { onClose: () => 
         transition={{ type: "spring", damping: 26, stiffness: 280 }}
         className="fixed inset-0 z-[140] flex items-end sm:items-center justify-center pointer-events-none"
       >
-        <div className="relative w-full sm:max-w-sm bg-white rounded-t-[2rem] sm:rounded-[2rem] shadow-2xl pointer-events-auto max-h-[92vh] overflow-y-auto scrollbar-hide">
+        <div className="invitation-popup-panel relative w-full sm:max-w-sm bg-white rounded-t-[2rem] sm:rounded-[2rem] shadow-2xl pointer-events-auto max-h-[92vh] overflow-y-auto scrollbar-hide">
           <div className="p-6">
             <div className="flex items-center justify-between mb-5">
               <h3 className="font-serif text-xl text-secondary italic">Chia sẻ khoảnh khắc 📸</h3>
-              <button onClick={onClose}
-                className="p-1.5 rounded-full hover:bg-secondary/10 text-secondary/50 transition-colors">
+              <button onClick={onClose} aria-label="Đóng"
+                className="w-11 h-11 flex items-center justify-center rounded-full hover:bg-secondary/10 text-secondary/50 transition-colors">
                 <X size={18} />
               </button>
             </div>

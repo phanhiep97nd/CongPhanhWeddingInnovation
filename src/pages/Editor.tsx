@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { api, json } from "../lib/api";
 import type { Wedding } from "../lib/types";
@@ -12,6 +12,8 @@ import GiftBoxEditor from "../components/editor/GiftBoxEditor";
 import UpgradePanel from "../components/billing/UpgradePanel";
 import LockedFeature from "../components/billing/LockedFeature";
 import { PlanRequiredError } from "../lib/api";
+import { useConfirmSheet } from "../components/ConfirmSheet";
+import { ArrowLeft } from "lucide-react";
 type Tab = "info" | "images" | "content" | "sections" | "guests" | "photos" | "giftBox" | "templates" | "billing";
 const tabs: { key: Tab; label: string; }[] = [{ key: "info", label: "Thông tin" }, { key: "images", label: "Ảnh" }, { key: "content", label: "Nội dung" }, { key: "sections", label: "Hạng mục" }, { key: "guests", label: "Khách mời" }, { key: "photos", label: "Ảnh khách gửi" }, { key: "giftBox", label: "Hộp mừng cưới" }, { key: "templates", label: "Mẫu thiệp" }, { key: "billing", label: "Gói & thanh toán" }];
 
@@ -21,9 +23,11 @@ export default function Editor() {
   const [saved, setSaved] = useState<Wedding | null>(null);
   const [draft, setDraft] = useState<Wedding | null>(null);
   const [tab, setTab] = useState<Tab>("info");
+  const tabsRef = useRef<HTMLElement>(null);
   const [message, setMessage] = useState("");
   const [saving, setSaving] = useState(false);
   const [requiredPlan, setRequiredPlan] = useState<"basic" | "premium" | null>(null);
+  const { confirm, sheet } = useConfirmSheet();
   // Read the PayOS return params once: the effect below strips them from the URL and may run twice
   // (StrictMode), so reading inside the effect would lose them on the second run.
   const [paymentReturn] = useState(() => {
@@ -72,6 +76,11 @@ export default function Editor() {
   }, [saved, draft]);
   const dirty = Object.keys(changes).length > 0;
   useEffect(() => {
+    if (!window.matchMedia("(max-width: 768px)").matches) return;
+    const active = tabsRef.current?.querySelector<HTMLButtonElement>("[aria-current='page']");
+    if (active?.scrollIntoView) active.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+  }, [tab]);
+  useEffect(() => {
     const warn = (event: BeforeUnloadEvent) => {
       if (dirty) {
         event.preventDefault();
@@ -107,8 +116,8 @@ export default function Editor() {
       setSaving(false);
     }
   }
-  function back() {
-    if (!dirty || window.confirm("Bạn có thay đổi chưa lưu. Rời trang?")) navigate("/dashboard");
+  async function back() {
+    if (!dirty || await confirm("Bạn có thay đổi chưa lưu. Rời trang?")) navigate("/dashboard");
   }
   if (!draft) return <main className="shell">
     <p>
@@ -118,16 +127,19 @@ export default function Editor() {
     </Link>
   </main>;
   return <main className="editor">
+    {sheet}
     <header className="dash-header editor-sticky-header">
-      <button className="text-button editor-back" onClick={back}>← <span>Thiệp của tôi</span>
+      <button className="text-button editor-back" onClick={() => void back()}>
+        <ArrowLeft size={20} aria-hidden="true" />{" "}
+        <span>Thiệp</span>
       </button>
       <strong className="dash-header-title">
         {draft.couple.groom} &{" "}
         {draft.couple.bride}
       </strong>
       <span className="save-state" role="status">{saving ? "Đang lưu" : dirty ? "Chưa lưu" : "Đã lưu"}</span>
-      <button className="button" disabled={!dirty || saving} onClick={() => void save()}>{saving ? "Đang lưu…" : "Lưu thay đổi"}</button>
-      <a href={`/w/${draft.slug}`} target="_blank" rel="noreferrer">Xem thiệp ↗
+      <button className="button editor-top-save" disabled={!dirty || saving} onClick={() => void save()}>{saving ? "Đang lưu…" : "Lưu thay đổi"}</button>
+      <a className="editor-view" href={`/w/${draft.slug}`} target="_blank" rel="noreferrer">Xem thiệp
       </a>
     </header>
     <div className="shell">
@@ -147,7 +159,7 @@ export default function Editor() {
         {message}
       </p>}
       {requiredPlan && <LockedFeature plan={requiredPlan} onUpgrade={() => { setTab("billing"); setRequiredPlan(null); }} />}
-      <nav className="tab-nav" aria-label="Chỉnh sửa thiệp">
+      <nav ref={tabsRef} className="tab-nav" aria-label="Chỉnh sửa thiệp">
         {tabs.map(item => <button key={item.key} className={tab === item.key ? "active" : ""} aria-current={tab === item.key ? "page" : undefined} onClick={() => setTab(item.key)}>
           {item.label}
         </button>)}
@@ -166,6 +178,10 @@ export default function Editor() {
         </div>{!draft.entitlements?.premiumTemplates && <LockedFeature plan="premium" label="Mẫu Tối giản" onUpgrade={() => setTab("billing")} />}</div>}
         {tab === "billing" && <UpgradePanel wedding={draft} />}
       </div>
+    </div>
+    <div className="editor-save-bar">
+      <span role="status">{saving ? "Đang lưu…" : dirty ? "Có thay đổi chưa lưu" : "Đã lưu"}</span>
+      <button className="button" aria-label="Lưu thay đổi trên điện thoại" disabled={!dirty || saving} onClick={() => void save()}>{saving ? "Đang lưu…" : "Lưu thay đổi"}</button>
     </div>
   </main>;
 }

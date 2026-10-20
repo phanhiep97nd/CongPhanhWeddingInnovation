@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { api, json, PlanRequiredError } from "../../lib/api";
 import { guestsCsv } from "../../lib/csv";
 import { parseBulkGuests } from "../../lib/guests";
@@ -9,6 +9,8 @@ import LockedFeature from "../billing/LockedFeature";
 import GuestQrDialog from "./GuestQrDialog";
 import { exportGuestExcel } from "../../lib/excel";
 import { Link } from "react-router-dom";
+import SharePreview from "./SharePreview";
+import { useConfirmSheet } from "../ConfirmSheet";
 
 export default function GuestsTab({ wedding, weddingId: legacyId, slug: legacySlug, onUpgrade = () => {} }: { wedding?: Wedding; weddingId?: string; slug?: string; onUpgrade?: () => void; }) {
   const weddingId = wedding?.id || legacyId || "";
@@ -22,10 +24,22 @@ export default function GuestsTab({ wedding, weddingId: legacyId, slug: legacySl
   const [phone, setPhone] = useState("");
   const [bulk, setBulk] = useState("");
   const [editing, setEditing] = useState<Guest | null>(null);
+  const editingDialog = useRef<HTMLDialogElement>(null);
   const [message, setMessage] = useState("");
   const [lockedPlan, setLockedPlan] = useState<"basic" | "premium" | null>(null);
   const [qrGuest, setQrGuest] = useState<Guest | null>(null);
+  const { confirm, sheet } = useConfirmSheet();
   const base = `/weddings/${weddingId}`;
+  useEffect(() => {
+    if (!editing) return;
+    editingDialog.current?.showModal();
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previous;
+      editingDialog.current?.close();
+    };
+  }, [editing?.id]);
   async function refresh() {
     const [list, counts] = await Promise.all([api<Guest[]>(`${base}/guests`, {}, true), api<Stats>(`${base}/stats`, {}, true)]);
     setGuests(list);
@@ -84,7 +98,7 @@ export default function GuestsTab({ wedding, weddingId: legacyId, slug: legacySl
     }
   }
   async function remove(g: Guest) {
-    if (!window.confirm(`Xóa khách ${g.invitationName}?`)) return;
+    if (!await confirm(`Xóa khách ${g.invitationName}?`)) return;
     try {
       await api<void>(`${base}/guests/${g.id}`, { method: "DELETE" }, true);
       await refresh();
@@ -110,6 +124,8 @@ export default function GuestsTab({ wedding, weddingId: legacyId, slug: legacySl
     URL.revokeObjectURL(url);
   }
   return <div className="editor-stack">
+    {sheet}
+    {wedding && <SharePreview wedding={wedding} guests={guests} />}
     <p>{guests.length}/{wedding?.limits?.guests ?? "∞"} khách</p>
     {wedding?.limits?.guests != null && guests.length >= wedding.limits.guests && <LockedFeature plan="basic" label="Thêm khách không giới hạn" onUpgrade={onUpgrade} />}
     {lockedPlan && <LockedFeature plan={lockedPlan} onUpgrade={onUpgrade} />}
@@ -138,7 +154,7 @@ export default function GuestsTab({ wedding, weddingId: legacyId, slug: legacySl
       <div className="form-grid">
         <Field label="Tên trên thiệp" value={invitationName} onChange={setInvitationName} />
         <Field label="Tên thật" value={name} onChange={setName} />
-        <Field label="SĐT" value={phone} onChange={setPhone} />
+        <Field label="SĐT" type="tel" autoComplete="tel" value={phone} onChange={setPhone} />
       </div>
       <button className="button">Thêm khách
       </button>
@@ -206,11 +222,11 @@ export default function GuestsTab({ wedding, weddingId: legacyId, slug: legacySl
         </div>
       </article>)}
     </div>
-    {editing && <div className="modal-backdrop" role="dialog" aria-label="Sửa khách mời">
+    {editing && <dialog ref={editingDialog} className="mobile-dialog" aria-label="Sửa khách mời" onCancel={event => { event.preventDefault(); setEditing(null); }}>
       <form className="modal-card editor-stack" onSubmit={saveGuest}>
-        <h3>Sửa khách mời
-        </h3>
-        {(["invitationName", "name", "phone", "pickupPoint", "room", "note"] as const).map(key => <Field key={key} label={({ invitationName: "Tên trên thiệp", name: "Tên thật", phone: "SĐT", pickupPoint: "Điểm đón", room: "Phòng", note: "Ghi chú" })[key]} value={editing[key]} onChange={value => setEditing({ ...editing, [key]: value })} />)}
+        <div className="dialog-handle" aria-hidden="true" />
+        <div className="dialog-heading"><h3>Sửa khách mời</h3><button type="button" aria-label="Đóng" onClick={() => setEditing(null)}>×</button></div>
+        {(["invitationName", "name", "phone", "pickupPoint", "room", "note"] as const).map(key => <Field key={key} label={({ invitationName: "Tên trên thiệp", name: "Tên thật", phone: "SĐT", pickupPoint: "Điểm đón", room: "Phòng", note: "Ghi chú" })[key]} type={key === "phone" ? "tel" : "text"} value={editing[key]} onChange={value => setEditing({ ...editing, [key]: value })} />)}
         <label>Trạng thái
           <select value={editing.status} onChange={e => setEditing({ ...editing, status: e.target.value as Guest["status"] })}>
             <option value="pending">Chờ
@@ -234,7 +250,7 @@ export default function GuestsTab({ wedding, weddingId: legacyId, slug: legacySl
           </button>
         </div>
       </form>
-    </div>}
+    </dialog>}
     {qrGuest && <GuestQrDialog name={qrGuest.invitationName} link={inviteLink(window.location.origin, slug, qrGuest.code)} onClose={() => setQrGuest(null)} />}
   </div>;
 }

@@ -47,7 +47,7 @@ export function PhotoSlide({ photos, onUpload, onOpenFeed }: {
             <span className="truncate">Khoảnh khắc ...</span>
           </h4>
           <button onClick={onUpload}
-            className="flex-shrink-0 whitespace-nowrap flex items-center gap-1.5 px-4 py-2 bg-primary-dark hover:bg-primary-deep text-white rounded-full text-xs font-bold shadow-md transition-colors">
+            className="flex-shrink-0 min-h-11 whitespace-nowrap flex items-center gap-1.5 px-4 py-2 bg-primary-dark hover:bg-primary-deep text-white rounded-full text-xs font-bold shadow-md transition-colors">
             <Plus size={13} /> Chia sẻ
           </button>
         </div>

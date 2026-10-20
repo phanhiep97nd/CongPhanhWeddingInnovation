@@ -2,15 +2,17 @@ import { useEffect, useState } from "react";
 import { api } from "../../lib/api";
 import type { Photo } from "../../lib/types";
 import { cldUrl } from "../../lib/images";
+import { useConfirmSheet } from "../ConfirmSheet";
 
 export default function PhotosTab({ weddingId, slug }: { weddingId: string; slug: string; }) {
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [error, setError] = useState("");
+  const { confirm, sheet } = useConfirmSheet();
   useEffect(() => {
     api<Photo[]>(`/weddings/${weddingId}/photos`, {}, true).then(setPhotos).catch(e => setError(e.message));
   }, [weddingId]);
   async function remove(photo: Photo) {
-    if (!window.confirm("Xóa ảnh này?")) return;
+    if (!await confirm("Xóa ảnh này?")) return;
     try {
       await api<void>(`/weddings/${weddingId}/photos/${photo.id}`, { method: "DELETE" }, true);
       setPhotos(items => items.filter(p => p.id !== photo.id));
@@ -19,6 +21,7 @@ export default function PhotosTab({ weddingId, slug }: { weddingId: string; slug
     }
   }
   return <div className="editor-stack">
+    {sheet}
     <h3>Ảnh khách gửi
     </h3>
     {error && <p role="alert" className="error">
