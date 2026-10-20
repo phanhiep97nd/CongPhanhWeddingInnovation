@@ -1,4 +1,5 @@
 import {
+  ACESFilmicToneMapping,
   BoxGeometry,
   CircleGeometry,
   Color,
@@ -11,19 +12,23 @@ import {
   Mesh,
   MeshBasicMaterial,
   PerspectiveCamera,
+  PCFShadowMap,
   PlaneGeometry,
+  PMREMGenerator,
   Raycaster,
   Scene,
   Shape,
   ShapeGeometry,
   SRGBColorSpace,
+  Texture,
   Timer,
   Vector2,
   Vector3,
   WebGLRenderer,
 } from "three";
 import { buildBride, buildGroom, disposeCharacterGeometries, type Character } from "./characters";
-import { PALETTE, disposeMaterials, flat, toon } from "./materials";
+import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
+import { PALETTE, disposeMaterials, flat, toon, windUniform } from "./materials";
 import { FONTS, ensureFonts, textCard } from "./textures";
 import { Petals, buildWorld, clamp01, disposeWorld, floatProps, frameAt, heart, hySign, redEnvelope, type Station } from "./world";
 
@@ -86,6 +91,8 @@ export class WeddingScene {
   readonly bride: Character;
   readonly stations: Station[];
   private readonly timer = new Timer();
+  private readonly sun = new DirectionalLight("#FFE4CC", 2.6);
+  private environment?: Texture;
   private readonly petals: Petals;
   private readonly hearts: { mesh: Mesh; life: number; velocity: Vector3 }[] = [];
   private readonly confetti: { mesh: Mesh; life: number; velocity: Vector3; spin: Vector3 }[] = [];
@@ -123,13 +130,36 @@ export class WeddingScene {
     const cap = options.pixelRatioCap ?? (options.lowPower ? 1.25 : 1.75);
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, cap));
 
-    this.scene.background = new Color(PALETTE.paper);
-    this.scene.fog = new Fog(PALETTE.paper, 9, 30);
+    // Filmic tone mapping + a generated environment give PBR surfaces natural highlights and bounce.
+    this.renderer.toneMapping = ACESFilmicToneMapping;
+    this.renderer.toneMappingExposure = 1.05;
+    this.scene.background = new Color(PALETTE.skyHorizon);
+    this.scene.fog = new Fog(PALETTE.skyHorizon, 10, 34);
+    const pmrem = new PMREMGenerator(this.renderer);
+    this.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+    this.scene.environment = this.environment;
+    this.scene.environmentIntensity = 0.45;
+    pmrem.dispose();
 
-    const sky = new HemisphereLight("#FFF6F1", PALETTE.grassDeep, 1.5);
-    const sun = new DirectionalLight("#FFE9D6", 1.5);
-    sun.position.set(-3, 8, -6);
-    this.scene.add(sky, sun);
+    const sky = new HemisphereLight("#FFF1EC", "#6E8F4E", 0.55);
+    this.sun.position.set(-4, 9, -5);
+    this.scene.add(sky, this.sun, this.sun.target);
+    if (!options.lowPower) {
+      // Soft sun shadows that follow the couple (a small shadow box keeps the map sharp on phones).
+      this.renderer.shadowMap.enabled = true;
+      this.renderer.shadowMap.type = PCFShadowMap;
+      this.sun.castShadow = true;
+      this.sun.shadow.mapSize.set(1024, 1024);
+      this.sun.shadow.camera.left = -5;
+      this.sun.shadow.camera.right = 5;
+      this.sun.shadow.camera.top = 5;
+      this.sun.shadow.camera.bottom = -5;
+      this.sun.shadow.camera.near = 1;
+      this.sun.shadow.camera.far = 30;
+      this.sun.shadow.bias = -0.0006;
+      this.sun.shadow.normalBias = 0.02;
+      this.sun.shadow.radius = 4;
+    }
 
     const suit = data.colors.find(isDark) || PALETTE.suit;
     const light = data.colors.filter((color) => !isDark(color));
@@ -139,10 +169,13 @@ export class WeddingScene {
       bouquet: light.length ? [...light.slice(0, 3), "#FFFFFF", PALETTE.blush] : undefined,
     });
     this.scene.add(this.groom.root, this.bride.root);
-    this.addShadow(this.groom.root, 0.32);
-    this.addShadow(this.bride.root, 0.42);
+    // Low-power phones skip shadow maps, so the couple gets soft contact blobs instead.
+    if (options.lowPower) {
+      this.addShadow(this.groom.root, 0.32);
+      this.addShadow(this.bride.root, 0.42);
+    }
 
-    const world = buildWorld(this.scene, data);
+    const world = buildWorld(this.scene, data, options.lowPower);
     this.stations = world.stations;
     this.petals = new Petals(options.lowPower ? 60 : 140);
     this.scene.add(this.petals.mesh);
@@ -259,6 +292,7 @@ export class WeddingScene {
     disposeCharacterGeometries();
     disposeWorld();
     disposeMaterials();
+    this.environment?.dispose();
     this.renderer.dispose();
   }
 
@@ -268,9 +302,16 @@ export class WeddingScene {
     const dt = Math.min(this.timer.getDelta(), 1 / 20);
     this.update(dt, this.timer.getElapsed());
     this.renderer.render(this.scene, this.camera);
+    this.stats.frames++;
+    this.stats.triangles = this.renderer.info.render.triangles;
+    this.stats.calls = this.renderer.info.render.calls;
   }
 
+  // Lightweight counters read by the dev playground and the automated performance check.
+  readonly stats = { frames: 0, triangles: 0, calls: 0 };
+
   private update(dt: number, time: number) {
+    windUniform.value = time;
     if (this.intro !== "done") this.updateIntro(dt);
 
     const previous = this.coupleU;
@@ -290,6 +331,7 @@ export class WeddingScene {
     this.updateParticles(dt);
     this.updateCamera(direction, dt);
     this.updateViewShift(dt);
+    this.followSun();
   }
 
   // ── Couple ────────────────────────────────────────────────────────────────
@@ -460,6 +502,13 @@ export class WeddingScene {
     if (target === "partner") point = partner.root.position;
     else point = target;
     return Math.atan2(point.x - position.x, point.z - position.z);
+  }
+
+  // Keep the shadow box centred on the couple as they walk.
+  private followSun() {
+    const centre = this.coupleCentre();
+    this.sun.position.set(centre.x - 4, 9, centre.z - 5);
+    this.sun.target.position.copy(centre);
   }
 
   private addShadow(root: Group, radius: number) {

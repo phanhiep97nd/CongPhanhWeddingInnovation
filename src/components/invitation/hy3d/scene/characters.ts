@@ -10,13 +10,13 @@ import {
   Material,
   MathUtils,
   Mesh,
-  MeshToonMaterial,
+  MeshStandardMaterial,
   Object3D,
   SphereGeometry,
   TorusGeometry,
   Vector2,
 } from "three";
-import { OUTLINE, PALETTE, flat, toon } from "./materials";
+import { PALETTE, flat, toon } from "./materials";
 
 // ── Rig & state ───────────────────────────────────────────────────────────────
 // Chibi proportions: ~1.1 units tall, head ≈ 40% of the height. Every limb hangs from a pivot so poses
@@ -74,11 +74,9 @@ function part(geometry: BufferGeometry, material: Material, outline = 0.018) {
   const group = new Group();
   const mesh = new Mesh(geometry, material);
   group.add(mesh);
-  if (outline > 0) {
-    const hull = new Mesh(geometry, OUTLINE);
-    hull.scale.setScalar(1 + outline * 3);
-    group.add(hull);
-  }
+  // Outline hulls were part of the cartoon look; the PBR scene relies on light and shadow instead.
+  void outline;
+  mesh.castShadow = true;
   return group;
 }
 
@@ -389,7 +387,7 @@ export function buildBride(colors: { dress?: string; sash?: string; bouquet?: st
   const veil = new Mesh(
     track(new ConeGeometry(0.26, 0.62, 24, 1, true, Math.PI * 0.35, Math.PI * 1.3)),
     // Soft translucent tulle.
-    new MeshToonMaterial({ color: "#FFFFFF", transparent: true, opacity: 0.5, side: DoubleSide, depthWrite: false }),
+    new MeshStandardMaterial({ color: "#FFFFFF", roughness: 0.9, transparent: true, opacity: 0.45, side: DoubleSide, depthWrite: false }),
   );
   veil.position.set(0, -0.12, -0.12);
   veil.rotation.y = Math.PI;

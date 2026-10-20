@@ -1,11 +1,11 @@
 import {
   BackSide,
   Color,
-  DataTexture,
+  DoubleSide,
+  FrontSide,
   MeshBasicMaterial,
-  MeshToonMaterial,
-  NearestFilter,
-  RedFormat,
+  MeshStandardMaterial,
+  type IUniform,
 } from "three";
 
 // ── Palette ───────────────────────────────────────────────────────────────────
@@ -16,52 +16,62 @@ export const PALETTE = {
   paper: "#FDF5F6",
   moss: "#3F5A2E",
   gold: "#C9A46A",
-  skin: "#F6D2BE",
-  cheek: "#F29AA6",
-  hairDark: "#2B1F1D",
-  hairBrown: "#3B2622",
-  eye: "#2A1E1E",
-  suit: "#2F3A55",
-  trousers: "#262E44",
+  skin: "#F2CDB8",
+  cheek: "#EE9CA6",
+  hairDark: "#241A18",
+  hairBrown: "#35231F",
+  eye: "#241A1A",
+  suit: "#2C3550",
+  trousers: "#232A3E",
   shirt: "#FFFFFF",
-  dress: "#FFF9F4",
-  grass: "#C9DDB1",
-  grassDeep: "#A9C68C",
-  path: "#F4DDD3",
-  pathEdge: "#E8C7BA",
-  wood: "#9C6B4E",
-  leaf: "#7FA36A",
+  dress: "#FFFBF6",
+  grass: "#8FB46A",
+  grassDeep: "#5E8743",
+  path: "#D9C7B8",
+  pathEdge: "#B89F8C",
+  wood: "#7A5238",
+  leaf: "#5F8F45",
+  skyTop: "#F7D9DF",
+  skyHorizon: "#FFF4EC",
 };
 
-// A three-step gradient gives the soft cel-shaded look of picture-book characters.
-let toonRamp: DataTexture | null = null;
+// ── Physically based surfaces ─────────────────────────────────────────────────
+// Every solid surface uses a standard (PBR) material so it reacts to the environment light and the
+// soft sun shadows. Cached by look so meshes share materials.
+const surfaceCache = new Map<string, MeshStandardMaterial>();
 
-function ramp() {
-  if (toonRamp) return toonRamp;
-  const steps = new Uint8Array([165, 220, 255]);
-  toonRamp = new DataTexture(steps, steps.length, 1, RedFormat);
-  toonRamp.minFilter = NearestFilter;
-  toonRamp.magFilter = NearestFilter;
-  toonRamp.generateMipmaps = false;
-  toonRamp.needsUpdate = true;
-  return toonRamp;
+export interface SurfaceOptions {
+  roughness?: number;
+  metalness?: number;
+  vertexColors?: boolean;
+  transparent?: boolean;
+  opacity?: number;
+  doubleSide?: boolean;
+  sheen?: boolean;          // fabric-like falloff for petals and the dress (emulated via emissive tint)
 }
 
-const toonCache = new Map<string, MeshToonMaterial>();
-
-export function toon(color: string, options: { transparent?: boolean; opacity?: number } = {}) {
-  const key = `${color}|${options.opacity ?? 1}`;
-  const cached = toonCache.get(key);
+export function surface(color: string, options: SurfaceOptions = {}) {
+  const key = `${color}|${JSON.stringify(options)}`;
+  const cached = surfaceCache.get(key);
   if (cached) return cached;
-  const material = new MeshToonMaterial({
+  const material = new MeshStandardMaterial({
     color: new Color(color),
-    gradientMap: ramp(),
+    roughness: options.roughness ?? 0.7,
+    metalness: options.metalness ?? 0,
+    vertexColors: options.vertexColors ?? false,
     transparent: options.transparent ?? false,
     opacity: options.opacity ?? 1,
+    side: options.doubleSide ? DoubleSide : FrontSide,
   });
-  toonCache.set(key, material);
+  if (options.sheen) {
+    material.emissive = new Color(color).multiplyScalar(0.06);
+  }
+  surfaceCache.set(key, material);
   return material;
 }
+
+// Kept for the character code: the chibi placeholders now use the same PBR surfaces.
+export const toon = surface;
 
 const flatCache = new Map<string, MeshBasicMaterial>();
 
@@ -74,15 +84,42 @@ export function flat(color: string, opacity = 1) {
   return material;
 }
 
-// Inverted-hull outline: a slightly larger back-faced copy drawn in a warm dark tone.
+// The cartoon outline hull is no longer drawn; kept so older call sites compile.
 export const OUTLINE = new MeshBasicMaterial({ color: new Color("#4A2A2E"), side: BackSide });
 
+// ── Wind ──────────────────────────────────────────────────────────────────────
+// Grass and flowers sway in the vertex shader: the higher a vertex, the further it moves, with a
+// phase taken from the instance position so a meadow ripples instead of moving in lockstep.
+export const windUniform: IUniform<number> = { value: 0 };
+
+export function withWind(material: MeshStandardMaterial, height: number, strength: number) {
+  material.onBeforeCompile = (shader) => {
+    shader.uniforms.uWindTime = windUniform;
+    shader.vertexShader = shader.vertexShader
+      .replace("#include <common>", "#include <common>\nuniform float uWindTime;")
+      .replace(
+        "#include <begin_vertex>",
+        `#include <begin_vertex>
+        float windHeight = clamp(position.y / ${height.toFixed(3)}, 0.0, 1.0);
+        #ifdef USE_INSTANCING
+          vec2 windBase = instanceMatrix[3].xz;
+        #else
+          vec2 windBase = vec2(0.0);
+        #endif
+        float windSway = sin(uWindTime * 1.7 + windBase.x * 0.9 + windBase.y * 0.7) * ${strength.toFixed(3)}
+          + sin(uWindTime * 3.3 + windBase.x * 2.1) * ${(strength * 0.25).toFixed(3)};
+        transformed.x += windSway * windHeight * windHeight;
+        transformed.z += windSway * 0.6 * windHeight * windHeight;`,
+      );
+  };
+  material.customProgramCacheKey = () => `wind-${height}-${strength}`;
+  return material;
+}
+
 export function disposeMaterials() {
-  toonCache.forEach((material) => material.dispose());
+  surfaceCache.forEach((material) => material.dispose());
   flatCache.forEach((material) => material.dispose());
-  toonCache.clear();
+  surfaceCache.clear();
   flatCache.clear();
   OUTLINE.dispose();
-  toonRamp?.dispose();
-  toonRamp = null;
 }

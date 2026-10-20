@@ -1,7 +1,9 @@
 import {
+  BackSide,
   BoxGeometry,
   BufferAttribute,
   BufferGeometry,
+  CanvasTexture,
   CatmullRomCurve3,
   Color,
   ConeGeometry,
@@ -13,17 +15,22 @@ import {
   Matrix4,
   Mesh,
   MeshBasicMaterial,
-  MeshToonMaterial,
+  MeshStandardMaterial,
   Object3D,
   PlaneGeometry,
+  RepeatWrapping,
   Scene,
+  ShaderMaterial,
   Shape,
   ShapeGeometry,
   SphereGeometry,
+  SRGBColorSpace,
+  Texture,
   TorusGeometry,
   Vector3,
 } from "three";
-import { PALETTE, flat, toon } from "./materials";
+import { PALETTE, flat, surface, toon, withWind } from "./materials";
+import { blossomCanopyGeometry, daisyGeometry, foliageGeometry, grassTuftGeometry, hydrangeaGeometry, roseGeometry } from "./flowers";
 import { FONTS, loadPhoto, textCard } from "./textures";
 import type { SceneData } from "./WeddingScene";
 
@@ -71,41 +78,171 @@ export function disposeWorld() {
   geometries.length = 0;
 }
 
-// ── Ground & path ribbon ──────────────────────────────────────────────────────
-function buildGround() {
+// ── Ground, flagstone path, sky ───────────────────────────────────────────────
+function buildGround(lowPower: boolean) {
   const group = new Group();
-  const grass = new Mesh(track(new PlaneGeometry(70, 80)), toon(PALETTE.grass));
-  grass.rotation.x = -Math.PI / 2;
-  grass.position.z = -18;
-  group.add(grass);
 
-  group.add(ribbon(PATH_WIDTH, 0.006, PALETTE.path));
-  group.add(ribbon(PATH_WIDTH + 0.22, 0.004, PALETTE.pathEdge));
+  // Meadow: a subdivided plane with gentle colour variation baked into vertex colours.
+  const meadow = track(new PlaneGeometry(70, 80, lowPower ? 40 : 80, lowPower ? 45 : 90));
+  meadow.rotateX(-Math.PI / 2);
+  const positions = meadow.getAttribute("position");
+  const colors = new Float32Array(positions.count * 3);
+  const light = new Color("#9BBE72");
+  const deep = new Color("#6E9550");
+  const dry = new Color("#B8C27E");
+  for (let index = 0; index < positions.count; index++) {
+    const x = positions.getX(index);
+    const z = positions.getZ(index);
+    const patch = 0.5 + 0.5 * Math.sin(x * 0.37 + Math.sin(z * 0.21) * 2) * Math.cos(z * 0.29);
+    const speck = 0.5 + 0.5 * Math.sin(x * 2.7 + z * 3.1);
+    const color = deep.clone().lerp(light, patch).lerp(dry, speck * 0.18);
+    colors.set([color.r, color.g, color.b], index * 3);
+  }
+  meadow.setAttribute("color", new BufferAttribute(colors, 3));
+  const ground = new Mesh(meadow, surface("#FFFFFF", { vertexColors: true, roughness: 1 }));
+  ground.position.z = -18;
+  ground.receiveShadow = true;
+  group.add(ground);
+
+  const path = ribbon(PATH_WIDTH, 0.008, flagstoneTexture());
+  path.receiveShadow = true;
+  group.add(path);
+  const border = ribbon(PATH_WIDTH + 0.28, 0.004);
+  (border.material as MeshStandardMaterial).color.set("#8E7A63");
+  border.receiveShadow = true;
+  group.add(border);
+
+  group.add(sky());
+  group.add(distantHills());
   return group;
 }
 
-function ribbon(width: number, height: number, color: string) {
-  const segments = 260;
+// Low rolling hills and a blurred tree line on the horizon so the meadow does not end in a flat edge.
+function distantHills() {
+  const group = new Group();
+  const ridge = (radius: number, height: number, color: string, seed: number) => {
+    const segments = 96;
+    const positions: number[] = [];
+    const indices: number[] = [];
+    const random = seeded(seed);
+    const phase = random() * 10;
+    for (let index = 0; index <= segments; index++) {
+      const angle = (index / segments) * Math.PI * 2;
+      const lift = height * (0.55 + 0.45 * Math.sin(angle * 3 + phase) * Math.sin(angle * 5.3 + phase * 0.7)) + random() * height * 0.08;
+      const x = Math.cos(angle) * radius;
+      const z = Math.sin(angle) * radius - 18;
+      positions.push(x, -0.5, z, x, lift, z);
+      if (index < segments) {
+        const base = index * 2;
+        indices.push(base, base + 2, base + 1, base + 1, base + 2, base + 3);
+      }
+    }
+    const geometry = track(new BufferGeometry());
+    geometry.setAttribute("position", new BufferAttribute(new Float32Array(positions), 3));
+    geometry.setIndex(indices);
+    geometry.computeVertexNormals();
+    return new Mesh(geometry, new MeshBasicMaterial({ color, side: DoubleSide, fog: true }));
+  };
+  group.add(ridge(46, 4.2, "#C7D5B0", 3), ridge(40, 2.6, "#AFC598", 5));
+  return group;
+}
+
+// Path ribbon with UVs running along the walk so the flagstone texture tiles naturally.
+function ribbon(width: number, height: number, texture?: Texture) {
+  const segments = 320;
   const positions = new Float32Array((segments + 1) * 2 * 3);
+  const uvs = new Float32Array((segments + 1) * 2 * 2);
   const indices: number[] = [];
+  let travelled = 0;
+  let previous = frameAt(0).point;
   for (let index = 0; index <= segments; index++) {
     const { point, side } = frameAt(index / segments);
+    travelled += point.distanceTo(previous);
+    previous = point;
     const left = point.clone().addScaledVector(side, width / 2);
     const right = point.clone().addScaledVector(side, -width / 2);
     positions.set([left.x, height, left.z, right.x, height, right.z], index * 6);
+    uvs.set([0, travelled / width, 1, travelled / width], index * 4);
     if (index < segments) {
       const a = index * 2;
-      indices.push(a, a + 2, a + 1, a + 1, a + 2, a + 3);
+      // Counter-clockwise seen from above, so the normals point up and the top face is drawn.
+      indices.push(a, a + 1, a + 2, a + 1, a + 3, a + 2);
     }
   }
   const geometry = track(new BufferGeometry());
   geometry.setAttribute("position", new BufferAttribute(positions, 3));
+  geometry.setAttribute("uv", new BufferAttribute(uvs, 2));
   geometry.setIndex(indices);
   geometry.computeVertexNormals();
-  return new Mesh(geometry, toon(color));
+  const material = new MeshStandardMaterial({ color: texture ? "#FFFFFF" : PALETTE.pathEdge, map: texture ?? null, roughness: 0.92 });
+  return new Mesh(geometry, material);
 }
 
-// ── Flowers, bushes, trees (instanced) ────────────────────────────────────────
+// Irregular flagstones in warm limestone tones, painted once on a canvas.
+function flagstoneTexture() {
+  const size = 512;
+  const canvas = document.createElement("canvas");
+  canvas.width = size;
+  canvas.height = size;
+  const context = canvas.getContext("2d")!;
+  context.fillStyle = "#8E7A63";
+  context.fillRect(0, 0, size, size);
+  const random = seeded(23);
+  const tones = ["#E3D3C3", "#D8C4B1", "#EADDCF", "#CDB7A3", "#DDCAB6"];
+  const rows = 4;
+  for (let row = 0; row < rows; row++) {
+    let x = row % 2 ? -40 : 0;
+    const y = (row / rows) * size;
+    while (x < size) {
+      const width = 90 + random() * 80;
+      const height = size / rows;
+      context.fillStyle = tones[Math.floor(random() * tones.length)];
+      context.beginPath();
+      const inset = 6;
+      const jitter = () => (random() - 0.5) * 10;
+      context.moveTo(x + inset + jitter(), y + inset + jitter());
+      context.lineTo(x + width - inset + jitter(), y + inset + jitter());
+      context.lineTo(x + width - inset + jitter(), y + height - inset + jitter());
+      context.lineTo(x + inset + jitter(), y + height - inset + jitter());
+      context.closePath();
+      context.fill();
+      // Subtle grain so the stone does not read as flat colour.
+      for (let dot = 0; dot < 90; dot++) {
+        context.fillStyle = `rgba(90, 70, 55, ${0.04 + random() * 0.06})`;
+        context.fillRect(x + random() * width, y + random() * height, 2 + random() * 3, 2 + random() * 3);
+      }
+      x += width;
+    }
+  }
+  const texture = new CanvasTexture(canvas);
+  texture.wrapS = RepeatWrapping;
+  texture.wrapT = RepeatWrapping;
+  texture.colorSpace = SRGBColorSpace;
+  texture.anisotropy = 8;
+  return texture;
+}
+
+// Soft gradient sky dome: blush overhead, warm paper at the horizon (matches the fog colour).
+function sky() {
+  const geometry = track(new SphereGeometry(60, 24, 16));
+  const material = new ShaderMaterial({
+    side: BackSide,
+    depthWrite: false,
+    fog: false,
+    uniforms: {
+      top: { value: new Color(PALETTE.skyTop) },
+      horizon: { value: new Color(PALETTE.skyHorizon) },
+    },
+    vertexShader: "varying vec3 vWorld; void main() { vWorld = (modelMatrix * vec4(position, 1.0)).xyz; gl_Position = projectionMatrix * viewMatrix * vec4(vWorld, 1.0); }",
+    fragmentShader: "uniform vec3 top; uniform vec3 horizon; varying vec3 vWorld; void main() { float h = clamp(normalize(vWorld - cameraPosition).y * 1.6, 0.0, 1.0); gl_FragColor = vec4(mix(horizon, top, h), 1.0); }",
+  });
+  const dome = new Mesh(geometry, material);
+  dome.frustumCulled = false;
+  dome.onBeforeRender = (_renderer, _scene, camera) => dome.position.copy(camera.position);
+  return dome;
+}
+
+// ── Flower beds, grass, shrubs, blossom trees (instanced) ─────────────────────
 function seeded(seed: number) {
   let value = seed;
   return () => {
@@ -114,62 +251,139 @@ function seeded(seed: number) {
   };
 }
 
-function buildPlanting() {
+function buildPlanting(lowPower: boolean) {
   const group = new Group();
   const random = seeded(7);
   const dummy = new Object3D();
-  const flowerColors = [PALETTE.blush, "#FFFFFF", PALETTE.son, "#F7B9C4", PALETTE.gold, "#D9C6EC"].map((color) => new Color(color));
+  const scale = lowPower ? 0.55 : 1;
 
-  const flowerCount = 520;
-  const flowers = new InstancedMesh(track(new IcosahedronGeometry(0.075, 1)), new MeshToonMaterial({ color: "#FFFFFF" }), flowerCount);
-  for (let index = 0; index < flowerCount; index++) {
-    const u = random();
-    const { point, side } = frameAt(u);
-    const offset = (PATH_WIDTH / 2 + 0.15 + random() * 0.9) * (random() > 0.5 ? 1 : -1);
-    dummy.position.copy(point).addScaledVector(side, offset);
-    dummy.position.y = 0.08 + random() * 0.12;
-    dummy.scale.setScalar(0.7 + random() * 0.7);
-    dummy.updateMatrix();
-    flowers.setMatrixAt(index, dummy.matrix);
-    flowers.setColorAt(index, flowerColors[Math.floor(random() * flowerColors.length)]);
-  }
-  group.add(flowers);
+  // Blooms of three species share one foliage mesh (stem + leaves) placed under each head.
+  const species = [
+    { geometry: roseGeometry(), count: Math.round(260 * scale), colors: ["#F4B9C3", "#FFFFFF", "#C94E5E", "#F7D6DA", "#E88C9C"], size: [0.9, 1.35] },
+    { geometry: daisyGeometry(), count: Math.round(180 * scale), colors: ["#FFFFFF", "#F8E7EF", "#F3D2E2"], size: [0.8, 1.15] },
+    { geometry: hydrangeaGeometry(), count: Math.round(70 * scale), colors: ["#D9C6EC", "#C9D8F2", "#F5D0DE"], size: [0.9, 1.2] },
+  ];
+  const foliage = track(foliageGeometry());
+  const foliageCount = species.reduce((sum, item) => sum + item.count, 0);
+  const leaves = new InstancedMesh(foliage, withWind(surface("#FFFFFF", { vertexColors: true, roughness: 0.75, doubleSide: true }), 0.3, 0.02), foliageCount);
+  let leafIndex = 0;
 
-  const bushCount = 170;
-  const bushes = new InstancedMesh(track(new IcosahedronGeometry(0.32, 1)), toon(PALETTE.leaf), bushCount);
-  for (let index = 0; index < bushCount; index++) {
-    const { point, side } = frameAt(random());
-    const offset = (PATH_WIDTH / 2 + 0.9 + random() * 1.8) * (random() > 0.5 ? 1 : -1);
-    dummy.position.copy(point).addScaledVector(side, offset);
-    dummy.position.y = 0.12;
-    dummy.scale.set(0.8 + random() * 0.8, 0.55 + random() * 0.5, 0.8 + random() * 0.8);
-    dummy.updateMatrix();
-    bushes.setMatrixAt(index, dummy.matrix);
-  }
-  group.add(bushes);
-
-  // Blossom trees further out: trunks + pink canopies.
-  const treeCount = 34;
-  const trunks = new InstancedMesh(track(new CylinderGeometry(0.08, 0.12, 1.4, 8)), toon(PALETTE.wood), treeCount);
-  const canopies = new InstancedMesh(track(new IcosahedronGeometry(0.9, 1)), new MeshToonMaterial({ color: "#FFFFFF" }), treeCount * 2);
-  const blossom = [new Color("#F6C9D2"), new Color("#F9DDE3"), new Color("#EFB3C0")];
-  for (let index = 0; index < treeCount; index++) {
-    const { point, side } = frameAt(index / treeCount + random() * 0.02);
-    const offset = (4 + random() * 4) * (index % 2 === 0 ? 1 : -1);
-    const base = point.clone().addScaledVector(side, offset);
-    dummy.position.set(base.x, 0.7, base.z);
-    dummy.scale.setScalar(1);
-    dummy.updateMatrix();
-    trunks.setMatrixAt(index, dummy.matrix);
-    for (let layer = 0; layer < 2; layer++) {
-      dummy.position.set(base.x + (random() - 0.5) * 0.5, 1.7 + layer * 0.55, base.z + (random() - 0.5) * 0.5);
-      dummy.scale.setScalar(1 - layer * 0.3 + random() * 0.2);
+  for (const item of species) {
+    track(item.geometry);
+    const material = withWind(surface("#FFFFFF", { vertexColors: true, roughness: 0.55, doubleSide: true, sheen: true }), 0.35, 0.02);
+    const blooms = new InstancedMesh(item.geometry, material, item.count);
+    for (let index = 0; index < item.count; index++) {
+      const { point, side } = frameAt(random());
+      const offset = (PATH_WIDTH / 2 + 0.22 + random() * 1.0) * (random() > 0.5 ? 1 : -1);
+      const size = item.size[0] + random() * (item.size[1] - item.size[0]);
+      dummy.position.copy(point).addScaledVector(side, offset);
+      dummy.position.y = 0.22 + random() * 0.16;
+      dummy.rotation.set((random() - 0.5) * 0.5, random() * Math.PI * 2, (random() - 0.5) * 0.5);
+      dummy.scale.setScalar(size);
       dummy.updateMatrix();
-      canopies.setMatrixAt(index * 2 + layer, dummy.matrix);
-      canopies.setColorAt(index * 2 + layer, blossom[Math.floor(random() * blossom.length)]);
+      blooms.setMatrixAt(index, dummy.matrix);
+      blooms.setColorAt(index, new Color(item.colors[Math.floor(random() * item.colors.length)]));
+      leaves.setMatrixAt(leafIndex++, dummy.matrix);
+    }
+    // Flowers are too small to need shadow-map casters; skipping them halves the shadow pass.
+    group.add(blooms);
+  }
+  group.add(leaves);
+
+  // Grass tufts along the path edges and scattered in the meadow, swaying in the wind.
+  const tuftCount = Math.round(1600 * scale);
+  const grass = new InstancedMesh(track(grassTuftGeometry()), withWind(surface("#FFFFFF", { vertexColors: true, roughness: 0.9, doubleSide: true }), 0.3, 0.05), tuftCount);
+  for (let index = 0; index < tuftCount; index++) {
+    const { point, side } = frameAt(random());
+    const edge = index % 3 !== 0;
+    const offset = edge
+      ? (PATH_WIDTH / 2 + 0.1 + random() * 0.6) * (random() > 0.5 ? 1 : -1)
+      : (PATH_WIDTH / 2 + 1 + random() * 6) * (random() > 0.5 ? 1 : -1);
+    dummy.position.copy(point).addScaledVector(side, offset);
+    dummy.position.y = 0;
+    dummy.rotation.set(0, random() * Math.PI * 2, 0);
+    dummy.scale.setScalar(0.8 + random() * 0.9);
+    dummy.updateMatrix();
+    grass.setMatrixAt(index, dummy.matrix);
+  }
+  group.add(grass);
+
+  // Boxwood shrubs: lumpy, slightly glossy evergreen balls.
+  const shrubCount = Math.round(120 * scale);
+  const shrubGeometry = track(new IcosahedronGeometry(0.34, 2));
+  const shrubPositions = shrubGeometry.getAttribute("position");
+  for (let index = 0; index < shrubPositions.count; index++) {
+    const vertex = new Vector3().fromBufferAttribute(shrubPositions, index);
+    vertex.multiplyScalar(1 + 0.1 * Math.sin(vertex.x * 19) * Math.cos(vertex.y * 17) + 0.06 * Math.sin(vertex.z * 23));
+    shrubPositions.setXYZ(index, vertex.x, vertex.y, vertex.z);
+  }
+  shrubGeometry.computeVertexNormals();
+  const shrubs = new InstancedMesh(shrubGeometry, surface("#4F7A3A", { roughness: 0.62 }), shrubCount);
+  for (let index = 0; index < shrubCount; index++) {
+    const { point, side } = frameAt(random());
+    const offset = (PATH_WIDTH / 2 + 1.3 + random() * 1.8) * (random() > 0.5 ? 1 : -1);
+    dummy.position.copy(point).addScaledVector(side, offset);
+    dummy.position.y = 0.18;
+    dummy.rotation.set(0, random() * Math.PI, 0);
+    dummy.scale.set(0.9 + random() * 0.8, 0.7 + random() * 0.5, 0.9 + random() * 0.8);
+    dummy.updateMatrix();
+    shrubs.setMatrixAt(index, dummy.matrix);
+  }
+  shrubs.castShadow = !lowPower;
+  shrubs.receiveShadow = true;
+  group.add(shrubs);
+
+  group.add(blossomTrees(random, lowPower));
+  return group;
+}
+
+// Cherry-blossom trees: a tapered trunk with two forked branches carrying blossom clusters.
+function blossomTrees(random: () => number, lowPower: boolean) {
+  const group = new Group();
+  const treeCount = lowPower ? 18 : 30;
+  const trunkGeometry = track(new CylinderGeometry(0.07, 0.16, 1.6, 8));
+  trunkGeometry.translate(0, 0.8, 0);
+  const branchGeometry = track(new CylinderGeometry(0.035, 0.07, 1.1, 6));
+  branchGeometry.translate(0, 0.55, 0);
+  const canopyGeometry = track(blossomCanopyGeometry());
+  const trunks = new InstancedMesh(trunkGeometry, surface("#5C4033", { roughness: 0.95 }), treeCount);
+  const branches = new InstancedMesh(branchGeometry, surface("#5C4033", { roughness: 0.95 }), treeCount * 2);
+  const canopies = new InstancedMesh(canopyGeometry, surface("#FFFFFF", { vertexColors: true, roughness: 0.8 }), treeCount * 3);
+  const dummy = new Object3D();
+  const tint = [new Color("#FFFFFF"), new Color("#FFE9EE"), new Color("#F6D4DC")];
+
+  for (let tree = 0; tree < treeCount; tree++) {
+    const { point, side } = frameAt(tree / treeCount + random() * 0.02);
+    const base = point.clone().addScaledVector(side, (4 + random() * 4) * (tree % 2 === 0 ? 1 : -1));
+    const height = 0.9 + random() * 0.4;
+    dummy.position.copy(base);
+    dummy.rotation.set(0, random() * Math.PI, (random() - 0.5) * 0.1);
+    dummy.scale.set(1, height, 1);
+    dummy.updateMatrix();
+    trunks.setMatrixAt(tree, dummy.matrix);
+
+    for (let fork = 0; fork < 2; fork++) {
+      const lean = (fork === 0 ? 1 : -1) * (0.5 + random() * 0.3);
+      const yaw = random() * Math.PI * 2;
+      dummy.position.set(base.x, 1.45 * height, base.z);
+      dummy.rotation.set(0, yaw, lean);
+      dummy.scale.setScalar(1);
+      dummy.updateMatrix();
+      branches.setMatrixAt(tree * 2 + fork, dummy.matrix);
+    }
+    for (let cluster = 0; cluster < 3; cluster++) {
+      const angle = (cluster / 3) * Math.PI * 2 + random();
+      dummy.position.set(base.x + Math.cos(angle) * 0.6, 2.3 * height + random() * 0.4, base.z + Math.sin(angle) * 0.6);
+      dummy.rotation.set(random(), random() * Math.PI, random());
+      dummy.scale.setScalar(0.8 + random() * 0.45);
+      dummy.updateMatrix();
+      canopies.setMatrixAt(tree * 3 + cluster, dummy.matrix);
+      canopies.setColorAt(tree * 3 + cluster, tint[Math.floor(random() * tint.length)]);
     }
   }
-  group.add(trunks, canopies);
+  trunks.castShadow = !lowPower;
+  canopies.castShadow = !lowPower;
+  group.add(trunks, branches, canopies);
   return group;
 }
 
@@ -481,9 +695,9 @@ export function buildStations(data: SceneData): Station[] {
   });
 }
 
-export function buildWorld(scene: Scene, data: SceneData) {
-  const ground = buildGround();
-  const planting = buildPlanting();
+export function buildWorld(scene: Scene, data: SceneData, lowPower = false) {
+  const ground = buildGround(lowPower);
+  const planting = buildPlanting(lowPower);
   const stations = buildStations(data);
   scene.add(ground, planting);
   stations.forEach((station) => scene.add(station.object));
