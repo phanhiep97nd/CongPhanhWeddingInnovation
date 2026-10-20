@@ -1,0 +1,33 @@
+import { useState } from "react";
+import { uploadImage, cldUrl } from "../../lib/images";
+
+export default function ImageField({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void; }) {
+  const [progress, setProgress] = useState<number | null>(null);
+  const [error, setError] = useState("");
+  async function upload(file?: File) {
+    if (!file) return;
+    setError("");
+    setProgress(0);
+    try {
+      onChange(await uploadImage(file, setProgress));
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setProgress(null);
+    }
+  }
+  return <div className="image-field">
+    <label>
+      {label}
+      <input type="url" value={value} onChange={e => onChange(e.target.value)} placeholder="Dán liên kết ảnh HTTPS" />
+    </label>
+    <label className="file-label">Tải ảnh lên
+      <input type="file" accept="image/*" onChange={e => void upload(e.target.files?.[0])} />
+    </label>
+    {progress !== null && <progress value={progress} max="100" />}
+    {error && <p role="alert" className="error">
+      {error}
+    </p>}
+    {value && <img src={cldUrl(value, 400)} alt={label} loading="lazy" decoding="async" />}
+  </div>;
+}

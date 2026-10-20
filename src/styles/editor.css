@@ -1,0 +1,41 @@
+.editor-title {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  padding: 1rem 0;
+  background: #fdf5f6;
+}
+
+@media (min-width: 900px) {
+  .editor .shell {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    column-gap: 2rem;
+  }
+  .editor-title, .editor .notice {
+    grid-column: 1 / -1;
+  }
+  .tab-nav {
+    display: grid;
+    align-content: start;
+    border: 0;
+    overflow: visible;
+  }
+  .tab-nav button {
+    text-align: left;
+    border-bottom: 0;
+    border-radius: .6rem;
+  }
+  .tab-nav button.active {
+    background: #f9e8ea;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+  }
+}
+

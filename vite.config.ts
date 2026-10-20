@@ -2,10 +2,9 @@ import tailwindcss from '@tailwindcss/vite';
 import legacy from '@vitejs/plugin-legacy';
 import react from '@vitejs/plugin-react';
 import path from 'path';
-import {defineConfig, loadEnv} from 'vite';
+import {defineConfig} from 'vitest/config';
 
-export default defineConfig(({mode}) => {
-  const env = loadEnv(mode, '.', '');
+export default defineConfig(() => {
   return {
     plugins: [
       react(),
@@ -14,9 +13,6 @@ export default defineConfig(({mode}) => {
         targets: ['Chrome >= 64', 'Safari >= 12', 'iOS >= 12', 'Firefox >= 67'],
       }),
     ],
-    define: {
-      'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
-    },
     resolve: {
       alias: {
         '@': path.resolve(__dirname, '.'),
@@ -36,11 +32,9 @@ export default defineConfig(({mode}) => {
     },
     build: {
       rollupOptions: {
-        input: {
-          main: path.resolve(__dirname, 'index.html'),
-          admin: path.resolve(__dirname, 'admin.html'),
-        },
+        output: { manualChunks(id: string) { if (id.includes('node_modules/react') || id.includes('node_modules/scheduler')) return 'react-vendor'; if (id.includes('node_modules/motion')) return 'motion'; } },
       },
     },
+    test: { environment: 'jsdom', setupFiles: ['./src/test/setup.ts'], exclude: ['api/**', 'node_modules/**', 'dist/**'] },
   };
 });
