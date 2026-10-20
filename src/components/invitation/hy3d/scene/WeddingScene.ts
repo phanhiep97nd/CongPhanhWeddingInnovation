@@ -523,10 +523,25 @@ export class WeddingScene {
     this.card = card;
     group.add(card);
 
-    // Front pocket hides the lower card until it slides up.
-    const pocket = new Mesh(new PlaneGeometry(1.5, 0.66), toon("#F6E3DC"));
-    pocket.position.set(0, -0.17, 0.05);
+    // Front pocket with a V-shaped mouth like a real envelope; it hides the lower card until it rises.
+    const pocketShape = new Shape();
+    pocketShape.moveTo(-0.75, -0.5);
+    pocketShape.lineTo(0.75, -0.5);
+    pocketShape.lineTo(0.75, 0.2);
+    pocketShape.lineTo(0, -0.12);
+    pocketShape.lineTo(-0.75, 0.2);
+    pocketShape.closePath();
+    const pocket = new Mesh(new ShapeGeometry(pocketShape), new MeshBasicMaterial({ color: "#F4DAD3" }));
+    pocket.position.z = 0.05;
     group.add(pocket);
+    const foldShape = new Shape();
+    foldShape.moveTo(-0.75, -0.5);
+    foldShape.lineTo(0.75, -0.5);
+    foldShape.lineTo(0, -0.02);
+    foldShape.closePath();
+    const fold = new Mesh(new ShapeGeometry(foldShape), new MeshBasicMaterial({ color: "#EDC8C0" }));
+    fold.position.z = 0.052;
+    group.add(fold);
 
     const flap = new Group();
     flap.position.set(0, 0.5, 0.055);

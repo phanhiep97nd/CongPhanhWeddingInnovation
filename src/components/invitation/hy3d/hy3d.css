@@ -136,8 +136,8 @@
 }
 
 .hy3d-strip img {
-  flex: 0 0 62%;
-  aspect-ratio: 4 / 5;
+  flex: 0 0 44%;
+  aspect-ratio: 3 / 4;
   object-fit: cover;
   border-radius: 14px;
   scroll-snap-align: center;
