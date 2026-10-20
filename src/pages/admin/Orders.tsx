@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { api, json } from "../../lib/api";
 import type { Order, PageResult } from "../../lib/types";
 import { money, planName } from "../../components/billing/UpgradePanel";
+import { useConfirmSheet } from "../../components/ConfirmSheet";
 
 export default function Orders() {
   const [query, setQuery] = useState("");
@@ -10,6 +11,7 @@ export default function Orders() {
   const [data, setData] = useState<PageResult<Order> | null>(null);
   const [error, setError] = useState("");
   const [version, setVersion] = useState(0);
+  const { confirm, sheet } = useConfirmSheet();
   useEffect(() => {
     const timer = setTimeout(() => {
       api<PageResult<Order>>(`/admin/orders?q=${encodeURIComponent(query)}&status=${status}&page=${page}&limit=20`, {}, true)
@@ -19,7 +21,7 @@ export default function Orders() {
   }, [query, status, page, version]);
 
   async function markPaid(order: Order) {
-    if (!window.confirm(`Xác nhận đã thanh toán đơn #${order.orderCode} (${money(order.amount)})?`)) return;
+    if (!await confirm(`Xác nhận đã thanh toán đơn #${order.orderCode} (${money(order.amount)})?`)) return;
     try {
       await api(`/admin/orders/${order.orderCode}/mark-paid`, json("POST"), true);
       setVersion(value => value + 1);
@@ -27,8 +29,9 @@ export default function Orders() {
   }
 
   return <div className="editor-stack">
+    {sheet}
     <h1>Đơn hàng</h1>
-    <div className="form-grid"><label>Tìm đơn hàng<input value={query} onChange={event => { setQuery(event.target.value); setPage(1); }} /></label>
+    <div className="form-grid"><label>Tìm đơn hàng<input type="search" enterKeyHint="search" value={query} onChange={event => { setQuery(event.target.value); setPage(1); }} /></label>
       <label>Trạng thái<select value={status} onChange={event => { setStatus(event.target.value); setPage(1); }}><option value="">Tất cả</option><option value="pending">Chờ thanh toán</option><option value="paid">Đã thanh toán</option><option value="cancelled">Đã huỷ</option><option value="expired">Hết hạn</option></select></label>
     </div>
     {error && <p role="alert" className="error">{error}</p>}

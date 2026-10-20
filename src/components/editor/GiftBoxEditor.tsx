@@ -30,7 +30,7 @@ export default function GiftBoxEditor({ wedding, change, onUpgrade }: {
           {banks.map(([bin, name]) => <option key={bin} value={bin}>{name}</option>)}
         </select>
       </label>
-      <Field label="Số tài khoản" value={account.accountNumber} onChange={accountNumber => update(index, { accountNumber: accountNumber.replace(/[^0-9A-Za-z]/g, "").slice(0, 30) })} />
+      <Field label="Số tài khoản" inputMode="numeric" value={account.accountNumber} onChange={accountNumber => update(index, { accountNumber: accountNumber.replace(/[^0-9A-Za-z]/g, "").slice(0, 30) })} />
       <Field label="Tên chủ tài khoản" value={account.accountName} onChange={accountName => update(index, { accountName: accountName.slice(0, 60) })} />
       <button className="text-button" onClick={() => change({ giftBox: { ...giftBox, accounts: giftBox.accounts.filter(item => item.id !== account.id) } })}>Xóa tài khoản</button>
     </article>)}

@@ -89,6 +89,7 @@ export interface Wedding {
   published: boolean;
   couple: { groom: string; bride: string; groomFull: string; brideFull: string };
   eventDate: string | null;
+  eventTime?: string;
   dateText: string;
   venue: { name: string; address: string; mapUrl: string };
   coverImage: string;

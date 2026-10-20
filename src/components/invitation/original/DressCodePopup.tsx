@@ -130,8 +130,8 @@ export function DressCodePopup({ onClose }: { onClose: () => void }) {
 
           <div className="px-7 pb-8 pt-5">
             {/* Close */}
-            <button onClick={onClose}
-              className="absolute top-5 right-5 p-1.5 rounded-full bg-white/80 text-secondary/50 hover:text-secondary transition-all shadow-sm">
+            <button onClick={onClose} aria-label="Đóng"
+              className="absolute top-5 right-5 w-11 h-11 flex items-center justify-center rounded-full bg-white/80 text-secondary/50 hover:text-secondary transition-all shadow-sm">
               <X size={16} />
             </button>
 

@@ -3,9 +3,12 @@ import { addCustomSection, clientId, moveSection, removeCustomSection, sectionLa
 import { Field } from "./Fields";
 import ImageField from "./ImageField";
 import LockedFeature from "../billing/LockedFeature";
+import { useConfirmSheet } from "../ConfirmSheet";
 
 export default function SectionsTab({ wedding: w, change, onUpgrade = () => {} }: { wedding: Wedding; change: (patch: Partial<Wedding>) => void; onUpgrade?: () => void; }) {
+  const { confirm, sheet } = useConfirmSheet();
   return <div className="editor-stack">
+    {sheet}
     <p>Bật, tắt và sắp xếp các hạng mục trên thiệp.
     </p>
     {w.sections.map((item, i) => {
@@ -23,7 +26,7 @@ export default function SectionsTab({ wedding: w, change, onUpgrade = () => {} }
             </button>
             <button aria-label={`Chuyển ${sectionLabel(item.key, w.customSections)} xuống`} disabled={i === w.sections.length - 1} onClick={() => change({ sections: moveSection(w.sections, i, 1) })}>↓
             </button>
-            {custom && <button onClick={() => { if (window.confirm(`Xóa hạng mục ${custom.title}?`)) change(removeCustomSection(w.sections, w.customSections, custom.id)); }}>Xóa
+            {custom && <button onClick={() => void confirm(`Xóa hạng mục ${custom.title}?`).then(approved => { if (approved) change(removeCustomSection(w.sections, w.customSections, custom.id)); })}>Xóa
             </button>}
           </div>
         </div>

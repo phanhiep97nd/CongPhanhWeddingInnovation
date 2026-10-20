@@ -1,3 +1,5 @@
+import { BRAND_NAME } from "../../../lib/brand";
+import WeddingPhoto from "../Photo";
 import { useEffect, useState } from "react";
 import type { PublicGuest, Photo, Wedding } from "../../../lib/types";
 import { api, json } from "../../../lib/api";
@@ -43,7 +45,7 @@ export default function InvitationShell({ wedding, guest, slug }: { wedding: Wed
   return <WeddingContext.Provider value={{ wedding, guest, slug }}>
     <main className="minimal-invite">
       <header className="minimal-hero">
-        {wedding.coverImage && <img src={wedding.coverImage} alt="Ảnh cưới" />}
+        {wedding.coverImage && <WeddingPhoto src={wedding.coverImage} alt="Ảnh cưới" hero />}
         <div>
           <p>Trân trọng kính mời</p>
           <h1>{wedding.couple.bride} <span>&</span> {wedding.couple.groom}</h1>
@@ -54,7 +56,7 @@ export default function InvitationShell({ wedding, guest, slug }: { wedding: Wed
         const key = section.key;
         if (key === "story") return <section key={key} id="story">
           <h2>{wedding.story.title || "Câu chuyện của chúng mình"}</h2>
-          {wedding.story.image && <img className="minimal-story-image" src={wedding.story.image} alt="Kỷ niệm của hai bạn" />}
+          {wedding.story.image && <img className="minimal-story-image" src={wedding.story.image} alt="Kỷ niệm của hai bạn" loading="lazy" decoding="async" />}
           <p className="minimal-prose">{wedding.story.body}</p>
         </section>;
         if (key === "timeline") return <section key={key} id="timeline">
@@ -63,7 +65,7 @@ export default function InvitationShell({ wedding, guest, slug }: { wedding: Wed
         </section>;
         if (key === "gallery") return <section key={key} id="gallery">
           <h2>Khoảnh khắc</h2>
-          <div className="minimal-gallery">{wedding.gallery.map(item => <figure key={item.id}><img src={item.url} alt={item.title || "Ảnh cưới"} loading="lazy" /><figcaption>{item.title}</figcaption></figure>)}</div>
+          <div className="minimal-gallery">{wedding.gallery.map(item => <figure key={item.id}><WeddingPhoto src={item.url} alt={item.title || "Ảnh cưới"} sizes="(max-width: 650px) 50vw, 450px" /><figcaption>{item.title}</figcaption></figure>)}</div>
         </section>;
         if (key === "info") return <section key={key} id="info">
           <h2>Ngày vui của chúng mình</h2>
@@ -84,13 +86,13 @@ export default function InvitationShell({ wedding, guest, slug }: { wedding: Wed
           <h2>Ảnh từ khách mời</h2>
           <label>Gửi ảnh của bạn<input type="file" accept="image/*" disabled={uploading} onChange={event => { const file = event.target.files?.[0]; if (file) void uploadPhoto(file); }} /></label>
           {message && <p role="status">{message}</p>}
-          <div className="minimal-gallery">{photos.map(photo => <figure key={photo.id}><img src={photo.url} alt={photo.caption || `Ảnh của ${photo.author}`} /><figcaption>{photo.author}</figcaption></figure>)}</div>
+          <div className="minimal-gallery">{photos.map(photo => <figure key={photo.id}><WeddingPhoto src={photo.url} alt={photo.caption || `Ảnh của ${photo.author}`} sizes="(max-width: 650px) 50vw, 450px" /><figcaption>{photo.author}</figcaption></figure>)}</div>
         </section>;
         if (key === "giftBox") return <GiftBoxSection key={key} wedding={wedding} />;
         const custom = wedding.customSections.find(item => `custom:${item.id}` === key);
         return custom ? <section key={key}><h2>{custom.title}</h2>{custom.image && <img className="minimal-story-image" src={custom.image} alt="" />}<p className="minimal-prose">{custom.body}</p></section> : null;
       })}
-      <footer><p>{wedding.couple.bride} & {wedding.couple.groom}</p>{wedding.showBranding && <a href="/">Tạo bởi Thiệp Cưới</a>}</footer>
+      <footer><p>{wedding.couple.bride} & {wedding.couple.groom}</p>{wedding.showBranding && <a href="/">Tạo bởi {BRAND_NAME}</a>}</footer>
       {wedding.musicUrl && <audio controls loop src={wedding.musicUrl} aria-label="Nhạc nền" />}
     </main>
   </WeddingContext.Provider>;

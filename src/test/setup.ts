@@ -2,6 +2,9 @@ import '@testing-library/jest-dom/vitest';
 import { cleanup } from '@testing-library/react';
 import { afterEach } from 'vitest';
 
+HTMLDialogElement.prototype.showModal ||= function () { this.setAttribute('open', ''); };
+HTMLDialogElement.prototype.close ||= function () { this.removeAttribute('open'); this.dispatchEvent(new Event('close')); };
+
 // vitest globals are off, so Testing Library cannot register its automatic cleanup.
 afterEach(() => cleanup());
 import type { ReactNode, Ref } from 'react';
@@ -27,8 +30,10 @@ vi.mock('motion/react', async () => {
     useReducedMotion: () => false,
     useScroll: () => ({ scrollYProgress: actual.motionValue(0) }),
     useTransform: () => actual.motionValue(1),
-    motion: new Proxy({}, {
-      get: (_target, tag: string) => forwardRef((props: Record<string, unknown>, ref: Ref<HTMLElement>) => {
+    // Cache one component per tag: a new forwardRef on every access is a new component type each
+    // render, which remounts the subtree (a test-only artifact that made tests flaky).
+    motion: new Proxy({} as Record<string, unknown>, {
+      get: (cache, tag: string) => cache[tag] ??= forwardRef((props: Record<string, unknown>, ref: Ref<HTMLElement>) => {
         const { initial, animate, exit, whileInView, whileHover, whileTap, viewport, transition, variants, layout, ...domProps } = props;
         void initial; void animate; void exit; void whileInView; void whileHover; void whileTap; void viewport; void transition; void variants; void layout;
         return createElement(tag, { ...domProps, ref });

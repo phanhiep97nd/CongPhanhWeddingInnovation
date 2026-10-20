@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { api, json } from "../../lib/api";
 import type { AdminUser, Order, Plan, WeddingSummary } from "../../lib/types";
 import { money, planName } from "../../components/billing/UpgradePanel";
+import { useConfirmSheet } from "../../components/ConfirmSheet";
 
 interface Detail { user: AdminUser; weddings: WeddingSummary[]; orders: Order[]; }
 
@@ -11,21 +12,23 @@ export default function UserDetail() {
   const [detail, setDetail] = useState<Detail | null>(null);
   const [error, setError] = useState("");
   const [version, setVersion] = useState(0);
+  const { confirm, sheet } = useConfirmSheet();
   useEffect(() => { api<Detail>(`/admin/users/${id}`, {}, true).then(setDetail).catch(cause => setError((cause as Error).message)); }, [id, version]);
 
   async function patchUser(patch: { role?: string; status?: string }) {
-    if (!detail || !window.confirm(`Cập nhật quyền hoặc trạng thái của ${detail.user.email}?`)) return;
+    if (!detail || !await confirm(`Cập nhật quyền hoặc trạng thái của ${detail.user.email}?`)) return;
     try { await api(`/admin/users/${id}`, json("PATCH", patch), true); setVersion(value => value + 1); }
     catch (cause) { setError((cause as Error).message); }
   }
 
   async function changePlan(wedding: WeddingSummary, plan: Plan) {
-    if (plan === wedding.plan || !window.confirm(`Đổi gói thiệp ${wedding.slug} sang ${planName(plan)}?`)) return;
+    if (plan === wedding.plan || !await confirm(`Đổi gói thiệp ${wedding.slug} sang ${planName(plan)}?`)) return;
     try { await api(`/admin/weddings/${wedding.id}/plan`, json("PATCH", { plan }), true); setVersion(value => value + 1); }
     catch (cause) { setError((cause as Error).message); }
   }
 
   return <div className="editor-stack">
+    {sheet}
     <Link to="/admin/users">← Người dùng</Link>
     {error && <p role="alert" className="error">{error}</p>}
     {!detail && !error && <p>Đang tải chi tiết…</p>}

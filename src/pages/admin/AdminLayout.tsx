@@ -1,5 +1,6 @@
 import { Link, NavLink, Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../../lib/auth";
+import { BRAND_NAME } from "../../lib/brand";
 
 export default function AdminLayout() {
   const { user, loading } = useAuth();
@@ -9,7 +10,7 @@ export default function AdminLayout() {
   if (user.role !== "admin") return <Navigate to="/dashboard" replace />;
   return <main className="admin-page">
     <header className="dash-header admin-header">
-      <Link className="brand" to="/admin">Quản trị</Link>
+      <Link className="brand" to="/admin">{BRAND_NAME} · Quản trị</Link>
       <nav aria-label="Quản trị">
         <NavLink to="/admin" end>Tổng quan</NavLink>
         <NavLink to="/admin/users">Người dùng</NavLink>
