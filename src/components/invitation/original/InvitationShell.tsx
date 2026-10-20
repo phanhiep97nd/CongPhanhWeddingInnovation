@@ -2,6 +2,7 @@
 // Keep JSX structure and classNames; only swap hardcoded content for wedding data.
 
 import React, { useState, useEffect, useMemo, useRef } from "react";
+import GiftBoxSection from "./GiftBoxSection";
 import { motion, AnimatePresence, useScroll, useTransform, useInView } from "motion/react";
 import {
   Heart, BookOpen, Calendar, Image as ImageIcon,
@@ -261,6 +262,7 @@ export default function InvitationShell({ wedding, guest, slug }: { wedding: Wed
             case "rooms": return <div key={id} id={id} className="bg-white"><InfoSection mode="rooms" refreshKey={roomsRefreshKey} /></div>;
             case "photoWall": return <div key={id} id={id} className="bg-white"><InfoSection mode="photoWall" guestName={guestInfo?.invitationName} /></div>;
             case "dressCode": return <div key={id} id={id} className="bg-white"><InfoSection mode="dressCode" /></div>;
+            case "giftBox": return <div key={id} id={id}><GiftBoxSection wedding={wedding} /></div>;
             default: {
               const custom = wedding.customSections.find((item) => section.key === `custom:${item.id}`);
               return custom ? <div key={id} id={id} className="bg-petal"><CustomSection section={custom} /></div> : null;
@@ -302,6 +304,7 @@ export default function InvitationShell({ wedding, guest, slug }: { wedding: Wed
           <p className="text-[10px] text-secondary/40 tracking-[0.3em] uppercase">
             © {wedding.eventDate?.slice(0, 4) || new Date().getFullYear()} {COUPLE.short} — Made with love
           </p>
+          {wedding.showBranding && <a href="/" className="font-serif text-xs text-secondary/60 underline underline-offset-4">Tạo bởi Thiệp Cưới</a>}
         </div>
       </footer>
 

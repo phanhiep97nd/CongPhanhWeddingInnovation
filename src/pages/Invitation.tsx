@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { api, ApiError } from "../lib/api";
 import type { PublicGuest, Wedding } from "../lib/types";
-import InvitationShell from "../components/invitation/original/InvitationShell";
+const ClassicInvitation = lazy(() => import("../components/invitation/original/InvitationShell"));
+const MinimalInvitation = lazy(() => import("../components/invitation/minimal/InvitationShell"));
 
 export default function Invitation() {
   const { slug = "", code } = useParams();
@@ -20,18 +21,20 @@ export default function Invitation() {
         ? api<PublicGuest>(`/public/weddings/${encodeURIComponent(slug)}/guests/${encodeURIComponent(code)}`)
         : Promise.resolve(null),
     ]).then(([nextWedding, nextGuest]) => {
+      // Set data and loading in the same tick: a separate .finally() caused an extra render
+      // that briefly showed the loading screen again on slow phones.
       if (active) {
         setWedding(nextWedding);
         setGuest(nextGuest);
+        setLoading(false);
       }
     }).catch((cause) => {
       if (active) {
         setError(cause instanceof ApiError && cause.status === 404
           ? "Không tìm thấy thiệp cưới này."
-          : (cause as Error).message);
-      }
-    }).finally(() => {
-      if (active) {
+          : cause instanceof ApiError && cause.status === 410
+            ? "Thiệp cưới này đã hết hạn."
+            : (cause as Error).message);
         setLoading(false);
       }
     });
@@ -63,5 +66,8 @@ export default function Invitation() {
       </main>
     );
   }
-  return <InvitationShell wedding={wedding} guest={guest} slug={slug} />;
+  const Shell = wedding.template === "minimal" ? MinimalInvitation : ClassicInvitation;
+  return <Suspense fallback={<p className="page-loading">Đang mở thiệp...</p>}>
+    <Shell wedding={wedding} guest={guest} slug={slug} />
+  </Suspense>;
 }

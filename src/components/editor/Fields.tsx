@@ -1,4 +1,8 @@
 import type { Wedding } from "../../lib/types";
+import { useEffect, useRef, useState } from "react";
+import { api } from "../../lib/api";
+import { uploadAudio } from "../../lib/images";
+import LockedFeature from "../billing/LockedFeature";
 type Change = (patch: Partial<Wedding>) => void;
 
 export function Field({ label, value, onChange, type = "text", textarea = false }: { label: string; value: string; onChange: (value: string) => void; type?: string; textarea?: boolean; key?: string; }) {
@@ -8,7 +12,31 @@ export function Field({ label, value, onChange, type = "text", textarea = false 
   </label>;
 }
 
-export function InfoTab({ wedding: w, change }: { wedding: Wedding; change: Change; }) {
+export function InfoTab({ wedding: w, change, onUpgrade }: { wedding: Wedding; change: Change; onUpgrade: () => void; }) {
+  const [slug, setSlug] = useState(w.slug);
+  const originalSlug = useRef(w.slug);
+  const [available, setAvailable] = useState<string>("");
+  const [audioBusy, setAudioBusy] = useState(false);
+  const [audioError, setAudioError] = useState("");
+  useEffect(() => { setSlug(w.slug); }, [w.slug]);
+  useEffect(() => {
+    if (slug === originalSlug.current || !w.entitlements?.permanent) return;
+    const timer = setTimeout(() => {
+      api<{ available: boolean; valid: boolean }>(`/weddings/slug-available?slug=${encodeURIComponent(slug)}`, {}, true)
+        .then(result => setAvailable(!result.valid ? "Đường dẫn không hợp lệ" : result.available ? "Đường dẫn còn trống" : "Đường dẫn đã được dùng"))
+        .catch(() => setAvailable("Không thể kiểm tra đường dẫn"));
+    }, 350);
+    return () => clearTimeout(timer);
+  }, [slug, w.entitlements?.permanent]);
+
+  async function handleAudio(file: File) {
+    setAudioBusy(true);
+    setAudioError("");
+    try { change({ musicUrl: await uploadAudio(file) }); }
+    catch (cause) { setAudioError((cause as Error).message); }
+    finally { setAudioBusy(false); }
+  }
+
   return <div className="form-grid">
     <Field label="Tên chú rể" value={w.couple.groom} onChange={groom => change({ couple: { ...w.couple, groom } })} />
     <Field label="Tên cô dâu" value={w.couple.bride} onChange={bride => change({ couple: { ...w.couple, bride } })} />
@@ -20,7 +48,26 @@ export function InfoTab({ wedding: w, change }: { wedding: Wedding; change: Chan
     <Field label="Địa chỉ" value={w.venue.address} onChange={address => change({ venue: { ...w.venue, address } })} />
     <Field label="Liên kết bản đồ" type="url" value={w.venue.mapUrl} onChange={mapUrl => change({ venue: { ...w.venue, mapUrl } })} />
     <Field label="Nhóm Zalo" type="url" value={w.zaloGroupLink} onChange={zaloGroupLink => change({ zaloGroupLink })} />
-    <Field label="Nhạc nền" type="url" value={w.musicUrl} onChange={musicUrl => change({ musicUrl })} />
+    <div className="full editor-stack">
+      <label>Đường dẫn thiệp
+        <input value={slug} disabled={!w.entitlements?.permanent} onChange={event => {
+          const next = event.target.value.toLowerCase();
+          setSlug(next);
+          change({ slug: next });
+        }} />
+      </label>
+      {w.entitlements?.permanent ? <p role="status">{available} Đường dẫn cũ vẫn tiếp tục hoạt động sau khi đổi.</p> : <LockedFeature plan="premium" label="Đổi đường dẫn thiệp" onUpgrade={onUpgrade} />}
+    </div>
+    <div className="full editor-stack">
+      <Field label="Nhạc nền (URL)" type="url" value={w.musicUrl} onChange={musicUrl => change({ musicUrl })} />
+      <label>Tải tệp nhạc (tối đa 15 MB)
+        <input type="file" accept="audio/*" disabled={audioBusy} onChange={event => { const file = event.target.files?.[0]; if (file) void handleAudio(file); }} />
+      </label>
+      {audioBusy && <p role="status">Đang tải nhạc…</p>}
+      {audioError && <p role="alert" className="error">{audioError}</p>}
+      {w.musicUrl && <audio controls src={w.musicUrl} />}
+      {!w.entitlements?.customMusic && <LockedFeature plan="premium" label="Nhạc nền riêng" onUpgrade={onUpgrade} />}
+    </div>
     <label>Màu chủ đạo
       <input type="color" value={w.theme.primary || "#b76e79"} onChange={e => change({ theme: { primary: e.target.value } })} />
     </label>

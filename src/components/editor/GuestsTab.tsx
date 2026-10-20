@@ -1,12 +1,18 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
-import { api, json } from "../../lib/api";
+import { api, json, PlanRequiredError } from "../../lib/api";
 import { guestsCsv } from "../../lib/csv";
 import { parseBulkGuests } from "../../lib/guests";
 import { inviteLink } from "../../lib/links";
-import type { Guest, Stats } from "../../lib/types";
+import type { Guest, Stats, Wedding } from "../../lib/types";
 import { Field } from "./Fields";
+import LockedFeature from "../billing/LockedFeature";
+import GuestQrDialog from "./GuestQrDialog";
+import { exportGuestExcel } from "../../lib/excel";
+import { Link } from "react-router-dom";
 
-export default function GuestsTab({ weddingId, slug }: { weddingId: string; slug: string; }) {
+export default function GuestsTab({ wedding, weddingId: legacyId, slug: legacySlug, onUpgrade = () => {} }: { wedding?: Wedding; weddingId?: string; slug?: string; onUpgrade?: () => void; }) {
+  const weddingId = wedding?.id || legacyId || "";
+  const slug = wedding?.slug || legacySlug || "";
   const [guests, setGuests] = useState<Guest[]>([]);
   const [stats, setStats] = useState<Stats | null>(null);
   const [search, setSearch] = useState("");
@@ -17,6 +23,8 @@ export default function GuestsTab({ weddingId, slug }: { weddingId: string; slug
   const [bulk, setBulk] = useState("");
   const [editing, setEditing] = useState<Guest | null>(null);
   const [message, setMessage] = useState("");
+  const [lockedPlan, setLockedPlan] = useState<"basic" | "premium" | null>(null);
+  const [qrGuest, setQrGuest] = useState<Guest | null>(null);
   const base = `/weddings/${weddingId}`;
   async function refresh() {
     const [list, counts] = await Promise.all([api<Guest[]>(`${base}/guests`, {}, true), api<Stats>(`${base}/stats`, {}, true)]);
@@ -38,7 +46,8 @@ export default function GuestsTab({ weddingId, slug }: { weddingId: string; slug
       await refresh();
       setMessage("Đã thêm khách mời.");
     } catch (err) {
-      setMessage((err as Error).message);
+      if (err instanceof PlanRequiredError) setLockedPlan(err.requiredPlan);
+      else setMessage((err as Error).message);
     }
   }
   async function addBulk() {
@@ -47,13 +56,19 @@ export default function GuestsTab({ weddingId, slug }: { weddingId: string; slug
       setMessage("Nhập từ 1 đến 500 khách.");
       return;
     }
+    if (wedding?.limits?.guests != null && guests.length + parsed.length > wedding.limits.guests) {
+      setMessage(`Danh sách sẽ vượt giới hạn ${wedding.limits.guests} khách của gói hiện tại. Hãy nâng cấp trước khi thêm.`);
+      setLockedPlan("basic");
+      return;
+    }
     try {
       await api<Guest[]>(`${base}/guests/bulk`, json("POST", { guests: parsed }), true);
       setBulk("");
       await refresh();
       setMessage(`Đã thêm ${parsed.length} khách.`);
     } catch (err) {
-      setMessage((err as Error).message);
+      if (err instanceof PlanRequiredError) setLockedPlan(err.requiredPlan);
+      else setMessage((err as Error).message);
     }
   }
   async function saveGuest(e: FormEvent) {
@@ -95,6 +110,9 @@ export default function GuestsTab({ weddingId, slug }: { weddingId: string; slug
     URL.revokeObjectURL(url);
   }
   return <div className="editor-stack">
+    <p>{guests.length}/{wedding?.limits?.guests ?? "∞"} khách</p>
+    {wedding?.limits?.guests != null && guests.length >= wedding.limits.guests && <LockedFeature plan="basic" label="Thêm khách không giới hạn" onUpgrade={onUpgrade} />}
+    {lockedPlan && <LockedFeature plan={lockedPlan} onUpgrade={onUpgrade} />}
     <div className="stats">
       {stats && <>
         <span>Tổng:{" "}
@@ -140,7 +158,11 @@ export default function GuestsTab({ weddingId, slug }: { weddingId: string; slug
       </button>
       <button className="button-outline" onClick={exportCsv}>Xuất CSV
       </button>
+      {wedding?.entitlements?.excelExport && <button className="button-outline" onClick={() => void exportGuestExcel(guests, window.location.origin, slug).catch(cause => setMessage((cause as Error).message))}>Xuất Excel</button>}
+      {wedding?.entitlements?.guestQr && <Link className="button-outline" to={`/dashboard/${weddingId}/qr`}>In mã QR</Link>}
     </div>
+    {wedding && !wedding.entitlements?.excelExport && <LockedFeature plan="basic" label="Xuất Excel" onUpgrade={onUpgrade} />}
+    {wedding && !wedding.entitlements?.guestQr && <LockedFeature plan="basic" label="Mã QR khách mời" onUpgrade={onUpgrade} />}
     {message && <p role="status">
       {message}
     </p>}
@@ -178,6 +200,7 @@ export default function GuestsTab({ weddingId, slug }: { weddingId: string; slug
           </button>
           <button onClick={() => setEditing(g)}>Sửa
           </button>
+          {wedding?.entitlements?.guestQr && <button onClick={() => setQrGuest(g)}>Mã QR</button>}
           <button onClick={() => void remove(g)}>Xóa
           </button>
         </div>
@@ -212,5 +235,6 @@ export default function GuestsTab({ weddingId, slug }: { weddingId: string; slug
         </div>
       </form>
     </div>}
+    {qrGuest && <GuestQrDialog name={qrGuest.invitationName} link={inviteLink(window.location.origin, slug, qrGuest.code)} onClose={() => setQrGuest(null)} />}
   </div>;
 }

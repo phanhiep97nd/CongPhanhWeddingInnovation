@@ -1,0 +1,22 @@
+.minimal-invite { background: #f4f0e9; color: #292b25; font-family: Georgia, serif; }
+.minimal-invite section { max-width: 900px; margin: auto; padding: 6rem 1.25rem; border-bottom: 1px solid #c8c5bc; }
+.minimal-invite h1, .minimal-invite h2 { font-weight: 400; letter-spacing: -.025em; }
+.minimal-invite h1 { font-size: clamp(3.5rem, 11vw, 7rem); line-height: .95; }
+.minimal-invite h1 span { font-style: italic; font-size: .65em; }
+.minimal-invite h2 { font-size: clamp(2.6rem, 6vw, 4.8rem); margin: 0 0 2rem; }
+.minimal-hero { min-height: 90dvh; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; }
+.minimal-hero img { width: 100%; height: 90dvh; object-fit: cover; }
+.minimal-hero > div { padding: 3rem; }
+.minimal-prose { white-space: pre-line; max-width: 65ch; line-height: 1.8; }
+.minimal-story-image { width: min(100%, 560px); margin-bottom: 2rem; }
+.minimal-gallery { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; }
+.minimal-gallery img { width: 100%; aspect-ratio: 4/5; object-fit: cover; }
+.minimal-gallery figcaption { padding-top: .5rem; }
+.minimal-invite ol { list-style: none; padding: 0; }
+.minimal-invite ol li { display: grid; grid-template-columns: 8rem 1fr; padding: 1rem 0; border-top: 1px solid #c8c5bc; }
+.minimal-invite a { color: inherit; text-decoration: underline; text-underline-offset: .3em; }
+.minimal-invite footer { text-align: center; padding: 4rem 1rem; }
+.minimal-swatches { display: flex; gap: .8rem; }
+.minimal-swatches span { width: 3rem; height: 3rem; border-radius: 50%; border: 1px solid #777; }
+.minimal-invite audio { position: fixed; bottom: 1rem; right: 1rem; max-width: min(18rem, 80vw); }
+@media (max-width: 650px) { .minimal-hero { display: block; } .minimal-hero img { height: 55dvh; } .minimal-hero > div { padding: 3rem 1.25rem; } .minimal-invite section { padding: 4rem 1.25rem; } .minimal-gallery { gap: .6rem; } }

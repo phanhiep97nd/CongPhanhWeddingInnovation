@@ -52,3 +52,19 @@ export async function uploadImage(file: File, onProgress?: (percent: number) => 
     xhr.send(form);
   });
 }
+
+export async function uploadAudio(file: File): Promise<string> {
+  if (!file.type.startsWith("audio/") || file.size > 15 * 1024 * 1024) {
+    throw new Error("Chọn tệp âm thanh không quá 15 MB.");
+  }
+  const cloud = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+  const preset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+  if (!cloud || !preset) throw new Error("Chưa cấu hình Cloudinary.");
+  const form = new FormData();
+  form.append("file", file);
+  form.append("upload_preset", preset);
+  const response = await fetch(`https://api.cloudinary.com/v1_1/${encodeURIComponent(cloud)}/video/upload`, { method: "POST", body: form });
+  const data = await response.json();
+  if (!response.ok || !data.secure_url) throw new Error(data.error?.message || "Tải nhạc thất bại.");
+  return data.secure_url;
+}

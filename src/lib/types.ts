@@ -1,4 +1,75 @@
-export type SectionKey = "story" | "timeline" | "gallery" | "info" | "rsvp" | "photoWall" | "rooms" | "dressCode";
+export type SectionKey = "story" | "timeline" | "gallery" | "info" | "rsvp" | "photoWall" | "rooms" | "dressCode" | "giftBox";
+export type Plan = "free" | "basic" | "premium";
+export type Template = "classic" | "minimal";
+export type FeatureKey = "unlimitedGuests" | "removeBranding" | "largeGallery" | "excelExport" | "guestQr" | "giftBox" | "photoWall" | "customMusic" | "permanent" | "premiumTemplates";
+export type Entitlements = Record<FeatureKey, boolean>;
+
+export interface GiftAccount {
+  id: string;
+  label: string;
+  bankBin: string;
+  bankName: string;
+  accountNumber: string;
+  accountName: string;
+}
+
+export interface GiftBox {
+  note: string;
+  accounts: GiftAccount[];
+}
+
+export interface Prices { basic: number; premium: number; }
+export interface Limits { guests: number | null; gallery: number; }
+export interface Usage { guests: number; }
+export interface Settings extends PricesLike {
+  freeGuestLimit: number;
+  freeGalleryLimit: number;
+  paidGalleryLimit: number;
+  freeExpiryDays: number;
+}
+interface PricesLike { prices: Prices; }
+
+export interface Pricing extends Omit<Settings, "freeExpiryDays"> {
+  features: { key: FeatureKey; label: string; plan: "basic" | "premium" }[];
+}
+
+export interface Order {
+  id: string;
+  orderCode: number;
+  wedding: string;
+  user: string;
+  plan: "basic" | "premium";
+  amount: number;
+  status: "pending" | "paid" | "cancelled" | "expired";
+  method: "payos" | "manual";
+  checkoutUrl: string;
+  qrCode: string;
+  paymentLinkId: string;
+  paidAt: string | null;
+  createdAt: string;
+  userEmail?: string;
+  weddingSlug?: string;
+}
+
+export interface AdminStats {
+  users: number;
+  lockedUsers: number;
+  weddings: number;
+  guests: number;
+  paidWeddings: number;
+  revenue: number;
+  revenueByMonth: { month: string; amount: number; orders: number }[];
+  planCounts: Record<Plan, number>;
+}
+
+export interface AdminUser extends User {
+  status: "active" | "locked";
+  createdAt: string;
+  weddingCount: number;
+  paidAmount: number;
+}
+
+export interface PageResult<T> { items: T[]; total: number; page: number; limit: number; }
 
 export interface Section {
   key: string;
@@ -34,6 +105,17 @@ export interface Wedding {
   theme: { primary: string };
   createdAt: string;
   updatedAt: string;
+  plan?: Plan;
+  planActivatedAt?: string | null;
+  template?: Template;
+  giftBox?: GiftBox;
+  slugAliases?: string[];
+  entitlements?: Entitlements;
+  limits?: Limits;
+  usage?: Usage;
+  expiresAt?: string | null;
+  prices?: Prices;
+  showBranding?: boolean;
 }
 
 export interface WeddingSummary {
@@ -45,12 +127,16 @@ export interface WeddingSummary {
   published: boolean;
   guestCount: number;
   updatedAt: string;
+  plan?: Plan;
+  expiresAt?: string | null;
 }
 
 export interface User {
   id: string;
   email: string;
   name: string;
+  role?: "user" | "admin";
+  status?: "active" | "locked";
 }
 
 export interface AuthResponse {

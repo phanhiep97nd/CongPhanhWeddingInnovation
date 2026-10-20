@@ -1,9 +1,64 @@
-.editor-title {
+.editor-sticky-header, .dashboard > .dash-header, .admin-header {
   position: sticky;
   top: 0;
-  z-index: 10;
-  padding: 1rem 0;
-  background: #fdf5f6;
+  z-index: 80;
+  padding-top: max(1rem, env(safe-area-inset-top));
+  background: #fff9f9;
+}
+
+.editor-title { padding-top: 1.5rem; }
+
+.locked-feature {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  flex-wrap: wrap;
+  color: #4c6635;
+  background: #f9e8ea;
+  border-radius: .8rem;
+  padding: .55rem .8rem;
+  font-size: .86rem;
+}
+
+.plan-grid, .template-picker { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.plan-grid section { display: grid; align-content: start; gap: .8rem; }
+.plan-grid ul { padding-left: 1.2rem; }
+.plan-price { font: 2.4rem var(--font-cormorant); margin: 0; }
+.order-history { list-style: none; padding: 0; }
+.order-history li { display: flex; justify-content: space-between; gap: 1rem; border-top: 1px solid #e8c7cb; padding: .8rem 0; }
+.template-picker button { display: grid; gap: .7rem; border: 1px solid #e8c7cb; border-radius: 1rem; padding: .8rem; background: white; text-align: left; }
+.template-picker button.selected { border: 2px solid #a85e65; }
+.template-thumb { display: grid; place-items: center; aspect-ratio: 4 / 3; font: italic 2rem var(--font-cormorant); }
+.classic-thumb { background: #f9e8ea; color: #a85e65; }
+.minimal-thumb { background: #f4f0e9; color: #292b25; }
+.dress-color-row { display: grid; grid-template-columns: 5rem minmax(0, 1fr) auto; align-items: end; gap: .7rem; }
+.color-swatch-label input { width: 3rem; height: 3rem; padding: 0; border: 0; background: none; cursor: pointer; }
+.dress-preview { display: flex; flex-wrap: wrap; gap: .5rem; }
+.dress-preview span { width: 2.5rem; height: 2.5rem; border-radius: 50%; border: 1px solid #777; }
+.qr-image { width: min(100%, 320px); margin: auto; }
+.qr-link { overflow-wrap: anywhere; }
+.qr-print-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+.qr-print-card { border: 1px solid #b6b6b6; padding: 1rem; text-align: center; break-inside: avoid; display: grid; gap: .5rem; }
+.qr-print-card img { width: 100%; max-width: 200px; margin: auto; }
+.qr-print-card small { overflow-wrap: anywhere; }
+.admin-header nav { display: flex; flex-wrap: wrap; gap: 1rem; }
+.admin-header nav .active { font-weight: 700; text-decoration: underline; }
+.admin-content { padding-top: 2rem; padding-bottom: 4rem; }
+.admin-stats { margin: 0; }
+.admin-stats > div, .admin-row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); align-items: center; gap: 1rem; border-bottom: 1px solid #e8c7cb; padding: .8rem 0; }
+.admin-stats > div { grid-template-columns: 1fr auto; }
+.admin-stats dd { margin: 0; font-weight: 700; }
+.admin-table { width: 100%; border-collapse: collapse; }
+.admin-table th, .admin-table td { padding: .7rem; border-bottom: 1px solid #e8c7cb; text-align: left; }
+.admin-row > *, .admin-row p, .order-history li { min-width: 0; overflow-wrap: anywhere; }
+.admin-content { min-width: 0; }
+
+@media print {
+  @page { size: A4; margin: 12mm; }
+  .no-print { display: none !important; }
+  .qr-print-page { max-width: none; padding: 0; }
+  .qr-print-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5mm; }
+  .qr-print-card { font-size: 10pt; }
 }
 
 .editor-title .button,
@@ -19,6 +74,10 @@
   .editor .dash-header-title {
     display: none;
   }
+  .editor-sticky-header { gap: .4rem; padding-inline: .5rem; font-size: .72rem; }
+  .editor-sticky-header .button { padding: .55rem; font-size: .72rem; }
+  .editor-back span { display: none; }
+  .editor-sticky-header .save-state { display: none; }
   .editor-title {
     display: flex;
     flex-wrap: wrap;
@@ -31,6 +90,14 @@
   .editor-title h1 {
     font-size: clamp(2rem, 9vw, 2.6rem);
   }
+}
+
+@media (max-width: 700px) {
+  .plan-grid, .template-picker { grid-template-columns: minmax(0, 1fr); }
+  .admin-header { align-items: flex-start; flex-wrap: wrap; }
+  .admin-header nav { order: 3; width: 100%; gap: .7rem; font-size: .85rem; }
+  .admin-row { grid-template-columns: minmax(0, 1fr); }
+  .qr-print-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (min-width: 900px) {
