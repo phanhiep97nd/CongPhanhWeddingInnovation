@@ -20,6 +20,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.18.4",
+    "three": "^0.186.1",
     "vite": "^6.2.0",
     "write-excel-file": "^4.1.1"
   },
@@ -29,6 +30,7 @@
     "@testing-library/user-event": "^14.6.8",
     "@types/node": "^22.14.0",
     "@types/qrcode": "^1.5.6",
+    "@types/three": "^0.186.0",
     "@vitejs/plugin-legacy": "^6.1.1",
     "autoprefixer": "^10.4.21",
     "jsdom": "^29.1.1",

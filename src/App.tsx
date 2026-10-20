@@ -14,6 +14,7 @@ const AdminUsers = lazy(() => import("./pages/admin/Users"));
 const AdminUserDetail = lazy(() => import("./pages/admin/UserDetail"));
 const AdminOrders = lazy(() => import("./pages/admin/Orders"));
 const AdminSettings = lazy(() => import("./pages/admin/Settings"));
+const Hy3dPlayground = lazy(() => import("./pages/Hy3dPlayground"));
 
 export function Home() {
   const { search } = useLocation();
@@ -46,6 +47,7 @@ export default function App() {
             <Route path="orders" element={<AdminOrders />} />
             <Route path="settings" element={<AdminSettings />} />
           </Route>
+          {import.meta.env.DEV && <Route path="/__hy3d" element={<Hy3dPlayground />} />}
           <Route path="/w/:slug" element={<Invitation />} />
           <Route path="/w/:slug/:code" element={<Invitation />} />
           <Route path="*" element={<main className="shell">
