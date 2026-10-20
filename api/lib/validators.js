@@ -25,13 +25,34 @@ function timeline(value) {
 }
 
 function gallery(value) {
-  return items(value, 50, {
+  return items(value, 1000, {
     id: item => string(item, 100),
     url,
     title: item => string(item, 200),
     desc: item => string(item, 1000),
     full: bool
   });
+}
+
+function giftBox(value) {
+  const data = shape(value, {
+    note: item => string(item, 300),
+    accounts: accounts => items(accounts, 4, {
+      id: item => string(item, 100),
+      label: item => string(item, 40),
+      bankBin: item => {
+        if (typeof item !== 'string' || !/^\d{6}$/.test(item)) fail('Mã ngân hàng không hợp lệ');
+        return item;
+      },
+      bankName: item => string(item, 100),
+      accountNumber: item => {
+        if (typeof item !== 'string' || !/^[0-9A-Za-z]{4,30}$/.test(item)) fail('Số tài khoản không hợp lệ');
+        return item;
+      },
+      accountName: item => string(item, 60)
+    })
+  });
+  return data;
 }
 
 function sections(value) {
@@ -67,6 +88,11 @@ const weddingFields = {
   }),
   timeline,
   gallery,
+  giftBox,
+  template: value => {
+    if (!['classic', 'minimal'].includes(value)) fail('Mẫu thiệp không hợp lệ');
+    return value;
+  },
   musicUrl: url,
   zaloGroupLink: url,
   dressCode: value => shape(value, {

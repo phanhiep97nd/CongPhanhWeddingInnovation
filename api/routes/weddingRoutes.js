@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const crypto = require('node:crypto');
 const Wedding = require('../models/Wedding');
 const Guest = require('../models/Guest');
 const Photo = require('../models/Photo');
@@ -8,6 +9,9 @@ const { fail, pick } = require('../lib/common');
 const { serialize } = require('../lib/serialize');
 const { weddingFields, normalizeSections } = require('../lib/validators');
 const guestRoutes = require('./guestRoutes');
+const orderRoutes = require('./orderRoutes');
+const { getSettings } = require('../models/Settings');
+const { entitlementsFor, limitsFor, expiresAt, paywall } = require('../lib/plans');
 
 const router = express.Router();
 router.use(auth);
@@ -35,6 +39,25 @@ function prepare(body, current) {
   return data;
 }
 
+async function ownerView(wedding) {
+  const settings = await getSettings();
+  const guests = await Guest.countDocuments({ wedding: wedding._id });
+  return {
+    ...serialize(wedding, ['owner']),
+    sections: normalizeSections(wedding.sections || [], wedding.customSections || []),
+    entitlements: entitlementsFor(wedding.plan),
+    limits: limitsFor(wedding.plan, settings),
+    usage: { guests },
+    expiresAt: expiresAt(wedding, settings),
+    prices: settings.prices
+  };
+}
+
+function randomSuffix() {
+  const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  return Array.from(crypto.randomBytes(4), byte => characters[byte % characters.length]).join('');
+}
+
 // ─── WEDDING COLLECTION ───
 router.get('/', async (request, response, next) => {
   try {
@@ -44,6 +67,7 @@ router.get('/', async (request, response, next) => {
       { $group: { _id: '$wedding', count: { $sum: 1 } } }
     ]);
     const countByWedding = new Map(counts.map(item => [String(item._id), item.count]));
+    const settings = await getSettings();
 
     response.json(weddings.map(wedding => ({
       id: String(wedding._id),
@@ -52,6 +76,8 @@ router.get('/', async (request, response, next) => {
       dateText: wedding.dateText,
       coverImage: wedding.coverImage,
       published: wedding.published,
+      plan: wedding.plan || 'free',
+      expiresAt: expiresAt(wedding, settings),
       guestCount: countByWedding.get(String(wedding._id)) || 0,
       updatedAt: wedding.updatedAt
     })));
@@ -68,7 +94,7 @@ router.get('/slug-available', async (request, response, next) => {
     } catch {
       return response.json({ available: false, valid: false });
     }
-    response.json({ available: !await Wedding.exists({ slug }), valid: true });
+    response.json({ available: !await Wedding.exists({ $or: [{ slug }, { slugAliases: slug }] }), valid: true });
   } catch (error) {
     next(error);
   }
@@ -77,8 +103,27 @@ router.get('/slug-available', async (request, response, next) => {
 router.post('/', async (request, response, next) => {
   try {
     if (!Object.hasOwn(request.body || {}, 'slug')) fail('Đường dẫn là bắt buộc');
-    const wedding = await Wedding.create({ owner: request.user.sub, ...prepare(request.body) });
-    response.status(201).json(serialize(wedding, ['owner']));
+    const data = prepare(request.body);
+    if (data.template && data.template !== 'classic') {
+      const error = paywall('premiumTemplates');
+      return response.status(error.status).json(error.body);
+    }
+    if (data.gallery && data.gallery.length > (await getSettings()).freeGalleryLimit) {
+      const error = paywall('largeGallery');
+      return response.status(error.status).json(error.body);
+    }
+    const requestedSlug = data.slug;
+    for (let attempt = 0; attempt < 5; attempt++) {
+      data.slug = `${requestedSlug}-${randomSuffix()}`;
+      if (await Wedding.exists({ $or: [{ slug: data.slug }, { slugAliases: data.slug }] })) continue;
+      try {
+        const wedding = await Wedding.create({ owner: request.user.sub, ...data });
+        return response.status(201).json(await ownerView(wedding));
+      } catch (error) {
+        if (error.code !== 11000 || attempt === 4) throw error;
+      }
+    }
+    return response.status(409).json({ message: 'Không thể tạo đường dẫn' });
   } catch (error) {
     next(error);
   }
@@ -87,21 +132,46 @@ router.post('/', async (request, response, next) => {
 router.use('/:id', owned);
 
 // ─── OWNED WEDDING ───
-router.get('/:id', (request, response) => response.json(serialize(request.wedding, ['owner'])));
+router.get('/:id', async (request, response, next) => {
+  try {
+    response.json(await ownerView(request.wedding));
+  } catch (error) {
+    next(error);
+  }
+});
 
 router.put('/:id', async (request, response, next) => {
   try {
     const data = prepare(request.body, request.wedding);
+    const entitlements = entitlementsFor(request.wedding.plan);
+    if (data.gallery && data.gallery.length > limitsFor(request.wedding.plan, await getSettings()).gallery) {
+      const error = paywall('largeGallery');
+      return response.status(error.status).json(error.body);
+    }
+    if (data.template && data.template !== 'classic' && !entitlements.premiumTemplates) {
+      const error = paywall('premiumTemplates');
+      return response.status(error.status).json(error.body);
+    }
+    if (data.slug && data.slug !== request.wedding.slug) {
+      if (!entitlements.permanent) {
+        const error = paywall('permanent');
+        return response.status(error.status).json(error.body);
+      }
+      if (await Wedding.exists({ _id: { $ne: request.wedding._id }, $or: [{ slug: data.slug }, { slugAliases: data.slug }] })) {
+        return response.status(409).json({ message: 'Đường dẫn đã tồn tại' });
+      }
+      request.wedding.slugAliases = [...(request.wedding.slugAliases || []).filter(alias => alias !== data.slug), request.wedding.slug].slice(-5);
+    }
     for (const [key, value] of Object.entries(data)) {
       if (value && typeof value === 'object' && !Array.isArray(value) && !(value instanceof Date)) {
         const current = request.wedding.get(key);
-        request.wedding.set(key, { ...(current.toObject?.() || current), ...value });
+        request.wedding.set(key, { ...(current?.toObject?.() || current || {}), ...value });
       } else {
         request.wedding.set(key, value);
       }
     }
     await request.wedding.save();
-    response.json(serialize(request.wedding, ['owner']));
+    response.json(await ownerView(request.wedding));
   } catch (error) {
     next(error);
   }
@@ -121,6 +191,7 @@ router.delete('/:id', async (request, response, next) => {
 });
 
 router.use('/:id/guests', guestRoutes);
+router.use('/:id/orders', orderRoutes);
 
 router.get('/:id/stats', async (request, response, next) => {
   try {

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { createRequire } from 'node:module';
-import { useDatabase, app, request, register, createWedding, authorized, Guest } from './helpers/db';
+import { useDatabase, app, request, register, createWedding, authorized, Guest, Wedding } from './helpers/db';
 
 const require = createRequire(import.meta.url);
 const { createGuests } = require('../lib/guestCodes');
@@ -40,7 +40,8 @@ describe('owner guest routes', () => {
   });
 
   it('inserts 200 guests with unique codes in input order', async () => {
-    const { account, base } = await setup();
+    const { account, wedding, base } = await setup();
+    await Wedding.updateOne({ _id: wedding.id }, { $set: { plan: 'basic' } });
     const guests = Array.from({ length: 200 }, (_, index) => ({ invitationName: `Guest ${index}` }));
     const result = await request(app).post(`${base}/bulk`).set(authorized(account.token)).send({ guests });
     expect(result.status).toBe(201);

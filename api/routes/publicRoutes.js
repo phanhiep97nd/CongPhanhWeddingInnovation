@@ -5,9 +5,11 @@ const Guest = require('../models/Guest');
 const Photo = require('../models/Photo');
 const { fail, string, pick, url } = require('../lib/common');
 const { serialize, publicGuest } = require('../lib/serialize');
-const { guestFields } = require('../lib/validators');
+const { guestFields, normalizeSections } = require('../lib/validators');
 const { createGuest } = require('../lib/guestCodes');
 const { ogImageUrl } = require('../lib/images');
+const { getSettings } = require('../models/Settings');
+const { FEATURES, entitlementsFor, isExpired } = require('../lib/plans');
 
 const router = express.Router();
 const limiter = rateLimit({
@@ -19,8 +21,12 @@ const limiter = rateLimit({
 
 async function loadWedding(request, response, next) {
   try {
-    const wedding = await Wedding.findOne({ slug: request.params.slug, published: true }).lean();
+    const wedding = await Wedding.findOne({ $or: [{ slug: request.params.slug }, { slugAliases: request.params.slug }], published: true }).lean();
     if (!wedding) return response.status(404).json({ message: 'Không tìm thấy thiệp cưới' });
+    const settings = await getSettings();
+    if (isExpired(wedding, settings)) {
+      return response.status(410).json({ message: 'Thiệp đã hết hạn', code: 'EXPIRED' });
+    }
     request.wedding = wedding;
     next();
   } catch (error) {
@@ -33,11 +39,45 @@ function findGuest(wedding, code) {
   return Guest.findOne({ wedding: wedding._id, ...selector });
 }
 
+router.get('/pricing', async (request, response, next) => {
+  try {
+    const settings = await getSettings();
+    const labels = {
+      unlimitedGuests: 'Không giới hạn khách mời', removeBranding: 'Ẩn thương hiệu',
+      largeGallery: 'Thư viện ảnh lớn', excelExport: 'Xuất Excel', guestQr: 'Mã QR khách mời',
+      giftBox: 'Hộp mừng cưới', photoWall: 'Tường ảnh', customMusic: 'Nhạc riêng',
+      permanent: 'Thiệp vĩnh viễn', premiumTemplates: 'Mẫu thiệp cao cấp'
+    };
+    response.json({
+      prices: settings.prices,
+      freeGuestLimit: settings.freeGuestLimit,
+      freeGalleryLimit: settings.freeGalleryLimit,
+      paidGalleryLimit: settings.paidGalleryLimit,
+      features: Object.entries(FEATURES).map(([key, plan]) => ({ key, label: labels[key], plan }))
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
 router.use('/weddings/:slug', loadWedding);
 
 // ─── PUBLIC WEDDING AND GUESTS ───
 router.get('/weddings/:slug', (request, response) => {
-  response.set('Cache-Control', 'public, max-age=60').json(serialize(request.wedding, ['owner']));
+  const wedding = serialize(request.wedding, ['owner', 'slugAliases', 'planActivatedAt']);
+  wedding.plan = wedding.plan || 'free';
+  wedding.sections = normalizeSections(wedding.sections || [], wedding.customSections || []);
+  const entitlements = entitlementsFor(wedding.plan);
+  wedding.entitlements = entitlements;
+  wedding.showBranding = !entitlements.removeBranding;
+  if (!entitlements.premiumTemplates) wedding.template = 'classic';
+  if (!entitlements.giftBox) wedding.giftBox = { note: '', accounts: [] };
+  else wedding.giftBox = wedding.giftBox || { note: '', accounts: [] };
+  if (!entitlements.customMusic) wedding.musicUrl = '';
+  if (!entitlements.photoWall) {
+    wedding.sections = wedding.sections.map(section => section.key === 'photoWall' ? { ...section, enabled: false } : section);
+  }
+  response.set('Cache-Control', 'public, max-age=60').json(wedding);
 });
 
 router.get('/weddings/:slug/guests/:code', async (request, response, next) => {
@@ -119,6 +159,9 @@ router.get('/weddings/:slug/photos', async (request, response, next) => {
 
 router.post('/weddings/:slug/photos', limiter, async (request, response, next) => {
   try {
+    if (!entitlementsFor(request.wedding.plan).photoWall) {
+      return response.status(403).json({ message: 'Tường ảnh chỉ dành cho gói Premium' });
+    }
     const data = pick(request.body, {
       url,
       caption: value => string(value, 500),

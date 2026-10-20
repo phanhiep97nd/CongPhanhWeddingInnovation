@@ -6,7 +6,8 @@
     "dev": "nodemon server.js",
     "test": "vitest run --pool=threads --maxWorkers=1",
     "seed": "node seed.js",
-    "migrate:legacy": "node scripts/migrate-legacy.js"
+    "migrate:legacy": "node scripts/migrate-legacy.js",
+    "make-admin": "node scripts/make-admin.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",

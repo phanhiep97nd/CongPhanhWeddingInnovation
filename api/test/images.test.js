@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { createRequire } from 'node:module';
-import { useDatabase, app, request, register, createWedding, authorized, Photo } from './helpers/db';
+import { useDatabase, app, request, register, createWedding, authorized, Photo, Wedding } from './helpers/db';
 
 const require = createRequire(import.meta.url);
 const { ogImageUrl } = require('../lib/images');
@@ -15,6 +15,7 @@ describe('photos and preview images', () => {
   it('rejects an insecure photo URL', async () => {
     const account = await register();
     const wedding = (await createWedding(account.token)).body;
+    await Wedding.updateOne({ _id: wedding.id }, { $set: { plan: 'premium' } });
     expect((await request(app).post(`/public/weddings/${wedding.slug}/photos`)
       .send({ url: 'http://example.com/p.jpg' })).status).toBe(400);
   });

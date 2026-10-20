@@ -8,7 +8,11 @@ const { string } = require('../lib/common');
 const router = express.Router();
 
 function userView(user) {
-  return { id: String(user._id), email: user.email, name: user.name };
+  return { id: String(user._id), email: user.email, name: user.name, role: user.role || 'user' };
+}
+
+function isAdminEmail(email) {
+  return (process.env.ADMIN_EMAILS || '').split(',').some(item => item.trim().toLowerCase() === email);
 }
 
 function sign(user) {
@@ -30,7 +34,7 @@ router.post('/register', async (request, response, next) => {
     }
     if (await User.exists({ email })) return response.status(409).json({ message: 'Email đã được sử dụng' });
 
-    const user = await User.create({ email, name, passwordHash: await bcrypt.hash(password, 10) });
+    const user = await User.create({ email, name, passwordHash: await bcrypt.hash(password, 10), role: isAdminEmail(email) ? 'admin' : 'user' });
     response.status(201).json({ token: sign(user), user: userView(user) });
   } catch (error) {
     next(error);
@@ -44,6 +48,13 @@ router.post('/login', async (request, response, next) => {
     const user = await User.findOne({ email });
     if (!user || typeof password !== 'string' || !await bcrypt.compare(password, user.passwordHash)) {
       return response.status(401).json({ message: 'Email hoặc mật khẩu không đúng' });
+    }
+    if (user.status === 'locked') {
+      return response.status(403).json({ code: 'LOCKED', message: 'Tài khoản đã bị khoá' });
+    }
+    if (isAdminEmail(email) && user.role !== 'admin') {
+      user.role = 'admin';
+      await user.save();
     }
     response.json({ token: sign(user), user: userView(user) });
   } catch (error) {

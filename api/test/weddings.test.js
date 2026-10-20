@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { useDatabase, app, request, register, createWedding, authorized, Guest, Photo } from './helpers/db';
+import { useDatabase, app, request, register, createWedding, authorized, Guest, Photo, Wedding } from './helpers/db';
 
 useDatabase();
 
@@ -22,26 +22,29 @@ describe('weddings', () => {
     expect(result.body).toEqual({ available: false, valid: false });
   });
 
-  it('returns unavailable for an existing slug', async () => {
+  it('keeps the requested free slug available after suffixing', async () => {
     const account = await register();
     await createWedding(account.token);
     const result = await request(app).get('/weddings/slug-available?slug=my-wedding').set(authorized(account.token));
-    expect(result.body).toEqual({ available: false, valid: true });
+    expect(result.body).toEqual({ available: true, valid: true });
   });
 
-  it('rejects duplicate slugs', async () => {
+  it('allows the same requested slug with different free suffixes', async () => {
     const first = await register();
     const second = await register('second@example.com');
-    await createWedding(first.token);
-    expect((await createWedding(second.token)).status).toBe(409);
+    const firstWedding = await createWedding(first.token);
+    const secondWedding = await createWedding(second.token);
+    expect(secondWedding.status).toBe(201);
+    expect(secondWedding.body.slug).not.toBe(firstWedding.body.slug);
   });
 
   it('returns 409 on a PUT slug conflict', async () => {
     const account = await register();
     const first = (await createWedding(account.token)).body;
-    await createWedding(account.token, { slug: 'other-wedding' });
+    const other = (await createWedding(account.token, { slug: 'other-wedding' })).body;
+    await Wedding.updateOne({ _id: first.id }, { $set: { plan: 'premium' } });
     const result = await request(app).put(`/weddings/${first.id}`)
-      .set(authorized(account.token)).send({ slug: 'other-wedding' });
+      .set(authorized(account.token)).send({ slug: other.slug });
     expect(result.status).toBe(409);
   });
 

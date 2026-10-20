@@ -4,6 +4,8 @@ const { fail, pick } = require('../lib/common');
 const { guestFields } = require('../lib/validators');
 const { serialize } = require('../lib/serialize');
 const { createGuest, createGuests } = require('../lib/guestCodes');
+const { getSettings } = require('../models/Settings');
+const { limitsFor, paywall } = require('../lib/plans');
 
 const router = express.Router({ mergeParams: true });
 
@@ -18,6 +20,11 @@ router.get('/', async (request, response, next) => {
 
 router.post('/', async (request, response, next) => {
   try {
+    const limit = limitsFor(request.wedding.plan, await getSettings()).guests;
+    if (limit !== null && await Guest.countDocuments({ wedding: request.wedding._id }) >= limit) {
+      const error = paywall('unlimitedGuests');
+      return response.status(error.status).json(error.body);
+    }
     const data = pick(request.body, guestFields);
     if (!data.invitationName) fail('Tên trên thiệp là bắt buộc');
     data.name = data.name || data.invitationName;
@@ -47,6 +54,12 @@ router.post('/bulk', async (request, response, next) => {
       data.name = data.name || data.invitationName;
       return data;
     });
+
+    const limit = limitsFor(request.wedding.plan, await getSettings()).guests;
+    if (limit !== null && await Guest.countDocuments({ wedding: request.wedding._id }) + entries.length > limit) {
+      const error = paywall('unlimitedGuests');
+      return response.status(error.status).json(error.body);
+    }
 
     const guests = await createGuests(request.wedding._id, entries);
     response.status(201).json(guests.map(guest => serialize(guest, ['wedding'])));
