@@ -1,6 +1,7 @@
 import type { Wedding } from "../../lib/types";
 import { Field } from "./Fields";
 import { clientId } from "../../lib/sections";
+import DressColors from "./DressColors";
 
 export default function ContentTab({ wedding: w, change }: { wedding: Wedding; change: (patch: Partial<Wedding>) => void; }) {
   const timeline = w.timeline;
@@ -32,9 +33,7 @@ export default function ContentTab({ wedding: w, change }: { wedding: Wedding; c
     <button className="button-outline" onClick={() => change({ timeline: [...timeline, { id: clientId(), time: "", title: "", desc: "" }] })}>Thêm mốc thời gian
     </button>
     <Field label="Ghi chú trang phục" value={w.dressCode.note} textarea onChange={note => change({ dressCode: { ...w.dressCode, note } })} />
-    <label>Màu trang phục (mã hex, cách nhau bằng dấu phẩy)
-      <input value={w.dressCode.colors.join(", ")} onChange={e => change({ dressCode: { ...w.dressCode, colors: e.target.value.split(",").map(x => x.trim()).filter(Boolean) } })} />
-    </label>
+    <DressColors colors={w.dressCode.colors} onChange={colors => change({ dressCode: { ...w.dressCode, colors } })} />
   </div>;
 }
 

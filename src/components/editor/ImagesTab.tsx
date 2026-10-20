@@ -2,8 +2,9 @@ import type { Wedding } from "../../lib/types";
 import ImageField from "./ImageField";
 import { Field } from "./Fields";
 import { clientId } from "../../lib/sections";
+import LockedFeature from "../billing/LockedFeature";
 
-export default function ImagesTab({ wedding: w, change }: { wedding: Wedding; change: (patch: Partial<Wedding>) => void; }) {
+export default function ImagesTab({ wedding: w, change, onUpgrade }: { wedding: Wedding; change: (patch: Partial<Wedding>) => void; onUpgrade: () => void; }) {
   const gallery = w.gallery;
   const update = (index: number, patch: Partial<Wedding["gallery"][number]>) => change({ gallery: gallery.map((item, i) => i === index ? { ...item, ...patch } : item) });
   const move = (index: number, target: number) => {
@@ -18,6 +19,7 @@ export default function ImagesTab({ wedding: w, change }: { wedding: Wedding; ch
     <ImageField label="Ảnh câu chuyện" value={w.story.image} onChange={image => change({ story: { ...w.story, image } })} />
     <h3>Bộ sưu tập ảnh
     </h3>
+    <p>{gallery.length}/{w.limits?.gallery ?? 6} ảnh</p>
     {gallery.map((item, i) => <article className="editor-item" key={item.id}>
       <ImageField label={`Ảnh ${i + 1}`} value={item.url} onChange={url => update(i, { url })} />
       <Field label="Tiêu đề" value={item.title} onChange={title => update(i, { title })} />
@@ -34,8 +36,9 @@ export default function ImagesTab({ wedding: w, change }: { wedding: Wedding; ch
         </button>
       </div>
     </article>)}
-    <button className="button-outline" onClick={() => change({ gallery: [...gallery, { id: clientId(), url: "", title: "", desc: "", full: false }] })}>Thêm ảnh
+    <button className="button-outline" disabled={gallery.length >= (w.limits?.gallery ?? 6)} onClick={() => change({ gallery: [...gallery, { id: clientId(), url: "", title: "", desc: "", full: false }] })}>Thêm ảnh
     </button>
+    {gallery.length >= (w.limits?.gallery ?? 6) && !w.entitlements?.largeGallery && <LockedFeature plan="basic" label="Thêm ảnh vào bộ sưu tập" onUpgrade={onUpgrade} />}
   </div>;
 }
 

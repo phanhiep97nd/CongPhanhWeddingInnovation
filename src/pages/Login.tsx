@@ -9,7 +9,11 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [visible, setVisible] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState(() => {
+    const message = sessionStorage.getItem("wi:login-message") || "";
+    sessionStorage.removeItem("wi:login-message");
+    return message;
+  });
   const [errorField, setErrorField] = useState<"email" | "password" | null>(null);
   const [busy, setBusy] = useState(false);
   if (user) return <Navigate to="/dashboard" replace />;

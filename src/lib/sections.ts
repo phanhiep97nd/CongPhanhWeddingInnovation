@@ -9,6 +9,7 @@ export const builtInSections: SectionKey[] = [
   "photoWall",
   "rooms",
   "dressCode",
+  "giftBox",
 ];
 
 export const sectionLabels: Record<SectionKey, string> = {
@@ -20,6 +21,7 @@ export const sectionLabels: Record<SectionKey, string> = {
   photoWall: "Ảnh khách gửi",
   rooms: "Phòng nghỉ",
   dressCode: "Trang phục",
+  giftBox: "Hộp mừng cưới",
 };
 
 export function sectionLabel(key: string, custom: CustomSection[] = []) {

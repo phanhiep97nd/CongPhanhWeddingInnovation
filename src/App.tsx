@@ -7,6 +7,13 @@ const Register = lazy(() => import("./pages/Register"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Editor = lazy(() => import("./pages/Editor"));
 const Invitation = lazy(() => import("./pages/Invitation"));
+const GuestQrPrint = lazy(() => import("./pages/GuestQrPrint"));
+const AdminLayout = lazy(() => import("./pages/admin/AdminLayout"));
+const AdminOverview = lazy(() => import("./pages/admin/Overview"));
+const AdminUsers = lazy(() => import("./pages/admin/Users"));
+const AdminUserDetail = lazy(() => import("./pages/admin/UserDetail"));
+const AdminOrders = lazy(() => import("./pages/admin/Orders"));
+const AdminSettings = lazy(() => import("./pages/admin/Settings"));
 
 export function Home() {
   const { search } = useLocation();
@@ -31,6 +38,14 @@ export default function App() {
           <Route path="/dashboard/:id" element={<ProtectedRoute>
             <Editor />
           </ProtectedRoute>} />
+          <Route path="/dashboard/:id/qr" element={<ProtectedRoute><GuestQrPrint /></ProtectedRoute>} />
+          <Route path="/admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
+            <Route index element={<AdminOverview />} />
+            <Route path="users" element={<AdminUsers />} />
+            <Route path="users/:id" element={<AdminUserDetail />} />
+            <Route path="orders" element={<AdminOrders />} />
+            <Route path="settings" element={<AdminSettings />} />
+          </Route>
           <Route path="/w/:slug" element={<Invitation />} />
           <Route path="/w/:slug/:code" element={<Invitation />} />
           <Route path="*" element={<main className="shell">

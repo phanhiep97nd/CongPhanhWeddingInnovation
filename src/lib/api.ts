@@ -4,6 +4,12 @@ export class ApiError extends Error {
     this.name = 'ApiError';
   }
 }
+export class PlanRequiredError extends ApiError {
+  constructor(message: string, public feature: string, public requiredPlan: "basic" | "premium") {
+    super(402, message);
+    this.name = "PlanRequiredError";
+  }
+}
 export const TOKEN_KEY = 'wi_token';
 
 export function getToken() {
@@ -29,9 +35,15 @@ export async function api<T>(path: string, options: RequestInit = {}, authentica
   const response = await fetch(`/api${path}`, { ...options, headers });
   if (!response.ok) {
     const data = await response.json().catch(() => ({}));
-    if (response.status === 401 && authenticated) {
+    if ((response.status === 401 || (response.status === 403 && data.code === "LOCKED")) && authenticated) {
       setToken(null);
       window.dispatchEvent(new Event('wi:unauthorized'));
+    }
+    if (response.status === 403 && data.code === "LOCKED") {
+      sessionStorage.setItem("wi:login-message", data.message || "Tài khoản đã bị khoá");
+    }
+    if (response.status === 402 && data.code === "PLAN_REQUIRED") {
+      throw new PlanRequiredError(data.message || "Cần nâng cấp gói.", data.feature, data.requiredPlan);
     }
     throw new ApiError(response.status, typeof data.message === 'string' ? data.message : 'Có lỗi xảy ra. Vui lòng thử lại.');
   }

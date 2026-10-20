@@ -82,6 +82,7 @@ export default function Dashboard() {
       <span>Xin chào,{" "}
         {user?.name}
       </span>
+      {user?.role === "admin" && <Link to="/admin">Quản trị</Link>}
       <button className="button-outline" onClick={() => {
         logout();
         navigate("/login");
@@ -111,6 +112,7 @@ export default function Dashboard() {
             </small>
           </label>
         </div>
+        <p>Gói miễn phí tự thêm 4 ký tự vào cuối đường dẫn khi tạo thiệp.</p>
         <button className="button" disabled={busy || !availability?.available || !availability.valid}>Tạo thiệp
         </button>
       </form>
@@ -138,6 +140,7 @@ export default function Dashboard() {
             <p>
               {item.published ? "Đã xuất bản" : "Đang ẩn"}
             </p>
+            {item.expiresAt && <p>Hết hạn {new Date(item.expiresAt).toLocaleDateString("vi-VN")}</p>}
             <div className="actions">
               <Link className="button" to={`/dashboard/${item.id}`}>Sửa
               </Link>

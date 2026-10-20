@@ -2,8 +2,9 @@ import type { Wedding } from "../../lib/types";
 import { addCustomSection, clientId, moveSection, removeCustomSection, sectionLabel, toggleSection } from "../../lib/sections";
 import { Field } from "./Fields";
 import ImageField from "./ImageField";
+import LockedFeature from "../billing/LockedFeature";
 
-export default function SectionsTab({ wedding: w, change }: { wedding: Wedding; change: (patch: Partial<Wedding>) => void; }) {
+export default function SectionsTab({ wedding: w, change, onUpgrade = () => {} }: { wedding: Wedding; change: (patch: Partial<Wedding>) => void; onUpgrade?: () => void; }) {
   return <div className="editor-stack">
     <p>Bật, tắt và sắp xếp các hạng mục trên thiệp.
     </p>
@@ -15,6 +16,8 @@ export default function SectionsTab({ wedding: w, change }: { wedding: Wedding; 
             <input type="checkbox" checked={item.enabled} onChange={() => change({ sections: toggleSection(w.sections, item.key) })} />
             {sectionLabel(item.key, w.customSections)}
           </label>
+          {item.key === "photoWall" && !w.entitlements?.photoWall && <LockedFeature plan="premium" label="Ảnh khách gửi" onUpgrade={onUpgrade} />}
+          {item.key === "giftBox" && !w.entitlements?.giftBox && <LockedFeature plan="premium" label="Hộp mừng cưới" onUpgrade={onUpgrade} />}
           <div className="actions">
             <button aria-label={`Chuyển ${sectionLabel(item.key, w.customSections)} lên`} disabled={i === 0} onClick={() => change({ sections: moveSection(w.sections, i, -1) })}>↑
             </button>
