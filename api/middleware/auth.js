@@ -1,22 +1,2 @@
-const jwt = require('jsonwebtoken');
-
-module.exports = (req, res, next) => {
-  const auth = req.headers.authorization;
-  if (!auth || !auth.startsWith('Bearer ')) {
-    return res.status(401).json({ message: 'Unauthorized' });
-  }
-  try {
-    req.admin = jwt.verify(auth.slice(7), process.env.JWT_SECRET);
-    next();
-  } catch {
-    res.status(401).json({ message: 'Token không hợp lệ hoặc đã hết hạn' });
-  }
-};
-
-// Only allow admin role
-module.exports.adminOnly = (req, res, next) => {
-  if (req.admin?.role !== 'admin') {
-    return res.status(403).json({ message: 'Chỉ admin mới có quyền thực hiện' });
-  }
-  next();
-};
+const jwt=require('jsonwebtoken');
+module.exports=(req,res,next)=>{const token=/^Bearer (.+)$/.exec(req.headers.authorization||'');if(!token)return res.status(401).json({message:'Vui lòng đăng nhập'});try{req.user=jwt.verify(token[1],process.env.JWT_SECRET);if(!req.user.sub)throw Error();next()}catch{return res.status(401).json({message:'Phiên đăng nhập không hợp lệ'})}};

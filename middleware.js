@@ -1,41 +1,7 @@
-export const config = {
-  matcher: ['/'],
-}
-
-const OG_BOTS =
-  /facebookexternalhit|Facebot|Twitterbot|TelegramBot|Slackbot|Discordbot|LinkedInBot|Pinterest|Googlebot|bingbot|Applebot/i
-
-export default function middleware(request) {
-  const ua = request.headers.get('user-agent') ?? ''
-  if (!OG_BOTS.test(ua)) return // pass through for regular users
-
-  const url = new URL(request.url)
-
-  const html = `<!DOCTYPE html>
-<html lang="vi">
-<head>
-  <meta charset="UTF-8" />
-  <title>Công &amp; Ph.Anh — Private Wedding 03.04.2026</title>
-  <meta name="description" content="Trân trọng kính mời bạn đến chung vui trong ngày trọng đại của Phương Anh &amp; Minh Công — 03/04/2026 tại Aman Villa." />
-  <meta property="og:type"        content="website" />
-  <meta property="og:site_name"   content="Công &amp; Ph.Anh Wedding" />
-  <meta property="og:url"         content="${url.href}" />
-  <meta property="og:title"       content="Công &amp; Ph.Anh — Private Wedding 03.04.2026" />
-  <meta property="og:description" content="Trân trọng kính mời bạn đến chung vui trong ngày trọng đại của Phương Anh &amp; Minh Công — 03/04/2026 tại Aman Villa." />
-  <meta property="og:image"       content="https://congphanh.vercel.app/images/og-image.jpg" />
-  <meta property="og:image:width"  content="1200" />
-  <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt"   content="Phương Anh &amp; Minh Công Wedding" />
-  <meta property="og:locale"      content="vi_VN" />
-  <meta name="twitter:card"        content="summary_large_image" />
-  <meta name="twitter:title"       content="Công &amp; Ph.Anh — Private Wedding 03.04.2026" />
-  <meta name="twitter:description" content="Trân trọng kính mời bạn đến chung vui trong ngày trọng đại của Phương Anh &amp; Minh Công — 03/04/2026 tại Aman Villa." />
-  <meta name="twitter:image"       content="https://congphanh.vercel.app/images/og-image.jpg" />
-</head>
-<body></body>
-</html>`
-
-  return new Response(html, {
-    headers: { 'content-type': 'text/html; charset=utf-8' },
-  })
-}
+export const config={matcher:['/w/:path*']};
+const bots=/facebookexternalhit|Facebot|Zalo|Twitterbot|TelegramBot|Slackbot|Discordbot|LinkedInBot|Pinterest|WhatsApp|Googlebot|bingbot|Applebot|Skype|viber/i;
+export const isCrawler=ua=>bots.test(ua||'');
+export function parseInvitePath(pathname){const parts=pathname.split('/').filter(Boolean);if(parts[0]!=='w'||parts.length<2||parts.length>3)return null;try{const slug=decodeURIComponent(parts[1]),code=parts[2]?decodeURIComponent(parts[2]):undefined;if(!/^[a-z0-9](?:[a-z0-9-]{1,48}[a-z0-9])$/.test(slug)||code&&!/^[a-z0-9]+$/i.test(code))return null;return {slug,code}}catch{return null}}
+export const escapeHtml=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+export function renderMetaHtml(meta,url){const title=meta.title||'Thiệp cưới',desc=meta.description||'Trân trọng kính mời bạn đến chung vui.',site=meta.siteName||'Thiệp cưới';let image='';try{if(meta.image)image=new URL(meta.image,new URL(url).origin).href}catch{}const tag=(name,value,property=false)=>`<meta ${property?'property':'name'}="${name}" content="${escapeHtml(value)}">`;return `<!doctype html><html lang="vi"><head><meta charset="utf-8"><title>${escapeHtml(title)}</title>${tag('description',desc)}${tag('og:title',title,true)}${tag('og:description',desc,true)}${image?tag('og:image',image,true)+tag('og:image:width','1200',true)+tag('og:image:height','630',true):''}${tag('og:url',url,true)}${tag('og:type','website',true)}${tag('og:site_name',site,true)}${tag('og:locale','vi_VN',true)}${tag('twitter:card','summary_large_image')}${tag('twitter:title',title)}${tag('twitter:description',desc)}${image?tag('twitter:image',image):''}</head><body></body></html>`}
+export default async function middleware(request){if(!isCrawler(request.headers.get('user-agent')))return undefined;const url=new URL(request.url),path=parseInvitePath(url.pathname);if(!path)return undefined;let meta={title:'Thiệp cưới',description:'Trân trọng kính mời bạn đến chung vui.',siteName:'Thiệp cưới',image:''};try{const origin=(process.env.API_ORIGIN||'https://congphanhweddinginnovation-api.up.railway.app').replace(/\/$/,'');const endpoint=`${origin}/public/weddings/${encodeURIComponent(path.slug)}/meta${path.code?'?g='+encodeURIComponent(path.code):''}`;const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),2500);try{const response=await fetch(endpoint,{signal:controller.signal});if(!response.ok)throw Error('Meta unavailable');meta=await response.json()}finally{clearTimeout(timer)}}catch{}return new Response(renderMetaHtml(meta,url.href),{headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'public, max-age=300'}})}
