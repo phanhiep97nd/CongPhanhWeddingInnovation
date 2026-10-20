@@ -41,7 +41,8 @@ export default function GiftBoxSection({ wedding }: { wedding: Wedding; key?: st
       </div>
       <dialog ref={qrDialog} className="gift-qr-dialog" onClose={() => setQrImage("")} onClick={event => { if (event.target === qrDialog.current) qrDialog.current.close(); }} aria-label="Mã QR chuyển khoản">
         <button className="gift-qr-close" onClick={() => qrDialog.current?.close()} aria-label="Đóng">×</button>
-        <img src={qrImage} alt="Mã QR chuyển khoản kích thước lớn" />
+        {/* No empty src: browsers may re-request the page for src="". */}
+        {qrImage && <img src={qrImage} alt="Mã QR chuyển khoản kích thước lớn" />}
       </dialog>
     </div>
   </section>;
