@@ -18,6 +18,23 @@
   padding: 1.4rem;
 }
 
+/* Phones: cover photo on top, text gets the full card width; greeting yields to the actions. */
+@media (max-width: 560px) {
+  .wedding-card {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .wedding-card img {
+    height: 170px;
+    min-height: 0;
+  }
+  .dashboard .dash-header > span {
+    display: none;
+  }
+  .create-card .form-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 .dashboard-empty {
   padding: 2rem 0 3rem;
   max-width: 42rem;
