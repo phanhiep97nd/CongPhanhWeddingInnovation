@@ -14,8 +14,10 @@ const User = require('../../models/User');
 const Wedding = require('../../models/Wedding');
 const Guest = require('../../models/Guest');
 const Photo = require('../../models/Photo');
+const Order = require('../../models/Order');
+const { Settings, invalidateSettings } = require('../../models/Settings');
 
-export { app, request, User, Wedding, Guest, Photo };
+export { app, request, User, Wedding, Guest, Photo, Order, Settings };
 
 export function useDatabase() {
   let mongo;
@@ -27,7 +29,7 @@ export function useDatabase() {
       mongo = await MongoMemoryServer.create();
       await mongoose.connect(mongo.getUri());
     }
-    await Promise.all([User.init(), Wedding.init(), Guest.init(), Photo.init()]);
+    await Promise.all([User.init(), Wedding.init(), Guest.init(), Photo.init(), Order.init(), Settings.init()]);
   }, 60000);
 
   beforeEach(async () => {
@@ -35,8 +37,11 @@ export function useDatabase() {
       User.deleteMany({}),
       Wedding.deleteMany({}),
       Guest.deleteMany({}),
-      Photo.deleteMany({})
+      Photo.deleteMany({}),
+      Order.deleteMany({}),
+      Settings.deleteMany({})
     ]);
+    invalidateSettings();
   });
 
   afterAll(async () => {
@@ -62,4 +67,15 @@ export async function createWedding(token, body = {}) {
 
 export function authorized(token) {
   return { Authorization: `Bearer ${token}` };
+}
+
+export async function createAdmin(email = 'admin@example.com') {
+  const account = await register(email);
+  await User.updateOne({ email }, { $set: { role: 'admin' } });
+  return account;
+}
+
+export async function payOrder(order) {
+  const { applyPaidOrder } = require('../../lib/orders');
+  return applyPaidOrder(order);
 }

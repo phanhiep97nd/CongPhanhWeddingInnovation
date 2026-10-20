@@ -1,9 +1,17 @@
 const mongoose = require('mongoose');
 
-const SECTION_KEYS = ['story', 'timeline', 'gallery', 'info', 'rsvp', 'photoWall', 'rooms', 'dressCode'];
+const SECTION_KEYS = ['story', 'timeline', 'gallery', 'info', 'rsvp', 'photoWall', 'rooms', 'dressCode', 'giftBox'];
 const schema = new mongoose.Schema({
   owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
   slug: { type: String, required: true, unique: true, lowercase: true, trim: true },
+  slugAliases: { type: [String], default: [], validate: aliases => aliases.length <= 5 },
+  plan: { type: String, enum: ['free', 'basic', 'premium'], default: 'free' },
+  planActivatedAt: { type: Date, default: null },
+  template: { type: String, enum: ['classic', 'minimal'], default: 'classic' },
+  giftBox: {
+    note: { type: String, default: '' },
+    accounts: { type: Array, default: [] }
+  },
   published: { type: Boolean, default: true },
   couple: {
     groom: { type: String, default: '' },
@@ -12,6 +20,7 @@ const schema = new mongoose.Schema({
     brideFull: { type: String, default: '' }
   },
   eventDate: { type: Date, default: null },
+  eventTime: { type: String, default: '' },
   dateText: { type: String, default: '' },
   venue: {
     name: { type: String, default: '' },
@@ -44,6 +53,8 @@ const schema = new mongoose.Schema({
   },
   theme: { primary: { type: String, default: '#b76e79' } }
 }, { timestamps: true, minimize: false });
+
+schema.index({ slugAliases: 1 });
 
 module.exports = mongoose.model('Wedding', schema);
 module.exports.SECTION_KEYS = SECTION_KEYS;

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { useDatabase, app, request, register, createWedding, authorized, Guest, Photo } from './helpers/db';
+import { useDatabase, app, request, register, createWedding, authorized, Guest, Photo, Wedding } from './helpers/db';
 
 useDatabase();
 
@@ -22,26 +22,29 @@ describe('weddings', () => {
     expect(result.body).toEqual({ available: false, valid: false });
   });
 
-  it('returns unavailable for an existing slug', async () => {
+  it('keeps the requested free slug available after suffixing', async () => {
     const account = await register();
     await createWedding(account.token);
     const result = await request(app).get('/weddings/slug-available?slug=my-wedding').set(authorized(account.token));
-    expect(result.body).toEqual({ available: false, valid: true });
+    expect(result.body).toEqual({ available: true, valid: true });
   });
 
-  it('rejects duplicate slugs', async () => {
+  it('allows the same requested slug with different free suffixes', async () => {
     const first = await register();
     const second = await register('second@example.com');
-    await createWedding(first.token);
-    expect((await createWedding(second.token)).status).toBe(409);
+    const firstWedding = await createWedding(first.token);
+    const secondWedding = await createWedding(second.token);
+    expect(secondWedding.status).toBe(201);
+    expect(secondWedding.body.slug).not.toBe(firstWedding.body.slug);
   });
 
   it('returns 409 on a PUT slug conflict', async () => {
     const account = await register();
     const first = (await createWedding(account.token)).body;
-    await createWedding(account.token, { slug: 'other-wedding' });
+    const other = (await createWedding(account.token, { slug: 'other-wedding' })).body;
+    await Wedding.updateOne({ _id: first.id }, { $set: { plan: 'premium' } });
     const result = await request(app).put(`/weddings/${first.id}`)
-      .set(authorized(account.token)).send({ slug: 'other-wedding' });
+      .set(authorized(account.token)).send({ slug: other.slug });
     expect(result.status).toBe(409);
   });
 
@@ -111,6 +114,45 @@ describe('weddings', () => {
     const result = await createWedding(account.token, { eventDate: '' });
     expect(result.status).toBe(201);
     expect(result.body.eventDate).toBeNull();
+  });
+
+  it('creates, edits, and returns eventTime in owner and public views', async () => {
+    const account = await register();
+    const wedding = (await createWedding(account.token, { eventTime: '18:30' })).body;
+    expect(wedding.eventTime).toBe('18:30');
+    expect((await request(app).get('/weddings').set(authorized(account.token))).body[0].eventTime).toBe('18:30');
+    expect((await request(app).get(`/public/weddings/${wedding.slug}`)).body.eventTime).toBe('18:30');
+    const edited = await request(app).put(`/weddings/${wedding.id}`)
+      .set(authorized(account.token)).send({ eventTime: '' });
+    expect(edited.body.eventTime).toBe('');
+  });
+
+  it.each(['24:00', '9:00', '12:60', 'tomorrow', null])('rejects invalid eventTime %s', async value => {
+    const account = await register();
+    expect((await createWedding(account.token, { eventTime: value })).status).toBe(400);
+  });
+
+  it('previews unpublished metadata for the owner with a guest code', async () => {
+    const owner = await register();
+    const other = await register('other@example.com');
+    const wedding = (await createWedding(owner.token, {
+      published: false,
+      couple: { groom: 'Minh', bride: 'Lan' },
+      coverImage: 'https://res.cloudinary.com/demo/image/upload/cover.jpg'
+    })).body;
+    await Guest.create({ wedding: wedding.id, code: 'abcdefgh', name: 'An', invitationName: 'Anh An' });
+    const path = `/weddings/${wedding.id}/preview-meta?g=abcdefgh`;
+    const result = await request(app).get(path).set(authorized(owner.token));
+    expect(result.status).toBe(200);
+    expect(result.body.title).toBe('Gửi Anh An · Thiệp cưới Minh & Lan');
+    expect(result.body.image).toContain('Anh%20An');
+    expect((await request(app).get(`/public/weddings/${wedding.slug}/meta`)).status).toBe(404);
+    const unknown = await request(app).get(`/weddings/${wedding.id}/preview-meta?g=unknown`)
+      .set(authorized(owner.token));
+    expect(unknown.body.guestName).toBe('');
+    expect(unknown.body.title).toBe('Thiệp cưới Minh & Lan');
+    expect((await request(app).get(path)).status).toBe(401);
+    expect((await request(app).get(path).set(authorized(other.token))).status).toBe(404);
   });
 
   it('rejects a malformed eventDate with 400', async () => {

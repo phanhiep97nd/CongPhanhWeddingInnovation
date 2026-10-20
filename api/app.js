@@ -43,9 +43,11 @@ const authLimit = rateLimit({
 app.get('/', (request, response) => response.json({ status: 'ok' }));
 app.use('/auth/register', authLimit);
 app.use('/auth/login', authLimit);
+app.use('/payos', require('./routes/payosRoutes'));
 app.use('/auth', require('./routes/authRoutes'));
 app.use('/weddings', require('./routes/weddingRoutes'));
 app.use('/public', require('./routes/publicRoutes'));
+app.use('/admin', require('./routes/adminRoutes'));
 
 app.use((request, response) => response.status(404).json({ message: 'Không tìm thấy' }));
 app.use((error, request, response, next) => {
