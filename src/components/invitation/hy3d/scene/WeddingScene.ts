@@ -231,7 +231,9 @@ export class WeddingScene {
 
   private updateViewShift(dt: number) {
     const openingEnd = 0.5 / (this.stations.length + 1);
-    const target = this.progress < openingEnd ? -0.08 : 0.17;
+    // The envelope sits lower than the couple so the hero text above stays clear.
+    const opening = this.intro === "done" ? -0.08 : -0.15;
+    const target = this.progress < openingEnd ? opening : 0.17;
     const next = MathUtils.damp(this.viewShift, target, 3, dt);
     if (Math.abs(next - this.viewShift) > 0.0005) {
       this.viewShift = next;
@@ -588,7 +590,8 @@ export class WeddingScene {
         // Once the flap is up, the card rises above the pocket and comes forward.
         this.card.position.y = MathUtils.damp(this.card.position.y, 0.66, 2.6, dt);
         this.card.position.z = 0.09;
-        if (this.card.position.y > 0.6) {
+        // Record the moment only once: this block keeps running while the card is shown.
+        if (this.card.position.y > 0.6 && this.intro !== "card") {
           this.intro = "card";
           this.cardShownAt = this.introTime;
         }
