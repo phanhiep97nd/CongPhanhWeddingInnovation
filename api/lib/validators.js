@@ -99,7 +99,7 @@ const weddingFields = {
   gallery,
   giftBox,
   template: value => {
-    if (!['classic', 'minimal'].includes(value)) fail('Mẫu thiệp không hợp lệ');
+    if (!['classic', 'minimal', 'hy3d'].includes(value)) fail('Mẫu thiệp không hợp lệ');
     return value;
   },
   musicUrl: url,

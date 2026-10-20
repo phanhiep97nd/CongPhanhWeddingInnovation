@@ -85,7 +85,7 @@ describe("phone editing controls", () => {
   });
 
   it("uses the single brand constant", () => {
-    expect(BRAND_NAME).toBe(import.meta.env.VITE_BRAND_NAME || "Thiệp Cưới");
+    expect(BRAND_NAME).toBe(import.meta.env.VITE_BRAND_NAME || "Hỷ Thiệp");
   });
 
   it("shows an enabled bottom save button after a mobile edit", async () => {

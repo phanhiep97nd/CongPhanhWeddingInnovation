@@ -1,11 +1,12 @@
 import { BRAND_NAME } from "../lib/brand";
+import BrandLogo from "../components/BrandLogo";
 import { Link } from "react-router-dom";
 
 export default function Landing() {
   return (
     <main className="landing">
       <nav className="topbar" aria-label="Điều hướng chính">
-        <Link className="brand" to="/">{BRAND_NAME}
+        <Link className="brand" to="/" aria-label={BRAND_NAME}><BrandLogo />
         </Link>
         <div>
           <Link to="/login" aria-label="Đăng nhập tài khoản">Đăng nhập

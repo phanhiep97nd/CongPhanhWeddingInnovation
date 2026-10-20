@@ -1,6 +1,6 @@
 export type SectionKey = "story" | "timeline" | "gallery" | "info" | "rsvp" | "photoWall" | "rooms" | "dressCode" | "giftBox";
 export type Plan = "free" | "basic" | "premium";
-export type Template = "classic" | "minimal";
+export type Template = "classic" | "minimal" | "hy3d";
 export type FeatureKey = "unlimitedGuests" | "removeBranding" | "largeGallery" | "excelExport" | "guestQr" | "giftBox" | "photoWall" | "customMusic" | "permanent" | "premiumTemplates";
 export type Entitlements = Record<FeatureKey, boolean>;
 

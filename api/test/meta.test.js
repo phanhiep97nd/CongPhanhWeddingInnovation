@@ -21,7 +21,7 @@ describe('buildMeta', () => {
     expect(result).toMatchObject({
       title: 'Gửi Anh An · Thiệp cưới Minh & Lan',
       description: 'Trân trọng kính mời Anh An đến dự lễ thành hôn của Minh & Lan vào 18:30, Thứ Sáu 03/04/2026 tại Nhà hàng Sen, 12 Nguyễn Huệ.',
-      siteName: 'Thiệp Cưới',
+      siteName: 'Hỷ Thiệp',
       guestName: 'Anh An',
       url: 'https://example.com/w/minh-lan/abc123'
     });

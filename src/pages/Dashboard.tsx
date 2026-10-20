@@ -1,4 +1,5 @@
 import { BRAND_NAME } from "../lib/brand";
+import BrandLogo from "../components/BrandLogo";
 import { useConfirmSheet } from "../components/ConfirmSheet";
 import { useEffect, useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -82,7 +83,7 @@ export default function Dashboard() {
   return <main className="dashboard">
     {sheet}
     <header className="dash-header">
-      <Link className="brand" to="/">{BRAND_NAME}
+      <Link className="brand" to="/" aria-label={BRAND_NAME}><BrandLogo />
       </Link>
       <span>Xin chào,{" "}
         {user?.name}

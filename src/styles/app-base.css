@@ -27,10 +27,39 @@ button:disabled {
 }
 
 .brand {
-  font: 2rem var(--font-script);
-  color: #a85e65;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: #a23b48;
   text-decoration: none;
   white-space: nowrap;
+}
+
+.brand-lockup {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brand-mark {
+  width: 32px;
+  height: 32px;
+  flex: none;
+}
+
+.brand-word {
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 600;
+  font-size: 1.6rem;
+  line-height: 1;
+  color: #a23b48;
+}
+
+.brand-suffix {
+  font-size: 0.9rem;
+  color: #3f5a2e;
+  padding-left: 8px;
+  border-left: 1px solid rgba(162, 59, 72, 0.25);
 }
 
 .eyebrow {
