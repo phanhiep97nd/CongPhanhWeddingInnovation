@@ -69,12 +69,13 @@ describe("public template and branding", () => {
 
   it("renders branding for free invitations", async () => {
     openWedding({ ...wedding, sections: [], showBranding: true });
-    expect(await screen.findByRole("link", { name: `Tạo bởi ${BRAND_NAME}` })).toHaveAttribute("href", "/");
+    // The lazily loaded classic shell can take longer than the 1s default when the whole suite runs.
+    expect(await screen.findByRole("link", { name: `Tạo bởi ${BRAND_NAME}` }, { timeout: 4000 })).toHaveAttribute("href", "/");
   });
 
   it("removes branding for paid invitations", async () => {
     openWedding({ ...wedding, sections: [], plan: "basic", showBranding: false });
-    await screen.findByText(/Made with love/);
+    await screen.findByText(/Made with love/, undefined, { timeout: 4000 });
     expect(screen.queryByRole("link", { name: `Tạo bởi ${BRAND_NAME}` })).not.toBeInTheDocument();
   });
 
@@ -86,7 +87,7 @@ describe("public template and branding", () => {
 
   it("keeps classic as the default template", async () => {
     openWedding({ ...wedding, sections: [], template: "classic" });
-    await screen.findByText(/Made with love/);
+    await screen.findByText(/Made with love/, undefined, { timeout: 4000 });
     expect(document.querySelector(".minimal-invite")).not.toBeInTheDocument();
   });
 });
