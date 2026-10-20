@@ -11,7 +11,7 @@ Authenticated endpoints require `Authorization: Bearer <token>`:
 - `GET|PUT|DELETE /weddings/:id`
 - `GET|POST /weddings/:id/guests`, `POST /weddings/:id/guests/bulk`
 - `PUT|DELETE /weddings/:id/guests/:guestId`, `GET /weddings/:id/stats`
-- `DELETE /weddings/:id/photos/:photoId`
+- `GET /weddings/:id/photos`, `DELETE /weddings/:id/photos/:photoId`
 
 Public endpoints:
 
@@ -21,3 +21,9 @@ Public endpoints:
 - `GET|POST /public/weddings/:slug/photos`, `GET /public/weddings/:slug/meta?g=<code>`
 
 The frontend uses `/api` as a proxy prefix. The API routes above omit that prefix.
+
+For crawler requests to `/w/:slug` or `/w/:slug/:code`, Vercel middleware fetches the
+metadata and `/index.html` together, replaces the shell's social tags, and returns the
+complete SPA. This also keeps the page usable in Zalo's in-app browser. If the shell
+cannot be fetched, it returns a minimal preview page; if metadata cannot be fetched,
+it inserts generic preview tags into the shell.
