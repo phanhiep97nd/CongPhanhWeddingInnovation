@@ -1,0 +1,3 @@
+import type { Wedding } from '../../lib/types';
+export default function Info({ wedding }: { wedding: Wedding }) { return <section className="invite-section white-section" id="info"><span className="eyebrow">Ngày trọng đại</span><h2>Thông tin ngày cưới</h2><div className="info-card"><p className="invite-date">{wedding.dateText}</p><h3>{wedding.venue.name}</h3><p>{wedding.venue.address}</p>{wedding.venue.mapUrl && <a className="button-outline" href={wedding.venue.mapUrl} target="_blank" rel="noreferrer">Xem bản đồ</a>}{wedding.zaloGroupLink && <a className="button-outline" href={wedding.zaloGroupLink} target="_blank" rel="noreferrer">Tham gia nhóm Zalo</a>}</div></section>; }
+

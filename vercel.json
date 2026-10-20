@@ -3,6 +3,11 @@
     {
       "source": "/api/:path*",
       "destination": "https://congphanhweddinginnovation-api.up.railway.app/:path*"
-    }
+    },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ],
+  "headers": [
+    { "source": "/assets/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }] },
+    { "source": "/images/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400" }] }
   ]
 }
