@@ -168,8 +168,8 @@
 
 /* The banner photo stays, fading out downwards into the scene so the couple shows below the names. */
 .classic-over-3d .invitation-hero > div:first-child {
-  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 40%, transparent 78%);
-  mask-image: linear-gradient(to bottom, #000 0%, #000 40%, transparent 78%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 30%, transparent 62%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 30%, transparent 62%);
 }
 
 .classic-over-3d .invitation-hero > div:first-child > div:last-child {
