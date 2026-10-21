@@ -35,7 +35,10 @@ export default function MixedMode({ wedding, guest, slug, onUnavailable }: {
   // Never keep the page hidden if the scene is slow to load or stalls.
   useEffect(() => {
     if (!opening) return;
-    const timer = window.setTimeout(finishOpening, OPENING_TIMEOUT_MS);
+    const timer = window.setTimeout(() => {
+      canvasRef.current?.finishIntro();
+      finishOpening();
+    }, OPENING_TIMEOUT_MS);
     return () => window.clearTimeout(timer);
   }, [opening]);
   const stops = useMemo(() => wedding.sections.filter((section) => section.enabled).map((section) => section.key), [wedding.sections]);

@@ -6,6 +6,7 @@ import "./hy3d.css";
 export interface Hy3dCanvasHandle {
   setProgress: (progress: number) => void;
   advanceIntro: () => void;
+  finishIntro: () => void;
 }
 
 interface Props {
@@ -41,6 +42,7 @@ const Hy3dCanvas = forwardRef<Hy3dCanvasHandle, Props>(function Hy3dCanvas({ dat
       sceneRef.current?.setProgress(progress);
     },
     advanceIntro: () => sceneRef.current?.advanceIntro(),
+    finishIntro: () => sceneRef.current?.finishIntro(),
   }), []);
 
   useEffect(() => {

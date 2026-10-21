@@ -7,14 +7,14 @@ import { sceneOptionsFor } from "./scene/sceneData";
 import { wedding } from "../../../test/plan-fixtures";
 import type { Wedding } from "../../../lib/types";
 
-const canvas = vi.hoisted(() => ({ setProgress: vi.fn(), advanceIntro: vi.fn(), props: vi.fn() }));
+const canvas = vi.hoisted(() => ({ setProgress: vi.fn(), advanceIntro: vi.fn(), finishIntro: vi.fn(), props: vi.fn() }));
 
 vi.mock("./Hy3dCanvas", async () => {
   const { createElement, forwardRef, useImperativeHandle } = await import("react");
   return {
     default: forwardRef(function Canvas(props, ref) {
       canvas.props(props);
-      useImperativeHandle(ref, () => ({ setProgress: canvas.setProgress, advanceIntro: canvas.advanceIntro }), []);
+      useImperativeHandle(ref, () => ({ setProgress: canvas.setProgress, advanceIntro: canvas.advanceIntro, finishIntro: canvas.finishIntro }), []);
       return createElement("canvas");
     }),
   };
@@ -138,6 +138,7 @@ describe("mixed opening", () => {
       expect(screen.queryByRole("button", { name: "Đóng lời mời" })).toBeNull();
 
       act(() => props.onIntroDone());
+      expect(canvas.finishIntro).not.toHaveBeenCalled();
       expect(root).not.toHaveClass("is-veiled");
       expect(screen.queryByRole("button", { name: "Chạm để mở thiệp" })).toBeNull();
       act(() => { vi.advanceTimersByTime(2600); });

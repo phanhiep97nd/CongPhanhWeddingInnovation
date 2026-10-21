@@ -199,6 +199,11 @@ export class WeddingScene {
     else if (this.intro === "card") this.envelope.leave();
   }
 
+  // Put the envelope away now (the page is being shown regardless).
+  finishIntro() {
+    this.envelope.leave();
+  }
+
   isIntroActive() {
     return this.intro !== "done";
   }
