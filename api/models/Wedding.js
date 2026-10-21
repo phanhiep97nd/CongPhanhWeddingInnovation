@@ -7,7 +7,9 @@ const schema = new mongoose.Schema({
   slugAliases: { type: [String], default: [], validate: aliases => aliases.length <= 5 },
   plan: { type: String, enum: ['free', 'basic', 'premium'], default: 'free' },
   planActivatedAt: { type: Date, default: null },
-  template: { type: String, enum: ['classic', 'minimal'], default: 'classic' },
+  template: { type: String, enum: ['classic', 'minimal', 'hy3d'], default: 'classic' },
+  // Hỷ 3D viewing modes the owner allows guests to switch between (at least one).
+  viewModes: { type: [String], enum: ['3d', 'mixed', 'normal'], default: () => ['3d', 'mixed', 'normal'] },
   giftBox: {
     note: { type: String, default: '' },
     accounts: { type: Array, default: [] }

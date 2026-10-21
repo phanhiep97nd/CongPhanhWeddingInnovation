@@ -131,7 +131,7 @@ describe("3D / normal modes", () => {
     expect(within(menu).getAllByRole("button")).toHaveLength(3);
     expect(within(menu).getByRole("button", { name: "3D" })).toHaveAttribute("aria-pressed", "true");
     expect(within(menu).getByRole("button", { name: "Thường" })).toHaveAttribute("aria-pressed", "false");
-    fireEvent.click(within(menu).getByRole("button", { name: "Kết hợp" }));
+    fireEvent.click(within(menu).getByRole("button", { name: "Trong suốt" }));
     expect(await screen.findByLabelText("Các hạng mục thiệp")).toBeInTheDocument();
     expect(container.querySelector(".classic-over-3d > .classic-3d-backdrop canvas")).toBeInTheDocument();
     expect(localStorage.getItem("hy3d-mode")).toBe("mixed");
@@ -140,8 +140,8 @@ describe("3D / normal modes", () => {
 
     render(<Hy3dModes wedding={hy3dWedding} guest={null} slug="pa-mc" />);
     expect(await screen.findByLabelText("Các hạng mục thiệp")).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "Chế độ xem thiệp: Kết hợp" }));
-    expect(screen.getByRole("button", { name: "Kết hợp" })).toHaveAttribute("aria-pressed", "true");
+    fireEvent.click(screen.getByRole("button", { name: "Chế độ xem thiệp: Trong suốt" }));
+    expect(screen.getByRole("button", { name: "Trong suốt" })).toHaveAttribute("aria-pressed", "true");
   });
 
   it.each(["3d", "normal"])("accepts the old stored %s mode", async (mode) => {

@@ -98,6 +98,14 @@ const weddingFields = {
   timeline,
   gallery,
   giftBox,
+  viewModes: value => {
+    const allowed = ['3d', 'mixed', 'normal'];
+    if (!Array.isArray(value) || !value.length || value.some(mode => !allowed.includes(mode))) {
+      fail('Cần bật ít nhất một chế độ xem hợp lệ');
+    }
+    // Keep a stable order and drop duplicates.
+    return allowed.filter(mode => value.includes(mode));
+  },
   template: value => {
     if (!['classic', 'minimal', 'hy3d'].includes(value)) fail('Mẫu thiệp không hợp lệ');
     return value;

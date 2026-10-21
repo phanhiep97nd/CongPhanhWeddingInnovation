@@ -207,3 +207,95 @@ button, a, summary, input, select, textarea { touch-action: manipulation; -webki
   .admin-row > button { grid-column: 1 / -1; }
 }
 .hy3d-thumb { background: linear-gradient(160deg, #fbe9ec, #e6efd9); color: #a23b48; font-style: normal; font-weight: 600; }
+
+/* Hỷ 3D viewing-mode switches */
+.view-modes {
+  margin: 20px 0 0;
+  padding: 16px;
+  border: 1px solid rgba(162, 59, 72, 0.15);
+  border-radius: 16px;
+  background: #fff;
+}
+
+.view-modes legend {
+  padding: 0 6px;
+  font-weight: 600;
+  color: #3f5a2e;
+}
+
+.view-modes-help {
+  margin: 0 0 8px;
+  font-size: 14px;
+  color: rgba(63, 90, 46, 0.75);
+}
+
+.view-modes-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 56px;
+  padding: 8px 0;
+  border-top: 1px solid rgba(162, 59, 72, 0.1);
+  cursor: pointer;
+}
+
+.view-modes-text {
+  display: grid;
+  gap: 2px;
+}
+
+.view-modes-label {
+  font-weight: 600;
+  color: #3f5a2e;
+}
+
+.view-modes-description {
+  font-size: 14px;
+  color: rgba(63, 90, 46, 0.72);
+}
+
+/* A real switch: the native checkbox restyled, 44px tall hit area through the label row. */
+.view-modes-row input[type="checkbox"] {
+  appearance: none;
+  flex: none;
+  width: 46px;
+  height: 28px;
+  margin: 0;
+  border-radius: 999px;
+  background: #e7d9db;
+  position: relative;
+  cursor: pointer;
+  transition: background-color 160ms ease-out;
+}
+
+.view-modes-row input[type="checkbox"]::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: transform 160ms ease-out;
+}
+
+.view-modes-row input[type="checkbox"]:checked {
+  background: #a23b48;
+}
+
+.view-modes-row input[type="checkbox"]:checked::after {
+  transform: translateX(18px);
+}
+
+.view-modes-row input[type="checkbox"]:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.view-modes-row input[type="checkbox"]:focus-visible {
+  outline: 2px solid #c9a46a;
+  outline-offset: 2px;
+}

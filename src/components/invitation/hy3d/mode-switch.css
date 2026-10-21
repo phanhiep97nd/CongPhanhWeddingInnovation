@@ -1,19 +1,37 @@
-/* Mode picker shared by all three viewing modes. */
+/* Viewing-mode switcher, shared by all three modes. Quiet by design: a frosted paper button with the son-red
+   icon of the current mode, so it sits on any background without competing with the couple's names. */
 .mode-switch-compact {
   position: fixed;
-  top: calc(8px + env(safe-area-inset-top));
-  right: calc(8px + env(safe-area-inset-right));
+  top: calc(10px + env(safe-area-inset-top));
+  right: calc(10px + env(safe-area-inset-right));
   z-index: 70;
+  display: grid;
+  place-items: center;
   width: 44px;
   height: 44px;
-  border: 0;
+  padding: 0;
+  border: 1px solid rgba(162, 59, 72, 0.18);
   border-radius: 50%;
-  background: #a23b48;
-  color: #fdf5f6;
-  font: 700 14px "Plus Jakarta Sans", sans-serif;
-  box-shadow: 0 6px 18px -8px rgba(90, 45, 52, 0.55);
+  background: rgba(253, 245, 246, 0.82);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: #a23b48;
+  box-shadow: 0 6px 16px -10px rgba(90, 45, 52, 0.55);
   cursor: pointer;
   touch-action: manipulation;
+  transition: background-color 160ms ease-out, border-color 160ms ease-out;
+}
+
+.mode-switch-compact svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 1.75;
+}
+
+.mode-switch-compact[aria-expanded="true"],
+.mode-switch-compact:hover {
+  background: rgba(253, 245, 246, 0.96);
+  border-color: rgba(162, 59, 72, 0.35);
 }
 
 .mode-menu-overlay {
@@ -22,42 +40,79 @@
   z-index: 80;
   display: flex;
   align-items: flex-end;
-  background: rgba(50, 35, 40, 0.22);
+  background: rgba(50, 35, 40, 0.18);
   overscroll-behavior: contain;
 }
 
 .mode-menu {
   width: 100%;
-  padding: 12px 16px calc(16px + env(safe-area-inset-bottom));
+  padding: 14px 12px calc(14px + env(safe-area-inset-bottom));
   border-radius: 20px 20px 0 0;
   background: #fdf5f6;
-  box-shadow: 0 -6px 24px rgba(90, 45, 52, 0.12);
+  box-shadow: 0 -10px 30px -12px rgba(90, 45, 52, 0.25);
+}
+
+.mode-menu-title {
+  margin: 0 8px 8px;
+  font: 600 13px "Plus Jakarta Sans", sans-serif;
+  color: rgba(63, 90, 46, 0.75);
 }
 
 .mode-menu button {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 24px 1fr 20px;
+  gap: 12px;
   align-items: center;
   width: 100%;
-  min-height: 44px;
-  padding: 10px 16px;
+  min-height: 56px;
+  padding: 10px 12px;
   border: 0;
-  border-radius: 12px;
+  border-radius: 14px;
   background: transparent;
   color: #3f5a2e;
-  font: 600 14px "Plus Jakarta Sans", sans-serif;
+  text-align: left;
   cursor: pointer;
   touch-action: manipulation;
 }
 
+.mode-menu button + button {
+  margin-top: 2px;
+}
+
 .mode-menu button[aria-pressed="true"] {
-  background: #a23b48;
-  color: #fdf5f6;
+  background: rgba(242, 200, 205, 0.45);
+}
+
+.mode-menu-icon {
+  width: 22px;
+  height: 22px;
+  stroke-width: 1.6;
+  color: #a23b48;
+}
+
+.mode-menu-text {
+  display: grid;
+  gap: 2px;
+}
+
+.mode-menu-label {
+  font: 600 15px "Plus Jakarta Sans", sans-serif;
+}
+
+.mode-menu-description {
+  font: 400 13px/1.35 "Plus Jakarta Sans", sans-serif;
+  color: rgba(63, 90, 46, 0.72);
+}
+
+.mode-menu-check {
+  width: 18px;
+  height: 18px;
+  color: #a23b48;
 }
 
 .mode-switch-compact:focus-visible,
 .mode-menu button:focus-visible {
-  outline: 3px solid #c9a46a;
+  outline: 2px solid #c9a46a;
   outline-offset: 2px;
 }
 
@@ -65,12 +120,20 @@
   .mode-menu-overlay {
     align-items: flex-start;
     justify-content: flex-end;
-    padding: calc(60px + env(safe-area-inset-top)) calc(8px + env(safe-area-inset-right)) 0 8px;
+    padding: calc(62px + env(safe-area-inset-top)) calc(10px + env(safe-area-inset-right)) 0 10px;
+    background: transparent;
   }
 
   .mode-menu {
-    width: 240px;
-    padding: 8px;
+    width: 300px;
+    padding: 10px 8px;
     border-radius: 16px;
+    box-shadow: 0 16px 40px -16px rgba(90, 45, 52, 0.35);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mode-switch-compact {
+    transition: none;
   }
 }
