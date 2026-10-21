@@ -7,6 +7,7 @@ import { buildBride, buildGroom, disposeCharacterGeometries } from "./characters
 import { buildWorld, disposeWorld, Petals, redEnvelope } from "./world";
 import { cameraPose } from "./cameraPose";
 import { cullPlanting } from "./chunkInstances";
+import { cullLandmarks } from "./landmarks";
 import { direct } from "./choreography";
 import { frameAt } from "./path";
 import { disposeMaterials } from "./materials";
@@ -86,7 +87,7 @@ describe("mobile rendering budget", () => {
           const { point, side } = frameAt(u);
           groom.root.position.copy(point).addScaledVector(side, -0.3);
           bride.root.position.copy(point).addScaledVector(side, 0.3);
-          const direction = direct({ stations: world.stations, coupleU: u, cameraGoal: camera.position, camera, tapReaction: 0 }, 0);
+          const direction = direct({ stations: world.stations, coupleU: u, cameraGoal: camera.position, camera, tapReaction: 0, homeFocus: world.home.focus }, 0);
           const look = new Vector3();
           gift.visible = direction.hold > 0.4;
           const intro = index < 0;
@@ -94,12 +95,13 @@ describe("mobile rendering budget", () => {
           cameraPose({
             coupleU: u, centre: point, orbit: direction.orbit, distance: direction.distance,
             characterScale: 1, aspect, fov: camera.fov, lookBias: direction.lookBias,
-            tilt: new Vector2(tilt, tilt), focus: direction.station?.focus, envelope: intro ? envelope.group : undefined,
+            tilt: new Vector2(tilt, tilt), focus: direction.focus ?? direction.station?.focus, envelope: intro ? envelope.group : undefined,
           }, camera.position, look);
           camera.lookAt(look);
           if (aspect < 0.8) camera.setViewOffset(390, 844, 0, 844 * (intro ? -0.15 : index < 5 ? -0.08 : 0.17), 390, 844);
           camera.updateMatrixWorld();
           cullPlanting(world.planting, camera.position);
+          cullLandmarks(world.landmarks, camera.position);
           world.stations.forEach((station) => {
             station.object.visible = station.focus.distanceToSquared(camera.position) <= 22 * 22;
           });

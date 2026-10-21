@@ -13,6 +13,7 @@ export interface Direction {
   hug: number;
   celebrate: number;
   orbit: number;          // camera angle around the couple: 0 = straight ahead, ±π/2 = beside
+  focus?: Vector3;        // overrides the station prop as the look-at point (the new home at the end)
   distance: number;
   lookBias: number;       // 0 = look at the couple, 1 = look at the station prop
 }
@@ -23,6 +24,7 @@ interface DirectionContext {
   cameraGoal: Vector3;
   camera: { aspect: number };
   tapReaction: number;
+  homeFocus?: Vector3;
 }
 
 export function direct(context: DirectionContext, walking: number): Direction {
@@ -101,12 +103,15 @@ export function direct(context: DirectionContext, walking: number): Direction {
       direction.lookBias = 0.2;
       break;
     case "end":
+      // Camera swings behind the couple so their new home fills the background while they hug at the porch.
       direction.faceGroom = "partner";
       direction.faceBride = "partner";
       direction.hug = 1;
       direction.celebrate = 0.25;
-      direction.orbit = 0.0;
-      direction.distance -= 0.6;
+      direction.orbit = Math.PI * 0.8;
+      direction.distance += 0.9;
+      direction.lookBias = 0.35;
+      direction.focus = context.homeFocus;
       break;
     case "walk":
       break;

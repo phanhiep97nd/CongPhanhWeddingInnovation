@@ -94,6 +94,8 @@ export function buildStations(data: SceneData, lowPower = false): Station[] {
   });
 }
 
+import { newHome, placeLandmarks, weddingBackdrop } from "./landmarks";
+
 export function buildWorld(scene: Scene, data: SceneData, lowPower = false) {
   const ground = buildGround(lowPower);
   const planting = buildPlanting(lowPower);
@@ -113,7 +115,13 @@ export function buildWorld(scene: Scene, data: SceneData, lowPower = false) {
   });
   batches.forEach((batch) => planting.add(mergeStatic(batch)));
   scene.add(ground, planting);
-  return { stations, planting };
+
+  // Landmarks framing the walk: the wedding backdrop behind the start, the new home at the end.
+  const backdrop = weddingBackdrop(data, lowPower);
+  const home = newHome(lowPower);
+  placeLandmarks(backdrop, home);
+  scene.add(backdrop, home.root);
+  return { stations, planting, home, landmarks: [backdrop, home.root] };
 }
 
 // Small helper for gentle bobbing of floating props.

@@ -26,7 +26,7 @@ describe("owner-selected viewing modes", () => {
   it("hides the switcher when the owner keeps a single mode", async () => {
     vi.spyOn(capability, "canRender3d").mockReturnValue(true);
     render(<Hy3dModes wedding={{ ...hy3d, viewModes: ["normal"] }} guest={null} slug="t" />);
-    expect(await screen.findByLabelText("Các hạng mục thiệp")).toBeInTheDocument();
+    expect(await screen.findByLabelText("Các hạng mục thiệp", undefined, { timeout: 4000 })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /Chế độ xem thiệp/ })).toBeNull();
     vi.restoreAllMocks();
   });

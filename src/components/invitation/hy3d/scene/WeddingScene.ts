@@ -5,11 +5,12 @@ import { setupRenderer } from "./renderSetup";
 import { EnvelopeIntro } from "./envelopeIntro";
 import { CelebrationParticles } from "./celebrationParticles";
 import { direct, type Direction } from "./choreography";
+import { cullLandmarks, type NewHome } from "./landmarks";
 import { cullPlanting } from "./chunkInstances";
 import type { GlbCharacter } from "./glbCharacter";
 import { modelsAvailable } from "./modelProbe";
 import {
-  CircleGeometry, DirectionalLight, Group, MathUtils, Mesh, MeshBasicMaterial,
+  CircleGeometry, DirectionalLight, Group, MathUtils, Mesh, MeshBasicMaterial, Object3D,
   PerspectiveCamera, Raycaster, Scene, Texture, Timer, Vector2, Vector3, WebGLRenderer,
 } from "three";
 import { buildBride, buildGroom, disposeCharacterGeometries, type Character } from "./characters";
@@ -43,6 +44,8 @@ export class WeddingScene {
   bride: Character;
   readonly stations: Station[];
   private readonly planting: Group;
+  private readonly home: NewHome;
+  private readonly landmarks: Object3D[];
   private readonly modelAbort = new AbortController();
   private models?: { bride: GlbCharacter; groom: GlbCharacter };
   private characterScale = 1;
@@ -100,6 +103,8 @@ export class WeddingScene {
     const world = buildWorld(this.scene, data, options.lowPower);
     this.stations = world.stations;
     this.planting = world.planting;
+    this.home = world.home;
+    this.landmarks = world.landmarks;
     this.particles = new CelebrationParticles(this.scene, options.lowPower ?? false);
     this.petals = new Petals(options.lowPower ? 60 : 140);
     this.scene.add(this.petals.mesh);
@@ -288,7 +293,14 @@ export class WeddingScene {
     const walking = MathUtils.clamp(travelled / Math.max(dt, 1e-4) / 0.9, 0, 1);
     this.placeCouple(this.coupleU, walking);
 
-    const direction = direct({ stations: this.stations, coupleU: this.coupleU, cameraGoal: this.cameraGoal, camera: this.camera, tapReaction: this.tapReaction }, walking);
+    const direction = direct({
+      stations: this.stations,
+      coupleU: this.coupleU,
+      cameraGoal: this.cameraGoal,
+      camera: this.camera,
+      tapReaction: this.tapReaction,
+      homeFocus: this.home.focus,
+    }, walking);
     this.perform(direction, dt);
 
     this.groom.update(dt, time);
@@ -300,6 +312,7 @@ export class WeddingScene {
     this.updateViewShift(dt);
     this.followSun();
     cullPlanting(this.planting, this.camera.position);
+    cullLandmarks(this.landmarks, this.camera.position);
     this.stations.forEach((station) => {
       station.object.visible = station.focus.distanceToSquared(this.camera.position) <= 22 * 22;
     });
@@ -353,6 +366,11 @@ export class WeddingScene {
         this.particles.spawnHearts(middle.clone().setY(1.3), 6);
       }
     }
+    // At the porch the door swings open and the warm light inside brightens; it closes again if they walk back.
+    const welcome = direction.key === "end" ? 1 : 0;
+    this.home.door.rotation.y = MathUtils.damp(this.home.door.rotation.y, -1.35 * welcome, 1.8, dt);
+    this.home.glow.opacity = MathUtils.damp(this.home.glow.opacity, 0.35 + 0.6 * welcome, 1.8, dt);
+
     if (direction.key === "story" && Math.random() < dt * 0.9) {
       this.particles.spawnHearts(this.coupleCentre().setY(1.3), 1);
     }
@@ -391,7 +409,7 @@ export class WeddingScene {
       coupleU: this.coupleU, centre: this.coupleCentre(), orbit: this.orbit,
       tilt: this.tilt, distance: this.distance, characterScale: this.characterScale,
       aspect: this.camera.aspect, fov: this.camera.fov, lookBias: this.lookBias,
-      focus: direction?.station?.focus,
+      focus: direction?.focus ?? direction?.station?.focus,
       envelope: this.intro !== "done" ? this.envelope.group : undefined,
     }, position, look);
   }
