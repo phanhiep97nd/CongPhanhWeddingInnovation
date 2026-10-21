@@ -26,6 +26,8 @@ export type { SceneData, SceneOptions } from "./sceneData";
 const START_U = 0.02;
 const END_U = 0.97;
 const PATH_LENGTH = 42;
+const CRANE_SECONDS = 3.2;
+const CRANE_HEIGHT = 2.8;
 
 export function progressToU(progress: number) {
   return START_U + clamp01(progress) * (END_U - START_U);
@@ -65,6 +67,9 @@ export class WeddingScene {
   private orbit = -0.55;
   private distance = 3.4;
   private lookBias = 0;
+  private craneTime = 0;      // seconds left in the crane move into / out of the ending
+  private lift = 0;
+  private atEnd = false;
   private running = false;
   private disposed = false;
   private readonly envelope: EnvelopeIntro;
@@ -160,12 +165,8 @@ export class WeddingScene {
   // Taps on the canvas: open the envelope, or make the couple react.
   tap(clientX: number, clientY: number) {
     if (!this.settings.taps) return;
-    if (this.intro === "envelope" || this.intro === "opening") {
-      this.envelope.phase = "opening";
-      return;
-    }
-    if (this.intro === "card") {
-      this.envelope.leave();
+    if (this.intro !== "done" && this.intro !== "leaving") {
+      this.advanceIntro();
       return;
     }
     const rect = this.canvas.getBoundingClientRect();
@@ -187,6 +188,15 @@ export class WeddingScene {
     this.visible = visible;
     if (visible) this.start();
     else this.stop();
+  }
+
+  // Called once when the envelope opening has finished (or was skipped).
+  onIntroDone?: () => void;
+
+  // Move the envelope opening on by one step (open it, or put the card away), as a tap on it does.
+  advanceIntro() {
+    if (this.intro === "envelope" || this.intro === "opening") this.envelope.phase = "opening";
+    else if (this.intro === "card") this.envelope.leave();
   }
 
   isIntroActive() {
@@ -216,8 +226,9 @@ export class WeddingScene {
   private updateViewShift(dt: number) {
     const openingEnd = 0.5 / (this.stations.length + 1);
     if (!this.settings.viewShift) {
-      // Background (mixed) mode: only on the classic hero move the couple below the big title text.
-      this.dampViewShift(this.progress < openingEnd ? -0.27 : 0, dt);
+      // Background (mixed) mode: the envelope plays centred with the page hidden; afterwards, on the classic
+      // hero, move the couple below the big title text.
+      this.dampViewShift(this.intro !== "done" ? 0 : this.progress < openingEnd ? -0.27 : 0, dt);
       return;
     }
     // The envelope sits lower than the couple so the hero text above stays clear.
@@ -284,7 +295,10 @@ export class WeddingScene {
 
   private update(dt: number, time: number) {
     windUniform.value = time;
-    if (this.intro !== "done") this.envelope.update(dt);
+    if (this.intro !== "done") {
+      this.envelope.update(dt);
+      if (!this.isIntroActive()) this.onIntroDone?.();
+    }
 
     const previous = this.coupleU;
     this.coupleU = MathUtils.damp(this.coupleU, this.targetU, 2.2, dt);
@@ -408,7 +422,7 @@ export class WeddingScene {
     cameraPose({
       coupleU: this.coupleU, centre: this.coupleCentre(), orbit: this.orbit,
       tilt: this.tilt, distance: this.distance, characterScale: this.characterScale,
-      aspect: this.camera.aspect, fov: this.camera.fov, lookBias: this.lookBias,
+      aspect: this.camera.aspect, fov: this.camera.fov, lookBias: this.lookBias, lift: this.lift,
       focus: direction?.focus ?? direction?.station?.focus,
       envelope: this.intro !== "done" ? this.envelope.group : undefined,
     }, position, look);
@@ -422,7 +436,18 @@ export class WeddingScene {
   }
 
   private updateCamera(direction: Direction, dt: number) {
-    this.orbit = MathUtils.damp(this.orbit, direction.orbit, 1.6, dt);
+    // Into and out of the ending the camera swings half way round the couple: it rises in an arc and comes
+    // back down behind them, so the house never slides past the lens.
+    const atEnd = direction.key === "end";
+    if (atEnd !== this.atEnd) {
+      this.atEnd = atEnd;
+      // Turning back mid-move reverses the arc from the same height instead of dropping the camera.
+      this.craneTime = CRANE_SECONDS - this.craneTime;
+    }
+    this.craneTime = Math.max(0, this.craneTime - dt);
+    this.lift = this.craneTime > 0 ? Math.sin(Math.PI * (1 - this.craneTime / CRANE_SECONDS)) * CRANE_HEIGHT : 0;
+    // A slower swing during the crane keeps the turn and the rise in step.
+    this.orbit = MathUtils.damp(this.orbit, direction.orbit, this.craneTime > 0 ? 1.1 : 1.6, dt);
     this.distance = MathUtils.damp(this.distance, direction.distance, 1.6, dt);
     this.lookBias = MathUtils.damp(this.lookBias, direction.lookBias, 1.6, dt);
     this.computeCamera(direction, this.cameraGoal, this.lookGoal);

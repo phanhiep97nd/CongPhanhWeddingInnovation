@@ -27,12 +27,13 @@ import { ConfirmationPopup } from "./ConfirmationPopup";
 import { DressCodePopup } from "./DressCodePopup";
 
 // ── App ───────────────────────────────────────────────────────────────────────
-export default function InvitationShell({ wedding, guest, slug, backdrop, onScrollContainer }: {
+export default function InvitationShell({ wedding, guest, slug, backdrop, onScrollContainer, veiled = false }: {
   wedding: Wedding;
   guest: PublicGuest | null;
   slug: string;
   backdrop?: ReactNode;
   onScrollContainer?: (element: HTMLDivElement | null) => void;
+  veiled?: boolean;   // content hidden while the backdrop plays its opening (Trong suốt mode)
 }) {
   const hasBackdrop = backdrop != null;
   const IMAGES = weddingImages(wedding);
@@ -89,9 +90,10 @@ export default function InvitationShell({ wedding, guest, slug, backdrop, onScro
   }, [navKey]);
 
   useEffect(() => {
+    if (veiled) return;
     const timer = setTimeout(() => setShowInvite(true), guest ? 0 : 2500);
     return () => clearTimeout(timer);
-  }, [guest]);
+  }, [guest, veiled]);
 
   // In-app browsers require a user gesture before audio can play.
   useEffect(() => {
@@ -188,7 +190,7 @@ export default function InvitationShell({ wedding, guest, slug, backdrop, onScro
 
   return (
     <WeddingContext.Provider value={{ wedding, guest, slug }}>
-    <div ref={containerRef} className={`scroll-container bg-petal selection:bg-primary${hasBackdrop ? " classic-over-3d" : ""}`} style={themeVariables(wedding.theme.primary) as CSSProperties}>
+    <div ref={containerRef} className={`scroll-container bg-petal selection:bg-primary${hasBackdrop ? " classic-over-3d" : ""}${veiled ? " is-veiled" : ""}`} style={themeVariables(wedding.theme.primary) as CSSProperties}>
       {hasBackdrop && <div className="classic-3d-backdrop" aria-hidden="true">{backdrop}</div>}
 
       {/* ── Header ── */}

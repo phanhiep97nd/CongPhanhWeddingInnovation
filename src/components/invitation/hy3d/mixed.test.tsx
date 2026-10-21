@@ -7,14 +7,14 @@ import { sceneOptionsFor } from "./scene/sceneData";
 import { wedding } from "../../../test/plan-fixtures";
 import type { Wedding } from "../../../lib/types";
 
-const canvas = vi.hoisted(() => ({ setProgress: vi.fn(), props: vi.fn() }));
+const canvas = vi.hoisted(() => ({ setProgress: vi.fn(), advanceIntro: vi.fn(), props: vi.fn() }));
 
 vi.mock("./Hy3dCanvas", async () => {
   const { createElement, forwardRef, useImperativeHandle } = await import("react");
   return {
     default: forwardRef(function Canvas(props, ref) {
       canvas.props(props);
-      useImperativeHandle(ref, () => ({ setProgress: canvas.setProgress }), []);
+      useImperativeHandle(ref, () => ({ setProgress: canvas.setProgress, advanceIntro: canvas.advanceIntro }), []);
       return createElement("canvas");
     }),
   };
@@ -38,6 +38,7 @@ afterEach(() => {
   vi.unstubAllGlobals();
   canvas.setProgress.mockClear();
   canvas.props.mockClear();
+  canvas.advanceIntro.mockClear();
 });
 
 function metrics(element: HTMLElement, values: Record<string, number | HTMLElement | null>) {
@@ -118,6 +119,35 @@ describe("container walk progress", () => {
   });
 });
 
+// Runs before the scroll wiring test: the opening plays only once per page load.
+describe("mixed opening", () => {
+  it("hides the page while the envelope opens, lets a tap hurry it, then reveals the page and the invitation", () => {
+    vi.useFakeTimers();
+    try {
+      const { container } = render(<MixedMode wedding={mixedWedding} guest={null} slug="test" onUnavailable={vi.fn()} />);
+      const root = container.querySelector(".scroll-container")!;
+      expect(root).toHaveClass("is-veiled");
+      const props = canvas.props.mock.lastCall![0];
+      expect(props.options).toEqual({ background: true, skipIntro: false });
+
+      fireEvent.click(screen.getByRole("button", { name: "Chạm để mở thiệp" }));
+      expect(canvas.advanceIntro).toHaveBeenCalledOnce();
+
+      // No invitation popup while veiled.
+      act(() => { vi.advanceTimersByTime(3000); });
+      expect(screen.queryByRole("button", { name: "Đóng lời mời" })).toBeNull();
+
+      act(() => props.onIntroDone());
+      expect(root).not.toHaveClass("is-veiled");
+      expect(screen.queryByRole("button", { name: "Chạm để mở thiệp" })).toBeNull();
+      act(() => { vi.advanceTimersByTime(2600); });
+      expect(screen.getByRole("button", { name: "Đóng lời mời" })).toBeInTheDocument();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+});
+
 describe("mixed scroll wiring", () => {
   it("uses container scroll, coalesces frames, remeasures on resize and cleans up", () => {
     let nextFrame = 0;
@@ -142,7 +172,7 @@ describe("mixed scroll wiring", () => {
     fireEvent(window, new Event("resize"));
     flush();
     expect(canvas.props).toHaveBeenLastCalledWith(expect.objectContaining({
-      options: { background: true },
+      options: { background: true, skipIntro: true },
       data: expect.objectContaining({ stations: ["story", "timeline", "rsvp", "custom:test"] }),
     }));
     canvas.setProgress.mockClear();
@@ -174,9 +204,9 @@ describe("mixed scroll wiring", () => {
 });
 
 describe("background scene policy", () => {
-  it.each([false, true])("disables intro, taps, tilt and portrait shift (lowPower=%s)", (lowPower) => {
+  it.each([false, true])("disables taps, tilt and portrait shift but keeps the envelope opening (lowPower=%s)", (lowPower) => {
     expect(sceneOptionsFor({ background: true, lowPower })).toMatchObject({
-      skipIntro: true, taps: false, tilt: false, viewShift: false, fpsCap: 30, pixelRatioCap: 1.25,
+      skipIntro: false, taps: false, tilt: false, viewShift: false, fpsCap: 30, pixelRatioCap: 1.25,
     });
   });
 

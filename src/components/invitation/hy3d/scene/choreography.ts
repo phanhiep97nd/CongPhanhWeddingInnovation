@@ -103,12 +103,13 @@ export function direct(context: DirectionContext, walking: number): Direction {
       direction.lookBias = 0.2;
       break;
     case "end":
-      // Camera swings behind the couple so their new home fills the background while they hug at the porch.
+      // Camera cranes up and over to behind the couple (round the side away from the house, never through it)
+      // so their new home fills the background while they hug at the porch.
       direction.faceGroom = "partner";
       direction.faceBride = "partner";
       direction.hug = 1;
       direction.celebrate = 0.25;
-      direction.orbit = Math.PI * 0.8;
+      direction.orbit = -Math.PI * 1.2;
       direction.distance += 0.9;
       direction.lookBias = 0.35;
       direction.focus = context.homeFocus;

@@ -5,12 +5,14 @@ import "./hy3d.css";
 
 export interface Hy3dCanvasHandle {
   setProgress: (progress: number) => void;
+  advanceIntro: () => void;
 }
 
 interface Props {
   data: SceneData;
   onUnavailable: () => void;
   options?: SceneOptions;
+  onIntroDone?: () => void;   // the envelope opening finished, was skipped, or there is none
 }
 
 interface DeviceOrientationPermission {
@@ -25,17 +27,20 @@ function isLowPower() {
 }
 
 // ── Canvas ────────────────────────────────────────────────────────────────────
-const Hy3dCanvas = forwardRef<Hy3dCanvasHandle, Props>(function Hy3dCanvas({ data, onUnavailable, options }, ref) {
+const Hy3dCanvas = forwardRef<Hy3dCanvasHandle, Props>(function Hy3dCanvas({ data, onUnavailable, options, onIntroDone }, ref) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const sceneRef = useRef<WeddingScene | null>(null);
   const pendingProgress = useRef(0);
   const [ready, setReady] = useState(false);
+  const introDone = useRef(onIntroDone);
+  introDone.current = onIntroDone;
 
   useImperativeHandle(ref, () => ({
     setProgress: (progress: number) => {
       pendingProgress.current = progress;
       sceneRef.current?.setProgress(progress);
     },
+    advanceIntro: () => sceneRef.current?.advanceIntro(),
   }), []);
 
   useEffect(() => {
@@ -55,6 +60,8 @@ const Hy3dCanvas = forwardRef<Hy3dCanvasHandle, Props>(function Hy3dCanvas({ dat
             return;
           }
           sceneRef.current = scene;
+          if (scene.isIntroActive()) scene.onIntroDone = () => introDone.current?.();
+          else introDone.current?.();
           if (pendingProgress.current) scene.setProgress(pendingProgress.current);
           scene.setVisible(document.visibilityState === "visible");
           setReady(true);

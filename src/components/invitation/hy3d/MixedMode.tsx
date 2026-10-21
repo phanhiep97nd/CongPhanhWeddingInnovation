@@ -7,7 +7,16 @@ import { observeResize } from "./observeResize";
 import { containerProgress, containerStopOffsets } from "./progress";
 import type { SceneData } from "./scene/sceneData";
 
+// The envelope opening plays once per page load; switching back to this mode later goes straight to the page.
+let openingPlayed = false;
+const OPENING_TIMEOUT_MS = 12000;
+
+function prefersReducedMotion() {
+  return typeof window.matchMedia === "function" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
 // ── Classic content over the walking scene ──
+// First the 3D envelope opens on its own (tap to hurry it), then the classic page fades in over the scene.
 export default function MixedMode({ wedding, guest, slug, onUnavailable }: {
   wedding: Wedding;
   guest: PublicGuest | null;
@@ -16,6 +25,19 @@ export default function MixedMode({ wedding, guest, slug, onUnavailable }: {
 }) {
   const canvasRef = useRef<Hy3dCanvasHandle>(null);
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
+  const [opening, setOpening] = useState(() => !openingPlayed && !prefersReducedMotion());
+
+  function finishOpening() {
+    openingPlayed = true;
+    setOpening(false);
+  }
+
+  // Never keep the page hidden if the scene is slow to load or stalls.
+  useEffect(() => {
+    if (!opening) return;
+    const timer = window.setTimeout(finishOpening, OPENING_TIMEOUT_MS);
+    return () => window.clearTimeout(timer);
+  }, [opening]);
   const stops = useMemo(() => wedding.sections.filter((section) => section.enabled).map((section) => section.key), [wedding.sections]);
   const sectionIds = useMemo(() => stops.map((key) => key.replace(":", "-")), [stops]);
   const sceneData = useMemo<SceneData>(() => ({
@@ -62,12 +84,28 @@ export default function MixedMode({ wedding, guest, slug, onUnavailable }: {
   }, [container, sectionIds]);
 
   return (
-    <ClassicInvitation
-      wedding={wedding}
-      guest={guest}
-      slug={slug}
-      onScrollContainer={setContainer}
-      backdrop={<Hy3dCanvas ref={canvasRef} data={sceneData} onUnavailable={onUnavailable} options={{ background: true }} />}
-    />
+    <>
+      <ClassicInvitation
+        wedding={wedding}
+        guest={guest}
+        slug={slug}
+        veiled={opening}
+        onScrollContainer={setContainer}
+        backdrop={
+          <Hy3dCanvas
+            ref={canvasRef}
+            data={sceneData}
+            onUnavailable={onUnavailable}
+            onIntroDone={finishOpening}
+            options={{ background: true, skipIntro: !opening }}
+          />
+        }
+      />
+      {opening && (
+        <button type="button" className="mixed-opening" onClick={() => canvasRef.current?.advanceIntro()}>
+          <span className="mixed-opening-hint">Chạm để mở thiệp</span>
+        </button>
+      )}
+    </>
   );
 }

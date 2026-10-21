@@ -11,6 +11,7 @@ interface CameraPose {
   aspect: number;
   fov: number;
   lookBias: number;
+  lift?: number;          // extra camera height in metres (the crane move at the end)
   focus?: Vector3;
   envelope?: Group;
 }
@@ -20,7 +21,7 @@ export function cameraPose(pose: CameraPose, position: Vector3, look: Vector3) {
   const orbit = pose.orbit + pose.tilt.x * 0.25;
   const offset = tangent.multiplyScalar(Math.cos(orbit)).addScaledVector(side, Math.sin(orbit));
   position.copy(pose.centre).addScaledVector(offset, pose.distance * pose.characterScale);
-  position.y = 1.35 * pose.characterScale + pose.tilt.y * 0.25 + (pose.aspect < 0.8 ? 0.15 : 0);
+  position.y = (1.35 + (pose.lift ?? 0)) * pose.characterScale + pose.tilt.y * 0.25 + (pose.aspect < 0.8 ? 0.15 : 0);
   look.copy(pose.centre).setY(0.62 * pose.characterScale);
   if (pose.focus) look.lerp(pose.focus.clone().setY(0.8), pose.lookBias);
   if (pose.envelope) {

@@ -23,7 +23,7 @@ export function sceneOptionsFor(options: SceneOptions = {}) {
   return {
     ...options,
     background,
-    skipIntro: background || (options.skipIntro ?? false),
+    skipIntro: options.skipIntro ?? false,
     taps: !background,
     tilt: !background,
     viewShift: !background,
