@@ -1,5 +1,5 @@
 const express = require('express');
-const mongoose = require('mongoose');
+const { isValidId } = require('../db/model');
 const User = require('../models/User');
 const Wedding = require('../models/Wedding');
 const Guest = require('../models/Guest');
@@ -9,6 +9,7 @@ const auth = require('../middleware/auth');
 const { requireAdmin } = auth;
 const { expiresAt } = require('../lib/plans');
 const { applyPaidOrder, orderView, uniqueOrderCode } = require('../lib/orders');
+const db = require('../db');
 
 const router = express.Router();
 router.use(auth, requireAdmin);
@@ -34,8 +35,8 @@ router.get('/stats', async (request, response, next) => {
     const [users, lockedUsers, weddings, guests, paidWeddings, revenueRows, planRows] = await Promise.all([
       User.countDocuments(), User.countDocuments({ status: 'locked' }), Wedding.countDocuments(),
       Guest.countDocuments(), Wedding.countDocuments({ plan: { $ne: 'free' } }),
-      Order.aggregate([{ $match: { status: 'paid' } }, { $group: { _id: { $dateToString: { format: '%Y-%m', date: '$paidAt' } }, amount: { $sum: '$amount' }, orders: { $sum: 1 } } }]),
-      Wedding.aggregate([{ $group: { _id: '$plan', count: { $sum: 1 } } }])
+      Order.monthlyRevenue(),
+      Wedding.groupBy('plan')
     ]);
     const monthAmounts = new Map(revenueRows.map(row => [row._id, row]));
     const revenueByMonth = [];
@@ -66,8 +67,8 @@ router.get('/users', async (request, response, next) => {
     ]);
     const ids = users.map(user => user._id);
     const [counts, payments] = await Promise.all([
-      Wedding.aggregate([{ $match: { owner: { $in: ids } } }, { $group: { _id: '$owner', count: { $sum: 1 } } }]),
-      Order.aggregate([{ $match: { user: { $in: ids }, status: 'paid' } }, { $group: { _id: '$user', amount: { $sum: '$amount' } } }])
+      Wedding.groupBy('owner', { owner: { $in: ids } }),
+      Order.groupBy('user', { user: { $in: ids }, status: 'paid' }, { amount: 'amount' })
     ]);
     const countMap = new Map(counts.map(row => [String(row._id), row.count]));
     const paidMap = new Map(payments.map(row => [String(row._id), row.amount]));
@@ -79,13 +80,13 @@ router.get('/users', async (request, response, next) => {
 
 router.get('/users/:id', async (request, response, next) => {
   try {
-    if (!mongoose.isValidObjectId(request.params.id)) return response.status(404).json({ message: 'Không tìm thấy' });
+    if (!isValidId(request.params.id)) return response.status(404).json({ message: 'Không tìm thấy' });
     const user = await User.findById(request.params.id).lean();
     if (!user) return response.status(404).json({ message: 'Không tìm thấy' });
     const [weddings, orders, settings] = await Promise.all([
       Wedding.find({ owner: user._id }).lean(), Order.find({ user: user._id }).sort({ createdAt: -1 }).lean(), getSettings()
     ]);
-    const counts = await Guest.aggregate([{ $match: { wedding: { $in: weddings.map(wedding => wedding._id) } } }, { $group: { _id: '$wedding', count: { $sum: 1 } } }]);
+    const counts = await Guest.groupBy('wedding', { wedding: { $in: weddings.map(wedding => wedding._id) } });
     const countMap = new Map(counts.map(row => [String(row._id), row.count]));
     response.json({
       user: userView(user),
@@ -99,7 +100,7 @@ router.get('/users/:id', async (request, response, next) => {
 
 router.patch('/users/:id', async (request, response, next) => {
   try {
-    if (!mongoose.isValidObjectId(request.params.id)) return response.status(404).json({ message: 'Không tìm thấy' });
+    if (!isValidId(request.params.id)) return response.status(404).json({ message: 'Không tìm thấy' });
     const { status, role } = request.body;
     if ((status !== undefined && !['active', 'locked'].includes(status)) || (role !== undefined && !['user', 'admin'].includes(role))) {
       return response.status(400).json({ message: 'Dữ liệu không hợp lệ' });
@@ -121,17 +122,19 @@ router.patch('/users/:id', async (request, response, next) => {
 // ─── WEDDINGS AND ORDERS ───
 router.patch('/weddings/:id/plan', async (request, response, next) => {
   try {
-    if (!mongoose.isValidObjectId(request.params.id)) return response.status(404).json({ message: 'Không tìm thấy' });
+    if (!isValidId(request.params.id)) return response.status(404).json({ message: 'Không tìm thấy' });
     const { plan, note } = request.body;
     if (!['free', 'basic', 'premium'].includes(plan) || (note !== undefined && (typeof note !== 'string' || note.length > 500))) {
       return response.status(400).json({ message: 'Dữ liệu không hợp lệ' });
     }
     const wedding = await Wedding.findById(request.params.id);
     if (!wedding) return response.status(404).json({ message: 'Không tìm thấy' });
-    wedding.plan = plan;
-    wedding.planActivatedAt = plan === 'free' ? null : new Date();
-    await wedding.save();
-    await Order.create({ orderCode: await uniqueOrderCode(), wedding: wedding._id, user: wedding.owner, plan, amount: 0, status: 'paid', method: 'manual', note: note || '', paidAt: new Date() });
+    await db.transaction(async () => {
+      wedding.plan = plan;
+      wedding.planActivatedAt = plan === 'free' ? null : new Date();
+      await wedding.save();
+      await Order.create({ orderCode: await uniqueOrderCode(), wedding: wedding._id, user: wedding.owner, plan, amount: 0, status: 'paid', method: 'manual', note: note || '', paidAt: new Date() });
+    });
     response.json({ id: String(wedding._id), slug: wedding.slug, plan: wedding.plan, planActivatedAt: wedding.planActivatedAt });
   } catch (error) {
     next(error);

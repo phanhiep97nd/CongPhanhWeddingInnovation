@@ -1,0 +1,72 @@
+name: hythiep
+
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: hythiep
+      POSTGRES_USER: hythiep
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hythiep -d hythiep"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    logging: &logging
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  api:
+    build:
+      context: .
+      dockerfile: api/Dockerfile.home
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: "3001"
+      DATABASE_URL: postgresql://hythiep:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}@db:5432/hythiep
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env}
+      ALLOWED_ORIGINS: https://hythiep.net
+      SITE_ORIGIN: https://hythiep.net
+      BRAND_NAME: ${BRAND_NAME:-Hỷ Thiệp}
+      OG_GUEST_OVERLAY: ${OG_GUEST_OVERLAY:-on}
+      OG_FONT: ${OG_FONT:-Roboto}
+      ADMIN_EMAILS: ${ADMIN_EMAILS:-}
+      PAYOS_CLIENT_ID: ${PAYOS_CLIENT_ID:-}
+      PAYOS_API_KEY: ${PAYOS_API_KEY:-}
+      PAYOS_CHECKSUM_KEY: ${PAYOS_CHECKSUM_KEY:-}
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3001/').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+    logging: *logging
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.home
+      args:
+        VITE_CLOUDINARY_CLOUD_NAME: ${VITE_CLOUDINARY_CLOUD_NAME:-}
+        VITE_CLOUDINARY_UPLOAD_PRESET: ${VITE_CLOUDINARY_UPLOAD_PRESET:-}
+        VITE_LEGACY_SLUG: ${VITE_LEGACY_SLUG:-hythiep}
+        VITE_BRAND_NAME: ${VITE_BRAND_NAME:-Hỷ Thiệp}
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8040:80"
+    depends_on:
+      api:
+        condition: service_healthy
+    logging: *logging
+
+volumes:
+  postgres_data:

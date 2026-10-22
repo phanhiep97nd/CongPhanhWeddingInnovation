@@ -2,8 +2,8 @@ import { beforeAll, afterAll, beforeEach } from 'vitest';
 import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
-const { MongoMemoryServer } = require('mongodb-memory-server');
-const mongoose = require('mongoose');
+const { PGlite } = require('@electric-sql/pglite');
+const db = require('../../db');
 const request = require('supertest');
 
 process.env.NODE_ENV = 'test';
@@ -20,33 +20,22 @@ const { Settings, invalidateSettings } = require('../../models/Settings');
 export { app, request, User, Wedding, Guest, Photo, Order, Settings };
 
 export function useDatabase() {
-  let mongo;
+  let database;
 
   beforeAll(async () => {
-    if (process.env.MONGOMS_EXTERNAL_URI) {
-      await mongoose.connect(process.env.MONGOMS_EXTERNAL_URI);
-    } else {
-      mongo = await MongoMemoryServer.create();
-      await mongoose.connect(mongo.getUri());
-    }
-    await Promise.all([User.init(), Wedding.init(), Guest.init(), Photo.init(), Order.init(), Settings.init()]);
+    database = new PGlite();
+    db.useTestDatabase(database);
+    await db.migrate();
   }, 60000);
 
   beforeEach(async () => {
-    await Promise.all([
-      User.deleteMany({}),
-      Wedding.deleteMany({}),
-      Guest.deleteMany({}),
-      Photo.deleteMany({}),
-      Order.deleteMany({}),
-      Settings.deleteMany({})
-    ]);
+    await db.query('TRUNCATE users, weddings, guests, photos, orders, settings CASCADE');
     invalidateSettings();
   });
 
   afterAll(async () => {
-    await mongoose.disconnect();
-    if (mongo) await mongo.stop();
+    db.useTestDatabase(undefined);
+    if (database) await database.close();
   });
 }
 

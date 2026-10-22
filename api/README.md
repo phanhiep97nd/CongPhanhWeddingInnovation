@@ -1,8 +1,14 @@
 # Wedding API
 
-Run `npm install` in `api/`, then set `MONGO_URI` and `JWT_SECRET` (required), `ALLOWED_ORIGINS` (comma-separated frontend origins), `PORT` (default 3001), `API_ORIGIN` for Vercel middleware, and `SITE_ORIGIN` for invite URLs, payment returns, and cancellations. Set `PAYOS_CLIENT_ID`, `PAYOS_API_KEY`, and `PAYOS_CHECKSUM_KEY` to enable checkout. Register `<API>/payos/webhook` as the webhook URL in the PayOS dashboard. `ADMIN_EMAILS` is a comma-separated list promoted to admin at registration or login. `LEGACY_OWNER_EMAIL` is required for migration; `SEED_PASSWORD` sets the demo password (default `demo12345`).
+Run `npm ci` in `api/`, copy `.env.example` to `.env`, and set `DATABASE_URL` (PostgreSQL) and `JWT_SECRET` (required). Use Node.js 22+. Set `ALLOWED_ORIGINS` (comma-separated frontend origins), `PORT` (default 3001), and `SITE_ORIGIN` for invitation/payment URLs. `MONGO_URI` is no longer used. Home deployment uses a private PostgreSQL Docker service; see [home server setup](../docs/HOME_SERVER_SETUP.md).
 
-Scripts: `npm start`, `npm run dev`, `npm test`, `npm run seed`, `npm run migrate:legacy`, `npm run make-admin -- <email>`.
+The API applies versioned SQL migrations on startup under a transaction/advisory lock. Use `npm run db:migrate` to apply them separately. Relational fields use foreign keys and flexible wedding content uses JSONB. API IDs and response formats are preserved. Payment confirmation and plan activation commit atomically. Database tables are created in the PostgreSQL URL's default search path; use a dedicated database for this app.
+
+Set `PAYOS_CLIENT_ID`, `PAYOS_API_KEY`, and `PAYOS_CHECKSUM_KEY` to enable checkout. On the home domain register `https://hythiep.net/api/payos/webhook`. `ADMIN_EMAILS` promotes matching emails on register/login. `SEED_PASSWORD` is only for demo seed data; do not seed production.
+
+Scripts: `npm start`, `npm run dev`, `npm test`, `npm run seed`, `npm run db:migrate`, `npm run db:import-mongo -- /export/directory [--apply]`, `npm run make-admin -- <email>`.
+
+Tests use isolated in-memory PostgreSQL through PGlite (no MongoDB process or production database). Import defaults to a rollback-only dry run and requires an empty target; see [data migration](../docs/POSTGRESQL_MIGRATION.md). Back up PostgreSQL with `pg_dump` and validate restoration before schema changes; returning to older MongoDB code requires a separate cutover plan.
 
 Authenticated endpoints require `Authorization: Bearer <token>`:
 

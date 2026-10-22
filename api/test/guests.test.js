@@ -50,7 +50,7 @@ describe('owner guest routes', () => {
     expect(result.body.map(guest => guest.invitationName)).toEqual(guests.map(guest => guest.invitationName));
   });
 
-  it('retries only a bulk document whose code collides', async () => {
+  it('retries an atomic bulk insert when a guest code collides', async () => {
     const { wedding } = await setup();
     await Guest.create({ wedding: wedding.id, code: 'abcdefgh', name: 'Existing', invitationName: 'Existing' });
 
@@ -106,6 +106,6 @@ describe('owner guest routes', () => {
   });
 
   it('requires wedding on a guest model', async () => {
-    await expect(Guest.create({ name: 'A', invitationName: 'A' })).rejects.toMatchObject({ name: 'ValidationError' });
+    await expect(Guest.create({ name: 'A', invitationName: 'A' })).rejects.toMatchObject({ status: 400 });
   });
 });

@@ -1,5 +1,5 @@
 const express = require('express');
-const mongoose = require('mongoose');
+const { isValidId } = require('../db/model');
 const crypto = require('node:crypto');
 const Wedding = require('../models/Wedding');
 const Guest = require('../models/Guest');
@@ -19,7 +19,7 @@ router.use(auth);
 
 async function owned(request, response, next) {
   try {
-    if (!mongoose.isValidObjectId(request.params.id)) {
+    if (!isValidId(request.params.id)) {
       return response.status(404).json({ message: 'Không tìm thấy thiệp cưới' });
     }
 
@@ -63,10 +63,7 @@ function randomSuffix() {
 router.get('/', async (request, response, next) => {
   try {
     const weddings = await Wedding.find({ owner: request.user.sub }).sort({ updatedAt: -1 }).lean();
-    const counts = await Guest.aggregate([
-      { $match: { wedding: { $in: weddings.map(wedding => wedding._id) } } },
-      { $group: { _id: '$wedding', count: { $sum: 1 } } }
-    ]);
+    const counts = await Guest.groupBy('wedding', { wedding: { $in: weddings.map(wedding => wedding._id) } });
     const countByWedding = new Map(counts.map(item => [String(item._id), item.count]));
     const settings = await getSettings();
 
@@ -122,7 +119,7 @@ router.post('/', async (request, response, next) => {
         const wedding = await Wedding.create({ owner: request.user.sub, ...data });
         return response.status(201).json(await ownerView(wedding));
       } catch (error) {
-        if (error.code !== 11000 || attempt === 4) throw error;
+        if (error.code !== '23505' || attempt === 4) throw error;
       }
     }
     return response.status(409).json({ message: 'Không thể tạo đường dẫn' });
@@ -192,10 +189,7 @@ router.put('/:id', async (request, response, next) => {
 
 router.delete('/:id', async (request, response, next) => {
   try {
-    await Promise.all([
-      Guest.deleteMany({ wedding: request.wedding._id }),
-      Photo.deleteMany({ wedding: request.wedding._id })
-    ]);
+    // PostgreSQL cascades guests/photos and retains order history (wedding=NULL).
     await request.wedding.deleteOne();
     response.status(204).end();
   } catch (error) {
@@ -208,17 +202,7 @@ router.use('/:id/orders', orderRoutes);
 
 router.get('/:id/stats', async (request, response, next) => {
   try {
-    const [stats] = await Guest.aggregate([
-      { $match: { wedding: request.wedding._id } },
-      { $group: {
-        _id: null,
-        total: { $sum: 1 },
-        yes: { $sum: { $cond: [{ $eq: ['$status', 'yes'] }, 1, 0] } },
-        no: { $sum: { $cond: [{ $eq: ['$status', 'no'] }, 1, 0] } },
-        pending: { $sum: { $cond: [{ $eq: ['$status', 'pending'] }, 1, 0] } },
-        attendees: { $sum: { $cond: [{ $eq: ['$status', 'yes'] }, '$guestCount', 0] } }
-      } }
-    ]);
+    const stats = await Guest.stats(request.wedding._id);
     response.json({
       total: stats?.total || 0,
       yes: stats?.yes || 0,

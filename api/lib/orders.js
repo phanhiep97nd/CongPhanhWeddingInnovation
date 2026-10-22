@@ -1,28 +1,31 @@
 const Order = require('../models/Order');
 const Wedding = require('../models/Wedding');
 const { PLAN_RANK } = require('./plans');
+const db = require('../db');
 
 // Webhook, sync and admin mark-paid may race on the same order: claim the pending -> paid
 // transition atomically so the plan is applied exactly once, and return the fresh order.
 async function applyPaidOrder(order) {
-  const claimed = await Order.findOneAndUpdate(
-    { _id: order._id, status: { $ne: 'paid' } },
-    { $set: { status: 'paid', paidAt: new Date() } },
-    { new: true }
-  );
-  if (!claimed) return Order.findById(order._id);
+  return db.transaction(async () => {
+    const claimed = await Order.findOneAndUpdate(
+      { _id: order._id, status: { $ne: 'paid' } },
+      { $set: { status: 'paid', paidAt: new Date() } },
+      { new: true }
+    );
+    if (!claimed) return Order.findById(order._id);
 
-  // Only plan fields are written, so a concurrent editor save is never overwritten,
-  // and a wedding that already has a higher plan is left untouched.
-  const allowedCurrentPlans = Object.keys(PLAN_RANK).filter(plan => PLAN_RANK[plan] <= PLAN_RANK[claimed.plan]);
-  await Wedding.updateOne(
-    {
-      _id: claimed.wedding,
-      $or: [{ plan: { $in: allowedCurrentPlans } }, { plan: { $exists: false } }]
-    },
-    { $set: { plan: claimed.plan, planActivatedAt: new Date() } }
-  );
-  return claimed;
+    // Only plan fields are written, so a concurrent editor save is never overwritten,
+    // and a wedding that already has a higher plan is left untouched.
+    const allowedCurrentPlans = Object.keys(PLAN_RANK).filter(plan => PLAN_RANK[plan] <= PLAN_RANK[claimed.plan]);
+    await Wedding.updateOne(
+      {
+        _id: claimed.wedding,
+        $or: [{ plan: { $in: allowedCurrentPlans } }, { plan: { $exists: false } }]
+      },
+      { $set: { plan: claimed.plan, planActivatedAt: new Date() } }
+    );
+    return claimed;
+  });
 }
 
 function orderView(order) {

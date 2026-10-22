@@ -44,7 +44,7 @@ router.post('/', async (request, response, next) => {
         await Order.create({ orderCode, wedding: request.wedding._id, user: request.user.sub, plan, amount, checkoutUrl: data.checkoutUrl, qrCode: data.qrCode, paymentLinkId: data.paymentLinkId });
         return response.status(201).json({ orderCode, checkoutUrl: data.checkoutUrl, qrCode: data.qrCode, amount, plan });
       } catch (error) {
-        if (error.code !== 11000 || attempt === 4) throw error;
+        if (error.code !== '23505' || attempt === 4) throw error;
       }
     }
   } catch (error) {

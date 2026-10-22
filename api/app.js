@@ -40,7 +40,14 @@ const authLimit = rateLimit({
   message: { message: 'Quá nhiều yêu cầu, vui lòng thử lại sau' }
 });
 
-app.get('/', (request, response) => response.json({ status: 'ok' }));
+app.get('/', async (request, response) => {
+  try {
+    await require('./db').query('SELECT 1');
+    response.json({ status: 'ok' });
+  } catch {
+    response.status(503).json({ status: 'unavailable' });
+  }
+});
 app.use('/auth/register', authLimit);
 app.use('/auth/login', authLimit);
 app.use('/payos', require('./routes/payosRoutes'));
@@ -60,10 +67,10 @@ app.use((error, request, response, next) => {
   } else if (error.name === 'CastError') {
     status = 404;
     message = 'Không tìm thấy';
-  } else if (error.name === 'ValidationError') {
+  } else if (error.name === 'ValidationError' || ['23514', '23502', '22P02'].includes(error.code)) {
     status = 400;
     message = 'Dữ liệu không hợp lệ';
-  } else if (error.code === 11000) {
+  } else if (error.code === '23505') {
     status = 409;
     message = 'Dữ liệu đã tồn tại';
   } else if (status === 500) {

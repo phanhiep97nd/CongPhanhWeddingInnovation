@@ -10,7 +10,7 @@ Gói Cơ bản mở khách không giới hạn, tối đa 50 ảnh, xuất Excel
 
 ## Phát triển
 
-Yêu cầu Node.js và backend API chạy trên cổng 3001. Frontend dùng Vite trên cổng 3000; proxy `/api` chuyển yêu cầu sang backend và bỏ tiền tố `/api`.
+Yêu cầu Node.js 22+ và backend API PostgreSQL chạy trên cổng 3001. Frontend dùng Vite trên cổng 3000; proxy `/api` chuyển yêu cầu sang backend và bỏ tiền tố `/api`. Backend dùng `api/.env.example` để cấu hình `DATABASE_URL`, `JWT_SECRET`; xem [API README](api/README.md).
 
 ```sh
 npm install
@@ -22,10 +22,10 @@ Tạo `.env.local` nếu cần tải ảnh lên Cloudinary:
 ```env
 VITE_CLOUDINARY_CLOUD_NAME=your-cloud-name
 VITE_CLOUDINARY_UPLOAD_PRESET=your-unsigned-preset
-VITE_LEGACY_SLUG=congphanh
+VITE_LEGACY_SLUG=hythiep
 ```
 
-`VITE_LEGACY_SLUG` tùy chọn, mặc định `congphanh`; dùng để chuyển liên kết cũ `/?id=...` sang thiệp mới. Cloudinary cần unsigned upload preset. Ảnh tải lên được thu nhỏ ở trình duyệt trước khi gửi.
+`VITE_LEGACY_SLUG` dùng để chuyển liên kết cũ `/?id=...` sang thiệp có slug tương ứng. Mẫu trên đặt `hythiep`; nếu dùng link cũ, cần có thiệp mang slug này hoặc đặt biến bằng slug thiệp thực tế. Biến này không đổi slug đã lưu trong database. Cloudinary cần unsigned upload preset. Ảnh tải lên được thu nhỏ ở trình duyệt trước khi gửi.
 Tải nhạc dùng cùng preset Cloudinary nhưng gửi tới `/video/upload`; preset cần chấp nhận tệp âm thanh tối đa 15 MB.
 
 ```sh
@@ -37,15 +37,17 @@ node scripts/optimize-images.mjs
 
 ## Triển khai
 
-Triển khai frontend trên Vercel. `vercel.json` chuyển `/api/*` sang API Railway trước khi chuyển các đường dẫn SPA về `index.html`; cấu hình lại đích API khi thay đổi backend. Middleware ở repo root do backend quản lý trả thẻ Open Graph cho crawler. Đặt các biến `VITE_*` khi build frontend, và `API_ORIGIN` cho middleware theo môi trường triển khai. Các đường dẫn `/assets/*` được cache lâu; `/images/*` được cache một ngày.
+Deploy Hỷ Thiệp lên `https://hythiep.net`, thư mục `~/apps/hythiep`, bằng Docker Compose gồm PostgreSQL local, API và web; dùng chung Cloudflare Tunnel với các project khác. Xem [hướng dẫn deploy local](docs/HOME_SERVER_SETUP.md), [chuyển dữ liệu MongoDB cũ sang PostgreSQL](docs/POSTGRESQL_MIGRATION.md) và [tự động deploy](docs/AUTO_DEPLOY.md). URL Git giữ nguyên; các file Docker/Compose đã có sẵn.
+
+Backend hiện chỉ dùng PostgreSQL, không đọc `MONGO_URI`. Các file `vercel.json`/`middleware.js` vẫn dành cho môi trường Vercel trước đây; nginx local thay thế API rewrite và SPA fallback nhưng chưa chạy middleware tạo preview riêng từng khách. Các biến `VITE_*` phải đặt lúc build frontend.
 
 ### PayOS
 
-Đặt `PAYOS_CLIENT_ID`, `PAYOS_API_KEY`, `PAYOS_CHECKSUM_KEY` và `SITE_ORIGIN` trong môi trường Railway của API. `SITE_ORIGIN` là URL Vercel công khai, không có dấu `/` cuối. Cấu hình webhook PayOS tới `https://<API_RAILWAY_DOMAIN>/payos/webhook` (đường dẫn backend trực tiếp; nếu đi qua Vercel thì dùng `https://<SITE_ORIGIN>/api/payos/webhook`). Liên kết thanh toán quay về `/dashboard/:id?payment=success&orderCode=...` hoặc `payment=cancel`; trang biên tập gọi sync để xác nhận ngay cả khi webhook chưa đến.
+Đặt `PAYOS_CLIENT_ID`, `PAYOS_API_KEY`, `PAYOS_CHECKSUM_KEY` trong `.env` production. Compose đặt `SITE_ORIGIN=https://hythiep.net`. Webhook là `https://hythiep.net/api/payos/webhook`. Liên kết thanh toán quay về `/dashboard/:id?payment=success&orderCode=...` hoặc `payment=cancel`; trang biên tập gọi sync để xác nhận ngay cả khi webhook chưa đến.
 
 ### Quản trị
 
-Đặt `ADMIN_EMAILS` (danh sách email phân tách bằng dấu phẩy) trên Railway để tự cấp quyền admin khi đăng ký/đăng nhập. Với tài khoản đã có, chạy `npm run make-admin -- <email>` trong môi trường backend có kết nối MongoDB. Quản trị viên mở `/admin` để xem thống kê, người dùng, đơn hàng và cài đặt giá, giới hạn.
+Đặt `ADMIN_EMAILS` (danh sách email phân tách bằng dấu phẩy) trong môi trường API để tự cấp quyền admin khi đăng ký/đăng nhập. Với tài khoản đã có, chạy `npm run make-admin -- <email>` trong môi trường backend có kết nối PostgreSQL. Quản trị viên mở `/admin` để xem thống kê, người dùng, đơn hàng và cài đặt giá, giới hạn.
 
 ## Hỷ 3D
 

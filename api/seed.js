@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const mongoose = require('mongoose');
+const db = require('./db');
 const bcrypt = require('bcryptjs');
 const User = require('./models/User');
 const Wedding = require('./models/Wedding');
@@ -8,8 +8,8 @@ const Guest = require('./models/Guest');
 const { createGuest } = require('./lib/guestCodes');
 
 async function run() {
-  if (!process.env.MONGO_URI) throw new Error('Thiếu MONGO_URI');
-  await mongoose.connect(process.env.MONGO_URI);
+  if (!process.env.DATABASE_URL) throw new Error('Thiếu DATABASE_URL');
+  await db.migrate();
 
   const email = 'demo@example.com';
   let user = await User.findOne({ email });
@@ -48,4 +48,4 @@ async function run() {
 run().catch(error => {
   console.error(error);
   process.exitCode = 1;
-}).finally(() => mongoose.disconnect());
+}).finally(() => db.close());

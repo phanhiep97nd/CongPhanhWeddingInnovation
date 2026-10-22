@@ -79,6 +79,6 @@ describe('photos', () => {
   });
 
   it('requires a wedding on the photo model', async () => {
-    await expect(Photo.create({ url: 'https://example.com/p.jpg' })).rejects.toMatchObject({ name: 'ValidationError' });
+    await expect(Photo.create({ url: 'https://example.com/p.jpg' })).rejects.toMatchObject({ status: 400 });
   });
 });
