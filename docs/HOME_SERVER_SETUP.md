@@ -6,7 +6,7 @@
 
 ```text
 Internet → Cloudflare HTTPS → Tunnel hoanhoahong
-  → 127.0.0.1:8040 → web (nginx + React)
+  → 127.0.0.1:8050 → web (nginx + React)
                        ├── /, /dashboard, /admin, /w/... → SPA
                        └── /api/* → api:3001/* → db:5432 (PostgreSQL)
                                                 └── volume postgres_data
@@ -22,12 +22,12 @@ PayOS → https://hythiep.net/api/payos/webhook
 | Website / admin | `https://hythiep.net` / `https://hythiep.net/admin` |
 | API | `https://hythiep.net/api` |
 | WWW | `https://www.hythiep.net` → redirect 308 về domain chính |
-| Cổng host | `127.0.0.1:8040` |
+| Cổng host | `127.0.0.1:8050` |
 | Database / user PostgreSQL | `hythiep` / `hythiep` |
 | PostgreSQL | `postgres:17-alpine`, cổng 5432 chỉ trong Docker |
 | Volume | `hythiep_postgres_data` (Compose project `hythiep`) |
 
-Cổng 8040 là đề xuất, cần kiểm tra chưa bị project khác dùng. API và PostgreSQL không mở cổng ra host/Internet. Không cần IP public cố định hay danh sách IP Atlas.
+Cổng mặc định mới là 8050 vì cổng 8040 trên server đang phục vụ dịch vụ khác. Kiểm tra 8050 còn trống trước khi chạy; có thể đổi bằng `WEB_PORT` trong `.env`, rồi sửa Service URL của cả hai route Tunnel và các lệnh curl cho khớp. API và PostgreSQL không mở cổng ra host/Internet. Không cần IP public cố định hay danh sách IP Atlas.
 
 ## 2. File deploy đã có sẵn
 
@@ -53,7 +53,7 @@ docker --version
 docker compose version
 sudo systemctl status cloudflared --no-pager
 groups
-sudo ss -ltnp 'sport = :8040'
+sudo ss -ltnp 'sport = :8050'
 mkdir -p ~/apps/hythiep
 cd ~/apps/hythiep
 git clone https://github.com/phanhiep97nd/CongPhanhWeddingInnovation.git .
@@ -79,6 +79,7 @@ Chỉ copy khi chưa có `.env`; nếu có, sao lưu rồi sửa từng biến. 
 ```dotenv
 POSTGRES_PASSWORD=CHUOI_HEX_THU_NHAT
 JWT_SECRET=CHUOI_HEX_THU_HAI
+WEB_PORT=8050
 ADMIN_EMAILS=email-quan-tri-cua-ban@example.com
 BRAND_NAME='Hỷ Thiệp'
 OG_GUEST_OVERLAY=on
@@ -110,9 +111,9 @@ docker compose -f docker-compose.home.yml config --quiet
 docker compose -f docker-compose.home.yml up -d --build
 docker compose -f docker-compose.home.yml ps
 docker compose -f docker-compose.home.yml logs api db --tail=40
-curl -fsS http://127.0.0.1:8040/api/
-curl -fsS http://127.0.0.1:8040/api/public/pricing
-curl -I http://127.0.0.1:8040/dashboard
+curl -fsS http://127.0.0.1:8050/api/
+curl -fsS http://127.0.0.1:8050/api/public/pricing
+curl -I http://127.0.0.1:8050/dashboard
 docker compose -f docker-compose.home.yml exec -T web nginx -t
 ```
 
@@ -129,10 +130,10 @@ Mong đợi db/api healthy, web Up; log API có `(PostgreSQL)`; `/api/` trả `{
 
 | Subdomain | Domain | Type | URL |
 |---|---|---|---|
-| **Để trống** | `hythiep.net` | HTTP | `127.0.0.1:8040` |
-| `www` | `hythiep.net` | HTTP | `127.0.0.1:8040` |
+| **Để trống** | `hythiep.net` | HTTP | `http://127.0.0.1:8050` |
+| `www` | `hythiep.net` | HTTP | `http://127.0.0.1:8050` |
 
-Hostname gốc phải là `hythiep.net`; không gõ `@` trong ô subdomain. Nếu ô URL yêu cầu giao thức, dùng `http://127.0.0.1:8040`. Cloudflare tạo DNS record cho route. Nếu trùng A/AAAA/CNAME @/www, kiểm tra rồi thay đúng record web; giữ DNS và route project khác.
+Hostname gốc phải là `hythiep.net`; không gõ `@` trong ô subdomain. Nếu ô URL yêu cầu giao thức, dùng `http://127.0.0.1:8050`. Cloudflare tạo DNS record cho route. Nếu trùng A/AAAA/CNAME @/www, kiểm tra rồi thay đúng record web; giữ DNS và route project khác.
 
 Cấu hình giả định cloudflared chạy bằng systemd trên host. Nếu chạy trong container, phải điều chỉnh mạng/địa chỉ origin. Không dùng Access bắt đăng nhập cho khách mời/webhook; `/api/*` phải bypass cache.
 
@@ -197,7 +198,7 @@ git status --short
 git rev-parse HEAD > ~/hythiep-previous-commit.txt
 git pull --ff-only origin main
 docker compose -f docker-compose.home.yml up -d --build
-curl -fsS http://127.0.0.1:8040/api/public/pricing
+curl -fsS http://127.0.0.1:8050/api/public/pricing
 ```
 
 Tự động deploy: [AUTO_DEPLOY.md](AUTO_DEPLOY.md). Thêm migration version tiếp theo, không sửa file đã áp dụng. Không nâng major PostgreSQL bằng đổi tag image trên volume cũ: cần backup/restore hoặc pg_upgrade riêng.
@@ -222,7 +223,7 @@ Rollback code không tự hoàn tác schema/dữ liệu. Bản code trước khi
 | Password authentication failed | Password trong DB khác .env; đồng bộ theo Phần 9, không xóa volume |
 | Migration lỗi | Logs api, DB healthy và quyền tạo bảng; không xóa bảng migration thủ công |
 | API trả 503/500 | Kết nối PostgreSQL/migration; health endpoint kiểm tra DB thật |
-| Nginx/Cloudflare 502 | Curl loopback 8040, trạng thái web/api, route HTTP và cloudflared |
+| Nginx/Cloudflare 502 | Curl loopback 8050, trạng thái web/api, route HTTP và cloudflared |
 | Upload lỗi | Preset Cloudinary và build lại web sau khi đổi VITE_* |
 
 ```bash

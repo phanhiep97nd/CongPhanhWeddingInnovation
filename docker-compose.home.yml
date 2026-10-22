@@ -62,7 +62,7 @@ services:
         VITE_BRAND_NAME: ${VITE_BRAND_NAME:-Hỷ Thiệp}
     restart: unless-stopped
     ports:
-      - "127.0.0.1:8040:80"
+      - "127.0.0.1:${WEB_PORT:-8050}:80"
     depends_on:
       api:
         condition: service_healthy

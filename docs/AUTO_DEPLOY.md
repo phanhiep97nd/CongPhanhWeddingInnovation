@@ -14,7 +14,7 @@
 | Thư mục runner riêng | `/home/deploy/actions-runner/hythiep` |
 | Tên / label riêng | `home-server-hythiep` / `hythiep` |
 | Log deploy trên server | `/home/deploy/deploy-logs/hythiep.log` |
-| Kiểm tra sau deploy | `http://127.0.0.1:8040/`, `/dashboard`, `/api/`, `/api/public/pricing` |
+| Kiểm tra sau deploy | `http://127.0.0.1:8050/`, `/dashboard`, `/api/`, `/api/public/pricing` |
 
 Luồng: push `main` → runner nhận job → cập nhật code → Compose build/chạy lại → kiểm tra HTTP → lưu log. Runner chủ động kết nối GitHub, không cần mở thêm cổng Internet.
 
@@ -132,11 +132,12 @@ jobs:
             echo "FAIL $1" | tee -a "$LOG"
             return 1
           }
-          check http://127.0.0.1:8040/
-          check http://127.0.0.1:8040/dashboard
-          check http://127.0.0.1:8040/api/
-          check http://127.0.0.1:8040/api/public/pricing
-          curl --max-time 10 -fsS http://127.0.0.1:8040/api/ \
+          base_url="http://$(docker compose -f docker-compose.home.yml port web 80)"
+          check "$base_url/"
+          check "$base_url/dashboard"
+          check "$base_url/api/"
+          check "$base_url/api/public/pricing"
+          curl --max-time 10 -fsS "$base_url/api/" \
             | python3 -c 'import json,sys; assert json.load(sys.stdin).get("status") == "ok"'
           docker compose -f docker-compose.home.yml exec -T web nginx -t
 
