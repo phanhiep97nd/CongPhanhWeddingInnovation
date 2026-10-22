@@ -220,6 +220,7 @@ Rollback code không tự hoàn tác schema/dữ liệu. Bản code trước khi
 |---|---|
 | Thiếu POSTGRES_PASSWORD/JWT_SECRET | Tạo .env ở gốc repo từ .env.home.example, điền đủ |
 | DB unhealthy | Logs db; ổ đĩa, quyền volume, tag PostgreSQL |
+| API báo EACCES khi đọc /app/server.js | Pull Dockerfile mới có bước chown/chmod cho user node, rồi build lại API; không sửa quyền volume PostgreSQL |
 | Password authentication failed | Password trong DB khác .env; đồng bộ theo Phần 9, không xóa volume |
 | Migration lỗi | Logs api, DB healthy và quyền tạo bảng; không xóa bảng migration thủ công |
 | API trả 503/500 | Kết nối PostgreSQL/migration; health endpoint kiểm tra DB thật |

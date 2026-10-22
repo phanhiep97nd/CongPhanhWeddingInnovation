@@ -3,6 +3,9 @@ WORKDIR /app
 COPY api/package.json api/package-lock.json ./
 RUN npm ci --omit=dev
 COPY api/ ./
+# A restrictive host umask can leave copied files readable only by root.
+# Set ownership and owner read/traverse permissions before dropping privileges.
+RUN chown -R node:node /app && chmod -R u+rX /app
 ENV NODE_ENV=production PORT=3001
 USER node
 EXPOSE 3001
