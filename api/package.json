@@ -7,6 +7,7 @@
     "test": "vitest run --pool=threads --maxWorkers=1",
     "seed": "node seed.js",
     "make-admin": "node scripts/make-admin.js",
+    "provision-accounts": "node scripts/provision-accounts.js",
     "db:migrate": "node scripts/migrate.js",
     "db:import-mongo": "node scripts/import-mongo-export.js"
   },

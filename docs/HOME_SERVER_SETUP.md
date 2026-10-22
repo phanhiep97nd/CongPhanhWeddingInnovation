@@ -157,6 +157,26 @@ Cấp quyền cho tài khoản đã có rồi đăng nhập lại:
 docker compose -f docker-compose.home.yml exec api npm run make-admin -- email-cua-ban@example.com
 ```
 
+### Tạo hai tài khoản quản trị và tạo thiệp đầy đủ tính năng
+
+Sau khi API healthy, chạy một lần trên server:
+
+```bash
+docker compose -f docker-compose.home.yml exec api npm run provision-accounts
+```
+
+Lệnh tạo `admin@hythiep.net` (quản trị toàn hệ thống) và `creator@hythiep.net` (tạo/quản lý thiệp của mình, không có quyền admin). Cả hai được tạo thiệp gói Cao cấp, đầy đủ tính năng, không cần thanh toán. Mỗi thiệp mới giữ đường dẫn tự chọn, không hết hạn và không giới hạn khách theo quyền gói Premium; giới hạn ảnh/tệp kỹ thuật của gói vẫn áp dụng.
+
+Mật khẩu ngẫu nhiên riêng được in trong terminal chỉ khi tạo mới; lưu lại để đăng nhập tại `https://hythiep.net/login`. Không đưa output chứa mật khẩu vào Git hoặc log Actions. Nếu tài khoản đã tồn tại, lệnh giữ nguyên mật khẩu và cấp quyền tương ứng; các thiệp hiện có của hai tài khoản cũng được nâng lên Premium, ghi lịch sử cấp thủ công. Chạy lại không tạo tài khoản hoặc lịch sử nâng gói trùng. Tài khoản bị khóa cần được xử lý riêng trước khi cấp quyền.
+
+Có thể chọn email khác:
+
+```bash
+docker compose -f docker-compose.home.yml exec api npm run provision-accounts -- --admin-email admin-cua-ban@example.com --creator-email creator-cua-ban@example.com
+```
+
+Quyền tạo thiệp Cao cấp chỉ được cấp qua script có truy cập server, không nhận từ form đăng ký công khai. Không thêm email creator vào `ADMIN_EMAILS` nếu muốn giữ tài khoản này chỉ có quyền tạo thiệp.
+
 PayOS: điền đủ ba khóa trong `.env`, chạy `docker compose -f docker-compose.home.yml up -d --force-recreate api`; webhook là `https://hythiep.net/api/payos/webhook`. Endpoint nhận POST có chữ ký; mở bằng GET không kiểm tra được webhook. Thử thanh toán, hủy và trạng thái đơn trong admin. Chỉ đổi webhook từ môi trường cũ khi server mới sẵn sàng.
 
 Preview chia sẻ: nginx không thực thi middleware Vercel. Link thiệp vẫn mở nhưng crawler chỉ nhận preview chung, chưa có tên/ảnh riêng từng khách. Muốn giữ preview cá nhân cần bổ sung server xử lý HTML crawler. Chuyển DB không thay đổi giới hạn này.

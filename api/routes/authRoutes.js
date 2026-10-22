@@ -8,7 +8,7 @@ const { string } = require('../lib/common');
 const router = express.Router();
 
 function userView(user) {
-  return { id: String(user._id), email: user.email, name: user.name, role: user.role || 'user' };
+  return { id: String(user._id), email: user.email, name: user.name, role: user.role || 'user', defaultWeddingPlan: user.defaultWeddingPlan || 'free' };
 }
 
 function isAdminEmail(email) {

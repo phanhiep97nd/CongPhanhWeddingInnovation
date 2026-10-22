@@ -140,6 +140,7 @@ export interface User {
   name: string;
   role?: "user" | "admin";
   status?: "active" | "locked";
+  defaultWeddingPlan?: "free" | "premium";
 }
 
 export interface AuthResponse {

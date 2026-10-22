@@ -11,7 +11,7 @@ useDatabase();
 describe('PostgreSQL persistence', () => {
   it('applies migrations once and checks database readiness', async () => {
     await db.migrate();
-    expect((await db.query('SELECT count(*)::int AS count FROM schema_migrations')).rows[0].count).toBe(1);
+    expect((await db.query('SELECT count(*)::int AS count FROM schema_migrations')).rows[0].count).toBe(2);
     expect((await request(app).get('/')).body).toEqual({ status: 'ok' });
   });
 

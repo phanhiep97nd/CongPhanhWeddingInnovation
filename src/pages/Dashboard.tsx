@@ -118,7 +118,9 @@ export default function Dashboard() {
             </small>
           </label>
         </div>
-        <p>Gói miễn phí tự thêm 4 ký tự vào cuối đường dẫn khi tạo thiệp.</p>
+        <p>{user?.defaultWeddingPlan === "premium"
+          ? "Tài khoản của bạn được tạo thiệp Cao cấp với đầy đủ tính năng, không cần thanh toán."
+          : "Gói miễn phí tự thêm 4 ký tự vào cuối đường dẫn khi tạo thiệp."}</p>
         <button className="button" disabled={busy || !availability?.available || !availability.valid}>Tạo thiệp
         </button>
       </form>

@@ -103,20 +103,24 @@ router.post('/', async (request, response, next) => {
   try {
     if (!Object.hasOwn(request.body || {}, 'slug')) fail('Đường dẫn là bắt buộc');
     const data = prepare(request.body);
-    if (data.template && data.template !== 'classic') {
+    const plan = request.user.defaultWeddingPlan === 'premium' ? 'premium' : 'free';
+    if (data.template && data.template !== 'classic' && !entitlementsFor(plan).premiumTemplates) {
       const error = paywall('premiumTemplates');
       return response.status(error.status).json(error.body);
     }
-    if (data.gallery && data.gallery.length > (await getSettings()).freeGalleryLimit) {
+    if (data.gallery && data.gallery.length > limitsFor(plan, await getSettings()).gallery) {
       const error = paywall('largeGallery');
       return response.status(error.status).json(error.body);
     }
     const requestedSlug = data.slug;
     for (let attempt = 0; attempt < 5; attempt++) {
-      data.slug = `${requestedSlug}-${randomSuffix()}`;
-      if (await Wedding.exists({ $or: [{ slug: data.slug }, { slugAliases: data.slug }] })) continue;
+      data.slug = plan === 'premium' ? requestedSlug : `${requestedSlug}-${randomSuffix()}`;
+      if (await Wedding.exists({ $or: [{ slug: data.slug }, { slugAliases: data.slug }] })) {
+        if (plan === 'premium') return response.status(409).json({ message: 'Đường dẫn đã tồn tại' });
+        continue;
+      }
       try {
-        const wedding = await Wedding.create({ owner: request.user.sub, ...data });
+        const wedding = await Wedding.create({ owner: request.user.sub, ...data, plan, planActivatedAt: plan === 'premium' ? new Date() : null });
         return response.status(201).json(await ownerView(wedding));
       } catch (error) {
         if (error.code !== '23505' || attempt === 4) throw error;

@@ -8,12 +8,12 @@ async function auth(request, response, next) {
   try {
     const payload = jwt.verify(token[1], process.env.JWT_SECRET);
     if (!payload.sub) throw new Error('Missing subject');
-    const user = await User.findById(payload.sub).select('email role status').lean();
+    const user = await User.findById(payload.sub).select('email role status defaultWeddingPlan').lean();
     if (!user) return response.status(401).json({ message: 'Phiên đăng nhập không hợp lệ' });
     if (user.status === 'locked') {
       return response.status(403).json({ code: 'LOCKED', message: 'Tài khoản đã bị khoá' });
     }
-    request.user = { sub: String(user._id), email: user.email, role: user.role || 'user' };
+    request.user = { sub: String(user._id), email: user.email, role: user.role || 'user', defaultWeddingPlan: user.defaultWeddingPlan || 'free' };
     next();
   } catch {
     return response.status(401).json({ message: 'Phiên đăng nhập không hợp lệ' });

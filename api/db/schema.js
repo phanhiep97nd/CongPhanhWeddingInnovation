@@ -2,8 +2,8 @@ const SECTION_KEYS = ['story', 'timeline', 'gallery', 'info', 'rsvp', 'photoWall
 // Scalar relations are SQL foreign keys; flexible invitation content uses JSONB.
 const schemas = {
   User: {
-    table: 'users', fields: ['email', 'passwordHash', 'name', 'role', 'status'],
-    defaults: { role: 'user', status: 'active' }, required: ['email', 'passwordHash', 'name']
+    table: 'users', fields: ['email', 'passwordHash', 'name', 'role', 'status', 'defaultWeddingPlan'],
+    defaults: { role: 'user', status: 'active', defaultWeddingPlan: 'free' }, required: ['email', 'passwordHash', 'name']
   },
   Wedding: {
     table: 'weddings', fields: ['owner', 'slug', 'slugAliases', 'plan', 'planActivatedAt', 'template', 'viewModes', 'giftBox', 'published', 'couple', 'eventDate', 'eventTime', 'dateText', 'venue', 'coverImage', 'ogImage', 'story', 'timeline', 'gallery', 'musicUrl', 'zaloGroupLink', 'dressCode', 'sections', 'customSections', 'meta', 'theme'],

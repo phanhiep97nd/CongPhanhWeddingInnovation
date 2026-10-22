@@ -8,6 +8,8 @@ Set `PAYOS_CLIENT_ID`, `PAYOS_API_KEY`, and `PAYOS_CHECKSUM_KEY` to enable check
 
 Scripts: `npm start`, `npm run dev`, `npm test`, `npm run seed`, `npm run db:migrate`, `npm run db:import-mongo -- /export/directory [--apply]`, `npm run make-admin -- <email>`.
 
+`npm run provision-accounts` creates `admin@hythiep.net` and `creator@hythiep.net` with separate random passwords printed only when newly created. Both have `defaultWeddingPlan=premium`; the creator remains a regular user without admin access. Existing passwords are preserved and existing invitations are upgraded with manual order history. Optional flags: `--admin-email <email> --creator-email <email>`. Run this only in a trusted terminal on the server, not CI logs. Public registration cannot set account plan privileges.
+
 Tests use isolated in-memory PostgreSQL through PGlite (no MongoDB process or production database). Import defaults to a rollback-only dry run and requires an empty target; see [data migration](../docs/POSTGRESQL_MIGRATION.md). Back up PostgreSQL with `pg_dump` and validate restoration before schema changes; returning to older MongoDB code requires a separate cutover plan.
 
 Authenticated endpoints require `Authorization: Bearer <token>`:
