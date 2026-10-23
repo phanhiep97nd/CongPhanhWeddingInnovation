@@ -1,0 +1,242 @@
+[
+  {
+    "key": "bao-hy",
+    "name": "Báo Hỷ",
+    "category": "Truyền thống",
+    "description": "Báo hỷ kiểu poster: chữ Hỷ trái tim, chữ cao in hoa trên nền kem đỏ.",
+    "accent": "#b42c38",
+    "paper": "#fff2e6",
+    "ink": "#67262d",
+    "family": "traditional"
+  },
+  {
+    "key": "bach-hop",
+    "name": "Bạch Hợp",
+    "category": "Hoa lá",
+    "description": "Giấy trắng kem, hoa bách hợp vẽ nét, phong bì dấu sáp, polaroid xô lệch và cuộn phim.",
+    "accent": "#987c62",
+    "paper": "#f8f2e7",
+    "ink": "#4c4036",
+    "family": "floral"
+  },
+  {
+    "key": "cacao",
+    "name": "Cacao",
+    "category": "Tối giản",
+    "description": "Kem và nâu cacao, phong bì dấu sáp vàng, đếm ngược, album chữ ký.",
+    "accent": "#674737",
+    "paper": "#f6eadb",
+    "ink": "#443127",
+    "family": "minimal"
+  },
+  {
+    "key": "diep-luc",
+    "name": "Diệp Lục",
+    "category": "Hoa lá",
+    "description": "Phong bì giấy xanh lá, dấu sáp và hoa lá trắng xanh trên nền giấy mộc.",
+    "accent": "#476d50",
+    "paper": "#f1f4e9",
+    "ink": "#2d4935",
+    "family": "floral"
+  },
+  {
+    "key": "giay-do",
+    "name": "Giấy Dó",
+    "category": "Tối giản",
+    "description": "Giấy dó, chữ mực đen và một con dấu son đóng lên tên hai bạn.",
+    "accent": "#8b6a4f",
+    "paper": "#f8f2e7",
+    "ink": "#4c4036",
+    "family": "minimal"
+  },
+  {
+    "key": "hoa-hong",
+    "name": "Hoa Hồng",
+    "category": "Tối giản",
+    "description": "Ảnh cưới phủ kín bìa, chữ nghiêng mềm, tông hồng trầm.",
+    "accent": "#b76e79",
+    "paper": "#fff0f1",
+    "ink": "#713e4a",
+    "family": "minimal"
+  },
+  {
+    "key": "huy-hieu",
+    "name": "Huy Hiệu",
+    "category": "Truyền thống",
+    "description": "Kem trung tính, huy hiệu monogram, hai chân dung và lịch tháng trên ảnh mờ.",
+    "accent": "#987c62",
+    "paper": "#f8f2e7",
+    "ink": "#4c4036",
+    "family": "traditional"
+  },
+  {
+    "key": "ho-phach",
+    "name": "Hổ Phách",
+    "category": "Hoa lá",
+    "description": "Vàng nâu ấm, hoa khô vẽ tay, dấu sáp đồng sau cánh cửa giấy kem.",
+    "accent": "#78513e",
+    "paper": "#f6eadb",
+    "ink": "#443127",
+    "family": "floral"
+  },
+  {
+    "key": "hy-do",
+    "name": "Hỷ Đỏ",
+    "category": "Truyền thống",
+    "description": "Nền giấy kem, đỏ son và vàng đồng, chữ song hỷ, hạc mây và khung ảnh vuông viền trắng.",
+    "accent": "#a0252a",
+    "paper": "#fff2e6",
+    "ink": "#67262d",
+    "family": "traditional"
+  },
+  {
+    "key": "lua-kem",
+    "name": "Lụa Kem",
+    "category": "Tối giản",
+    "description": "Kem sữa và taupe nhạt, phong bì dấu sáp vàng, hoa baby trắng, chữ ký thư pháp.",
+    "accent": "#987c62",
+    "paper": "#f8f2e7",
+    "ink": "#4c4036",
+    "family": "minimal"
+  },
+  {
+    "key": "luc-bao",
+    "name": "Lục Bảo",
+    "category": "Hoa lá",
+    "description": "Cánh cửa xanh lục bảo mở ra dấu sáp, hoa cẩm tú cầu và lan trắng.",
+    "accent": "#246958",
+    "paper": "#f1f4e9",
+    "ink": "#2d4935",
+    "family": "floral"
+  },
+  {
+    "key": "ngoc-trai",
+    "name": "Ngọc Trai",
+    "category": "Tối giản",
+    "description": "Hộp nhung xanh biển và ngọc trai: mở nắp hộp trang sức, ảnh bìa trong khung vòm chuỗi ngọc, lịch tháng đánh dấu bằng ngọc, đếm ngược bằng bốn viên ngọc.",
+    "accent": "#587991",
+    "paper": "#eef4f8",
+    "ink": "#233b54",
+    "family": "minimal"
+  },
+  {
+    "key": "rum-trang",
+    "name": "Rum Trắng",
+    "category": "Hoa lá",
+    "description": "Xanh lá đậm với hoa rum trắng, thẻ câu chuyện nghiêng và album ghép.",
+    "accent": "#476d50",
+    "paper": "#f1f4e9",
+    "ink": "#2d4935",
+    "family": "floral"
+  },
+  {
+    "key": "ruou-vang",
+    "name": "Rượu Vang",
+    "category": "Hoa lá",
+    "description": "Đỏ rượu vang, hoa mộc lan vẽ nét, phong bì và lịch tháng như thiệp in.",
+    "accent": "#712c42",
+    "paper": "#fff2e6",
+    "ink": "#67262d",
+    "family": "floral"
+  },
+  {
+    "key": "rung-xanh",
+    "name": "Rừng Xanh",
+    "category": "Hoa lá",
+    "description": "Xanh lá thẫm, hoa vẽ nét trên giấy mộc, mở đầu bằng phong bì sáp vàng.",
+    "accent": "#244c37",
+    "paper": "#f1f4e9",
+    "ink": "#2d4935",
+    "family": "floral"
+  },
+  {
+    "key": "sen-hong",
+    "name": "Sen Hồng",
+    "category": "Hoa lá",
+    "description": "Tranh lụa cuộn mở ra hoa sen hồng, điểm xanh ngọc và sóng nước.",
+    "accent": "#be788e",
+    "paper": "#fff0f1",
+    "ink": "#713e4a",
+    "family": "floral"
+  },
+  {
+    "key": "song-hy",
+    "name": "Song Hỷ",
+    "category": "Truyền thống",
+    "description": "Song hạc bay quanh chữ Hỷ, đỏ sơn mài và vàng kim.",
+    "accent": "#9a2028",
+    "paper": "#fff2e6",
+    "ink": "#67262d",
+    "family": "traditional"
+  },
+  {
+    "key": "vuon-la",
+    "name": "Vườn Lá",
+    "category": "Hoa lá",
+    "description": "Lá xanh rêu vẽ tay trên nền kem, nhẹ như tiệc ngoài vườn.",
+    "accent": "#476d50",
+    "paper": "#f1f4e9",
+    "ink": "#2d4935",
+    "family": "floral"
+  },
+  {
+    "key": "xanh-cham",
+    "name": "Xanh Chàm",
+    "category": "Tối giản",
+    "description": "Xanh chàm thanh lịch, hoa và tàu biển vẽ nét, lịch tháng nền xanh và album lưới.",
+    "accent": "#354d75",
+    "paper": "#eef4f8",
+    "ink": "#233b54",
+    "family": "minimal"
+  },
+  {
+    "key": "xanh-reu",
+    "name": "Xanh Rêu",
+    "category": "Hoa lá",
+    "description": "Xanh rêu sâu, thẻ ảnh bo góc cô dâu chú rể, lịch tháng chữ ký và timeline trên ảnh tối.",
+    "accent": "#4c5e43",
+    "paper": "#f1f4e9",
+    "ink": "#2d4935",
+    "family": "floral"
+  },
+  {
+    "key": "dia-hy",
+    "name": "Đĩa Hỷ",
+    "category": "Truyền thống",
+    "description": "Báo hỷ kiểu đĩa than: đỏ tươi, chữ cao in hoa, chữ Hỷ giữa đĩa.",
+    "accent": "#c32f32",
+    "paper": "#fff2e6",
+    "ink": "#67262d",
+    "family": "traditional"
+  },
+  {
+    "key": "do-luu",
+    "name": "Đỏ Lựu",
+    "category": "Hoa lá",
+    "description": "Đỏ lựu thanh lịch, lịch tháng trên phong bì, khối album đỏ và quà tặng cô dâu chú rể.",
+    "accent": "#a6383b",
+    "paper": "#fff2e6",
+    "ink": "#67262d",
+    "family": "floral"
+  },
+  {
+    "key": "do-sam",
+    "name": "Đỏ Sẫm",
+    "category": "Truyền thống",
+    "description": "Đỏ sẫm áo dài, chữ hỷ, hai khối cô dâu chú rể và album xếp lớp.",
+    "accent": "#78272e",
+    "paper": "#fff2e6",
+    "ink": "#67262d",
+    "family": "traditional"
+  },
+  {
+    "key": "do-tham",
+    "name": "Đỏ Thắm",
+    "category": "Truyền thống",
+    "description": "Đỏ thắm sang trọng, phong bì dấu sáp và lịch tháng, album lưới đỏ rực.",
+    "accent": "#aa2938",
+    "paper": "#fff2e6",
+    "ink": "#67262d",
+    "family": "traditional"
+  }
+]

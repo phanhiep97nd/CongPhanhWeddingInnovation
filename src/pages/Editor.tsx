@@ -10,6 +10,7 @@ import GuestsTab from "../components/editor/GuestsTab";
 import PhotosTab from "../components/editor/PhotosTab";
 import GiftBoxEditor from "../components/editor/GiftBoxEditor";
 import ViewModesSetting from "../components/editor/ViewModesSetting";
+import InvitationDesignPicker from "../components/editor/InvitationDesignPicker";
 import UpgradePanel from "../components/billing/UpgradePanel";
 import LockedFeature from "../components/billing/LockedFeature";
 import { PlanRequiredError } from "../lib/api";
@@ -178,7 +179,8 @@ export default function Editor() {
           <button className={draft.template === "minimal" ? "selected" : ""} disabled={!draft.entitlements?.premiumTemplates} onClick={() => change({ template: "minimal" })}><span className="template-thumb minimal-thumb">C / P</span>Tối giản</button>
           <button className={draft.template === "hy3d" ? "selected" : ""} disabled={!draft.entitlements?.premiumTemplates} onClick={() => change({ template: "hy3d" })}><span className="template-thumb hy3d-thumb">3D</span>Hỷ 3D</button>
         </div>{!draft.entitlements?.premiumTemplates && <LockedFeature plan="premium" label="Mẫu Tối giản" onUpgrade={() => setTab("billing")} />}
-        {draft.template === "hy3d" && <ViewModesSetting wedding={draft} change={change} />}</div>}
+        {draft.template === "hy3d" && <ViewModesSetting wedding={draft} change={change} />}
+        <InvitationDesignPicker wedding={draft} change={change} onUpgrade={() => setTab("billing")} dirty={dirty} /></div>}
         {tab === "billing" && <UpgradePanel wedding={draft} />}
       </div>
     </div>

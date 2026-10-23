@@ -16,6 +16,7 @@ import { useReducedMotion } from "motion/react";
 import type { PublicGuest, Wedding } from "../../../lib/types";
 import type { CSSProperties, ReactNode } from "react";
 import { BRAND_NAME } from "../../../lib/brand";
+import { findInvitationDesign } from "../../../lib/invitationDesigns";
 import { InvitePopup } from "./InvitePopup";
 import { StorySection } from "./StorySection";
 import { TimelineSection } from "./TimelineSection";
@@ -36,6 +37,7 @@ export default function InvitationShell({ wedding, guest, slug, backdrop, onScro
   veiled?: boolean;   // content hidden while the backdrop plays its opening (Trong suốt mode)
 }) {
   const hasBackdrop = backdrop != null;
+  const design = findInvitationDesign(wedding.theme.design);
   const IMAGES = weddingImages(wedding);
   const COUPLE = couple(wedding);
   const WEDDING_DATE = weddingDate(wedding);
@@ -190,7 +192,7 @@ export default function InvitationShell({ wedding, guest, slug, backdrop, onScro
 
   return (
     <WeddingContext.Provider value={{ wedding, guest, slug }}>
-    <div ref={containerRef} className={`scroll-container bg-petal selection:bg-primary${hasBackdrop ? " classic-over-3d" : ""}${veiled ? " is-veiled" : ""}`} style={themeVariables(wedding.theme.primary) as CSSProperties}>
+    <div ref={containerRef} className={`scroll-container bg-petal selection:bg-primary${design ? ` invitation-design invitation-design-${design.family}` : ""}${hasBackdrop ? " classic-over-3d" : ""}${veiled ? " is-veiled" : ""}`} style={{ ...themeVariables(wedding.theme.primary), ...(design ? { "--design-paper": design.paper, "--design-ink": design.ink } : {}) } as CSSProperties}>
       {hasBackdrop && <div className="classic-3d-backdrop" aria-hidden="true">{backdrop}</div>}
 
       {/* ── Header ── */}

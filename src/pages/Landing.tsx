@@ -1,5 +1,6 @@
 import { BRAND_NAME } from "../lib/brand";
 import BrandLogo from "../components/BrandLogo";
+import LandingDesignGallery from "../components/LandingDesignGallery";
 import { Link } from "react-router-dom";
 
 export default function Landing() {
@@ -75,6 +76,7 @@ export default function Landing() {
           </div>
         </div>
       </section>
+      <LandingDesignGallery />
       <section className="landing-steps">
         <h2>Từ tấm thiệp đến ngày gặp nhau</h2>
         <div>

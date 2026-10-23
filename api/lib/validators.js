@@ -130,7 +130,10 @@ const weddingFields = {
     title: item => string(item, 200),
     description: item => string(item, 1000)
   }),
-  theme: value => shape(value, { primary: color })
+  theme: value => shape(value, { primary: color, design: item => {
+    if (typeof item !== 'string' || !require('./invitationDesigns').has(item)) fail('Mẫu thiệp không hợp lệ');
+    return item;
+  } })
 };
 
 const guestFields = {

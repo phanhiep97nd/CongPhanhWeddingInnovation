@@ -104,7 +104,7 @@ export interface Wedding {
   sections: Section[];
   customSections: CustomSection[];
   meta: { title: string; description: string };
-  theme: { primary: string };
+  theme: { primary: string; design?: string };
   createdAt: string;
   updatedAt: string;
   plan?: Plan;

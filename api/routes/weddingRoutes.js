@@ -104,7 +104,7 @@ router.post('/', async (request, response, next) => {
     if (!Object.hasOwn(request.body || {}, 'slug')) fail('Đường dẫn là bắt buộc');
     const data = prepare(request.body);
     const plan = request.user.defaultWeddingPlan === 'premium' ? 'premium' : 'free';
-    if (data.template && data.template !== 'classic' && !entitlementsFor(plan).premiumTemplates) {
+    if ((data.template && data.template !== 'classic' || data.theme?.design) && !entitlementsFor(plan).premiumTemplates) {
       const error = paywall('premiumTemplates');
       return response.status(error.status).json(error.body);
     }
@@ -162,7 +162,7 @@ router.put('/:id', async (request, response, next) => {
       const error = paywall('largeGallery');
       return response.status(error.status).json(error.body);
     }
-    if (data.template && data.template !== 'classic' && !entitlements.premiumTemplates) {
+    if ((data.template && data.template !== 'classic' || data.theme?.design) && !entitlements.premiumTemplates) {
       const error = paywall('premiumTemplates');
       return response.status(error.status).json(error.body);
     }

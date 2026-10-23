@@ -71,7 +71,7 @@ export function InfoTab({ wedding: w, change, onUpgrade }: { wedding: Wedding; c
       {!w.entitlements?.customMusic && <LockedFeature plan="premium" label="Nhạc nền riêng" onUpgrade={onUpgrade} />}
     </div>
     <label>Màu chủ đạo
-      <input type="color" value={w.theme.primary || "#b76e79"} onChange={e => change({ theme: { primary: e.target.value } })} />
+      <input type="color" value={w.theme.primary || "#b76e79"} onChange={e => change({ theme: { ...w.theme, primary: e.target.value } })} />
     </label>
     <ShareField label="Tiêu đề chia sẻ (để trống = tự tạo)" value={w.meta.title} onChange={title => change({ meta: { ...w.meta, title } })} />
     <ShareField label="Mô tả chia sẻ (để trống = tự tạo)" value={w.meta.description} onChange={description => change({ meta: { ...w.meta, description } })} />

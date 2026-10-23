@@ -70,7 +70,7 @@ router.get('/weddings/:slug', (request, response) => {
   const entitlements = entitlementsFor(wedding.plan);
   wedding.entitlements = entitlements;
   wedding.showBranding = !entitlements.removeBranding;
-  if (!entitlements.premiumTemplates) wedding.template = 'classic';
+  if (!entitlements.premiumTemplates) { wedding.template = 'classic'; if (wedding.theme) wedding.theme = { ...wedding.theme, design: undefined }; }
   if (!entitlements.giftBox) wedding.giftBox = { note: '', accounts: [] };
   else wedding.giftBox = wedding.giftBox || { note: '', accounts: [] };
   if (!entitlements.customMusic) wedding.musicUrl = '';
