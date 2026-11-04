@@ -6,8 +6,9 @@ const schemas = {
     defaults: { role: 'user', status: 'active', defaultWeddingPlan: 'free' }, required: ['email', 'passwordHash', 'name']
   },
   Wedding: {
-    table: 'weddings', fields: ['owner', 'slug', 'slugAliases', 'plan', 'planActivatedAt', 'template', 'viewModes', 'giftBox', 'published', 'couple', 'eventDate', 'eventTime', 'dateText', 'venue', 'coverImage', 'ogImage', 'story', 'timeline', 'gallery', 'musicUrl', 'zaloGroupLink', 'dressCode', 'sections', 'customSections', 'meta', 'theme'],
+    table: 'weddings', fields: ['invitationKind', 'eventTitle', 'importedTemplate', 'owner', 'slug', 'slugAliases', 'plan', 'planActivatedAt', 'template', 'viewModes', 'giftBox', 'published', 'couple', 'eventDate', 'eventTime', 'dateText', 'venue', 'coverImage', 'ogImage', 'story', 'timeline', 'gallery', 'musicUrl', 'zaloGroupLink', 'dressCode', 'sections', 'customSections', 'meta', 'theme'],
     defaults: {
+      invitationKind: 'wedding', eventTitle: '', importedTemplate: null,
       slugAliases: [], plan: 'free', planActivatedAt: null, template: 'classic', viewModes: ['3d', 'mixed', 'normal'],
       giftBox: { note: '', accounts: [] }, published: true,
       couple: { groom: '', bride: '', groomFull: '', brideFull: '' }, eventDate: null, eventTime: '', dateText: '',
@@ -15,7 +16,7 @@ const schemas = {
       timeline: [], gallery: [], musicUrl: '', zaloGroupLink: '', dressCode: { note: '', colors: [] },
       sections: SECTION_KEYS.map(key => ({ key, enabled: true })), customSections: [], meta: { title: '', description: '' }, theme: { primary: '#b76e79' }
     }, required: ['owner', 'slug'],
-    json: ['slugAliases', 'viewModes', 'giftBox', 'couple', 'venue', 'story', 'timeline', 'gallery', 'dressCode', 'sections', 'customSections', 'meta', 'theme'],
+    json: ['importedTemplate', 'slugAliases', 'viewModes', 'giftBox', 'couple', 'venue', 'story', 'timeline', 'gallery', 'dressCode', 'sections', 'customSections', 'meta', 'theme'],
     dates: ['planActivatedAt', 'eventDate'], relations: { owner: 'User' }
   },
   Guest: {
@@ -26,6 +27,10 @@ const schemas = {
   Photo: {
     table: 'photos', fields: ['wedding', 'url', 'caption', 'author'], defaults: { caption: '', author: 'Ẩn danh' },
     required: ['wedding', 'url'], relations: { wedding: 'Wedding' }
+  },
+  Wish: {
+    table: 'wishes', fields: ['wedding', 'author', 'message'],
+    required: ['wedding', 'author', 'message'], relations: { wedding: 'Wedding' }
   },
   Order: {
     table: 'orders', fields: ['orderCode', 'wedding', 'user', 'plan', 'amount', 'status', 'method', 'checkoutUrl', 'qrCode', 'paymentLinkId', 'note', 'paidAt'],

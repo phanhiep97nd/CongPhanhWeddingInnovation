@@ -4,6 +4,7 @@ import { api } from "../../lib/api";
 import { uploadAudio } from "../../lib/images";
 import LockedFeature from "../billing/LockedFeature";
 import SharePreview from "./SharePreview";
+import { invitationKinds } from '../../lib/templateLibrary';
 type Change = (patch: Partial<Wedding>) => void;
 
 export function Field({ label, value, onChange, type = "text", textarea = false, autoComplete, inputMode }: { label: string; value: string; onChange: (value: string) => void; type?: string; textarea?: boolean; autoComplete?: string; inputMode?: "numeric" | "tel" | "url" | "email"; key?: string; }) {
@@ -39,11 +40,13 @@ export function InfoTab({ wedding: w, change, onUpgrade }: { wedding: Wedding; c
   }
 
   return <div className="form-grid">
-    <Field label="Tên chú rể" autoComplete="given-name" value={w.couple.groom} onChange={groom => change({ couple: { ...w.couple, groom } })} />
+    <label className="full">Loại thiệp<select value={w.invitationKind || 'wedding'} onChange={e => change({ invitationKind: e.target.value as Wedding['invitationKind'] })}>{invitationKinds.map(kind => <option key={kind.id} value={kind.id}>{kind.label}</option>)}</select></label>
+    {w.invitationKind && w.invitationKind !== 'wedding' && <Field label="Tên sự kiện" value={w.eventTitle || ''} onChange={eventTitle => change({ eventTitle })} />}
+    {(!w.invitationKind || w.invitationKind === 'wedding') && <><Field label="Tên chú rể" autoComplete="given-name" value={w.couple.groom} onChange={groom => change({ couple: { ...w.couple, groom } })} />
     <Field label="Tên cô dâu" value={w.couple.bride} onChange={bride => change({ couple: { ...w.couple, bride } })} />
     <Field label="Họ tên chú rể" value={w.couple.groomFull} onChange={groomFull => change({ couple: { ...w.couple, groomFull } })} />
-    <Field label="Họ tên cô dâu" value={w.couple.brideFull} onChange={brideFull => change({ couple: { ...w.couple, brideFull } })} />
-    <Field label="Ngày cưới" type="date" value={w.eventDate?.slice(0, 10) || ""} onChange={eventDate => change({ eventDate: eventDate || null })} />
+    <Field label="Họ tên cô dâu" value={w.couple.brideFull} onChange={brideFull => change({ couple: { ...w.couple, brideFull } })} /></>}
+    <Field label={!w.invitationKind || w.invitationKind === 'wedding' ? 'Ngày cưới' : 'Ngày tổ chức'} type="date" value={w.eventDate?.slice(0, 10) || ""} onChange={eventDate => change({ eventDate: eventDate || null })} />
     <Field label="Giờ làm lễ" type="time" value={w.eventTime || ""} onChange={eventTime => change({ eventTime })} />
     <Field label="Ngày hiển thị" value={w.dateText} onChange={dateText => change({ dateText })} />
     <Field label="Tên địa điểm" value={w.venue.name} onChange={name => change({ venue: { ...w.venue, name } })} />

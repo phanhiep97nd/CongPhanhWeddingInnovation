@@ -2,10 +2,12 @@ import { lazy, Suspense, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { api, ApiError } from "../lib/api";
 import type { PublicGuest, Wedding } from "../lib/types";
+import InvitationToolbar from '../components/invitation/InvitationToolbar';
 const ClassicInvitation = lazy(() => import("../components/invitation/original/InvitationShell"));
 const MinimalInvitation = lazy(() => import("../components/invitation/minimal/InvitationShell"));
 // The Hỷ 3D template offers two modes (3D / classic), chosen inside Hy3dModes.
 const Hy3dInvitation = lazy(() => import("../components/invitation/hy3d/Hy3dModes"));
+const ImportedInvitation = lazy(() => import('../components/invitation/ImportedInvitation'));
 
 export default function Invitation() {
   const { slug = "", code } = useParams();
@@ -48,14 +50,14 @@ export default function Invitation() {
     if (!wedding) {
       return;
     }
-    document.title = wedding.meta.title || `Thiệp cưới ${wedding.couple.groom} & ${wedding.couple.bride}`;
+    document.title = wedding.meta.title || wedding.eventTitle || `Thiệp cưới ${wedding.couple.groom} & ${wedding.couple.bride}`;
     let meta = document.querySelector<HTMLMetaElement>("meta[name=\"description\"]");
     if (!meta) {
       meta = document.createElement("meta");
       meta.name = "description";
       document.head.append(meta);
     }
-    meta.content = wedding.meta.description || `Trân trọng kính mời ${guest?.invitationName || "bạn"} đến chung vui trong ngày trọng đại của ${wedding.couple.groom} & ${wedding.couple.bride}.`;
+    meta.content = wedding.meta.description || `Trân trọng kính mời ${guest?.invitationName || "bạn"} đến chung vui ${wedding.eventTitle || `trong ngày trọng đại của ${wedding.couple.groom} & ${wedding.couple.bride}`}.`;
   }, [wedding, guest]);
   if (loading) {
     return <p className="page-loading">Đang mở thiệp...</p>;
@@ -68,10 +70,11 @@ export default function Invitation() {
       </main>
     );
   }
-  const Shell = wedding.template === "minimal"
+  const Shell = wedding.hasImportedTemplate || (wedding.invitationKind && wedding.invitationKind !== 'wedding') ? ImportedInvitation : wedding.template === "minimal"
     ? MinimalInvitation
     : wedding.template === "hy3d" ? Hy3dInvitation : ClassicInvitation;
   return <Suspense fallback={<p className="page-loading">Đang mở thiệp...</p>}>
     <Shell wedding={wedding} guest={guest} slug={slug} />
+    {!wedding.hasImportedTemplate && <InvitationToolbar key={slug} slug={slug} wedding={wedding} guestName={guest?.invitationName} fixed />}
   </Suspense>;
 }

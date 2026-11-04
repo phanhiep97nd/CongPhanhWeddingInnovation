@@ -9,6 +9,8 @@ const app = express();
 app.set('trust proxy', 1);
 app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 app.use(compression());
+// Sandboxed previews have an opaque origin. Only signed, read-only assets allow it.
+app.use('/templates/assets', require('./routes/templateRoutes').assets);
 
 const allowedOrigins = (process.env.ALLOWED_ORIGINS || '').split(',').map(origin => origin.trim()).filter(Boolean);
 app.use(cors({
@@ -54,6 +56,7 @@ app.use('/payos', require('./routes/payosRoutes'));
 app.use('/auth', require('./routes/authRoutes'));
 app.use('/weddings', require('./routes/weddingRoutes'));
 app.use('/public', require('./routes/publicRoutes'));
+app.use('/templates', require('./routes/templateRoutes'));
 app.use('/admin', require('./routes/adminRoutes'));
 
 app.use((request, response) => response.status(404).json({ message: 'Không tìm thấy' }));

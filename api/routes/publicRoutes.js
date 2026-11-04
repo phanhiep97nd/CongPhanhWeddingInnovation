@@ -3,6 +3,7 @@ const rateLimit = require('express-rate-limit');
 const Wedding = require('../models/Wedding');
 const Guest = require('../models/Guest');
 const Photo = require('../models/Photo');
+const Wish = require('../models/Wish');
 const { fail, string, pick, url } = require('../lib/common');
 const { serialize, publicGuest } = require('../lib/serialize');
 const { guestFields, normalizeSections } = require('../lib/validators');
@@ -62,9 +63,33 @@ router.get('/pricing', async (request, response, next) => {
 
 router.use('/weddings/:slug', loadWedding);
 
+router.get('/weddings/:slug/wishes', async (request, response, next) => {
+  try {
+    const wishes = await Wish.find({ wedding: request.wedding._id }).sort({ createdAt: -1 }).limit(50).lean();
+    response.set('Cache-Control', 'no-store').json(wishes.map(wish => serialize(wish, ['wedding', 'updatedAt'])));
+  } catch (error) { next(error); }
+});
+router.post('/weddings/:slug/wishes', limiter, async (request, response, next) => {
+  try {
+    const author = string(request.body?.author, 100, true);
+    const message = string(request.body?.message, 500, true);
+    const wish = await Wish.create({ wedding: request.wedding._id, author, message });
+    response.status(201).json(serialize(wish, ['wedding', 'updatedAt']));
+  } catch (error) { next(error); }
+});
+
+router.get('/weddings/:slug/template-render', async (request, response, next) => {
+  try {
+    if (!request.wedding.importedTemplate) return response.sendStatus(404);
+    const guest = typeof request.query.g === 'string' ? await findGuest(request.wedding, request.query.g).lean() : null;
+    response.set('Cache-Control', 'no-store').json({ html: require('../lib/templateLibrary').render(request.wedding.importedTemplate, { guestName: guest?.invitationName || '' }) });
+  } catch (error) { next(error); }
+});
+
 // ─── PUBLIC WEDDING AND GUESTS ───
 router.get('/weddings/:slug', (request, response) => {
-  const wedding = serialize(request.wedding, ['owner', 'slugAliases', 'planActivatedAt']);
+  const wedding = serialize(request.wedding, ['owner', 'slugAliases', 'planActivatedAt', 'importedTemplate']);
+  wedding.hasImportedTemplate = Boolean(request.wedding.importedTemplate);
   wedding.plan = wedding.plan || 'free';
   wedding.sections = normalizeSections(wedding.sections || [], wedding.customSections || []);
   const entitlements = entitlementsFor(wedding.plan);

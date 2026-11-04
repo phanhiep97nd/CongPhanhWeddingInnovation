@@ -1,40 +1,33 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { invitationDesigns } from "../lib/invitationDesigns";
+import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../lib/auth';
+import { api } from '../lib/api';
+import { rememberTemplate, type LibraryTemplate } from '../lib/templateLibrary';
+import TemplateLibrary from './TemplateLibrary';
+import InvitationToolbar from './invitation/InvitationToolbar';
 
 export default function LandingDesignGallery() {
-  const [category, setCategory] = useState("Tất cả");
-  const [expanded, setExpanded] = useState(false);
-  const [selected, setSelected] = useState<(typeof invitationDesigns)[number] | null>(null);
-  const filtered = invitationDesigns.filter(item => category === "Tất cả" || item.category === category);
-  const visible = expanded ? filtered : filtered.slice(0, 6);
-  return <section className="landing-design-gallery" aria-labelledby="landing-design-heading">
-    <div className="landing-section-heading">
-      <p className="landing-eyebrow">Bộ sưu tập</p>
-      <h2 id="landing-design-heading">Chọn sắc thái cho lời mời</h2>
-      <p>24 phong cách để khám phá. Sau khi tạo thiệp, hai bạn chỉnh nội dung và gửi link có tên riêng cho từng khách trong cùng một editor.</p>
-    </div>
-    <div className="design-filters" role="group" aria-label="Lọc phong cách thiệp">
-      {["Tất cả", "Truyền thống", "Hoa lá", "Tối giản"].map(value => <button key={value} type="button" className={category === value ? "active" : ""} onClick={() => { setCategory(value); setExpanded(false); }}>{value}</button>)}
-    </div>
-    <div className="design-grid">{visible.map(item => <button className="design-option" type="button" key={item.key} onClick={() => setSelected(item)} aria-label={`Xem trước phong cách ${item.name}`}>
-      <span className={"design-card design-card-" + (item.family)} style={{ background: item.paper, color: item.ink, borderColor: item.accent }}>
-        <span className="design-mark" style={{ color: item.accent }}>{item.category === "Truyền thống" ? "囍" : item.category === "Hoa lá" ? "✿" : "♡"}</span>
-        <span className="design-names">Phương Anh<i>&</i>Minh Công</span>
-        <span className="design-date">03 · 04 · 2026</span>
-      </span><strong>{item.name}</strong><small>{item.category}</small>
-    </button>)}</div>
-    {!expanded && filtered.length > visible.length && <button type="button" className="button-outline" onClick={() => setExpanded(true)}>Xem tất cả {filtered.length} phong cách</button>}
-    {selected && <div className="design-modal-backdrop" role="presentation" onMouseDown={event => { if (event.target === event.currentTarget) setSelected(null); }}>
-      <div className="design-modal" role="dialog" aria-modal="true" aria-labelledby="design-modal-title">
-        <button type="button" className="design-modal-close" onClick={() => setSelected(null)} aria-label="Đóng xem trước">×</button>
-        <div className={"design-card design-card-" + (selected.family)} style={{ background: selected.paper, color: selected.ink, borderColor: selected.accent }}>
-          <span className="design-mark" style={{ color: selected.accent }}>{selected.category === "Truyền thống" ? "囍" : selected.category === "Hoa lá" ? "✿" : "♡"}</span>
-          <span className="design-names">Phương Anh<i>&</i>Minh Công</span>
-          <span className="design-date">03 · 04 · 2026</span>
-        </div>
-        <div><p className="landing-eyebrow">{selected.category}</p><h3 id="design-modal-title">{selected.name}</h3><p>{selected.description}</p><p>Đây là phác họa phong cách. Thiệp thật sẽ dùng ảnh, tên, ngày cưới và lời mời do hai bạn nhập.</p><Link className="button" to="/register">Tạo thiệp</Link></div>
-      </div>
-    </div>}
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const [selected, setSelected] = useState<LibraryTemplate | null>(null);
+  const [html, setHtml] = useState('');
+  const [error, setError] = useState('');
+  const [replay, setReplay] = useState(0);
+  const dialog = useRef<HTMLDialogElement>(null);
+  const frame = useRef<HTMLIFrameElement>(null);
+  useEffect(() => {
+    setHtml(''); setError('');
+    if (!selected) { dialog.current?.close(); return; }
+    dialog.current?.showModal();
+    let active = true;
+    api<{ html: string }>(`/templates/${selected.id}/demo`).then(result => { if (active) setHtml(result.html); }).catch(e => { if (active) setError(e.message); });
+    return () => { active = false; };
+  }, [selected, replay]);
+  return <section className="landing-design-gallery" id="bo-suu-tap" aria-labelledby="landing-design-heading">
+    <div className="landing-section-heading"><p className="landing-eyebrow">Bộ sưu tập cho mọi dịp vui</p><h2 id="landing-design-heading">Một tấm thiệp, thật đúng với bạn.</h2><p>Từ ngày thành đôi đến sinh nhật, tân gia và những cuộc gặp đáng nhớ. Chọn mẫu bạn yêu thích rồi viết tiếp câu chuyện của mình.</p></div>
+    <TemplateLibrary onSelect={setSelected} />
+    <dialog className="library-dialog" ref={dialog} onCancel={() => setSelected(null)} onClick={e => { if (e.target === e.currentTarget) setSelected(null); }}>
+      {selected && <><header><h3>{selected.name}</h3><button type="button" autoFocus aria-label="Đóng xem mẫu" onClick={() => setSelected(null)}>✕</button></header><div className="library-dialog-preview invitation-toolbar-host">{html ? <><iframe ref={frame} title={`Xem mẫu ${selected.name}`} sandbox="allow-scripts" srcDoc={html} /><InvitationToolbar frame={frame} key={`${selected.id}-${replay}`} /></> : error ? <p role="alert">{error}</p> : <p role="status">Đang mở thiệp mẫu…</p>}</div><footer><p>Chạm để mở thiệp, cuộn để khám phá nội dung và hiệu ứng.</p><button className="text-button" type="button" onClick={() => setReplay(value => value + 1)}>{error ? 'Thử lại' : 'Xem lại từ đầu'}</button><button className="button" type="button" onClick={() => { rememberTemplate(selected); navigate(user ? '/dashboard' : '/register'); }}>Dùng mẫu này</button></footer></>}
+    </dialog>
   </section>;
 }

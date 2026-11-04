@@ -19,12 +19,14 @@ export default defineConfig(() => {
       },
     },
     server: {
+      fs: { deny: ['.env', '.env.*', '*.{crt,pem}', '**/.git/**', '**/api/private/**'] },
       // HMR is disabled in AI Studio via DISABLE_HMR env var.
       // Do not modify - file watching is disabled to prevent flickering during agent edits.
       hmr: process.env.DISABLE_HMR !== 'true',
       proxy: {
-        '/api': {
-          target: 'http://localhost:3001',
+        // api/data is shared public style metadata imported by the frontend.
+        '^/api/(?!data/)': {
+          target: process.env.DEV_API_TARGET || 'http://localhost:3001',
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api/, ''),
         },

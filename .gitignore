@@ -10,3 +10,7 @@ coverage/
 mongo-export/
 backups/
 *.dump
+# Generated from the local captured library; deploy these separately, never publish as source.
+api/private/templates/
+public/template-thumbnails/
+.local-test/

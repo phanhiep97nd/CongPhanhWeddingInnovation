@@ -66,13 +66,13 @@ function buildMeta(wedding, guestName = '', options = {}) {
     diachi: wedding.venue?.address || ''
   };
   const couple = [values.chure, values.codau].filter(Boolean).join(' & ');
-  const defaultTitle = guestName
+  const defaultTitle = wedding.invitationKind && wedding.invitationKind !== 'wedding' ? `${guestName ? `Gửi ${guestName} · ` : ''}${wedding.eventTitle || 'Thiệp mời'}${ngay ? ` — ${ngay}` : ''}` : guestName
     ? `Gửi ${guestName} · Thiệp cưới${couple ? ` ${couple}` : ''}`
     : `Thiệp cưới${couple ? ` ${couple}` : ''}${ngay ? ` — ${ngay}` : ''}`;
   let title = wedding.meta?.title ? fillTemplate(wedding.meta.title, values) : defaultTitle;
   let description = wedding.meta?.description
     ? fillTemplate(wedding.meta.description, values)
-    : defaultDescription(values);
+    : wedding.invitationKind && wedding.invitationKind !== 'wedding' ? `Trân trọng kính mời ${values.khach} đến ${wedding.eventTitle || 'chung vui'}.${ngay ? ` Ngày ${ngay}.` : ''}${values.diadiem ? ` Tại ${values.diadiem}.` : ''}` : defaultDescription(values);
 
   if (guestName && wedding.meta?.title && !title.includes(guestName)) {
     title = `Gửi ${guestName} · ${title}`;

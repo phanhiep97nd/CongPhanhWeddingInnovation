@@ -7,6 +7,7 @@ import { api, json } from "../lib/api";
 import { useAuth } from "../lib/auth";
 import type { Wedding, WeddingSummary } from "../lib/types";
 import { cldUrl } from "../lib/images";
+import { chosenTemplate, invitationKinds, invitationTitle, templateChoiceKey } from '../lib/templateLibrary';
 
 export function slugify(text: string) {
   return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[đĐ]/g, "d").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 50).replace(/-+$/, "");
@@ -18,6 +19,9 @@ export default function Dashboard() {
   const [items, setItems] = useState<WeddingSummary[]>([]);
   const [groom, setGroom] = useState("");
   const [bride, setBride] = useState("");
+  const [choice, setChoice] = useState(chosenTemplate);
+  const [kind, setKind] = useState<NonNullable<Wedding['invitationKind']>>(() => chosenTemplate()?.category || 'wedding');
+  const [eventTitle, setEventTitle] = useState('');
   const [slug, setSlug] = useState("");
   const [editedSlug, setEditedSlug] = useState(false);
   const [availability, setAvailability] = useState<{ available: boolean; valid: boolean; } | null>(null);
@@ -29,8 +33,8 @@ export default function Dashboard() {
     api<WeddingSummary[]>("/weddings", {}, true).then(setItems).catch(e => setError(e.message));
   }, []);
   useEffect(() => {
-    if (!editedSlug) setSlug(slugify([groom, bride].filter(Boolean).join("-")));
-  }, [groom, bride, editedSlug]);
+    if (!editedSlug) setSlug(slugify(kind === 'wedding' ? [groom, bride].filter(Boolean).join('-') : eventTitle));
+  }, [groom, bride, editedSlug, kind, eventTitle]);
   useEffect(() => {
     let active = true;
     setAvailability(null);
@@ -49,14 +53,15 @@ export default function Dashboard() {
   async function create(e: FormEvent) {
     e.preventDefault();
     setError("");
-    if (!groom.trim() || !bride.trim() || !availability?.valid || !availability.available) {
-      setError("Vui lòng nhập tên hai bạn và chọn đường dẫn hợp lệ, còn trống.");
+    if ((kind === 'wedding' ? !groom.trim() || !bride.trim() : !eventTitle.trim()) || !availability?.valid || !availability.available) {
+      setError("Vui lòng nhập tên sự kiện hoặc tên hai bạn và chọn đường dẫn hợp lệ, còn trống.");
       return;
     }
     setBusy(true);
     try {
-      const result = await api<Wedding>("/weddings", json("POST", { slug, couple: { groom: groom.trim(), bride: bride.trim(), groomFull: "", brideFull: "" } }), true);
-      navigate(`/dashboard/${result.id}`);
+      const result = await api<Wedding>("/weddings", json("POST", { slug, invitationKind: kind, eventTitle: kind === 'wedding' ? '' : eventTitle.trim(), ...(choice ? { importedTemplate: { templateId: choice.id, values: {}, opening: true, motion: true }, published: false } : {}), couple: { groom: groom.trim(), bride: bride.trim(), groomFull: "", brideFull: "" } }), true);
+      sessionStorage.removeItem(templateChoiceKey);
+      navigate(`/dashboard/${result.id}${choice || kind !== 'wedding' ? '?tab=templates' : ''}`);
     } catch (err) {
       setError((err as Error).message);
     } finally {
@@ -96,18 +101,21 @@ export default function Dashboard() {
       </button>
     </header>
     <div className="shell">
-      <h1>Thiệp cưới của tôi
+      <h1>Thiệp của tôi
       </h1>
       <form className="create-card" onSubmit={create}>
         <h2>Tạo thiệp mới
         </h2>
         <div className="form-grid">
-          <label>Tên chú rể
+          <label className="full">Dịp tổ chức<select value={kind} onChange={e => { setKind(e.target.value as NonNullable<Wedding['invitationKind']>); if (choice && choice.category !== e.target.value) { setChoice(null); sessionStorage.removeItem(templateChoiceKey); } }}>{invitationKinds.map(k => <option key={k.id} value={k.id}>{k.label}</option>)}</select></label>
+          {choice && <p className="full">Mẫu đã chọn: <strong>{choice.name}</strong>. Thiệp bắt đầu ở trạng thái nháp để bạn thay nội dung trước khi xuất bản.</p>}
+          {kind !== 'wedding' && <label className="full">Tên sự kiện<input value={eventTitle} maxLength={200} placeholder={kind === 'birthday' ? 'Sinh nhật của Minh Anh' : kind === 'housewarming' ? 'Mừng nhà mới của gia đình' : 'Tên buổi gặp gỡ của bạn'} onChange={e => setEventTitle(e.target.value)} /></label>}
+          {kind === 'wedding' && <><label>Tên chú rể
             <input autoComplete="given-name" enterKeyHint="next" value={groom} onChange={e => setGroom(e.target.value)} />
           </label>
           <label>Tên cô dâu
             <input autoComplete="given-name" enterKeyHint="next" value={bride} onChange={e => setBride(e.target.value)} />
-          </label>
+          </label></>}
           <label className="full">Đường dẫn thiệp
             <input aria-label="Đường dẫn thiệp" inputMode="url" autoComplete="off" enterKeyHint="done" value={slug} onChange={e => {
               setEditedSlug(true);
@@ -138,8 +146,7 @@ export default function Dashboard() {
           {item.coverImage && <img src={cldUrl(item.coverImage, 640)} alt="Ảnh bìa" loading="lazy" decoding="async" />}
           <div>
             <h2>
-              {item.couple.groom} &{" "}
-              {item.couple.bride}
+              {invitationTitle(item)}
             </h2>
             <p>
               {item.dateText || "Chưa đặt ngày"} ·{" "}

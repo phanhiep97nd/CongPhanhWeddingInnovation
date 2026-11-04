@@ -10,6 +10,8 @@ export default function Landing() {
         <Link className="brand" to="/" aria-label={BRAND_NAME}><BrandLogo />
         </Link>
         <div>
+          <a className="landing-nav-link" href="#bo-suu-tap">Kho mẫu</a>
+          <a className="landing-nav-link" href="#cach-tao">Cách tạo thiệp</a>
           <Link to="/login" aria-label="Đăng nhập tài khoản">Đăng nhập
           </Link>
           <Link className="button" to="/register"><span className="desktop-label">Tạo thiệp miễn phí</span><span className="mobile-label">Tạo thiệp</span>
@@ -18,16 +20,17 @@ export default function Landing() {
       </nav>
       <section className="landing-hero">
         <div className="landing-copy">
+          <p className="landing-eyebrow">Hỷ Thiệp · Gửi niềm vui, giữ kỷ niệm</p>
           <h1>Một lời mời dành riêng cho từng người thương
           </h1>
-          <p>Kể câu chuyện của hai bạn bằng ảnh và lời riêng. Gửi đường dẫn có tên từng khách, nhận xác nhận tham dự và cùng lưu ảnh sau ngày vui.
+          <p>Ngày cưới, sinh nhật hay buổi tân gia đầu tiên — kể câu chuyện của bạn bằng ảnh và lời riêng. Gửi lời mời có tên từng khách và nhận xác nhận tham dự ngay trên thiệp.
           </p>
           <div className="actions">
             <Link className="button" to="/register">Tạo thiệp miễn phí
             </Link>
-            <Link className="text-button" to="/login">Đăng nhập
-            </Link>
+            <a className="text-button" href="#bo-suu-tap">Khám phá bộ sưu tập ↗</a>
           </div>
+          <div className="hero-details"><span>✦ Sửa ngay trên điện thoại</span><span>♡ Lời mời có tên riêng</span><span>✓ Theo dõi người tham dự</span></div>
         </div>
         <div className="landing-preview" aria-label="Bản xem trước thiệp cưới">
           <img src="/images/DSCF7944.jpg" alt="Ảnh cưới trong bản xem trước thiệp" />
@@ -41,8 +44,9 @@ export default function Landing() {
           </div>
         </div>
       </section>
+      <div className="occasion-ribbon" aria-label="Thiệp cho mọi dịp">Ngày chung đôi <span>✦</span> Thêm tuổi mới <span>✦</span> Về nhà mới <span>✦</span> Gặp gỡ & sẻ chia</div>
       <section className="landing-story">
-        <h2>Thiệp đi cùng ngày cưới
+        <h2>Chuẩn bị nhẹ nhàng, đón ngày vui trọn vẹn
         </h2>
         <div>
           <p>
@@ -77,19 +81,25 @@ export default function Landing() {
         </div>
       </section>
       <LandingDesignGallery />
-      <section className="landing-steps">
+      <section className="landing-steps" id="cach-tao">
         <h2>Từ tấm thiệp đến ngày gặp nhau</h2>
         <div>
-          <p><strong>Viết lời mời.</strong> Thêm ảnh, câu chuyện, lịch trình và những điều khách cần biết.</p>
-          <p><strong>Gửi đến từng người.</strong> Tạo liên kết có tên khách rồi gửi trong cuộc trò chuyện quen thuộc.</p>
-          <p><strong>Đón lời hồi đáp.</strong> Theo dõi xác nhận tham dự và giữ ảnh mọi người chia sẻ sau buổi lễ.</p>
+          <p><span className="step-number">01</span><strong>Chọn mẫu, viết lời mời.</strong> Lọc theo dịp vui, thay ảnh và chạm vào chữ để sửa nội dung.</p>
+          <p><span className="step-number">02</span><strong>Xem thử trước khi gửi.</strong> Kiểm tra thiệp trên điện thoại, chọn chuyển động và hiệu ứng mở thiệp.</p>
+          <p><span className="step-number">03</span><strong>Gửi đi và đón lời hồi đáp.</strong> Mời từng người bằng liên kết riêng, theo dõi xác nhận ngay trong tài khoản.</p>
         </div>
       </section>
+      <section className="landing-faq" id="cau-hoi"><div><p className="landing-eyebrow">Những điều bạn muốn biết</p><h2>Bắt đầu thật dễ dàng.</h2><p>Bạn không cần biết thiết kế để có một lời mời mang dấu ấn riêng.</p></div><div>
+        <details><summary>Tôi có thể sửa thiệp bằng điện thoại không?</summary><p>Có. Chọn phần chữ hoặc ảnh trong khung xem trước để thay nội dung, rồi lưu thay đổi trước khi gửi.</p></details>
+        <details><summary>Có những loại thiệp nào?</summary><p>Bộ sưu tập gồm thiệp cưới, sinh nhật, tân gia và sự kiện. Bạn có thể tìm mẫu theo tên hoặc lọc theo danh mục.</p></details>
+        <details><summary>Sửa thiệp sau khi gửi có đổi đường dẫn không?</summary><p>Không. Khi bạn lưu nội dung mới, khách mở lại đường dẫn cũ sẽ thấy bản cập nhật.</p></details>
+        <details><summary>Làm sao biết khách có tham dự?</summary><p>Khách xác nhận ngay trên thiệp. Bạn xem danh sách và số người tham dự trong mục Khách mời.</p></details>
+      </div></section>
       <section className="landing-close">
         <h2>Ngày vui bắt đầu từ một lời mời thật riêng.</h2>
         <Link className="button" to="/register">Tạo thiệp miễn phí</Link>
       </section>
-      <footer className="landing-footer"><span>{BRAND_NAME}</span><span>Một nơi nhỏ cho ngày trọng đại của hai bạn.</span></footer>
+      <footer className="landing-footer"><span>{BRAND_NAME}</span><span>Một nơi nhỏ cho những ngày thật đáng nhớ.</span><a href="#cau-hoi">Câu hỏi thường gặp</a></footer>
     </main>
   );
 }

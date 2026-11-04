@@ -11,6 +11,8 @@ import PhotosTab from "../components/editor/PhotosTab";
 import GiftBoxEditor from "../components/editor/GiftBoxEditor";
 import ViewModesSetting from "../components/editor/ViewModesSetting";
 import InvitationDesignPicker from "../components/editor/InvitationDesignPicker";
+import ImportedTemplateEditor from "../components/editor/ImportedTemplateEditor";
+import { invitationTitle } from "../lib/templateLibrary";
 import UpgradePanel from "../components/billing/UpgradePanel";
 import LockedFeature from "../components/billing/LockedFeature";
 import { PlanRequiredError } from "../lib/api";
@@ -24,7 +26,7 @@ export default function Editor() {
   const navigate = useNavigate();
   const [saved, setSaved] = useState<Wedding | null>(null);
   const [draft, setDraft] = useState<Wedding | null>(null);
-  const [tab, setTab] = useState<Tab>("info");
+  const [tab, setTab] = useState<Tab>(new URLSearchParams(window.location.search).get('tab') === 'templates' ? 'templates' : 'info');
   const tabsRef = useRef<HTMLElement>(null);
   const [message, setMessage] = useState("");
   const [saving, setSaving] = useState(false);
@@ -136,8 +138,7 @@ export default function Editor() {
         <span>Thiệp</span>
       </button>
       <strong className="dash-header-title">
-        {draft.couple.groom} &{" "}
-        {draft.couple.bride}
+        {invitationTitle(draft)}
       </strong>
       <span className="save-state" role="status">{saving ? "Đang lưu" : dirty ? "Chưa lưu" : "Đã lưu"}</span>
       <button className="button editor-top-save" disabled={!dirty || saving} onClick={() => void save()}>{saving ? "Đang lưu…" : "Lưu thay đổi"}</button>
@@ -148,8 +149,7 @@ export default function Editor() {
       <div className="editor-title">
         <div>
           <h1>
-            {draft.couple.groom} &{" "}
-            {draft.couple.bride}
+            {invitationTitle(draft)}
           </h1>
           <p>/w/
             {draft.slug}
@@ -174,13 +174,13 @@ export default function Editor() {
         {tab === "guests" && <GuestsTab wedding={draft} onUpgrade={() => setTab("billing")} />}
         {tab === "photos" && <><PhotosTab weddingId={draft.id} slug={draft.slug} />{!draft.entitlements?.photoWall && <LockedFeature plan="premium" label="Ảnh khách gửi" onUpgrade={() => setTab("billing")} />}</>}
         {tab === "giftBox" && <GiftBoxEditor wedding={draft} change={change} onUpgrade={() => setTab("billing")} />}
-        {tab === "templates" && <div className="editor-stack"><h2>Mẫu thiệp</h2><div className="template-picker">
+        {tab === "templates" && <div className="editor-stack"><ImportedTemplateEditor wedding={draft} change={change} /><details><summary>Phong cách Hỷ Thiệp nguyên bản</summary><h2>Mẫu thiệp</h2><div className="template-picker">
           <button className={draft.template !== "minimal" && draft.template !== "hy3d" ? "selected" : ""} onClick={() => change({ template: "classic" })}><span className="template-thumb classic-thumb">C & P</span>Cổ điển</button>
           <button className={draft.template === "minimal" ? "selected" : ""} disabled={!draft.entitlements?.premiumTemplates} onClick={() => change({ template: "minimal" })}><span className="template-thumb minimal-thumb">C / P</span>Tối giản</button>
           <button className={draft.template === "hy3d" ? "selected" : ""} disabled={!draft.entitlements?.premiumTemplates} onClick={() => change({ template: "hy3d" })}><span className="template-thumb hy3d-thumb">3D</span>Hỷ 3D</button>
         </div>{!draft.entitlements?.premiumTemplates && <LockedFeature plan="premium" label="Mẫu Tối giản" onUpgrade={() => setTab("billing")} />}
         {draft.template === "hy3d" && <ViewModesSetting wedding={draft} change={change} />}
-        <InvitationDesignPicker wedding={draft} change={change} onUpgrade={() => setTab("billing")} dirty={dirty} /></div>}
+        <InvitationDesignPicker wedding={draft} change={change} onUpgrade={() => setTab("billing")} dirty={dirty} /></details></div>}
         {tab === "billing" && <UpgradePanel wedding={draft} />}
       </div>
     </div>

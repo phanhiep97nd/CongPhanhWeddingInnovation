@@ -85,6 +85,10 @@ export interface CustomSection {
 }
 
 export interface Wedding {
+  invitationKind?: "wedding" | "birthday" | "housewarming" | "graduation" | "event";
+  eventTitle?: string;
+  importedTemplate?: { templateId: string; values: Record<string, string>; opening: boolean; motion: boolean } | null;
+  hasImportedTemplate?: boolean;
   id: string;
   slug: string;
   published: boolean;
@@ -122,6 +126,8 @@ export interface Wedding {
 }
 
 export interface WeddingSummary {
+  invitationKind?: Wedding["invitationKind"];
+  eventTitle?: string;
   id: string;
   slug: string;
   couple: Wedding["couple"];

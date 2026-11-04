@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { createRequire } from 'node:module';
+import { readdirSync } from 'node:fs';
 import { useDatabase, User, Wedding, Guest, Photo, Order, register, createWedding, app, request } from './helpers/db';
 const require = createRequire(import.meta.url);
 const db = require('../db');
@@ -10,8 +11,11 @@ useDatabase();
 
 describe('PostgreSQL persistence', () => {
   it('applies migrations once and checks database readiness', async () => {
+    const expected = readdirSync(new URL('../db/migrations/', import.meta.url)).filter(name => name.endsWith('.sql')).sort();
+    const before = (await db.query('SELECT name, applied_at FROM schema_migrations ORDER BY name')).rows;
+    expect(before.map(row => row.name)).toEqual(expected);
     await db.migrate();
-    expect((await db.query('SELECT count(*)::int AS count FROM schema_migrations')).rows[0].count).toBe(2);
+    expect((await db.query('SELECT name, applied_at FROM schema_migrations ORDER BY name')).rows).toEqual(before);
     expect((await request(app).get('/')).body).toEqual({ status: 'ok' });
   });
 

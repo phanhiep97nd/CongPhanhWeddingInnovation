@@ -72,6 +72,12 @@ function sections(value) {
 }
 
 const weddingFields = {
+  invitationKind: value => {
+    if (!['wedding', 'birthday', 'housewarming', 'graduation', 'event'].includes(value)) fail('Loại thiệp không hợp lệ');
+    return value;
+  },
+  eventTitle: value => string(value, 200),
+  importedTemplate: value => require('./templateLibrary').selection(value),
   slug,
   published: bool,
   couple: value => shape(value, {

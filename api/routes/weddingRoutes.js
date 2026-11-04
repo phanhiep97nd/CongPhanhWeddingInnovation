@@ -71,6 +71,8 @@ router.get('/', async (request, response, next) => {
       id: String(wedding._id),
       slug: wedding.slug,
       couple: wedding.couple,
+      invitationKind: wedding.invitationKind,
+      eventTitle: wedding.eventTitle,
       dateText: wedding.dateText,
       eventTime: wedding.eventTime,
       coverImage: wedding.coverImage,
@@ -143,6 +145,15 @@ router.get('/:id', async (request, response, next) => {
   }
 });
 
+router.post('/:id/template-preview', (request, response, next) => {
+  try {
+    const library = require('../lib/templateLibrary');
+    const selected = library.selection(request.body);
+    if (!selected) return response.status(400).json({ message: 'Chọn một mẫu thiệp' });
+    response.set('Cache-Control', 'no-store').json({ html: library.render(selected, { editing: true }) });
+  } catch (error) { next(error); }
+});
+
 router.get('/:id/preview-meta', async (request, response, next) => {
   try {
     const code = typeof request.query.g === 'string' ? request.query.g : '';
@@ -177,7 +188,7 @@ router.put('/:id', async (request, response, next) => {
       request.wedding.slugAliases = [...(request.wedding.slugAliases || []).filter(alias => alias !== data.slug), request.wedding.slug].slice(-5);
     }
     for (const [key, value] of Object.entries(data)) {
-      if (value && typeof value === 'object' && !Array.isArray(value) && !(value instanceof Date)) {
+      if (key !== 'importedTemplate' && value && typeof value === 'object' && !Array.isArray(value) && !(value instanceof Date)) {
         const current = request.wedding.get(key);
         request.wedding.set(key, { ...(current?.toObject?.() || current || {}), ...value });
       } else {
