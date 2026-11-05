@@ -24,7 +24,7 @@ process.env.JWT_SECRET = require('node:crypto').randomBytes(32).toString('hex');
     if (!user) user = await User.create({ email: account.email, name: 'Quản trị kiểm thử', passwordHash: await fromApi('bcryptjs').hash(account.password, 10), role: 'admin', status: 'active', defaultWeddingPlan: 'premium' });
     else { user.role = 'admin'; user.status = 'active'; user.defaultWeddingPlan = 'premium'; await user.save(); }
     await fs.writeFile(accountFile, JSON.stringify(account, null, 2));
-    await fs.writeFile(path.join(local, 'TAI-KHOAN-TEST.txt'), `Trang đăng nhập: http://localhost:3100/login\nEmail: ${account.email}\nMật khẩu: ${account.password}\nQuyền: admin; trạng thái active; thiệp mới mặc định Premium.\nDữ liệu test lưu cục bộ trong .local-test/database, giữ lại khi khởi động lại.\nKhởi động API: node scripts/preview-library.cjs --persistent --seed-admin\nKhông dùng tài khoản này trên môi trường production.\n`);
+    await fs.writeFile(path.join(local, 'TAI-KHOAN-TEST.txt'), `Trang đăng nhập: http://127.0.0.1:3100/login\nĐịa chỉ thay thế: http://localhost:3100/login\nEmail: ${account.email}\nMật khẩu: ${account.password}\nQuyền: admin; trạng thái active; thiệp mới mặc định Premium.\nDữ liệu test lưu cục bộ trong .local-test/database, giữ lại khi khởi động lại.\nKhởi động API: node scripts/preview-library.cjs --persistent --seed-admin\nKhông dùng tài khoản này trên môi trường production.\n`);
     console.log('Local test admin ready; credentials: .local-test/TAI-KHOAN-TEST.txt');
   }
   const server = require('../api/app').listen(3101, '127.0.0.1', () => console.log(`Isolated API http://127.0.0.1:3101; ${persistent ? 'persistent local test data' : 'data resets on restart'}`));

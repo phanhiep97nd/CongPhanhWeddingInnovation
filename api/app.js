@@ -15,7 +15,14 @@ app.use('/templates/assets', require('./routes/templateRoutes').assets);
 const allowedOrigins = (process.env.ALLOWED_ORIGINS || '').split(',').map(origin => origin.trim()).filter(Boolean);
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || /^http:\/\/localhost(?::\d+)?$/.test(origin) || allowedOrigins.includes(origin)) {
+    let loopback = false;
+    if (origin) {
+      try {
+        const url = new URL(origin);
+        loopback = url.protocol === 'http:' && ['localhost', '127.0.0.1', '[::1]'].includes(url.hostname) && url.origin === origin;
+      } catch { /* Malformed origins remain disallowed. */ }
+    }
+    if (!origin || loopback || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
       const error = new Error('Nguồn truy cập không được phép');
