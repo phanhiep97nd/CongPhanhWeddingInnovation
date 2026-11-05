@@ -174,7 +174,7 @@ export default function Editor() {
         {tab === "guests" && <GuestsTab wedding={draft} onUpgrade={() => setTab("billing")} />}
         {tab === "photos" && <><PhotosTab weddingId={draft.id} slug={draft.slug} />{!draft.entitlements?.photoWall && <LockedFeature plan="premium" label="Ảnh khách gửi" onUpgrade={() => setTab("billing")} />}</>}
         {tab === "giftBox" && <GiftBoxEditor wedding={draft} change={change} onUpgrade={() => setTab("billing")} />}
-        {tab === "templates" && <div className="editor-stack"><ImportedTemplateEditor wedding={draft} change={change} /><details><summary>Phong cách Hỷ Thiệp nguyên bản</summary><h2>Mẫu thiệp</h2><div className="template-picker">
+        {tab === "templates" && <div className="editor-stack"><ImportedTemplateEditor wedding={draft} change={change} onEditInfo={() => setTab("info")} /><details><summary>Phong cách Hỷ Thiệp nguyên bản</summary><h2>Mẫu thiệp</h2><div className="template-picker">
           <button className={draft.template !== "minimal" && draft.template !== "hy3d" ? "selected" : ""} onClick={() => change({ template: "classic" })}><span className="template-thumb classic-thumb">C & P</span>Cổ điển</button>
           <button className={draft.template === "minimal" ? "selected" : ""} disabled={!draft.entitlements?.premiumTemplates} onClick={() => change({ template: "minimal" })}><span className="template-thumb minimal-thumb">C / P</span>Tối giản</button>
           <button className={draft.template === "hy3d" ? "selected" : ""} disabled={!draft.entitlements?.premiumTemplates} onClick={() => change({ template: "hy3d" })}><span className="template-thumb hy3d-thumb">3D</span>Hỷ 3D</button>

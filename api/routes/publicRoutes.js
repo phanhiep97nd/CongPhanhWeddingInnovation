@@ -82,7 +82,7 @@ router.get('/weddings/:slug/template-render', async (request, response, next) =>
   try {
     if (!request.wedding.importedTemplate) return response.sendStatus(404);
     const guest = typeof request.query.g === 'string' ? await findGuest(request.wedding, request.query.g).lean() : null;
-    response.set('Cache-Control', 'no-store').json({ html: require('../lib/templateLibrary').render(request.wedding.importedTemplate, { guestName: guest?.invitationName || '' }) });
+    response.set('Cache-Control', 'no-store').json({ html: require('../lib/templateLibrary').render(request.wedding.importedTemplate, { guestName: guest?.invitationName || '', wedding: request.wedding }) });
   } catch (error) { next(error); }
 });
 

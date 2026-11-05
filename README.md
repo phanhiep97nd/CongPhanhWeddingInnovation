@@ -75,6 +75,12 @@ Deploy Hỷ Thiệp lên `https://hythiep.net`, thư mục `~/apps/hythiep`, b�
 
 Backend hiện chỉ dùng PostgreSQL, không đọc `MONGO_URI`. Các file `vercel.json`/`middleware.js` vẫn dành cho môi trường Vercel trước đây; nginx local thay thế API rewrite và SPA fallback nhưng chưa chạy middleware tạo preview riêng từng khách. Các biến `VITE_*` phải đặt lúc build frontend.
 
+### Đồng bộ thông tin với mẫu nhập
+
+Our Love Begins (`tpl-07109f7b5da0fc5f`) dùng dữ liệu tab Thông tin cho tên cô dâu/chú rể (ưu tiên họ tên đầy đủ), ngày/giờ, ngày hiển thị, địa điểm, địa chỉ và bản đồ. Lịch và đếm ngược dùng cùng ngày/giờ; bản xem trước nhận dữ liệu chưa lưu, trang khách chỉ nhận dữ liệu đã lưu. Các trường này dẫn về tab Thông tin để tránh hai nguồn nội dung cạnh tranh. Chữ dài được thu nhỏ trong vùng bố cục dành sẵn.
+
+Phạm vi đồng bộ này mới được xác nhận cho Our Love Begins. Kiểm tra 283 mẫu trước đó chỉ xác nhận sửa trực tiếp trường chữ/ảnh, không xác nhận ánh xạ tab Thông tin cho mọi mẫu. Kiểm tra API: `npm test --prefix api -- test/template-content.test.js test/template-library.test.js`. Kiểm tra trình duyệt trong workspace snapshot: `node verify-one-invitation-sync.mjs`; sửa mẫu local `test-thiep-01`, kiểm tra bản nháp, lưu/tải lại, sửa lần hai và trang khách 390px. Báo cáo và ảnh nằm trong `.local-test/one-invitation-sync.json` và `.local-test/sync-*.png` (không đưa vào Git).
+
 ### PayOS
 
 Đặt `PAYOS_CLIENT_ID`, `PAYOS_API_KEY`, `PAYOS_CHECKSUM_KEY` trong `.env` production. Compose đặt `SITE_ORIGIN=https://hythiep.net`. Webhook là `https://hythiep.net/api/payos/webhook`. Liên kết thanh toán quay về `/dashboard/:id?payment=success&orderCode=...` hoặc `payment=cancel`; trang biên tập gọi sync để xác nhận ngay cả khi webhook chưa đến.

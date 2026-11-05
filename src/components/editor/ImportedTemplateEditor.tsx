@@ -7,13 +7,14 @@ import TemplateLibrary from '../TemplateLibrary';
 import InvitationToolbar from '../invitation/InvitationToolbar';
 
 type Selection = NonNullable<Wedding['importedTemplate']>;
-export default function ImportedTemplateEditor({ wedding, change }: { wedding: Wedding; change: (patch: Partial<Wedding>) => void }) {
+export default function ImportedTemplateEditor({ wedding, change, onEditInfo }: { wedding: Wedding; change: (patch: Partial<Wedding>) => void; onEditInfo?: () => void }) {
   const selected = wedding.importedTemplate;
   const [browse, setBrowse] = useState(!selected);
   const [fields, setFields] = useState<TemplateField[]>([]);
   const [active, setActive] = useState('');
   const [filter, setFilter] = useState('');
   const [html, setHtml] = useState('');
+  const [boundValues, setBoundValues] = useState<Record<string, string>>({});
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
   const [previewBusy, setPreviewBusy] = useState(false);
@@ -25,7 +26,7 @@ export default function ImportedTemplateEditor({ wedding, change }: { wedding: W
   const latest = useRef(selected); latest.current = selected;
   const selectedId = selected?.templateId;
   useEffect(() => {
-    setFields([]); setActive(''); setHtml(''); setHistory([]); setFuture([]); position.current = { top: 0, inner: 0 };
+    setFields([]); setActive(''); setHtml(''); setBoundValues({}); setHistory([]); setFuture([]); position.current = { top: 0, inner: 0 };
     if (!selectedId) return;
     let live = true;
     api<TemplateField[]>(`/templates/${selectedId}/fields`, {}, true).then(result => { if (live) { setFields(result); setActive(result.find(field => field.type === 'text')?.key || result[0]?.key || ''); } }).catch(e => { if (live) setError(e.message); });
@@ -37,12 +38,13 @@ export default function ImportedTemplateEditor({ wedding, change }: { wedding: W
     if (!selected) return;
     const timer = setTimeout(() => {
       setPreviewBusy(true);
-      api<{ html: string }>(`/weddings/${wedding.id}/template-preview`, json('POST', selected), true).then(result => {
-        if (version === revision.current) { setHtml(result.html); setError(''); }
+      const content = { couple: wedding.couple, eventDate: wedding.eventDate, eventTime: wedding.eventTime, dateText: wedding.dateText, venue: wedding.venue };
+      api<{ html: string; boundValues: Record<string, string> }>(`/weddings/${wedding.id}/template-preview`, json('POST', { ...selected, content }), true).then(result => {
+        if (version === revision.current) { setHtml(result.html); setBoundValues(result.boundValues); setError(''); }
       }).catch(e => { if (version === revision.current) setError(e.message); }).finally(() => { if (version === revision.current) setPreviewBusy(false); });
     }, 600);
     return () => { clearTimeout(timer); revision.current++; };
-  }, [selected, wedding.id]);
+  }, [selected, wedding]);
   useEffect(() => {
     const receive = (event: MessageEvent) => {
       if (event.source === frame.current?.contentWindow && event.data?.type === 'ht:scroll') { position.current = { top: Number(event.data.top) || 0, inner: Number(event.data.inner) || 0 }; return; }
@@ -81,9 +83,10 @@ export default function ImportedTemplateEditor({ wedding, change }: { wedding: W
         <div className="studio-fields">
           <label>Tìm chữ hoặc ảnh<input type="search" value={filter} onChange={e => setFilter(e.target.value)} placeholder="Nhập nội dung cần tìm…" /></label>
           <label>Phần đang chỉnh sửa<select value={active} onChange={e => setActive(e.target.value)}><option value="">Chọn phần nội dung</option>{fields.filter(f => f.label.toLocaleLowerCase().includes(filter.toLocaleLowerCase()) || f.key === active).map(f => <option key={f.key} value={f.key}>{f.type === 'image' ? '▧ ' : 'T '}{f.label}</option>)}</select></label>
-          {field && <div className="studio-field" key={field.key}><label>{field.type === 'image' ? 'Đường dẫn ảnh HTTPS' : 'Nội dung'}{field.type === 'text' ? <textarea rows={5} maxLength={5000} value={selected.values[field.key] ?? field.value} onChange={e => setValue(field.key, e.target.value)} /> : <input type="url" value={selected.values[field.key] || ''} placeholder="Giữ ảnh gốc hoặc dán đường dẫn ảnh mới" onChange={e => setValue(field.key, e.target.value)} />}</label>
+          {field && <div className="studio-field" key={field.key}><label>{field.type === 'image' ? 'Đường dẫn ảnh HTTPS' : 'Nội dung'}{field.type === 'text' ? <textarea rows={5} maxLength={5000} readOnly={Boolean(field.binding)} value={boundValues[field.key] ?? selected.values[field.key] ?? field.value} onChange={e => setValue(field.key, e.target.value)} /> : <input type="url" value={selected.values[field.key] || ''} placeholder="Giữ ảnh gốc hoặc dán đường dẫn ảnh mới" onChange={e => setValue(field.key, e.target.value)} />}</label>
+            {field.binding && <p>Đồng bộ từ {field.binding.label}. <button type="button" className="text-button" onClick={onEditInfo}>Chỉnh trong Thông tin</button></p>}
             {field.type === 'image' && <label>Tải ảnh của bạn<input type="file" accept="image/*" disabled={busy} onChange={async e => { const file = e.target.files?.[0]; if (!file) return; const key = field.key; const templateId = selected.templateId; setBusy(true); setError(''); try { const url = await uploadImage(file); const current = latest.current; if (current?.templateId === templateId) update({ ...current, values: { ...current.values, [key]: url } }); } catch (e) { setError((e as Error).message); } finally { setBusy(false); } }} /></label>}
-            <button type="button" className="text-button" onClick={() => setValue(field.key)}>Khôi phục phần này về mẫu gốc</button>
+            {!field.binding && <button type="button" className="text-button" onClick={() => setValue(field.key)}>Khôi phục phần này về mẫu gốc</button>}
             {busy && <p role="status">Đang tải ảnh…</p>}
           </div>}
           <p className="studio-tip">Thay ảnh giữ nguyên khung của mẫu. Bạn có thể sửa lời mời, tên, ngày, địa chỉ và các đoạn nội dung trong bộ chọn phía trên.</p>
