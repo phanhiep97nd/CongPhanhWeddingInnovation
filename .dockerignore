@@ -10,3 +10,4 @@
 mongo-export
 backups
 **/*.dump
+**/.local-test
