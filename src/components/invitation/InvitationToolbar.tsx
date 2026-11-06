@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { Gift, MessageCircle, X } from 'lucide-react';
 import { api, json } from '../../lib/api';
 import type { Wedding } from '../../lib/types';
@@ -40,14 +40,17 @@ export default function InvitationToolbar({ slug, wedding, guestName = '', fixed
     const mounted = window.htBlessings.mount(blessingRoot.current); display.current = mounted;
     return () => { mounted.destroy(); display.current = null; };
   }, [frame]);
+  // Owners can stop wishes from scrolling over the card; guests still read and send them from the toolbar.
+  const autoplay = wedding?.theme?.blessings !== false;
+  const floating = useMemo(() => autoplay ? wishes : [], [autoplay, wishes]);
   useEffect(() => {
-    if (!frame) { display.current?.set(wishes); return; }
+    if (!frame) { display.current?.set(floating); return; }
     const iframe = frame.current;
-    const send = () => iframe?.contentWindow?.postMessage({ type: 'ht:blessings', wishes }, '*');
+    const send = () => iframe?.contentWindow?.postMessage({ type: 'ht:blessings', wishes: floating }, '*');
     const ready = (event: MessageEvent) => { if (event.source === iframe?.contentWindow && event.data?.type === 'ht:blessings-ready') send(); };
     iframe?.addEventListener('load', send); window.addEventListener('message', ready); send();
     return () => { iframe?.removeEventListener('load', send); window.removeEventListener('message', ready); };
-  }, [wishes, frame]);
+  }, [floating, frame]);
   useEffect(() => {
     if (panel) dialog.current?.showModal(); else dialog.current?.close();
   }, [panel]);

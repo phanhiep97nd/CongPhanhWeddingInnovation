@@ -2,31 +2,26 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { api, json } from "../lib/api";
 import type { Wedding } from "../lib/types";
-import { InfoTab } from "../components/editor/Fields";
-import ImagesTab from "../components/editor/ImagesTab";
-import ContentTab from "../components/editor/ContentTab";
-import SectionsTab from "../components/editor/SectionsTab";
+import CardTab from "../components/editor/CardTab";
 import GuestsTab from "../components/editor/GuestsTab";
 import PhotosTab from "../components/editor/PhotosTab";
-import GiftBoxEditor from "../components/editor/GiftBoxEditor";
-import ViewModesSetting from "../components/editor/ViewModesSetting";
-import InvitationDesignPicker from "../components/editor/InvitationDesignPicker";
-import ImportedTemplateEditor from "../components/editor/ImportedTemplateEditor";
 import { invitationTitle } from "../lib/templateLibrary";
 import UpgradePanel from "../components/billing/UpgradePanel";
 import LockedFeature from "../components/billing/LockedFeature";
 import { PlanRequiredError } from "../lib/api";
 import { useConfirmSheet } from "../components/ConfirmSheet";
 import { ArrowLeft } from "lucide-react";
-type Tab = "info" | "images" | "content" | "sections" | "guests" | "photos" | "giftBox" | "templates" | "billing";
-const tabs: { key: Tab; label: string; }[] = [{ key: "info", label: "Thông tin" }, { key: "images", label: "Ảnh" }, { key: "content", label: "Nội dung" }, { key: "sections", label: "Hạng mục" }, { key: "guests", label: "Khách mời" }, { key: "photos", label: "Ảnh khách gửi" }, { key: "giftBox", label: "Hộp mừng cưới" }, { key: "templates", label: "Mẫu thiệp" }, { key: "billing", label: "Gói & thanh toán" }];
+type Tab = "card" | "guests" | "photos" | "billing";
+const tabs: { key: Tab; label: string; }[] = [{ key: "card", label: "Chỉnh sửa thiệp" }, { key: "guests", label: "Khách mời" }, { key: "photos", label: "Ảnh khách gửi" }, { key: "billing", label: "Gói & thanh toán" }];
 
 export default function Editor() {
   const { id = "" } = useParams();
   const navigate = useNavigate();
   const [saved, setSaved] = useState<Wedding | null>(null);
   const [draft, setDraft] = useState<Wedding | null>(null);
-  const [tab, setTab] = useState<Tab>(new URLSearchParams(window.location.search).get('tab') === 'templates' ? 'templates' : 'info');
+  const [tab, setTab] = useState<Tab>("card");
+  // Links that ask for templates (e.g. a new card created from the library) open the template panel.
+  const [focusTemplates] = useState(() => new URLSearchParams(window.location.search).get("tab") === "templates");
   const tabsRef = useRef<HTMLElement>(null);
   const [message, setMessage] = useState("");
   const [saving, setSaving] = useState(false);
@@ -162,25 +157,15 @@ export default function Editor() {
       </p>}
       {requiredPlan && <LockedFeature plan={requiredPlan} onUpgrade={() => { setTab("billing"); setRequiredPlan(null); }} />}
       <nav ref={tabsRef} className="tab-nav" aria-label="Chỉnh sửa thiệp">
-        {tabs.map(item => <button key={item.key} className={tab === item.key ? "active" : ""} aria-current={tab === item.key ? "page" : undefined} onClick={() => setTab(item.key)}>
+        {/* Guest photo uploads exist only in the original layouts; library cards have no upload section. */}
+        {tabs.filter(item => item.key !== "photos" || !draft.importedTemplate).map(item => <button key={item.key} className={tab === item.key ? "active" : ""} aria-current={tab === item.key ? "page" : undefined} onClick={() => setTab(item.key)}>
           {item.label}
         </button>)}
       </nav>
       <div className="editor-panel">
-        {tab === "info" && <InfoTab wedding={draft} change={change} onUpgrade={() => setTab("billing")} />}
-        {tab === "images" && <ImagesTab wedding={draft} change={change} onUpgrade={() => setTab("billing")} />}
-        {tab === "content" && <ContentTab wedding={draft} change={change} />}
-        {tab === "sections" && <SectionsTab wedding={draft} change={change} onUpgrade={() => setTab("billing")} />}
+        {tab === "card" && <CardTab wedding={draft} change={change} onUpgrade={() => setTab("billing")} focusTemplates={focusTemplates} />}
         {tab === "guests" && <GuestsTab wedding={draft} onUpgrade={() => setTab("billing")} />}
         {tab === "photos" && <><PhotosTab weddingId={draft.id} slug={draft.slug} />{!draft.entitlements?.photoWall && <LockedFeature plan="premium" label="Ảnh khách gửi" onUpgrade={() => setTab("billing")} />}</>}
-        {tab === "giftBox" && <GiftBoxEditor wedding={draft} change={change} onUpgrade={() => setTab("billing")} />}
-        {tab === "templates" && <div className="editor-stack"><ImportedTemplateEditor wedding={draft} change={change} onEditInfo={() => setTab("info")} /><details><summary>Phong cách Hỷ Thiệp nguyên bản</summary><h2>Mẫu thiệp</h2><div className="template-picker">
-          <button className={draft.template !== "minimal" && draft.template !== "hy3d" ? "selected" : ""} onClick={() => change({ template: "classic" })}><span className="template-thumb classic-thumb">C & P</span>Cổ điển</button>
-          <button className={draft.template === "minimal" ? "selected" : ""} disabled={!draft.entitlements?.premiumTemplates} onClick={() => change({ template: "minimal" })}><span className="template-thumb minimal-thumb">C / P</span>Tối giản</button>
-          <button className={draft.template === "hy3d" ? "selected" : ""} disabled={!draft.entitlements?.premiumTemplates} onClick={() => change({ template: "hy3d" })}><span className="template-thumb hy3d-thumb">3D</span>Hỷ 3D</button>
-        </div>{!draft.entitlements?.premiumTemplates && <LockedFeature plan="premium" label="Mẫu Tối giản" onUpgrade={() => setTab("billing")} />}
-        {draft.template === "hy3d" && <ViewModesSetting wedding={draft} change={change} />}
-        <InvitationDesignPicker wedding={draft} change={change} onUpgrade={() => setTab("billing")} dirty={dirty} /></details></div>}
         {tab === "billing" && <UpgradePanel wedding={draft} />}
       </div>
     </div>

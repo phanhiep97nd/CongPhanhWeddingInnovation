@@ -9,6 +9,7 @@ const { serialize, publicGuest } = require('../lib/serialize');
 const { guestFields, normalizeSections } = require('../lib/validators');
 const { createGuest } = require('../lib/guestCodes');
 const { buildMeta } = require('../lib/meta');
+const { sharePage } = require('../lib/sharePage');
 const { getSettings } = require('../models/Settings');
 const { FEATURES, entitlementsFor, isExpired } = require('../lib/plans');
 
@@ -212,6 +213,17 @@ router.get('/weddings/:slug/meta', async (request, response, next) => {
 
     const code = typeof request.query.g === 'string' ? request.query.g : '';
     response.json(buildMeta(wedding, guestName, { code }));
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Link-preview bots are routed here by nginx for /w/:slug[/:code]; see deploy/nginx.home.conf.
+router.get('/weddings/:slug/share', async (request, response, next) => {
+  try {
+    const code = typeof request.query.g === 'string' ? request.query.g : '';
+    const guest = code ? await findGuest(request.wedding, code).lean() : null;
+    response.set({ 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'public, max-age=300' }).send(sharePage(buildMeta(request.wedding, guest?.invitationName || '', { code: guest ? code : '' })));
   } catch (error) {
     next(error);
   }

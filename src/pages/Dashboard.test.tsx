@@ -3,7 +3,7 @@ import { act, fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { AuthProvider } from "../lib/auth";
 import Dashboard from "./Dashboard";
-import { slugify } from "./Dashboard";
+import { slugify } from "../lib/links";
 describe("wedding slug suggestion", () => {
   it("removes Vietnamese diacritics", () => {
     expect(slugify("Phương Anh & Minh Công")).toBe("phuong-anh-minh-cong");

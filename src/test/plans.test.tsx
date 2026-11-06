@@ -55,7 +55,8 @@ describe("upgrade panel", () => {
     vi.stubGlobal("fetch", vi.fn().mockImplementation(async (path: string) => response(path.includes("pricing") ? pricing : [])));
     render(<UpgradePanel wedding={wedding} />);
     expect(await screen.findByText("99.000đ")).toBeInTheDocument();
-    expect(screen.getByText("Hộp mừng cưới")).toBeInTheDocument();
+    // The gift box is a basic feature, so it is listed for both paid plans.
+    expect(screen.getAllByText("Hộp mừng cưới").length).toBeGreaterThan(0);
   });
 
   it("shows only the price difference for basic to premium", async () => {
@@ -122,7 +123,7 @@ describe("gated editor controls", () => {
   it("shows photo wall and gift box locks in section controls", () => {
     render(<SectionsTab wedding={wedding} change={vi.fn()} onUpgrade={vi.fn()} />);
     expect(screen.getByText(/Ảnh khách gửi cần gói Cao cấp/)).toBeInTheDocument();
-    expect(screen.getByText(/Hộp mừng cưới cần gói Cao cấp/)).toBeInTheDocument();
+    expect(screen.getByText(/Hộp mừng cưới cần gói Cơ bản/)).toBeInTheDocument();
   });
 
   it("removes section locks when premium", () => {
@@ -133,7 +134,7 @@ describe("gated editor controls", () => {
   it("lets free owners prepare a gift account", () => {
     const change = vi.fn();
     render(<GiftBoxEditor wedding={wedding} change={change} onUpgrade={vi.fn()} />);
-    expect(screen.getByText(/Hiển thị hộp mừng cưới trên thiệp cần gói Cao cấp/)).toBeInTheDocument();
+    expect(screen.getByText(/Hiển thị hộp mừng cưới trên thiệp cần gói Cơ bản/)).toBeInTheDocument();
     fireEvent.change(screen.getByLabelText("Số tài khoản"), { target: { value: "abc123" } });
     expect(change).toHaveBeenCalled();
   });
@@ -141,7 +142,7 @@ describe("gated editor controls", () => {
   it("limits gift accounts to four", () => {
     const accounts = Array.from({ length: 4 }, (_, index) => ({ ...wedding.giftBox!.accounts[0], id: String(index) }));
     render(<GiftBoxEditor wedding={{ ...wedding, giftBox: { note: "", accounts } }} change={vi.fn()} onUpgrade={vi.fn()} />);
-    expect(screen.getByRole("button", { name: "Thêm tài khoản" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Thêm tài khoản hoặc mã QR" })).toBeDisabled();
   });
 });
 
@@ -151,9 +152,17 @@ describe("invitation additions and data", () => {
     expect(screen.queryByText("Lời chúc")).not.toBeInTheDocument();
   });
 
-  it("shows VietQR for premium gift accounts", () => {
+  it("shows VietQR for gift accounts", () => {
     render(<GiftBoxSection wedding={{ ...wedding, entitlements: premiumEntitlements }} />);
-    expect(screen.getByAltText("Mã chuyển khoản Vietcombank")).toHaveAttribute("src", expect.stringContaining("970436-12345678-compact2.png"));
+    expect(screen.getByAltText("Mã chuyển khoản Cô dâu")).toHaveAttribute("src", expect.stringContaining("970436-12345678-compact2.png"));
+  });
+
+  it("shows an uploaded QR, including e-wallet codes without a bank account", () => {
+    const accounts = [{ ...wedding.giftBox!.accounts[0], qrImage: "https://cdn.example.test/bank-qr.png" }, { id: "w", label: "MoMo", bankBin: "", bankName: "", accountNumber: "", accountName: "Hoa", qrImage: "https://cdn.example.test/momo.png" }];
+    render(<GiftBoxSection wedding={{ ...wedding, entitlements: premiumEntitlements, giftBox: { note: "", accounts } }} />);
+    expect(screen.getByAltText("Mã chuyển khoản Cô dâu")).toHaveAttribute("src", "https://cdn.example.test/bank-qr.png");
+    expect(screen.getByAltText("Mã chuyển khoản MoMo")).toHaveAttribute("src", "https://cdn.example.test/momo.png");
+    expect(screen.getAllByRole("button", { name: "Sao chép số tài khoản" })).toHaveLength(1);
   });
 
   it("encodes account name and couple in VietQR", () => {

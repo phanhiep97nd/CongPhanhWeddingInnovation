@@ -4,7 +4,7 @@ const FEATURES = {
   largeGallery: 'basic',
   excelExport: 'basic',
   guestQr: 'basic',
-  giftBox: 'premium',
+  giftBox: 'basic',
   photoWall: 'premium',
   customMusic: 'premium',
   permanent: 'premium',

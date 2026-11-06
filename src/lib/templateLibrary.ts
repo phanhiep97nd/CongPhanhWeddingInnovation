@@ -7,7 +7,8 @@ export const invitationKinds = [
   { id: 'event', label: 'Sự kiện' },
 ] as const;
 export interface LibraryTemplate { id: string; name: string; category: NonNullable<Wedding['invitationKind']>; thumbnail: string; fieldCount: number }
-export interface TemplateField { key: string; type: 'text' | 'image'; label: string; value: string; binding?: { label: string; tab: 'info' } }
+export interface TemplateField { key: string; type: 'text' | 'image'; label: string; value: string; binding?: { source: TemplateBindingSource; label: string } }
+export type TemplateBindingSource = 'names' | 'schedule' | 'dateText' | 'venue';
 export const templateChoiceKey = 'hy:template-choice';
 export function rememberTemplate(item: LibraryTemplate) { try { sessionStorage.setItem(templateChoiceKey, JSON.stringify(item)); } catch { /* selection remains available inside editor */ } }
 export function chosenTemplate(): LibraryTemplate | null {

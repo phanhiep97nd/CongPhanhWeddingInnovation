@@ -1,0 +1,4379 @@
+{
+ "tpl-e0ead20053787a9c": {
+  "sample": {
+   "groom": "MINH TRÍ",
+   "bride": "THANH HẰNG",
+   "basis": "label"
+  },
+  "fields": {
+   "f23": {
+    "pattern": "{groom}"
+   },
+   "f59": {
+    "pattern": "{bride}",
+    "upper": true
+   },
+   "f62": {
+    "pattern": "{groom}",
+    "upper": true
+   },
+   "f68": {
+    "pattern": "{bride}"
+   },
+   "f69": {
+    "pattern": "{groom}"
+   },
+   "f78": {
+    "pattern": "{bride}"
+   }
+  }
+ },
+ "tpl-f4325844edab59cd": {
+  "sample": {
+   "groom": "Vinh Quang",
+   "bride": "Thúy Vân",
+   "basis": "pair"
+  },
+  "fields": {
+   "f51": {
+    "pattern": "{groomFull}"
+   },
+   "f52": {
+    "pattern": "{brideFull}"
+   },
+   "f127": {
+    "pattern": "{groom} - {bride}"
+   }
+  }
+ },
+ "tpl-d8770114820d2c8b": {
+  "sample": {
+   "groom": "Thanh Huy",
+   "bride": "Phương Thúy",
+   "basis": "pair"
+  },
+  "fields": {
+   "f33": {
+    "pattern": "{groom} - {bride}"
+   },
+   "f113": {
+    "pattern": "{groomFull}"
+   },
+   "f114": {
+    "pattern": "{brideFull}"
+   }
+  }
+ },
+ "tpl-0b59fd94844f2353": {
+  "sample": {
+   "groom": "Minh Quân",
+   "bride": "Mai Anh",
+   "basis": "pair"
+  },
+  "fields": {
+   "f67": {
+    "pattern": "{bride} & {groom}"
+   },
+   "f77": {
+    "pattern": "{bride}"
+   },
+   "f78": {
+    "pattern": "{groom}"
+   },
+   "f167": {
+    "pattern": "{brideFull}"
+   }
+  }
+ },
+ "tpl-9e7eae7f25151a5c": {
+  "sample": {
+   "groom": "Anh Khoa",
+   "bride": "Thanh Thanh",
+   "basis": "label"
+  },
+  "fields": {
+   "f57": {
+    "pattern": "{groomFull} & {bride}"
+   },
+   "f67": {
+    "pattern": "{groom} & {bride}"
+   },
+   "f78": {
+    "pattern": "{groom}"
+   },
+   "f80": {
+    "pattern": "{bride}"
+   }
+  }
+ },
+ "tpl-492156ab4fe54ebb": {
+  "sample": {
+   "groom": "Hoàng Long",
+   "bride": "Phương Nga",
+   "basis": "label"
+  },
+  "fields": {
+   "f18": {
+    "pattern": "{bride}",
+    "upper": true
+   },
+   "f42": {
+    "pattern": "{bride}"
+   },
+   "f43": {
+    "pattern": "{groom}"
+   },
+   "f84": {
+    "pattern": "{bride}"
+   },
+   "f87": {
+    "pattern": "{groom}"
+   },
+   "f108": {
+    "pattern": "{brideFull}"
+   },
+   "f110": {
+    "pattern": "{groom}",
+    "upper": true
+   }
+  }
+ },
+ "tpl-da03e4ffbb40397a": {
+  "sample": {
+   "groom": "Hải Đăng",
+   "bride": "Yến Nhi",
+   "basis": "label"
+  },
+  "fields": {
+   "f60": {
+    "pattern": "{groom}"
+   },
+   "f61": {
+    "pattern": "{bride}"
+   },
+   "f74": {
+    "pattern": "{groom}"
+   },
+   "f76": {
+    "pattern": "{bride}"
+   }
+  }
+ },
+ "tpl-22df1b924841a0f3": {
+  "sample": {
+   "groom": "Văn Anh",
+   "bride": "Minh Thư",
+   "basis": "pair"
+  },
+  "fields": {
+   "f31": {
+    "pattern": "{groom} - {bride}"
+   },
+   "f43": {
+    "pattern": "{groom}"
+   },
+   "f44": {
+    "pattern": "{bride}"
+   }
+  }
+ },
+ "tpl-e67cb146deb89a79": {
+  "sample": {
+   "groom": "Tuấn Minh",
+   "bride": "Mai Trang",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f38": {
+    "pattern": "{bride}"
+   },
+   "f39": {
+    "pattern": "{groom}"
+   },
+   "f57": {
+    "pattern": "{groom}"
+   },
+   "f58": {
+    "pattern": "{bride}"
+   },
+   "f92": {
+    "pattern": "{groom}"
+   },
+   "f93": {
+    "pattern": "{bride}"
+   }
+  }
+ },
+ "tpl-1702b1accbeba875": {
+  "sample": {
+   "groom": "Hải Đăng",
+   "bride": "Minh Nguyệt",
+   "basis": "label"
+  },
+  "fields": {
+   "f29": {
+    "pattern": "{groom}"
+   },
+   "f30": {
+    "pattern": "{bride}"
+   },
+   "f41": {
+    "pattern": "{groom} & {bride}"
+   }
+  }
+ },
+ "tpl-c61e99fa867ac605": {
+  "sample": {
+   "groom": "Hoàng Nam",
+   "bride": "Minh Anh",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f39": {
+    "pattern": "{bride} & {groom}"
+   },
+   "f76": {
+    "pattern": "{bride}"
+   },
+   "f77": {
+    "pattern": "{groom}"
+   },
+   "f137": {
+    "pattern": "{bride}"
+   },
+   "f138": {
+    "pattern": "{groom}"
+   }
+  }
+ },
+ "tpl-548821ebb4014801": {
+  "sample": {
+   "groom": "Hoàng Nam",
+   "bride": "Mai Anh",
+   "basis": "label"
+  },
+  "fields": {
+   "f81": {
+    "pattern": "Cô dâu: {bride}"
+   },
+   "f190": {
+    "pattern": "{groom}"
+   },
+   "f193": {
+    "pattern": "Chú rể: {groom}"
+   }
+  }
+ },
+ "tpl-1587c4b382c1db2c": {
+  "sample": {
+   "groom": "Tiến Luân",
+   "bride": "Khánh Vân",
+   "basis": "pair"
+  },
+  "fields": {
+   "f47": {
+    "pattern": "{bride} & {groom}"
+   },
+   "f50": {
+    "pattern": "{bride}"
+   },
+   "f67": {
+    "pattern": "{brideFull}"
+   }
+  }
+ },
+ "tpl-b117d9d7de76b72a": {
+  "sample": {
+   "groom": "Văn Toàn",
+   "bride": "Mai Anh",
+   "basis": "label"
+  },
+  "fields": {
+   "f34": {
+    "pattern": "{bride}"
+   },
+   "f35": {
+    "pattern": "{groom}"
+   },
+   "f44": {
+    "pattern": "Cô dâu : {bride}"
+   },
+   "f45": {
+    "pattern": "Chú rể : {groom}"
+   }
+  }
+ },
+ "tpl-97b49030bd71cb67": {
+  "sample": {
+   "groom": "Hải Đăng",
+   "bride": "Yến Nhi",
+   "basis": "label"
+  },
+  "fields": {
+   "f39": {
+    "pattern": "{bride}"
+   },
+   "f40": {
+    "pattern": "{groom}"
+   },
+   "f53": {
+    "pattern": "{groom}"
+   },
+   "f55": {
+    "pattern": "{bride}"
+   }
+  }
+ },
+ "tpl-bcc375014cb76441": {
+  "sample": {
+   "groom": "Tuấn Minh",
+   "bride": "Mai Lan",
+   "basis": "pair"
+  },
+  "fields": {
+   "f36": {
+    "pattern": "{groom} & {bride}"
+   },
+   "f81": {
+    "pattern": "{bride}"
+   },
+   "f82": {
+    "pattern": "{groom}"
+   },
+   "f84": {
+    "pattern": "{brideInitial}",
+    "upper": true,
+    "initial": "last"
+   }
+  }
+ },
+ "tpl-1acde4f1a8cda443": {
+  "sample": {
+   "groom": "Quốc Thiên",
+   "bride": "Thanh Tú",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f28": {
+    "pattern": "{groom}"
+   },
+   "f29": {
+    "pattern": "{bride}"
+   },
+   "f33": {
+    "pattern": "{groom}"
+   },
+   "f34": {
+    "pattern": "{bride}"
+   },
+   "f60": {
+    "pattern": "{groom}"
+   },
+   "f62": {
+    "pattern": "{bride}"
+   }
+  }
+ },
+ "tpl-afa3cd6f2a4d1b01": {
+  "sample": {
+   "groom": "Lê Hoàng Minh",
+   "bride": "Nguyễn Mai Chi",
+   "basis": "label"
+  },
+  "fields": {
+   "f51": {
+    "pattern": "{groom}"
+   },
+   "f52": {
+    "pattern": "{bride}"
+   },
+   "f104": {
+    "pattern": "{groom}"
+   },
+   "f107": {
+    "pattern": "{bride}"
+   }
+  }
+ },
+ "tpl-d0cb0ad30c7e9119": {
+  "sample": {
+   "groom": "Duy Nam",
+   "bride": "Minh Anh",
+   "basis": "pair"
+  },
+  "fields": {
+   "f17": {
+    "pattern": "{bride} & {groom}"
+   },
+   "f31": {
+    "pattern": "{groom}"
+   },
+   "f32": {
+    "pattern": "{bride}"
+   }
+  }
+ },
+ "tpl-3a73935fd18d080d": {
+  "sample": {
+   "groom": "Minh Quân",
+   "bride": "Ánh Dương",
+   "basis": "label"
+  },
+  "fields": {
+   "f72": {
+    "pattern": "{groom} - {bride}"
+   },
+   "f84": {
+    "pattern": "{groomFull}"
+   },
+   "f90": {
+    "pattern": "{brideFull}"
+   }
+  }
+ },
+ "tpl-00c7552ddfa8c8e7": {
+  "sample": {
+   "groom": "Nhật Hoàng",
+   "bride": "Diệp Anh",
+   "basis": "label"
+  },
+  "fields": {
+   "f36": {
+    "pattern": "{groom} & {bride}"
+   },
+   "f45": {
+    "pattern": "{bride}"
+   },
+   "f47": {
+    "pattern": "{groom}"
+   }
+  }
+ },
+ "tpl-11eef04c54521c46": {
+  "sample": {
+   "groom": "Nhật Nam",
+   "bride": "Khánh Linh",
+   "basis": "pair"
+  },
+  "fields": {
+   "f66": {
+    "pattern": "{bride} & {groom}"
+   }
+  }
+ },
+ "tpl-630fcfdcfbb073c1": {
+  "sample": {
+   "groom": "Tiến Đạt",
+   "bride": "Huỳnh Như",
+   "basis": "pair"
+  },
+  "fields": {
+   "f38": {
+    "pattern": "{groom} & {bride}"
+   },
+   "f47": {
+    "pattern": "{groom}"
+   },
+   "f48": {
+    "pattern": "{bride}"
+   }
+  }
+ },
+ "tpl-b3055d239c7b6a52": {
+  "sample": {
+   "groom": "Minh Quân",
+   "bride": "Mai Anh",
+   "basis": "pair"
+  },
+  "fields": {
+   "f29": {
+    "pattern": "{groom} & {bride}"
+   },
+   "f35": {
+    "pattern": "{groom} & {bride}"
+   }
+  }
+ },
+ "tpl-df57846ef1060dde": {
+  "sample": {
+   "groom": "Tiến Đạt",
+   "bride": "Ngọc Hân",
+   "basis": "pair"
+  },
+  "fields": {
+   "f44": {
+    "pattern": "{groom} & {bride}"
+   },
+   "f70": {
+    "pattern": "{groomFull}"
+   },
+   "f71": {
+    "pattern": "{brideFull}"
+   }
+  }
+ },
+ "tpl-50b621c9257c9390": {
+  "sample": {
+   "groom": "Minh Kiên",
+   "bride": "Thúy Kiều",
+   "basis": "pair"
+  },
+  "fields": {
+   "f37": {
+    "pattern": "{groom} & {bride}"
+   }
+  }
+ },
+ "tpl-34daa9e46ceafacf": {
+  "sample": {
+   "groom": "Nguyễn Minh Tiến",
+   "bride": "Trịnh Hải Yến",
+   "basis": "label"
+  },
+  "fields": {
+   "f36": {
+    "pattern": "{groom}"
+   },
+   "f38": {
+    "pattern": "{bride}"
+   },
+   "f84": {
+    "pattern": "{brideInitial}",
+    "upper": true,
+    "initial": "last"
+   },
+   "f107": {
+    "pattern": "{brideInitial}",
+    "upper": true,
+    "initial": "last"
+   }
+  }
+ },
+ "tpl-b4258eb8118238ba": {
+  "sample": {
+   "groom": "Mạnh Hài",
+   "bride": "Yến Trang",
+   "basis": "label"
+  },
+  "fields": {
+   "f71": {
+    "pattern": "{bride}"
+   },
+   "f121": {
+    "pattern": "{groom} & {bride}"
+   }
+  }
+ },
+ "tpl-351ba23b53fbc639": {
+  "sample": {
+   "groom": "Đức Anh",
+   "bride": "Thanh Loan",
+   "basis": "pair"
+  },
+  "fields": {
+   "f47": {
+    "pattern": "{groomInitial}",
+    "upper": true,
+    "initial": "last"
+   },
+   "f48": {
+    "pattern": "{brideInitial}",
+    "upper": true,
+    "initial": "last"
+   },
+   "f49": {
+    "pattern": "{groomInitial}",
+    "upper": true,
+    "initial": "last"
+   },
+   "f64": {
+    "pattern": "{bride} - {groom}"
+   },
+   "f65": {
+    "pattern": "{bride} - {groom}"
+   },
+   "f66": {
+    "pattern": "{bride} - {groom}"
+   },
+   "f67": {
+    "pattern": "{groomInitial}",
+    "upper": true,
+    "initial": "last"
+   },
+   "f68": {
+    "pattern": "{brideInitial}",
+    "upper": true,
+    "initial": "last"
+   }
+  }
+ },
+ "tpl-d6afe98fb19e778f": {
+  "sample": {
+   "groom": "Huyền Anh",
+   "bride": "Minh Châu",
+   "basis": "pair"
+  },
+  "fields": {
+   "f32": {
+    "pattern": "{bride} & {groom}"
+   },
+   "f33": {
+    "pattern": "{bride} & {groom}"
+   }
+  }
+ },
+ "tpl-68655fbfe3001e00": {
+  "sample": {
+   "groom": "Minh Quân",
+   "bride": "Hải Yến",
+   "basis": "pair"
+  },
+  "fields": {
+   "f46": {
+    "pattern": "{bride} & {groom}"
+   },
+   "f48": {
+    "pattern": "{bride} & {groom}"
+   },
+   "f54": {
+    "pattern": "{bride} & {groom}"
+   },
+   "f56": {
+    "pattern": "{bride}"
+   },
+   "f57": {
+    "pattern": "{groom}"
+   }
+  }
+ },
+ "tpl-33298399e6e04454": {
+  "sample": {
+   "groom": "Anh Quân",
+   "bride": "An Nhiên",
+   "basis": "pair"
+  },
+  "fields": {
+   "f45": {
+    "pattern": "{groom} & {bride}"
+   },
+   "f48": {
+    "pattern": "{groom} & {bride}"
+   }
+  }
+ },
+ "tpl-50c579b4efa64b95": {
+  "sample": {
+   "groom": "Nguyễn Tuấn",
+   "bride": "Mai Anh",
+   "basis": "pair"
+  },
+  "fields": {
+   "f33": {
+    "pattern": "{bride} & {groom}"
+   },
+   "f54": {
+    "pattern": "{bride} & {groom}"
+   }
+  }
+ },
+ "tpl-0c7433451984c6e4": {
+  "sample": {
+   "groom": "HOÀNG NAM",
+   "bride": "THANH VY",
+   "basis": "pair"
+  },
+  "fields": {
+   "f43": {
+    "pattern": "{brideFull}"
+   },
+   "f44": {
+    "pattern": "{groomFull}"
+   },
+   "f49": {
+    "pattern": "{groom} & {bride}",
+    "upper": true
+   },
+   "f52": {
+    "pattern": "{groom} & {bride}",
+    "upper": true
+   }
+  }
+ },
+ "tpl-e59755ae0f227b9d": {
+  "sample": {
+   "groom": "Hải Nam",
+   "bride": "Mỹ Linh",
+   "basis": "label"
+  },
+  "fields": {
+   "f38": {
+    "pattern": "{groom}"
+   },
+   "f39": {
+    "pattern": "{bride}"
+   },
+   "f56": {
+    "pattern": "{bride}"
+   },
+   "f60": {
+    "pattern": "{groom}"
+   },
+   "f68": {
+    "pattern": "Cảm ơn tất cả tình cảm của cô dì chú bác, bạn bè và anh chị em đã dành cho {groom} & {bride}!"
+   }
+  }
+ },
+ "tpl-f378d3ef845169fb": {
+  "sample": {
+   "groom": "Hải Nam",
+   "bride": "Ngọc Hân",
+   "basis": "pair"
+  },
+  "fields": {
+   "f28": {
+    "pattern": "{groom} & {bride}"
+   },
+   "f38": {
+    "pattern": "{groom} & {bride}"
+   }
+  }
+ },
+ "tpl-a38030a39d76293e": {
+  "sample": {
+   "groom": "HUY",
+   "bride": "NGỌC",
+   "basis": "pair"
+  },
+  "fields": {
+   "f31": {
+    "pattern": "{brideFull}",
+    "upper": true
+   },
+   "f33": {
+    "pattern": "{groomFull}",
+    "upper": true
+   },
+   "f36": {
+    "pattern": "{groom} & {bride}",
+    "upper": true
+   }
+  }
+ },
+ "tpl-718c9984c70cba6d": {
+  "sample": {
+   "groom": "Quốc Huy",
+   "bride": "Ngọc Anh",
+   "basis": "label"
+  },
+  "fields": {
+   "f28": {
+    "pattern": "{groom}"
+   },
+   "f31": {
+    "pattern": "{bride}"
+   },
+   "f34": {
+    "pattern": "{groomInitial}",
+    "upper": true,
+    "initial": "last"
+   },
+   "f35": {
+    "pattern": "{brideInitial}",
+    "upper": true,
+    "initial": "last"
+   }
+  }
+ },
+ "tpl-316ef4948b176712": {
+  "sample": {
+   "groom": "Lê Quốc",
+   "bride": "Nguyễn Nhi",
+   "basis": "pair"
+  },
+  "fields": {
+   "f30": {
+    "pattern": "{bride}"
+   },
+   "f33": {
+    "pattern": "{groom} & {bride}"
+   },
+   "f46": {
+    "pattern": "{groom}"
+   }
+  }
+ },
+ "tpl-99d5ba4b78e480b0": {
+  "sample": {
+   "groom": "Minh Đức",
+   "bride": "Ngân Hà",
+   "basis": "pair"
+  },
+  "fields": {
+   "f23": {
+    "pattern": "{brideFull}"
+   },
+   "f27": {
+    "pattern": "{groom} & {bride}"
+   },
+   "f39": {
+    "pattern": "{groomFull}"
+   }
+  }
+ },
+ "tpl-aa1e9230c2863b6b": {
+  "sample": {
+   "groom": "Tiến Minh",
+   "bride": "Yến Chi",
+   "basis": "label"
+  },
+  "fields": {
+   "f64": {
+    "pattern": "{groom}"
+   },
+   "f65": {
+    "pattern": "{bride}"
+   },
+   "f82": {
+    "pattern": "{groom} & {bride}"
+   },
+   "f93": {
+    "pattern": "{groom} và {bride}"
+   }
+  }
+ },
+ "tpl-c2aa1271294f952c": {
+  "sample": {
+   "groom": "Nguyễn Văn Cường",
+   "bride": "Trần Minh Yến",
+   "basis": "label"
+  },
+  "fields": {
+   "f33": {
+    "pattern": "{groom}"
+   },
+   "f37": {
+    "pattern": "{bride}"
+   },
+   "f70": {
+    "pattern": "{bride}"
+   }
+  }
+ },
+ "tpl-ee198195f62a1a57": {
+  "sample": {
+   "groom": "Nguyễn Quốc Long",
+   "bride": "Phạm Lê Hải Yến",
+   "basis": "pair"
+  },
+  "fields": {
+   "f37": {
+    "pattern": "{groom} & {bride}"
+   }
+  }
+ },
+ "tpl-f722003238d6300e": {
+  "sample": {
+   "groom": "Quang Thịnh",
+   "bride": "Lan Hương",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f34": {
+    "pattern": "{groom}"
+   },
+   "f35": {
+    "pattern": "{bride}"
+   },
+   "f40": {
+    "pattern": "{groom}"
+   },
+   "f41": {
+    "pattern": "{bride}"
+   }
+  }
+ },
+ "tpl-614702a90c388341": {
+  "sample": {
+   "groom": "Văn Toàn",
+   "bride": "Phương Nhi",
+   "basis": "label"
+  },
+  "fields": {
+   "f38": {
+    "pattern": "{groom}",
+    "upper": true
+   },
+   "f39": {
+    "pattern": "{bride}",
+    "upper": true
+   },
+   "f56": {
+    "pattern": "{bride}"
+   },
+   "f60": {
+    "pattern": "{groom}"
+   },
+   "f68": {
+    "pattern": "Cảm ơn tất cả tình cảm của cô dì chú bác, bạn bè và anh chị em đã dành cho {groom} & {bride}!"
+   }
+  }
+ },
+ "tpl-412c029badbcee73": {
+  "sample": {
+   "groom": "Huỳnh Đức",
+   "bride": "Thu Phương",
+   "basis": "pair"
+  },
+  "fields": {
+   "f21": {
+    "pattern": "{groom} & {bride}"
+   }
+  }
+ },
+ "tpl-d1bf7566868c7a53": {
+  "sample": {
+   "groom": "Đức Hiển",
+   "bride": "Minh Hằng",
+   "basis": "pair"
+  },
+  "fields": {
+   "f52": {
+    "pattern": "{bride}"
+   },
+   "f53": {
+    "pattern": "{groom}"
+   },
+   "f60": {
+    "pattern": "{bride} & {groom}"
+   },
+   "f71": {
+    "pattern": "{brideFull}"
+   },
+   "f72": {
+    "pattern": "{groomFull}"
+   },
+   "f90": {
+    "pattern": "{bride} & {groom}"
+   }
+  }
+ },
+ "tpl-e1a3805004b3221e": {
+  "sample": {
+   "groom": "Anh Khoa",
+   "bride": "Thùy Dương",
+   "basis": "label"
+  },
+  "fields": {
+   "f30": {
+    "pattern": "Cô dâu: {bride}"
+   },
+   "f33": {
+    "pattern": "{bride} & {groom}"
+   },
+   "f41": {
+    "pattern": "Chú rể: {groom}"
+   }
+  }
+ },
+ "tpl-33a5050d26f80a19": {
+  "sample": {
+   "groom": "Minh Đức",
+   "bride": "Ngân Hà",
+   "basis": "pair"
+  },
+  "fields": {
+   "f45": {
+    "pattern": "{groom} & {bride}"
+   },
+   "f50": {
+    "pattern": "{groom}"
+   },
+   "f51": {
+    "pattern": "{bride}"
+   },
+   "f78": {
+    "pattern": "{groomInitial}",
+    "upper": true,
+    "initial": "last"
+   },
+   "f79": {
+    "pattern": "{brideInitial}",
+    "upper": true,
+    "initial": "last"
+   }
+  }
+ },
+ "tpl-a712bee905656912": {
+  "sample": {
+   "groom": "Nguyễn Hải Nam",
+   "bride": "Lê Vân Anh",
+   "basis": "pair"
+  },
+  "fields": {
+   "f44": {
+    "pattern": "{groom}"
+   },
+   "f46": {
+    "pattern": "{bride}"
+   },
+   "f55": {
+    "pattern": "{groom} & {bride}"
+   }
+  }
+ },
+ "tpl-10de3282d1de6c9a": {
+  "sample": {
+   "groom": "Dũng",
+   "bride": "Trang",
+   "basis": "pair"
+  },
+  "fields": {
+   "f47": {
+    "pattern": "{groomFull}"
+   },
+   "f91": {
+    "pattern": "{groom} & {bride}"
+   },
+   "f134": {
+    "pattern": "{groomFull}"
+   },
+   "f135": {
+    "pattern": "{brideFull}"
+   }
+  }
+ },
+ "tpl-55403524fa3596df": {
+  "sample": {
+   "groom": "Đăng Phúc",
+   "bride": "Minh Ánh",
+   "basis": "label"
+  },
+  "fields": {
+   "f118": {
+    "pattern": "{groom}"
+   },
+   "f121": {
+    "pattern": "{bride}"
+   },
+   "f127": {
+    "pattern": "{bride}"
+   },
+   "f128": {
+    "pattern": "{groom}"
+   }
+  }
+ },
+ "tpl-75bda94dca61fcd2": {
+  "sample": {
+   "groom": "Quang Huy",
+   "bride": "Tú Anh",
+   "basis": "pair"
+  },
+  "fields": {
+   "f54": {
+    "pattern": "{groom} & {bride}"
+   }
+  }
+ },
+ "tpl-b65dbe6429863ce4": {
+  "sample": {
+   "groom": "Quốc Bảo",
+   "bride": "Khánh Linh",
+   "basis": "pair"
+  },
+  "fields": {
+   "f30": {
+    "pattern": "{bride}"
+   },
+   "f43": {
+    "pattern": "{groom} & {bride}"
+   },
+   "f52": {
+    "pattern": "{groom}"
+   }
+  }
+ },
+ "tpl-474f75cae299cbdd": {
+  "sample": {
+   "groom": "Hoàng Quân",
+   "bride": "Mai Anh",
+   "basis": "label"
+  },
+  "fields": {
+   "f38": {
+    "pattern": "{groom}"
+   },
+   "f39": {
+    "pattern": "{bride}"
+   },
+   "f56": {
+    "pattern": "{bride}"
+   },
+   "f60": {
+    "pattern": "{groom}"
+   },
+   "f67": {
+    "pattern": "Cảm ơn tất cả tình cảm của cô dì chú bác, bạn bè và anh chị em đã dành cho {groom} & {bride}!"
+   }
+  }
+ },
+ "tpl-f3036f6e0bbc8309": {
+  "sample": {
+   "groom": "Gia Minh",
+   "bride": "Bảo Ngọc",
+   "basis": "label"
+  },
+  "fields": {
+   "f35": {
+    "pattern": "{brideInitial}",
+    "upper": true,
+    "initial": "last"
+   },
+   "f36": {
+    "pattern": "{groomInitial}",
+    "upper": true,
+    "initial": "last"
+   },
+   "f38": {
+    "pattern": "{groom} & {bride}"
+   },
+   "f50": {
+    "pattern": "{groomFull}"
+   },
+   "f52": {
+    "pattern": "{bride}"
+   },
+   "f53": {
+    "pattern": "{groom}"
+   },
+   "f61": {
+    "pattern": "{brideFull}"
+   }
+  }
+ },
+ "tpl-d40c3a1b59eea369": {
+  "sample": {
+   "groom": "Tuấn Tú",
+   "bride": "Hiểu Quyên",
+   "basis": "label"
+  },
+  "fields": {
+   "f23": {
+    "pattern": "{bride} & {groom}"
+   },
+   "f25": {
+    "pattern": "{brideFull} & {groom}"
+   },
+   "f27": {
+    "pattern": "Chú rể: {groom}"
+   },
+   "f30": {
+    "pattern": "Cô dâu: {bride}"
+   }
+  }
+ },
+ "tpl-58eb69a463c147a5": {
+  "sample": {
+   "groom": "Quốc Tường",
+   "bride": "An Nhi",
+   "basis": "pair"
+  },
+  "fields": {
+   "f53": {
+    "pattern": "{bride} & {groom}"
+   }
+  }
+ },
+ "tpl-03b1d9fba5c38946": {
+  "sample": {
+   "groom": "Minh Hải",
+   "bride": "Thu Phương",
+   "basis": "label"
+  },
+  "fields": {
+   "f53": {
+    "pattern": "{groom} & {bride}"
+   },
+   "f104": {
+    "pattern": "{groom}"
+   },
+   "f106": {
+    "pattern": "{bride}"
+   }
+  }
+ },
+ "tpl-963f35e42a78408d": {
+  "sample": {
+   "groom": "Gia Khánh",
+   "bride": "Quỳnh Anh",
+   "basis": "label"
+  },
+  "fields": {
+   "f42": {
+    "pattern": "{groom}"
+   },
+   "f43": {
+    "pattern": "{bride}"
+   },
+   "f52": {
+    "pattern": "{groom}"
+   },
+   "f54": {
+    "pattern": "{bride}"
+   },
+   "f66": {
+    "pattern": "{groomFull}"
+   },
+   "f68": {
+    "pattern": "{brideFull}"
+   },
+   "f179": {
+    "pattern": "Cô Dâu - {brideFull}"
+   },
+   "f183": {
+    "pattern": "{brideFull}"
+   }
+  }
+ },
+ "tpl-86038dbacb2c3c65": {
+  "sample": {
+   "groom": "Hải Nam",
+   "bride": "Khánh Linh",
+   "basis": "label"
+  },
+  "fields": {
+   "f40": {
+    "pattern": "{groom}"
+   },
+   "f41": {
+    "pattern": "{bride}"
+   },
+   "f50": {
+    "pattern": "{groom}"
+   },
+   "f52": {
+    "pattern": "{bride}"
+   },
+   "f64": {
+    "pattern": "{groomFull}"
+   },
+   "f66": {
+    "pattern": "{brideFull}"
+   }
+  }
+ },
+ "tpl-79b09b3ea58a90f7": {
+  "sample": {
+   "groom": "Trung Hiếu",
+   "bride": "Thanh Hà",
+   "basis": "label"
+  },
+  "fields": {
+   "f56": {
+    "pattern": "{groom}"
+   },
+   "f57": {
+    "pattern": "{bride}"
+   },
+   "f65": {
+    "pattern": "{groom}"
+   },
+   "f67": {
+    "pattern": "{bride}"
+   },
+   "f76": {
+    "pattern": "{groomFull}"
+   },
+   "f77": {
+    "pattern": "{brideFull}"
+   }
+  }
+ },
+ "tpl-a60107fb110fdd99": {
+  "sample": {
+   "groom": "Hoàng Nam",
+   "bride": "Thanh Tú",
+   "basis": "label"
+  },
+  "fields": {
+   "f73": {
+    "pattern": "{groom}"
+   },
+   "f74": {
+    "pattern": "{bride}"
+   },
+   "f84": {
+    "pattern": "{groom}"
+   },
+   "f86": {
+    "pattern": "{bride}"
+   },
+   "f97": {
+    "pattern": "{groomFull}"
+   },
+   "f99": {
+    "pattern": "{brideFull}"
+   },
+   "f184": {
+    "pattern": "Chúc {groom} và {bride} trọn đời bên nhau, cùng sẻ chia những niềm vui và nỗi buồn, vượt qua mọi chông gai."
+   },
+   "f226": {
+    "pattern": "Cô Dâu - {brideFull}"
+   },
+   "f230": {
+    "pattern": "{brideFull}"
+   }
+  }
+ },
+ "tpl-605779a484ca197d": {
+  "sample": {
+   "groom": "Thế Bảo",
+   "bride": "Ngọc Ánh",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f41": {
+    "pattern": "{bride}"
+   },
+   "f42": {
+    "pattern": "{groom}"
+   },
+   "f51": {
+    "pattern": "{bride}"
+   },
+   "f52": {
+    "pattern": "{groom}"
+   },
+   "f62": {
+    "pattern": "{brideFull}"
+   },
+   "f64": {
+    "pattern": "{groomFull}"
+   },
+   "f151": {
+    "pattern": "Chúc {groom} và {bride} luôn khỏe mạnh, bình an và tràn đầy niềm vui, để cùng nhau xây dựng một tương lai tốt đẹp!"
+   },
+   "f194": {
+    "pattern": "Cô Dâu - {brideFull}"
+   },
+   "f198": {
+    "pattern": "{brideFull}"
+   }
+  }
+ },
+ "tpl-c4c188a44aab3898": {
+  "sample": {
+   "groom": "Hoài Nam",
+   "bride": "Ngọc Linh",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f44": {
+    "pattern": "{groom}"
+   },
+   "f45": {
+    "pattern": "{bride}"
+   },
+   "f53": {
+    "pattern": "{groom}"
+   },
+   "f54": {
+    "pattern": "{bride}"
+   },
+   "f70": {
+    "pattern": "{groomFull}"
+   },
+   "f72": {
+    "pattern": "{brideFull}"
+   },
+   "f227": {
+    "pattern": "Cô Dâu / 新娘 - {brideFull}"
+   },
+   "f231": {
+    "pattern": "{brideFull}"
+   }
+  }
+ },
+ "tpl-746383769f784f4a": {
+  "sample": {
+   "groom": "Quang Duy",
+   "bride": "Hà Linh",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f75": {
+    "pattern": "{groom}"
+   },
+   "f76": {
+    "pattern": "{bride}"
+   },
+   "f83": {
+    "pattern": "{groom}"
+   },
+   "f84": {
+    "pattern": "{bride}"
+   },
+   "f95": {
+    "pattern": "{groomFull}"
+   },
+   "f97": {
+    "pattern": "{brideFull}"
+   },
+   "f209": {
+    "pattern": "Chúc {groom} và {bride} trăm năm hạnh phúc, đầu bạc răng long!"
+   },
+   "f213": {
+    "pattern": "Chú Rể - {groomFull}"
+   },
+   "f217": {
+    "pattern": "{groomFull}",
+    "upper": true
+   }
+  }
+ },
+ "tpl-6b25838edacf1eea": {
+  "sample": {
+   "groom": "Thanh Tùng",
+   "bride": "Ngọc Hân",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f44": {
+    "pattern": "{groom}"
+   },
+   "f45": {
+    "pattern": "{bride}"
+   },
+   "f53": {
+    "pattern": "{groom}"
+   },
+   "f54": {
+    "pattern": "{bride}"
+   },
+   "f65": {
+    "pattern": "{groomFull}"
+   },
+   "f66": {
+    "pattern": "{brideFull}"
+   }
+  }
+ },
+ "tpl-43729fb27e39b6d9": {
+  "sample": {
+   "groom": "Bảo Lâm",
+   "bride": "Quỳnh Anh",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f40": {
+    "pattern": "{groom}"
+   },
+   "f41": {
+    "pattern": "{bride}"
+   },
+   "f49": {
+    "pattern": "{groom}"
+   },
+   "f50": {
+    "pattern": "{bride}"
+   },
+   "f54": {
+    "pattern": "{brideFull}"
+   },
+   "f59": {
+    "pattern": "{groomFull}"
+   },
+   "f60": {
+    "pattern": "{brideFull}"
+   }
+  }
+ },
+ "tpl-69eb091fccf0333c": {
+  "sample": {
+   "groom": "Vân An",
+   "bride": "Mỹ Duyên",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f63": {
+    "pattern": "{groom}"
+   },
+   "f64": {
+    "pattern": "{bride}"
+   },
+   "f72": {
+    "pattern": "{groom}"
+   },
+   "f73": {
+    "pattern": "{bride}"
+   },
+   "f82": {
+    "pattern": "{groomFull}"
+   },
+   "f83": {
+    "pattern": "{brideFull}"
+   }
+  }
+ },
+ "tpl-78171f19361c6186": {
+  "sample": {
+   "groom": "Anh Tuấn",
+   "bride": "Thu Hà",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f42": {
+    "pattern": "{groom}"
+   },
+   "f43": {
+    "pattern": "{bride}"
+   },
+   "f51": {
+    "pattern": "{groom}"
+   },
+   "f52": {
+    "pattern": "{bride}"
+   },
+   "f61": {
+    "pattern": "{groomFull}"
+   },
+   "f62": {
+    "pattern": "{brideFull}"
+   }
+  }
+ },
+ "tpl-1a4530a356a71a3d": {
+  "sample": {
+   "groom": "Hoàng Phúc",
+   "bride": "Tuệ Anh",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f44": {
+    "pattern": "{groom}"
+   },
+   "f45": {
+    "pattern": "{bride}"
+   },
+   "f53": {
+    "pattern": "{groom}"
+   },
+   "f54": {
+    "pattern": "{bride}"
+   },
+   "f61": {
+    "pattern": "{brideFull}"
+   },
+   "f63": {
+    "pattern": "{groomFull}"
+   },
+   "f64": {
+    "pattern": "{brideFull}"
+   }
+  }
+ },
+ "tpl-7dcf4227d57ab2ba": {
+  "sample": {
+   "groom": "Quốc Bảo",
+   "bride": "Khánh Vy",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f64": {
+    "pattern": "{groom}"
+   },
+   "f65": {
+    "pattern": "{bride}"
+   },
+   "f72": {
+    "pattern": "{groom}"
+   },
+   "f73": {
+    "pattern": "{bride}"
+   },
+   "f84": {
+    "pattern": "{groomFull}"
+   },
+   "f86": {
+    "pattern": "{brideFull}"
+   },
+   "f172": {
+    "pattern": "Chúc mừng {groom} và {bride}! Chúc hai bạn trăm năm hạnh phúc, đầu bạc răng long nhé."
+   },
+   "f199": {
+    "pattern": "Chúc mừng {bride} của tớ! Làm cô dâu xinh nhất Huế nhé."
+   }
+  }
+ },
+ "tpl-cbdcbbad0ddd26bf": {
+  "sample": {
+   "groom": "Tuấn Kiệt",
+   "bride": "Thanh Hà",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f66": {
+    "pattern": "{groom}"
+   },
+   "f67": {
+    "pattern": "{bride}"
+   },
+   "f74": {
+    "pattern": "{groom}"
+   },
+   "f75": {
+    "pattern": "{bride}"
+   },
+   "f85": {
+    "pattern": "{groomFull}"
+   },
+   "f87": {
+    "pattern": "{brideFull}"
+   }
+  }
+ },
+ "tpl-4b54afaa82b40df8": {
+  "sample": {
+   "groom": "Trung Hiếu",
+   "bride": "Minh Nguyệt",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f42": {
+    "pattern": "{groom}"
+   },
+   "f43": {
+    "pattern": "{bride}"
+   },
+   "f52": {
+    "pattern": "{groom}"
+   },
+   "f53": {
+    "pattern": "{bride}"
+   },
+   "f64": {
+    "pattern": "{groomFull}"
+   },
+   "f66": {
+    "pattern": "{brideFull}"
+   },
+   "f174": {
+    "pattern": "Cô Dâu - {brideFull}"
+   },
+   "f178": {
+    "pattern": "{brideFull}"
+   }
+  }
+ },
+ "tpl-8184f2605190479c": {
+  "sample": {
+   "groom": "Minh Quân",
+   "bride": "Thu Hà",
+   "basis": "label"
+  },
+  "fields": {
+   "f42": {
+    "pattern": "{groom}"
+   },
+   "f43": {
+    "pattern": "{bride}"
+   },
+   "f51": {
+    "pattern": "{groom}"
+   },
+   "f53": {
+    "pattern": "{bride}"
+   },
+   "f64": {
+    "pattern": "{groomFull}"
+   },
+   "f66": {
+    "pattern": "{brideFull}"
+   },
+   "f176": {
+    "pattern": "Cô Dâu - {brideFull}"
+   },
+   "f180": {
+    "pattern": "{brideFull}"
+   }
+  }
+ },
+ "tpl-0a89e216f37a7ca3": {
+  "sample": {
+   "groom": "Hoàng Nam",
+   "bride": "Thanh Tú",
+   "basis": "label"
+  },
+  "fields": {
+   "f30": {
+    "pattern": "{groom}"
+   },
+   "f31": {
+    "pattern": "{bride}"
+   },
+   "f39": {
+    "pattern": "{groom}"
+   },
+   "f41": {
+    "pattern": "{bride}"
+   }
+  }
+ },
+ "tpl-f7edb9c4fdc91fdc": {
+  "sample": {
+   "groom": "Văn Long",
+   "bride": "Thu Hà",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f31": {
+    "pattern": "{groom}"
+   },
+   "f32": {
+    "pattern": "{bride}"
+   },
+   "f40": {
+    "pattern": "{groom}"
+   },
+   "f41": {
+    "pattern": "{bride}"
+   },
+   "f52": {
+    "pattern": "{groomFull}"
+   },
+   "f54": {
+    "pattern": "{brideFull}"
+   },
+   "f163": {
+    "pattern": "Cô Dâu - {brideFull}"
+   },
+   "f167": {
+    "pattern": "{brideFull}"
+   }
+  }
+ },
+ "tpl-2a7db10fd7b8f638": {
+  "sample": {
+   "groom": "Duy Khang",
+   "bride": "Thu Hà",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f33": {
+    "pattern": "{groom}"
+   },
+   "f34": {
+    "pattern": "{bride}"
+   },
+   "f42": {
+    "pattern": "{groom}"
+   },
+   "f43": {
+    "pattern": "{bride}"
+   },
+   "f52": {
+    "pattern": "{groomFull}"
+   },
+   "f53": {
+    "pattern": "{brideFull}"
+   }
+  }
+ },
+ "tpl-695891cc3c7de2d2": {
+  "sample": {
+   "groom": "Gia Huy",
+   "bride": "Tiểu Vy",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f37": {
+    "pattern": "{groom}"
+   },
+   "f38": {
+    "pattern": "{bride}"
+   },
+   "f46": {
+    "pattern": "{groom}"
+   },
+   "f47": {
+    "pattern": "{bride}"
+   },
+   "f58": {
+    "pattern": "{groomFull}"
+   },
+   "f60": {
+    "pattern": "{brideFull}"
+   }
+  }
+ },
+ "tpl-8f783e0effd4785c": {
+  "sample": {
+   "groom": "Tuấn Khang",
+   "bride": "Mỹ Linh",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f44": {
+    "pattern": "{groom}"
+   },
+   "f45": {
+    "pattern": "{bride}"
+   },
+   "f53": {
+    "pattern": "{groom}"
+   },
+   "f54": {
+    "pattern": "{bride}"
+   },
+   "f65": {
+    "pattern": "{groomFull}"
+   },
+   "f67": {
+    "pattern": "{brideFull}"
+   },
+   "f164": {
+    "pattern": "Chúc mừng đám cưới! Chúc {groom} và {bride} mãi yêu thương và hạnh phúc bên nhau."
+   }
+  }
+ },
+ "tpl-6c6dc26af3f0eeb3": {
+  "sample": {
+   "groom": "Bảo Lâm",
+   "bride": "Thanh Trúc",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f59": {
+    "pattern": "{groom}"
+   },
+   "f60": {
+    "pattern": "{bride}"
+   },
+   "f67": {
+    "pattern": "{groom}"
+   },
+   "f68": {
+    "pattern": "{bride}"
+   },
+   "f79": {
+    "pattern": "{groomFull}"
+   },
+   "f81": {
+    "pattern": "{brideFull}"
+   },
+   "f181": {
+    "pattern": "Chúc {groom} và {bride} trăm năm hạnh phúc, bên nhau đến đầu bạc răng long nhé!"
+   }
+  }
+ },
+ "tpl-259ec0476c1576ec": {
+  "sample": {
+   "groom": "Hoàng Nam",
+   "bride": "Thuỳ Dương",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f58": {
+    "pattern": "{groom}"
+   },
+   "f59": {
+    "pattern": "{bride}"
+   },
+   "f66": {
+    "pattern": "{groom}"
+   },
+   "f67": {
+    "pattern": "{bride}"
+   },
+   "f78": {
+    "pattern": "{groomFull}"
+   },
+   "f80": {
+    "pattern": "{brideFull}"
+   },
+   "f170": {
+    "pattern": "Thiệp đẹp quá trời, chúc {groom} và {bride} mãi bên nhau, yêu thương trọn đời nhé!"
+   },
+   "f185": {
+    "pattern": "Chúc mừng {groom}! Cuối cùng cũng tới ngày này, hạnh phúc bên nhau mãi mãi nha."
+   },
+   "f194": {
+    "pattern": "{bride} xinh quá! Chúc hai bạn hạnh phúc viên mãn, mãi mãi yêu thương nhau."
+   }
+  }
+ },
+ "tpl-186e1fd389d09d00": {
+  "sample": {
+   "groom": "Hoàng Phúc",
+   "bride": "Như Khuê",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f62": {
+    "pattern": "{groom}"
+   },
+   "f63": {
+    "pattern": "{bride}"
+   },
+   "f70": {
+    "pattern": "{groom}"
+   },
+   "f71": {
+    "pattern": "{bride}"
+   },
+   "f82": {
+    "pattern": "{groomFull}"
+   },
+   "f84": {
+    "pattern": "{brideFull}"
+   },
+   "f171": {
+    "pattern": "Chúc mừng hai bạn! Chúc {groom} và {bride} trăm năm hạnh phúc, bên nhau trọn đời."
+   },
+   "f183": {
+    "pattern": "Chúc {bride} làm cô dâu thật xinh đẹp và hạnh phúc trọn vẹn!"
+   },
+   "f195": {
+    "pattern": "Cuối cùng cũng tới ngày này! Chúc mừng {groom} và {bride} nhé."
+   }
+  }
+ },
+ "tpl-00c0b86de142e062": {
+  "sample": {
+   "groom": "Hoàng Long",
+   "bride": "Phương Linh",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f51": {
+    "pattern": "{groom}"
+   },
+   "f52": {
+    "pattern": "{bride}"
+   },
+   "f60": {
+    "pattern": "{groom}"
+   },
+   "f61": {
+    "pattern": "{bride}"
+   },
+   "f72": {
+    "pattern": "{groomFull}"
+   },
+   "f74": {
+    "pattern": "{brideFull}"
+   }
+  }
+ },
+ "tpl-648efb541fe7e6f0": {
+  "sample": {
+   "groom": "Gia Huy",
+   "bride": "Tiểu Vy",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f40": {
+    "pattern": "{groom}"
+   },
+   "f41": {
+    "pattern": "{bride}"
+   },
+   "f49": {
+    "pattern": "{groom}"
+   },
+   "f50": {
+    "pattern": "{bride}"
+   },
+   "f61": {
+    "pattern": "{groomFull}"
+   },
+   "f63": {
+    "pattern": "{brideFull}"
+   },
+   "f175": {
+    "pattern": "Chú Rể - {groomFull}"
+   },
+   "f179": {
+    "pattern": "{groomFull}"
+   }
+  }
+ },
+ "tpl-085e1d36fd68d4b9": {
+  "sample": {
+   "groom": "Quốc Đạt",
+   "bride": "Diệu Linh",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f42": {
+    "pattern": "{groom}"
+   },
+   "f43": {
+    "pattern": "{bride}"
+   },
+   "f51": {
+    "pattern": "{groom}"
+   },
+   "f52": {
+    "pattern": "{bride}"
+   },
+   "f61": {
+    "pattern": "{groomFull}"
+   },
+   "f62": {
+    "pattern": "{brideFull}"
+   }
+  }
+ },
+ "tpl-eb0bfafb6f9e3ec6": {
+  "sample": {
+   "groom": "Gia Bảo",
+   "bride": "Ngọc Diệp",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f43": {
+    "pattern": "{groom}"
+   },
+   "f44": {
+    "pattern": "{bride}"
+   },
+   "f52": {
+    "pattern": "{groom}"
+   },
+   "f53": {
+    "pattern": "{bride}"
+   },
+   "f64": {
+    "pattern": "{groomFull}"
+   },
+   "f66": {
+    "pattern": "{brideFull}"
+   },
+   "f152": {
+    "pattern": "Chúc mừng hạnh phúc hai bạn! Chúc {groom} và {bride} trăm năm hạnh phúc, đầu bạc răng long."
+   },
+   "f167": {
+    "pattern": "Cuối cùng cũng tới ngày này! Chúc mừng {groom} nhé, chúc hai bạn thật nhiều may mắn."
+   },
+   "f170": {
+    "pattern": "Chúc {bride} làm cô dâu xinh nhất! Chúc hai bạn trăm năm hạnh phúc."
+   }
+  }
+ },
+ "tpl-70be8d01516088f3": {
+  "sample": {
+   "groom": "Duy Khang",
+   "bride": "Mai Trâm",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f43": {
+    "pattern": "{groom}"
+   },
+   "f44": {
+    "pattern": "{bride}"
+   },
+   "f52": {
+    "pattern": "{groom}"
+   },
+   "f53": {
+    "pattern": "{bride}"
+   },
+   "f64": {
+    "pattern": "{groomFull}"
+   },
+   "f66": {
+    "pattern": "{brideFull}"
+   },
+   "f179": {
+    "pattern": "Chúc mừng hạnh phúc hai bạn! Chúc {groom} và {bride} trăm năm hạnh phúc, đầu bạc răng long."
+   },
+   "f183": {
+    "pattern": "Chú Rể - {groomFull}"
+   },
+   "f187": {
+    "pattern": "{groomFull}",
+    "upper": true
+   }
+  }
+ },
+ "tpl-34bda42e1182fbf3": {
+  "sample": {
+   "groom": "Hoàng Nam",
+   "bride": "Thuỳ Dương",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f47": {
+    "pattern": "{groom}"
+   },
+   "f48": {
+    "pattern": "{bride}"
+   },
+   "f56": {
+    "pattern": "{groom}"
+   },
+   "f57": {
+    "pattern": "{bride}"
+   },
+   "f68": {
+    "pattern": "{groomFull}"
+   },
+   "f70": {
+    "pattern": "{brideFull}"
+   },
+   "f178": {
+    "pattern": "Chúc mừng {groom} và {bride}! Hẹn gặp cả nhà ở Nam Định."
+   }
+  }
+ },
+ "tpl-74f8b5bcff77c131": {
+  "sample": {
+   "groom": "Bảo Duy",
+   "bride": "Khánh Vy",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f42": {
+    "pattern": "{groom}"
+   },
+   "f43": {
+    "pattern": "{bride}"
+   },
+   "f50": {
+    "pattern": "{groom}"
+   },
+   "f51": {
+    "pattern": "{bride}"
+   },
+   "f62": {
+    "pattern": "{groomFull}"
+   },
+   "f64": {
+    "pattern": "{brideFull}"
+   },
+   "f149": {
+    "pattern": "Chúc {groom} và {bride} trăm năm hạnh phúc, sớm có tin vui nhé!"
+   },
+   "f176": {
+    "pattern": "Chúc {bride} làm cô dâu đẹp nhất Sa Đéc nhé. Hạnh phúc nha!"
+   }
+  }
+ },
+ "tpl-3fea882e0b3cdeba": {
+  "sample": {
+   "groom": "Minh Quân",
+   "bride": "Bảo Trân",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f46": {
+    "pattern": "{groom}"
+   },
+   "f47": {
+    "pattern": "{bride}"
+   },
+   "f54": {
+    "pattern": "{groom}"
+   },
+   "f55": {
+    "pattern": "{bride}"
+   },
+   "f66": {
+    "pattern": "{groomFull}"
+   },
+   "f68": {
+    "pattern": "{brideFull}"
+   }
+  }
+ },
+ "tpl-86d5222f334def3d": {
+  "sample": {
+   "groom": "Đăng Khoa",
+   "bride": "Mỹ Duyên",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f37": {
+    "pattern": "{groom}"
+   },
+   "f38": {
+    "pattern": "{bride}"
+   },
+   "f45": {
+    "pattern": "{groom}"
+   },
+   "f46": {
+    "pattern": "{bride}"
+   },
+   "f57": {
+    "pattern": "{groomFull}"
+   },
+   "f59": {
+    "pattern": "{brideFull}"
+   }
+  }
+ },
+ "tpl-79b50b99136fdeb4": {
+  "sample": {
+   "groom": "Anh Tuấn",
+   "bride": "Mỹ Linh",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f56": {
+    "pattern": "{groom}"
+   },
+   "f57": {
+    "pattern": "{bride}"
+   },
+   "f64": {
+    "pattern": "{groom}"
+   },
+   "f65": {
+    "pattern": "{bride}"
+   },
+   "f76": {
+    "pattern": "{groomFull}"
+   },
+   "f78": {
+    "pattern": "{brideFull}"
+   },
+   "f163": {
+    "pattern": "{brideFull}"
+   },
+   "f174": {
+    "pattern": "Chúc mừng ngày trọng đại của {groom} và {bride}!"
+   },
+   "f189": {
+    "pattern": "Chúc {groom} và {bride} trăm năm hạnh phúc, mãi mãi bên nhau!"
+   }
+  }
+ },
+ "tpl-8c507f969a26ed0f": {
+  "sample": {
+   "groom": "Quốc Đạt",
+   "bride": "Hà Vy",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f52": {
+    "pattern": "{groom}"
+   },
+   "f53": {
+    "pattern": "{bride}"
+   },
+   "f60": {
+    "pattern": "{groom}"
+   },
+   "f61": {
+    "pattern": "{bride}"
+   },
+   "f72": {
+    "pattern": "{groomFull}"
+   },
+   "f74": {
+    "pattern": "{brideFull}"
+   },
+   "f160": {
+    "pattern": "Chúc mừng {groom} và {bride}! Chúc hai bạn trăm năm hạnh phúc, đầu bạc răng long."
+   },
+   "f175": {
+    "pattern": "{bride} làm cô dâu chắc xinh lắm. Chúc hai bạn hạnh phúc trọn đời!"
+   },
+   "f187": {
+    "pattern": "Chúc {groom} và {bride} một hành trình thật dài và thật đẹp bên nhau."
+   }
+  }
+ },
+ "tpl-a6ca3962dc7af9c2": {
+  "sample": {
+   "groom": "Hoài Nam",
+   "bride": "Thanh Trúc",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f42": {
+    "pattern": "{groom}"
+   },
+   "f43": {
+    "pattern": "{bride}"
+   },
+   "f50": {
+    "pattern": "{groom}"
+   },
+   "f51": {
+    "pattern": "{bride}"
+   },
+   "f62": {
+    "pattern": "{groomFull}"
+   },
+   "f64": {
+    "pattern": "{brideFull}"
+   },
+   "f150": {
+    "pattern": "Chúc {groom} và {bride} trăm năm hạnh phúc, mãi mãi bên nhau!"
+   },
+   "f171": {
+    "pattern": "Váy cưới đẹp quá! Chúc {bride} thật nhiều hạnh phúc nhé."
+   }
+  }
+ },
+ "tpl-bca3a3d4f79768b2": {
+  "sample": {
+   "groom": "Minh Hoàng",
+   "bride": "Mỹ Ngọc",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f42": {
+    "pattern": "{groom}"
+   },
+   "f43": {
+    "pattern": "{bride}"
+   },
+   "f50": {
+    "pattern": "{groom}"
+   },
+   "f51": {
+    "pattern": "{bride}"
+   },
+   "f62": {
+    "pattern": "{groomFull}"
+   },
+   "f64": {
+    "pattern": "{brideFull}"
+   }
+  }
+ },
+ "tpl-777826bea71e491e": {
+  "sample": {
+   "groom": "Gia Bảo",
+   "bride": "Khánh Vy",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f48": {
+    "pattern": "{groom}"
+   },
+   "f49": {
+    "pattern": "{bride}"
+   },
+   "f56": {
+    "pattern": "{groom}"
+   },
+   "f57": {
+    "pattern": "{bride}"
+   },
+   "f68": {
+    "pattern": "{groomFull}"
+   },
+   "f70": {
+    "pattern": "{brideFull}"
+   },
+   "f154": {
+    "pattern": "Chúc {groom} và {bride} trăm năm hạnh phúc, đầu bạc răng long nhé!"
+   },
+   "f178": {
+    "pattern": "Chúc {bride} thật xinh trong ngày trọng đại. Hạnh phúc nhé!"
+   }
+  }
+ },
+ "tpl-8cbece41f9a8ea4b": {
+  "sample": {
+   "groom": "Quang Huy",
+   "bride": "Thảo Vy",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f41": {
+    "pattern": "{groom}"
+   },
+   "f42": {
+    "pattern": "{bride}"
+   },
+   "f49": {
+    "pattern": "{groom}"
+   },
+   "f50": {
+    "pattern": "{bride}"
+   },
+   "f61": {
+    "pattern": "{groomFull}"
+   },
+   "f63": {
+    "pattern": "{brideFull}"
+   }
+  }
+ },
+ "tpl-551a3261b11778b9": {
+  "sample": {
+   "groom": "Đức Anh",
+   "bride": "Ngọc Hân",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f54": {
+    "pattern": "{bride}"
+   },
+   "f55": {
+    "pattern": "{groom}"
+   },
+   "f62": {
+    "pattern": "{bride}"
+   },
+   "f63": {
+    "pattern": "{groom}"
+   },
+   "f74": {
+    "pattern": "{brideFull}"
+   },
+   "f76": {
+    "pattern": "{groomFull}"
+   },
+   "f168": {
+    "pattern": "{groom} và {bride} thật xứng đôi vừa lứa. Chúc hai bạn hạnh phúc mãi nhé!"
+   },
+   "f180": {
+    "pattern": "{bride} ơi, chúc mừng ngày trọng đại! Mong hai bạn mãi yêu thương và thấu hiểu nhau."
+   },
+   "f183": {
+    "pattern": "Chúc mừng {groom} và {bride}! Chúc hai bạn trăm năm hạnh phúc, bên nhau trọn đời."
+   }
+  }
+ },
+ "tpl-2704b66b56dc2ab2": {
+  "sample": {
+   "groom": "Hoàng Phúc",
+   "bride": "Như Khuê",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f33": {
+    "pattern": "{groom}"
+   },
+   "f34": {
+    "pattern": "{bride}"
+   },
+   "f41": {
+    "pattern": "{groom}"
+   },
+   "f42": {
+    "pattern": "{bride}"
+   },
+   "f53": {
+    "pattern": "{groomFull}"
+   },
+   "f55": {
+    "pattern": "{brideFull}"
+   },
+   "f142": {
+    "pattern": "Chúc mừng hai bạn! Chúc {groom} và {bride} trăm năm hạnh phúc, bên nhau trọn đời."
+   },
+   "f154": {
+    "pattern": "Chúc {bride} làm cô dâu thật xinh đẹp và hạnh phúc trọn vẹn!"
+   },
+   "f166": {
+    "pattern": "Cuối cùng cũng tới ngày này! Chúc mừng {groom} và {bride} nhé."
+   }
+  }
+ },
+ "tpl-7e302215e1edca73": {
+  "sample": {
+   "groom": "Minh Tuấn",
+   "bride": "Lan Anh",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f46": {
+    "pattern": "{groom}"
+   },
+   "f47": {
+    "pattern": "{bride}"
+   },
+   "f54": {
+    "pattern": "{groom}"
+   },
+   "f55": {
+    "pattern": "{bride}"
+   },
+   "f66": {
+    "pattern": "{groomFull}"
+   },
+   "f67": {
+    "pattern": "{brideFull}"
+   }
+  }
+ },
+ "tpl-f26b5705ae2d0816": {
+  "sample": {
+   "groom": "Bảo Duy",
+   "bride": "Quỳnh Anh",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f43": {
+    "pattern": "{groom}"
+   },
+   "f44": {
+    "pattern": "{bride}"
+   },
+   "f52": {
+    "pattern": "{groom}"
+   },
+   "f53": {
+    "pattern": "{bride}"
+   },
+   "f62": {
+    "pattern": "{groomFull}"
+   },
+   "f63": {
+    "pattern": "{brideFull}"
+   }
+  }
+ },
+ "tpl-7bee1df4a891c7e3": {
+  "sample": {
+   "groom": "Hoài Nam",
+   "bride": "Ngọc Linh",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f35": {
+    "pattern": "{groom}"
+   },
+   "f36": {
+    "pattern": "{bride}"
+   },
+   "f46": {
+    "pattern": "{groom}"
+   },
+   "f47": {
+    "pattern": "{bride}"
+   }
+  }
+ },
+ "tpl-d64412a657999be9": {
+  "sample": {
+   "groom": "THẾ BẢO",
+   "bride": "NGỌC ÁNH",
+   "basis": "pair"
+  },
+  "fields": {
+   "f62": {
+    "pattern": "{groom}"
+   },
+   "f63": {
+    "pattern": "{bride}"
+   },
+   "f72": {
+    "pattern": "{groom} & {bride}",
+    "upper": true
+   }
+  }
+ },
+ "tpl-3e606d94840dba32": {
+  "sample": {
+   "groom": "Hữu Trí",
+   "bride": "Thiên Ý",
+   "basis": "label"
+  },
+  "fields": {
+   "f57": {
+    "pattern": "{groom}"
+   },
+   "f58": {
+    "pattern": "{bride}"
+   },
+   "f67": {
+    "pattern": "{bride}"
+   },
+   "f69": {
+    "pattern": "{groom}"
+   },
+   "f80": {
+    "pattern": "{groomFull}"
+   },
+   "f82": {
+    "pattern": "{brideFull}"
+   },
+   "f187": {
+    "pattern": "Chú Rể - {groomFull}"
+   },
+   "f191": {
+    "pattern": "{groomFull}"
+   },
+   "f192": {
+    "pattern": "Cô Dâu - {brideFull}"
+   },
+   "f196": {
+    "pattern": "{brideFull}"
+   }
+  }
+ },
+ "tpl-37938bc9aa3c2346": {
+  "sample": {
+   "groom": "VĂN TOÀN",
+   "bride": "THANH DIỆP",
+   "basis": "pair"
+  },
+  "fields": {
+   "f29": {
+    "pattern": "{groom}"
+   },
+   "f30": {
+    "pattern": "{bride}"
+   },
+   "f39": {
+    "pattern": "{groom} & {bride}",
+    "upper": true
+   }
+  }
+ },
+ "tpl-a369aad2501d0d80": {
+  "sample": {
+   "groom": "Thế Bảo",
+   "bride": "Ngọc Ánh",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f34": {
+    "pattern": "{groom}"
+   },
+   "f35": {
+    "pattern": "{bride}"
+   },
+   "f45": {
+    "pattern": "{groom}"
+   },
+   "f46": {
+    "pattern": "{bride}"
+   }
+  }
+ },
+ "tpl-f1f69ed638a9d19a": {
+  "sample": {
+   "groom": "Trung Hiếu",
+   "bride": "Như Ý",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f35": {
+    "pattern": "{groom}"
+   },
+   "f36": {
+    "pattern": "{bride}"
+   },
+   "f44": {
+    "pattern": "{groom}"
+   },
+   "f45": {
+    "pattern": "{bride}"
+   }
+  }
+ },
+ "tpl-eeb2d0fb0393508d": {
+  "sample": {
+   "groom": "Tuấn Kiệt",
+   "bride": "Minh Anh",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f42": {
+    "pattern": "{groom}"
+   },
+   "f43": {
+    "pattern": "{bride}"
+   },
+   "f50": {
+    "pattern": "{groom}"
+   },
+   "f51": {
+    "pattern": "{bride}"
+   },
+   "f63": {
+    "pattern": "{groomFull}"
+   },
+   "f65": {
+    "pattern": "{brideFull}"
+   },
+   "f158": {
+    "pattern": "Nhìn thiệp cưới đẹp ghê. Chúc {bride} làm cô dâu thật xinh, hạnh phúc mãi mãi!"
+   },
+   "f176": {
+    "pattern": "Chúc mừng hạnh phúc hai bạn! Chúc {groom} và {bride} trăm năm hạnh phúc, bên nhau đầu bạc răng long."
+   },
+   "f185": {
+    "pattern": "Cô Dâu - {brideFull}"
+   },
+   "f189": {
+    "pattern": "{brideFull}",
+    "upper": true
+   }
+  }
+ },
+ "tpl-8d7ba876fbd13880": {
+  "sample": {
+   "groom": "Gia Bảo",
+   "bride": "Tú Anh",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f41": {
+    "pattern": "{groom}"
+   },
+   "f42": {
+    "pattern": "{bride}"
+   },
+   "f49": {
+    "pattern": "{groom}"
+   },
+   "f50": {
+    "pattern": "{bride}"
+   },
+   "f62": {
+    "pattern": "{groomFull}"
+   },
+   "f64": {
+    "pattern": "{brideFull}"
+   },
+   "f156": {
+    "pattern": "Chúc mừng {bride}! Nhìn hai bạn thật xứng đôi vừa lứa."
+   },
+   "f171": {
+    "pattern": "Đám cưới đẹp quá! Chúc {groom} và {bride} trăm năm viên mãn."
+   }
+  }
+ },
+ "tpl-a928ffdf461e5e7c": {
+  "sample": {
+   "groom": "Văn An",
+   "bride": "Mỹ Ngọc",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f38": {
+    "pattern": "{groom}"
+   },
+   "f39": {
+    "pattern": "{bride}"
+   },
+   "f46": {
+    "pattern": "{groom}"
+   },
+   "f47": {
+    "pattern": "{bride}"
+   },
+   "f60": {
+    "pattern": "{groomFull}"
+   },
+   "f62": {
+    "pattern": "{brideFull}"
+   },
+   "f185": {
+    "pattern": "Cô Dâu - {brideFull}"
+   },
+   "f189": {
+    "pattern": "{brideFull}"
+   }
+  }
+ },
+ "tpl-21ba3ff5f44a7c61": {
+  "sample": {
+   "groom": "Thế Bảo",
+   "bride": "Ngọc Ánh",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f61": {
+    "pattern": "{bride}"
+   },
+   "f62": {
+    "pattern": "{groom}"
+   },
+   "f73": {
+    "pattern": "{bride}"
+   },
+   "f74": {
+    "pattern": "{groom}"
+   }
+  }
+ },
+ "tpl-7dce6c71623b45fa": {
+  "sample": {
+   "groom": "Hoàng Nam",
+   "bride": "Thanh Tú",
+   "basis": "label"
+  },
+  "fields": {
+   "f40": {
+    "pattern": "{groom}"
+   },
+   "f41": {
+    "pattern": "{bride}"
+   },
+   "f51": {
+    "pattern": "{groom}"
+   },
+   "f53": {
+    "pattern": "{bride}"
+   }
+  }
+ },
+ "tpl-ba45b19ab74f7394": {
+  "sample": {
+   "groom": "Hoài Nam",
+   "bride": "Ngọc Linh",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f18": {
+    "pattern": "{bride}"
+   },
+   "f19": {
+    "pattern": "{groom}"
+   },
+   "f26": {
+    "pattern": "{bride}"
+   },
+   "f27": {
+    "pattern": "{groom}"
+   }
+  }
+ },
+ "tpl-a71618740a1448f2": {
+  "sample": {
+   "groom": "Hoài Nam",
+   "bride": "Ngọc Linh",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f43": {
+    "pattern": "{groom}"
+   },
+   "f44": {
+    "pattern": "{bride}"
+   },
+   "f51": {
+    "pattern": "{groom}"
+   },
+   "f52": {
+    "pattern": "{bride}"
+   }
+  }
+ },
+ "tpl-36f21631ee63ac23": {
+  "sample": {
+   "groom": "Hoài Nam",
+   "bride": "Ngọc Linh",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f21": {
+    "pattern": "{bride}"
+   },
+   "f22": {
+    "pattern": "{groom}"
+   },
+   "f30": {
+    "pattern": "{bride}"
+   },
+   "f31": {
+    "pattern": "{groom}"
+   }
+  }
+ },
+ "tpl-9410f77f294f9009": {
+  "sample": {
+   "groom": "Đức Anh",
+   "bride": "Thanh Mai",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f31": {
+    "pattern": "{groom}"
+   },
+   "f32": {
+    "pattern": "{bride}"
+   },
+   "f39": {
+    "pattern": "{groom}"
+   },
+   "f40": {
+    "pattern": "{bride}"
+   },
+   "f51": {
+    "pattern": "{groomFull}"
+   },
+   "f53": {
+    "pattern": "{brideFull}"
+   },
+   "f162": {
+    "pattern": "Cô Dâu - {brideFull}"
+   },
+   "f166": {
+    "pattern": "{brideFull}"
+   }
+  }
+ },
+ "tpl-55531bff4f258c6b": {
+  "sample": {
+   "groom": "Đăng Khoa",
+   "bride": "Mỹ Duyên",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f37": {
+    "pattern": "{groom}"
+   },
+   "f38": {
+    "pattern": "{bride}"
+   },
+   "f46": {
+    "pattern": "{groom}"
+   },
+   "f47": {
+    "pattern": "{bride}"
+   },
+   "f58": {
+    "pattern": "{groomFull}"
+   },
+   "f60": {
+    "pattern": "{brideFull}"
+   }
+  }
+ },
+ "tpl-1906212dd038d415": {
+  "sample": {
+   "groom": "Hoàng Nam",
+   "bride": "Thảo Vy",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f49": {
+    "pattern": "{groom}"
+   },
+   "f50": {
+    "pattern": "{bride}"
+   },
+   "f58": {
+    "pattern": "{groom}"
+   },
+   "f59": {
+    "pattern": "{bride}"
+   },
+   "f70": {
+    "pattern": "{groomFull}"
+   },
+   "f72": {
+    "pattern": "{brideFull}"
+   },
+   "f185": {
+    "pattern": "Chúc mừng {groom} và {bride}! Chúc hai bạn trăm năm hạnh phúc, đầu bạc răng long nhé!"
+   }
+  }
+ },
+ "tpl-add1a2766edb6cc9": {
+  "sample": {
+   "groom": "Hoàng Long",
+   "bride": "Bảo Ngọc",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f38": {
+    "pattern": "{groom}"
+   },
+   "f39": {
+    "pattern": "{bride}"
+   },
+   "f47": {
+    "pattern": "{groom}"
+   },
+   "f48": {
+    "pattern": "{bride}"
+   },
+   "f59": {
+    "pattern": "{groomFull}"
+   },
+   "f61": {
+    "pattern": "{brideFull}"
+   },
+   "f167": {
+    "pattern": "{groom}"
+   }
+  }
+ },
+ "tpl-588c790ea59698ac": {
+  "sample": {
+   "groom": "Tuấn Kiệt",
+   "bride": "Minh Anh",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f47": {
+    "pattern": "{groom}"
+   },
+   "f48": {
+    "pattern": "{bride}"
+   },
+   "f56": {
+    "pattern": "{groom}"
+   },
+   "f57": {
+    "pattern": "{bride}"
+   },
+   "f68": {
+    "pattern": "{groomFull}"
+   },
+   "f70": {
+    "pattern": "{brideFull}"
+   }
+  }
+ },
+ "tpl-e55be566e0c17428": {
+  "sample": {
+   "groom": "Xuân Trường",
+   "bride": "Diệu Linh",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f56": {
+    "pattern": "{groom}"
+   },
+   "f57": {
+    "pattern": "{bride}"
+   },
+   "f65": {
+    "pattern": "{groom}"
+   },
+   "f66": {
+    "pattern": "{bride}"
+   },
+   "f75": {
+    "pattern": "{groomFull}"
+   },
+   "f76": {
+    "pattern": "{brideFull}"
+   }
+  }
+ },
+ "tpl-1884d8fd8b5dc377": {
+  "sample": {
+   "groom": "Quốc Bảo",
+   "bride": "Diệu Linh",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f42": {
+    "pattern": "{groom}"
+   },
+   "f43": {
+    "pattern": "{bride}"
+   },
+   "f51": {
+    "pattern": "{groom}"
+   },
+   "f52": {
+    "pattern": "{bride}"
+   },
+   "f63": {
+    "pattern": "{groomFull}"
+   },
+   "f65": {
+    "pattern": "{brideFull}"
+   },
+   "f152": {
+    "pattern": "Chúc mừng {groom} và {bride}! Chúc hai bạn trăm năm hạnh phúc, đầu bạc răng long nhé!"
+   }
+  }
+ },
+ "tpl-f39fa35a58733d17": {
+  "sample": {
+   "groom": "Gia Khánh",
+   "bride": "Ngọc Hân",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f54": {
+    "pattern": "{groom}"
+   },
+   "f55": {
+    "pattern": "{bride}"
+   },
+   "f63": {
+    "pattern": "{groom}"
+   },
+   "f64": {
+    "pattern": "{bride}"
+   },
+   "f73": {
+    "pattern": "{groomFull}"
+   },
+   "f74": {
+    "pattern": "{brideFull}"
+   }
+  }
+ },
+ "tpl-2c45103fb2174fd7": {
+  "sample": {
+   "groom": "Hải Nam",
+   "bride": "Thanh Hà",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f59": {
+    "pattern": "{groom}"
+   },
+   "f60": {
+    "pattern": "{bride}"
+   },
+   "f68": {
+    "pattern": "{groom}"
+   },
+   "f69": {
+    "pattern": "{bride}"
+   },
+   "f78": {
+    "pattern": "{groomFull}"
+   },
+   "f79": {
+    "pattern": "{brideFull}"
+   }
+  }
+ },
+ "tpl-f17c3de8e0297e5d": {
+  "sample": {
+   "groom": "Quang Huy",
+   "bride": "Lan Anh",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f47": {
+    "pattern": "{groom}"
+   },
+   "f48": {
+    "pattern": "{bride}"
+   },
+   "f56": {
+    "pattern": "{groom}"
+   },
+   "f57": {
+    "pattern": "{bride}"
+   },
+   "f66": {
+    "pattern": "{groomFull}"
+   },
+   "f67": {
+    "pattern": "{brideFull}"
+   }
+  }
+ },
+ "tpl-6fc11164a759ed83": {
+  "sample": {
+   "groom": "Gia Bảo",
+   "bride": "Thanh Vân",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f42": {
+    "pattern": "{groom}"
+   },
+   "f43": {
+    "pattern": "{bride}"
+   },
+   "f51": {
+    "pattern": "{groom}"
+   },
+   "f52": {
+    "pattern": "{bride}"
+   },
+   "f63": {
+    "pattern": "{groomFull}"
+   },
+   "f65": {
+    "pattern": "{brideFull}"
+   },
+   "f152": {
+    "pattern": "Chúc mừng hai bạn! Chúc {groom} và {bride} trăm năm hạnh phúc, sớm sinh quý tử nhé!"
+   },
+   "f179": {
+    "pattern": "Chúc mừng {groom} và {bride}! Mong hai bạn luôn giữ được nụ cười như trong ảnh cưới."
+   }
+  }
+ },
+ "tpl-6267fba25b03832e": {
+  "sample": {
+   "groom": "Hoài Nam",
+   "bride": "Mai Chi",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f28": {
+    "pattern": "{groom}"
+   },
+   "f29": {
+    "pattern": "{bride}"
+   },
+   "f37": {
+    "pattern": "{groom}"
+   },
+   "f38": {
+    "pattern": "{bride}"
+   },
+   "f49": {
+    "pattern": "{groomFull}"
+   },
+   "f51": {
+    "pattern": "{brideFull}"
+   },
+   "f141": {
+    "pattern": "Chúc mừng {groom} và {bride}! Chúc hai bạn xây dựng một mái ấm thật đong đầy tiếng cười."
+   },
+   "f174": {
+    "pattern": "Cô Dâu - {brideFull}"
+   },
+   "f178": {
+    "pattern": "{brideFull}",
+    "upper": true
+   }
+  }
+ },
+ "tpl-b0f325bdbf0c2239": {
+  "sample": {
+   "groom": "Đăng Khoa",
+   "bride": "Thùy Dương",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f22": {
+    "pattern": "{groom}"
+   },
+   "f23": {
+    "pattern": "{bride}"
+   },
+   "f31": {
+    "pattern": "{groom}"
+   },
+   "f32": {
+    "pattern": "{bride}"
+   },
+   "f43": {
+    "pattern": "{groomFull}"
+   },
+   "f45": {
+    "pattern": "{brideFull}"
+   },
+   "f132": {
+    "pattern": "Chúc mừng hai bạn! Mong {groom} và {bride} trăm năm hạnh phúc, bên nhau trọn đời."
+   },
+   "f159": {
+    "pattern": "Chúc {bride} thật xinh trong ngày cưới, chúc hai bạn hạnh phúc dài lâu!"
+   }
+  }
+ },
+ "tpl-f26e88b847ea99ce": {
+  "sample": {
+   "groom": "Minh Khôi",
+   "bride": "Ngọc Hân",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f20": {
+    "pattern": "{groom}"
+   },
+   "f21": {
+    "pattern": "{bride}"
+   },
+   "f29": {
+    "pattern": "{groom}"
+   },
+   "f30": {
+    "pattern": "{bride}"
+   },
+   "f41": {
+    "pattern": "{groomFull}"
+   },
+   "f43": {
+    "pattern": "{brideFull}"
+   },
+   "f133": {
+    "pattern": "Chúc {bride} và {groom} mãi giữ được sự ngọt ngào như hôm nay."
+   },
+   "f157": {
+    "pattern": "Chúc mừng hai bạn! Chúc {groom} và {bride} trăm năm hạnh phúc, đầu bạc răng long."
+   }
+  }
+ },
+ "tpl-0ef601b9e07e2fde": {
+  "sample": {
+   "groom": "Văn Hoàng",
+   "bride": "Mỹ Ngọc",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f28": {
+    "pattern": "{groom}"
+   },
+   "f29": {
+    "pattern": "{bride}"
+   },
+   "f37": {
+    "pattern": "{groom}"
+   },
+   "f38": {
+    "pattern": "{bride}"
+   },
+   "f49": {
+    "pattern": "{groomFull}"
+   },
+   "f51": {
+    "pattern": "{brideFull}"
+   }
+  }
+ },
+ "tpl-1f9b2c8a81b42abe": {
+  "sample": {
+   "groom": "Gia Bảo",
+   "bride": "Khánh Vy",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f38": {
+    "pattern": "{groom}"
+   },
+   "f39": {
+    "pattern": "{bride}"
+   },
+   "f47": {
+    "pattern": "{groom}"
+   },
+   "f48": {
+    "pattern": "{bride}"
+   },
+   "f59": {
+    "pattern": "{groomFull}"
+   },
+   "f61": {
+    "pattern": "{brideFull}"
+   },
+   "f148": {
+    "pattern": "Chúc mừng {groom} và {bride}! Chúc hai bạn trăm năm hạnh phúc, mãi mãi bên nhau nhé."
+   }
+  }
+ },
+ "tpl-65b8107930caf284": {
+  "sample": {
+   "groom": "Duy Khang",
+   "bride": "Thảo Vy",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f32": {
+    "pattern": "{groom}"
+   },
+   "f33": {
+    "pattern": "{bride}"
+   },
+   "f41": {
+    "pattern": "{groom}"
+   },
+   "f42": {
+    "pattern": "{bride}"
+   },
+   "f53": {
+    "pattern": "{groomFull}"
+   },
+   "f55": {
+    "pattern": "{brideFull}"
+   },
+   "f141": {
+    "pattern": "Chúc mừng {groom} và {bride}! Chúc hai bạn trăm năm hạnh phúc, mãi bên nhau nhé."
+   },
+   "f172": {
+    "pattern": "Chú Rể - {groomFull}"
+   },
+   "f176": {
+    "pattern": "{groomFull}",
+    "upper": true
+   }
+  }
+ },
+ "tpl-7f7e726f3e811cc0": {
+  "sample": {
+   "groom": "Trung Hiếu",
+   "bride": "Như Ý",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f39": {
+    "pattern": "{groom}"
+   },
+   "f40": {
+    "pattern": "{bride}"
+   },
+   "f49": {
+    "pattern": "{groom}"
+   },
+   "f50": {
+    "pattern": "{bride}"
+   }
+  }
+ },
+ "tpl-1d9f3a0d0ad09ec0": {
+  "sample": {
+   "groom": "Thế Bảo",
+   "bride": "Ngọc Ánh",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f56": {
+    "pattern": "{bride}"
+   },
+   "f57": {
+    "pattern": "{groom}"
+   },
+   "f66": {
+    "pattern": "{bride}"
+   },
+   "f67": {
+    "pattern": "{groom}"
+   }
+  }
+ },
+ "tpl-07c6c3b5a7bb8bff": {
+  "sample": {
+   "groom": "Đức Bảo",
+   "bride": "Thảo Vy",
+   "basis": "label"
+  },
+  "fields": {
+   "f60": {
+    "pattern": "{groom}"
+   },
+   "f61": {
+    "pattern": "{bride}"
+   },
+   "f71": {
+    "pattern": "{groom}"
+   },
+   "f73": {
+    "pattern": "{bride}"
+   }
+  }
+ },
+ "tpl-868aac0728ad2b8a": {
+  "sample": {
+   "groom": "Hoài Nam",
+   "bride": "Ngọc Linh",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f58": {
+    "pattern": "{groom}"
+   },
+   "f59": {
+    "pattern": "{bride}"
+   },
+   "f66": {
+    "pattern": "{groom}"
+   },
+   "f67": {
+    "pattern": "{bride}"
+   }
+  }
+ },
+ "tpl-eeb33d0664fa1146": {
+  "sample": {
+   "groom": "Nhật Long",
+   "bride": "Kim Phượng",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f68": {
+    "pattern": "{groom}"
+   },
+   "f69": {
+    "pattern": "{bride}"
+   },
+   "f77": {
+    "pattern": "{groom}"
+   },
+   "f78": {
+    "pattern": "{bride}"
+   },
+   "f93": {
+    "pattern": "{groomFull}"
+   },
+   "f95": {
+    "pattern": "{brideFull}"
+   }
+  }
+ },
+ "tpl-1ee2fea77dae3a8b": {
+  "sample": {
+   "groom": "Thành",
+   "bride": "Trang",
+   "basis": "pair"
+  },
+  "fields": {
+   "f36": {
+    "pattern": "{groom} & {bride}"
+   },
+   "f38": {
+    "pattern": "{groomFull}"
+   },
+   "f39": {
+    "pattern": "{brideFull}"
+   }
+  }
+ },
+ "tpl-fe3336651d25f010": {
+  "sample": {
+   "groom": "Minh Thành",
+   "bride": "Bảo Ngọc",
+   "basis": "label"
+  },
+  "fields": {
+   "f37": {
+    "pattern": "{groom} & {bride}"
+   },
+   "f51": {
+    "pattern": "{groom} & {bride}"
+   },
+   "f52": {
+    "pattern": "{groom}"
+   },
+   "f54": {
+    "pattern": "{bride}"
+   },
+   "f132": {
+    "pattern": "{groom} & {bride}"
+   }
+  }
+ },
+ "tpl-0f2bfcb17251ceb6": {
+  "sample": {
+   "groom": "PHONG",
+   "bride": "TRANG",
+   "basis": "pair"
+  },
+  "fields": {
+   "f33": {
+    "pattern": "{groom} & {bride}",
+    "upper": true
+   },
+   "f45": {
+    "pattern": "{groomFull}",
+    "upper": true
+   },
+   "f47": {
+    "pattern": "{brideFull}",
+    "upper": true
+   },
+   "f110": {
+    "pattern": "{groom} & {bride}",
+    "upper": true
+   }
+  }
+ },
+ "tpl-fdcf66d75d0c91e2": {
+  "sample": {
+   "groom": "Thanh Minh",
+   "bride": "Bảo Ngọc",
+   "basis": "label"
+  },
+  "fields": {
+   "f14": {
+    "pattern": "{groom}"
+   },
+   "f16": {
+    "pattern": "{bride}",
+    "upper": true
+   },
+   "f39": {
+    "pattern": "{groom}"
+   },
+   "f40": {
+    "pattern": "{bride}"
+   },
+   "f87": {
+    "pattern": "{groom}"
+   },
+   "f90": {
+    "pattern": "{bride}"
+   },
+   "f110": {
+    "pattern": "{groom} & {bride}"
+   }
+  }
+ },
+ "tpl-390dae6df4f697a6": {
+  "sample": {
+   "groom": "Trung",
+   "bride": "Vân",
+   "basis": "label"
+  },
+  "fields": {
+   "f36": {
+    "pattern": "{groom} & {bride}"
+   },
+   "f44": {
+    "pattern": "{groomFull}"
+   },
+   "f46": {
+    "pattern": "{brideFull}"
+   }
+  }
+ },
+ "tpl-b5148abeeb943be8": {
+  "sample": {
+   "groom": "Toàn",
+   "bride": "Nga",
+   "basis": "label"
+  },
+  "fields": {
+   "f47": {
+    "pattern": "{groom} & {bride}"
+   },
+   "f61": {
+    "pattern": "{groomFull}"
+   },
+   "f64": {
+    "pattern": "{brideFull}"
+   },
+   "f109": {
+    "pattern": "{groomFull} & {brideFull}"
+   },
+   "f130": {
+    "pattern": "{groomFull} & {brideFull}"
+   }
+  }
+ },
+ "tpl-dd04c1752b33de3e": {
+  "sample": {
+   "groom": "Kiến Văn",
+   "bride": "Việt Hoài",
+   "basis": "label"
+  },
+  "fields": {
+   "f83": {
+    "pattern": "Trưởng nam: {groom} Ái nữ: {bride}"
+   },
+   "f92": {
+    "pattern": "{groomFull}"
+   },
+   "f95": {
+    "pattern": "{brideFull}"
+   },
+   "f119": {
+    "pattern": "{groom} & {bride}"
+   }
+  }
+ },
+ "tpl-bc6e5c2dc6872681": {
+  "sample": {
+   "groom": "Bảo",
+   "bride": "Ngân",
+   "basis": "label"
+  },
+  "fields": {
+   "f42": {
+    "pattern": "{groom} & {bride}"
+   },
+   "f47": {
+    "pattern": "{brideFull}"
+   },
+   "f50": {
+    "pattern": "{groomFull}"
+   },
+   "f76": {
+    "pattern": "{groom} & {bride}"
+   }
+  }
+ },
+ "tpl-46e179b39b7463e3": {
+  "sample": {
+   "groom": "Kiến Văn",
+   "bride": "Việt Hoài",
+   "basis": "pair"
+  },
+  "fields": {
+   "f68": {
+    "pattern": "{groomFull}",
+    "upper": true
+   },
+   "f69": {
+    "pattern": "{brideFull}",
+    "upper": true
+   },
+   "f76": {
+    "pattern": "{groom} - {bride}"
+   }
+  }
+ },
+ "tpl-136e75c21775c167": {
+  "sample": {
+   "groom": "Kiến Văn",
+   "bride": "Việt Hoài",
+   "basis": "repeated-pair"
+  },
+  "fields": {
+   "f26": {
+    "pattern": "{groom}"
+   },
+   "f27": {
+    "pattern": "{bride}"
+   },
+   "f33": {
+    "pattern": "{groom}"
+   },
+   "f34": {
+    "pattern": "{bride}"
+   },
+   "f98": {
+    "pattern": "{groom}"
+   },
+   "f99": {
+    "pattern": "{bride}"
+   }
+  }
+ },
+ "tpl-ff3f26ce1ef26edc": {
+  "sample": {
+   "groom": "Kiến Văn",
+   "bride": "Việt Hoài",
+   "basis": "label"
+  },
+  "fields": {
+   "f20": {
+    "pattern": "{groomFull}",
+    "upper": true
+   },
+   "f21": {
+    "pattern": "{brideFull}",
+    "upper": true
+   },
+   "f32": {
+    "pattern": "{bride}"
+   },
+   "f91": {
+    "pattern": "{groom}"
+   },
+   "f99": {
+    "pattern": "{groom} - {bride}"
+   },
+   "f101": {
+    "pattern": "{groom}"
+   },
+   "f103": {
+    "pattern": "{bride}"
+   }
+  }
+ },
+ "tpl-d2273d0a5d5ebe40": {
+  "sample": {
+   "groom": "Thanh Minh",
+   "bride": "Mỹ Ngọc",
+   "basis": "label"
+  },
+  "fields": {
+   "f28": {
+    "pattern": "{groom}"
+   },
+   "f40": {
+    "pattern": "{groom}"
+   },
+   "f41": {
+    "pattern": "{bride}"
+   },
+   "f43": {
+    "pattern": "{bride}"
+   },
+   "f109": {
+    "pattern": "{groom} & {bride}"
+   }
+  }
+ },
+ "tpl-93ad6c177a67608d": {
+  "sample": {
+   "groom": "VĂN THANH",
+   "bride": "MỸ DUYÊN",
+   "basis": "label"
+  },
+  "fields": {
+   "f53": {
+    "pattern": "{groom} VÀ {bride}",
+    "upper": true
+   },
+   "f56": {
+    "pattern": "{brideInitial}",
+    "upper": true,
+    "initial": "last"
+   },
+   "f57": {
+    "pattern": "{groomInitial}",
+    "upper": true,
+    "initial": "last"
+   },
+   "f67": {
+    "pattern": "{groom}",
+    "upper": true
+   },
+   "f70": {
+    "pattern": "{bride}",
+    "upper": true
+   },
+   "f126": {
+    "pattern": "{groom} & {bride}",
+    "upper": true
+   }
+  }
+ },
+ "tpl-af91976b33dfa05a": {
+  "sample": {
+   "groom": "Minh Vũ",
+   "bride": "Mỹ Linh",
+   "basis": "label"
+  },
+  "fields": {
+   "f35": {
+    "pattern": "{groomInitial}",
+    "upper": true,
+    "initial": "last"
+   },
+   "f37": {
+    "pattern": "{groom}",
+    "upper": true
+   },
+   "f38": {
+    "pattern": "{brideInitial}",
+    "upper": true,
+    "initial": "last"
+   },
+   "f39": {
+    "pattern": "{bride}",
+    "upper": true
+   },
+   "f41": {
+    "pattern": "{groom} & {bride}"
+   },
+   "f52": {
+    "pattern": "{groom}&{bride}"
+   },
+   "f58": {
+    "pattern": "{groom}"
+   },
+   "f61": {
+    "pattern": "{bride}"
+   },
+   "f79": {
+    "pattern": "{groom}&{bride}"
+   }
+  }
+ },
+ "tpl-898fb738d1618a78": {
+  "sample": {
+   "groom": "Kiến Văn",
+   "bride": "Việt Hoài",
+   "basis": "label"
+  },
+  "fields": {
+   "f81": {
+    "pattern": "{groomFull}"
+   },
+   "f92": {
+    "pattern": "{groom}"
+   },
+   "f93": {
+    "pattern": "{bride}"
+   },
+   "f99": {
+    "pattern": "{brideFull}"
+   },
+   "f105": {
+    "pattern": "{groom} & {bride}"
+   }
+  }
+ },
+ "tpl-f9c0e31609224954": {
+  "sample": {
+   "groom": "HOÀNG KIẾN VĂN",
+   "bride": "NGÔ VIỆT HOÀI",
+   "basis": "pair"
+  },
+  "fields": {
+   "f72": {
+    "pattern": "{groom}",
+    "upper": true
+   },
+   "f73": {
+    "pattern": "{bride}",
+    "upper": true
+   },
+   "f76": {
+    "pattern": "{groom} - {bride}",
+    "upper": true
+   },
+   "f84": {
+    "pattern": "{groom} - {bride}"
+   }
+  }
+ },
+ "tpl-5d51be8c41b23f41": {
+  "sample": {
+   "groom": "Thanh Minh",
+   "bride": "Mỹ Ngọc",
+   "basis": "label"
+  },
+  "fields": {
+   "f80": {
+    "pattern": "{groom} & {bride}"
+   },
+   "f91": {
+    "pattern": "{bride}"
+   },
+   "f93": {
+    "pattern": "{groom}"
+   },
+   "f106": {
+    "pattern": "{groom}"
+   },
+   "f109": {
+    "pattern": "{bride}"
+   },
+   "f113": {
+    "pattern": "{groom} & {bride}"
+   },
+   "f123": {
+    "pattern": "{groom} & {bride}"
+   }
+  }
+ },
+ "tpl-8fa054ec2d806198": {
+  "sample": {
+   "groom": "Văn Thanh",
+   "bride": "Nguyệt Nga",
+   "basis": "label"
+  },
+  "fields": {
+   "f20": {
+    "pattern": "{groom} & {bride}"
+   },
+   "f21": {
+    "pattern": "{groom} & {bride}"
+   },
+   "f28": {
+    "pattern": "{bride}"
+   },
+   "f30": {
+    "pattern": "{groom}"
+   }
+  }
+ },
+ "tpl-cf4a5756ae809d1a": {
+  "sample": {
+   "groom": "Sơn",
+   "bride": "Hằng",
+   "basis": "label"
+  },
+  "fields": {
+   "f24": {
+    "pattern": "{groom} & {bride}"
+   },
+   "f90": {
+    "pattern": "{brideFull}"
+   },
+   "f92": {
+    "pattern": "{groomFull}"
+   }
+  }
+ },
+ "tpl-881cbd8bf5f8677f": {
+  "sample": {
+   "groom": "Minh Thành",
+   "bride": "Ngọc Hiền",
+   "basis": "label"
+  },
+  "fields": {
+   "f98": {
+    "pattern": "{groom}"
+   },
+   "f99": {
+    "pattern": "{bride}"
+   },
+   "f103": {
+    "pattern": "{groom} & {bride}"
+   },
+   "f114": {
+    "pattern": "{groom} & {bride}"
+   }
+  }
+ },
+ "tpl-a971744a613a1fa0": {
+  "sample": {
+   "groom": "Văn Thanh",
+   "bride": "Minh Hằng",
+   "basis": "label"
+  },
+  "fields": {
+   "f31": {
+    "pattern": "{groom} & {bride}"
+   },
+   "f46": {
+    "pattern": "{groom}"
+   },
+   "f47": {
+    "pattern": "{bride}"
+   },
+   "f98": {
+    "pattern": "{groom}"
+   },
+   "f101": {
+    "pattern": "{bride}"
+   },
+   "f125": {
+    "pattern": "{groom} & {bride}"
+   }
+  }
+ },
+ "tpl-8e5bdfc7145b4004": {
+  "sample": {
+   "groom": "Văn Minh",
+   "bride": "Ngọc Hà",
+   "basis": "label"
+  },
+  "fields": {
+   "f22": {
+    "pattern": "{groom}"
+   },
+   "f23": {
+    "pattern": "{bride}"
+   },
+   "f34": {
+    "pattern": "{bride}"
+   },
+   "f37": {
+    "pattern": "{groom}"
+   },
+   "f113": {
+    "pattern": "{bride} & {groom}"
+   }
+  }
+ },
+ "tpl-9c0e2d70fa439767": {
+  "sample": {
+   "groom": "HOÀNG KIẾN VĂN",
+   "bride": "NGÔ VIỆT HOÀI",
+   "basis": "label"
+  },
+  "fields": {
+   "f21": {
+    "pattern": "{groom} - {bride}",
+    "upper": true
+   },
+   "f87": {
+    "pattern": "{groom}"
+   },
+   "f90": {
+    "pattern": "{bride}"
+   },
+   "f108": {
+    "pattern": "{bride}"
+   }
+  }
+ },
+ "tpl-a1e328379e9b3bb7": {
+  "sample": {
+   "groom": "HOÀNG HẢI",
+   "bride": "NGUYỆT THANH",
+   "basis": "label"
+  },
+  "fields": {
+   "f52": {
+    "pattern": "{groomFull}",
+    "upper": true
+   },
+   "f53": {
+    "pattern": "{brideFull}",
+    "upper": true
+   },
+   "f60": {
+    "pattern": "{groomFull}",
+    "upper": true
+   },
+   "f62": {
+    "pattern": "{brideFull}",
+    "upper": true
+   },
+   "f87": {
+    "pattern": "{groom} & {bride}",
+    "upper": true
+   }
+  }
+ },
+ "tpl-910a4094d457fe63": {
+  "sample": {
+   "groom": "KHÁNH",
+   "bride": "LOAN",
+   "basis": "label"
+  },
+  "fields": {
+   "f40": {
+    "pattern": "{groom} & {bride}",
+    "upper": true
+   },
+   "f43": {
+    "pattern": "{groomFull}"
+   },
+   "f45": {
+    "pattern": "{brideFull}"
+   }
+  }
+ },
+ "tpl-972a14144f24180c": {
+  "sample": {
+   "groom": "HOÀNG KIẾN VĂN",
+   "bride": "NGÔ VIỆT HOÀI",
+   "basis": "label"
+  },
+  "fields": {
+   "f74": {
+    "pattern": "{groom} - {bride}",
+    "upper": true
+   },
+   "f77": {
+    "pattern": "{groom}",
+    "upper": true
+   },
+   "f78": {
+    "pattern": "{bride}",
+    "upper": true
+   },
+   "f83": {
+    "pattern": "{groom}"
+   },
+   "f86": {
+    "pattern": "{bride}"
+   },
+   "f93": {
+    "pattern": "{groom}"
+   }
+  }
+ },
+ "tpl-a39211d76e1277b1": {
+  "sample": {
+   "groom": "HOÀNG KIẾN VĂN",
+   "bride": "NGÔ VIỆT HOÀI",
+   "basis": "label"
+  },
+  "fields": {
+   "f22": {
+    "pattern": "{groom} - {bride}",
+    "upper": true
+   },
+   "f88": {
+    "pattern": "{groom}"
+   },
+   "f91": {
+    "pattern": "{bride}"
+   }
+  }
+ },
+ "tpl-5238b98f99ff20ce": {
+  "sample": {
+   "groom": "Kiến Văn",
+   "bride": "Việt Hoài",
+   "basis": "label"
+  },
+  "fields": {
+   "f82": {
+    "pattern": "{groomFull}"
+   },
+   "f91": {
+    "pattern": "{brideFull}"
+   },
+   "f97": {
+    "pattern": "{groomFull}"
+   },
+   "f98": {
+    "pattern": "{brideFull}"
+   },
+   "f113": {
+    "pattern": "{groomFull}"
+   },
+   "f114": {
+    "pattern": "{brideFull}"
+   },
+   "f118": {
+    "pattern": "{groom} & {bride}"
+   }
+  }
+ },
+ "tpl-fe4712ae3a0ce04c": {
+  "sample": {
+   "groom": "Văn Minh",
+   "bride": "Hạ Nguyệt",
+   "basis": "label"
+  },
+  "fields": {
+   "f52": {
+    "pattern": "{groom} & {bride}"
+   },
+   "f58": {
+    "pattern": "{groom}"
+   },
+   "f61": {
+    "pattern": "{bride}"
+   },
+   "f131": {
+    "pattern": "{groom} & {bride}"
+   }
+  }
+ },
+ "tpl-2290cc78fe643cef": {
+  "sample": {
+   "groom": "Hoàng Kiến Văn",
+   "bride": "Nguyễn Việt Hoài",
+   "basis": "label"
+  },
+  "fields": {
+   "f86": {
+    "pattern": "{groom}"
+   },
+   "f89": {
+    "pattern": "{bride}"
+   }
+  }
+ },
+ "tpl-5314eaa1545d37bd": {
+  "sample": {
+   "groom": "Thanh Minh",
+   "bride": "Hà Ngọc",
+   "basis": "label"
+  },
+  "fields": {
+   "f51": {
+    "pattern": "{groom} & {bride}"
+   },
+   "f110": {
+    "pattern": "{groom}"
+   },
+   "f114": {
+    "pattern": "{bride}"
+   },
+   "f148": {
+    "pattern": "{groom} & {bride}"
+   }
+  }
+ },
+ "tpl-40a3710b1304c0c6": {
+  "sample": {
+   "groom": "Việt",
+   "bride": "Loan",
+   "basis": "label"
+  },
+  "fields": {
+   "f67": {
+    "pattern": "{groom} & {bride}"
+   },
+   "f78": {
+    "pattern": "{groomFull}"
+   },
+   "f81": {
+    "pattern": "{brideFull}"
+   },
+   "f150": {
+    "pattern": "{groom} & {bride}"
+   }
+  }
+ },
+ "tpl-e37eafa54ca5334f": {
+  "sample": {
+   "groom": "MINH THÀNH",
+   "bride": "HUYỀN TRANG",
+   "basis": "label"
+  },
+  "fields": {
+   "f54": {
+    "pattern": "{groom}",
+    "upper": true
+   },
+   "f57": {
+    "pattern": "{bride}",
+    "upper": true
+   }
+  }
+ },
+ "tpl-f49d777f7ca822f7": {
+  "sample": {
+   "groom": "Văn Danh",
+   "bride": "Mỹ Linh",
+   "basis": "label"
+  },
+  "fields": {
+   "f55": {
+    "pattern": "{groom}"
+   },
+   "f56": {
+    "pattern": "{bride}"
+   },
+   "f71": {
+    "pattern": "{bride}"
+   },
+   "f74": {
+    "pattern": "{groom}"
+   }
+  }
+ },
+ "tpl-5ea088b4e1385e0d": {
+  "sample": {
+   "groom": "MINH THÀNH",
+   "bride": "BẢO NGỌC",
+   "basis": "label"
+  },
+  "fields": {
+   "f30": {
+    "pattern": "{groom} & {bride}",
+    "upper": true
+   },
+   "f74": {
+    "pattern": "{bride}"
+   },
+   "f76": {
+    "pattern": "{groom}"
+   },
+   "f84": {
+    "pattern": "{groom}"
+   },
+   "f85": {
+    "pattern": "{bride}"
+   }
+  }
+ },
+ "tpl-3a7908e17fe8a23e": {
+  "sample": {
+   "groom": "Minh Thành",
+   "bride": "Bảo Ngọc",
+   "basis": "label"
+  },
+  "fields": {
+   "f26": {
+    "pattern": "{brideFull}",
+    "upper": true
+   },
+   "f36": {
+    "pattern": "{groom}"
+   },
+   "f38": {
+    "pattern": "{bride}"
+   },
+   "f61": {
+    "pattern": "{groom}"
+   },
+   "f63": {
+    "pattern": "{bride}"
+   }
+  }
+ }
+}

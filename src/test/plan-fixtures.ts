@@ -57,7 +57,7 @@ export const pricing: Pricing = {
   paidGalleryLimit: 50,
   features: [
     { key: "unlimitedGuests", label: "Khách không giới hạn", plan: "basic" },
-    { key: "giftBox", label: "Hộp mừng cưới", plan: "premium" },
+    { key: "giftBox", label: "Hộp mừng cưới", plan: "basic" },
   ],
 };
 

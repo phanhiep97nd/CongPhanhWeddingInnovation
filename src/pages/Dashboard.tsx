@@ -8,10 +8,8 @@ import { useAuth } from "../lib/auth";
 import type { Wedding, WeddingSummary } from "../lib/types";
 import { cldUrl } from "../lib/images";
 import { chosenTemplate, invitationKinds, invitationTitle, templateChoiceKey } from '../lib/templateLibrary';
+import { slugify } from '../lib/links';
 
-export function slugify(text: string) {
-  return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[đĐ]/g, "d").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 50).replace(/-+$/, "");
-}
 
 export default function Dashboard() {
   const { user, logout } = useAuth();

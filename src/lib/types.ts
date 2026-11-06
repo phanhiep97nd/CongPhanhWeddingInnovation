@@ -1,3 +1,5 @@
+// Owner wording for the shared opening envelope; empty parts use the defaults.
+export interface EnvelopeTexts { kicker?: string; to?: string; letter?: string; button?: string }
 export type SectionKey = "story" | "timeline" | "gallery" | "info" | "rsvp" | "photoWall" | "rooms" | "dressCode" | "giftBox";
 export type Plan = "free" | "basic" | "premium";
 export type Template = "classic" | "minimal" | "hy3d";
@@ -12,6 +14,8 @@ export interface GiftAccount {
   bankName: string;
   accountNumber: string;
   accountName: string;
+  // An uploaded QR (e-wallet or bank app); without it the card shows the VietQR code of the bank account.
+  qrImage?: string;
 }
 
 export interface GiftBox {
@@ -87,7 +91,7 @@ export interface CustomSection {
 export interface Wedding {
   invitationKind?: "wedding" | "birthday" | "housewarming" | "graduation" | "event";
   eventTitle?: string;
-  importedTemplate?: { templateId: string; values: Record<string, string>; opening: boolean; motion: boolean } | null;
+  importedTemplate?: { templateId: string; values: Record<string, string>; opening: boolean; motion: boolean; envelope?: EnvelopeTexts } | null;
   hasImportedTemplate?: boolean;
   id: string;
   slug: string;
@@ -108,7 +112,7 @@ export interface Wedding {
   sections: Section[];
   customSections: CustomSection[];
   meta: { title: string; description: string };
-  theme: { primary: string; design?: string };
+  theme: { primary: string; design?: string; blessings?: boolean };
   createdAt: string;
   updatedAt: string;
   plan?: Plan;

@@ -48,18 +48,23 @@ function giftBox(value) {
     accounts: accounts => items(accounts, 4, {
       id: item => string(item, 100),
       label: item => string(item, 40),
+      // Bank details are optional when the owner uploads their own QR (e-wallets, a bank app's QR).
       bankBin: item => {
-        if (typeof item !== 'string' || !/^\d{6}$/.test(item)) fail('Mã ngân hàng không hợp lệ');
+        if (typeof item !== 'string' || (item !== '' && !/^\d{6}$/.test(item))) fail('Mã ngân hàng không hợp lệ');
         return item;
       },
       bankName: item => string(item, 100),
       accountNumber: item => {
-        if (typeof item !== 'string' || !/^[0-9A-Za-z]{4,30}$/.test(item)) fail('Số tài khoản không hợp lệ');
+        if (typeof item !== 'string' || (item !== '' && !/^[0-9A-Za-z]{4,30}$/.test(item))) fail('Số tài khoản không hợp lệ');
         return item;
       },
-      accountName: item => string(item, 60)
+      accountName: item => string(item, 60),
+      qrImage: url
     })
   });
+  for (const account of data.accounts || []) {
+    if (!account.qrImage && !(account.bankBin && account.accountNumber)) fail('Mỗi tài khoản cần ngân hàng và số tài khoản, hoặc ảnh mã QR');
+  }
   return data;
 }
 
@@ -136,7 +141,7 @@ const weddingFields = {
     title: item => string(item, 200),
     description: item => string(item, 1000)
   }),
-  theme: value => shape(value, { primary: color, design: item => {
+  theme: value => shape(value, { primary: color, blessings: bool, design: item => {
     if (typeof item !== 'string' || !require('./invitationDesigns').has(item)) fail('Mẫu thiệp không hợp lệ');
     return item;
   } })

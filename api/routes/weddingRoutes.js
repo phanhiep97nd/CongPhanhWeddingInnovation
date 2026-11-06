@@ -154,7 +154,7 @@ router.post('/:id/template-preview', (request, response, next) => {
     const draft = pick(request.body.content, schema);
     const content = { ...request.wedding.toObject(), ...draft };
     for (const key of ['couple', 'venue']) content[key] = { ...request.wedding[key], ...draft[key] };
-    response.set('Cache-Control', 'no-store').json({ html: library.render(selected, { editing: true, wedding: content }), boundValues: library.boundValues(selected.templateId, content) });
+    response.set('Cache-Control', 'no-store').json({ html: library.render(selected, { editing: true, wedding: content }), boundValues: library.boundValues(selected.templateId, content), softValues: library.softValues(selected.templateId, content), images: library.originalImages(selected.templateId), opening: library.openingKind(selected.templateId) });
   } catch (error) { next(error); }
 });
 

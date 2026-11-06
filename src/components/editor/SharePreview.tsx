@@ -42,7 +42,7 @@ export default function SharePreview({ wedding, guests }: { wedding: Wedding; gu
       active = false;
       clearTimeout(timer);
     };
-  }, [wedding.id, wedding.meta.title, wedding.meta.description, wedding.eventDate, wedding.eventTime, wedding.dateText, wedding.coverImage, wedding.ogImage, wedding.venue.name, wedding.venue.address, code]);
+  }, [wedding.id, wedding.updatedAt, code]);
 
   return <section className="share-preview editor-item" aria-label="Xem trước khi gửi">
     <h3>Xem trước khi gửi</h3>
@@ -61,8 +61,10 @@ export default function SharePreview({ wedding, guests }: { wedding: Wedding; gu
     {state === "loading" && <p role="status">Đang tạo bản xem trước…</p>}
     {state === "error" && <p role="alert">Không tải được bản xem trước. Hãy thử lại.</p>}
     {state === "ready" && meta &&
+      // Laid out like a link sent in Zalo or Messenger: the message with its link, then the link card.
       <div className="chat-bubble">
         <p>Thiệp cưới của chúng mình 💌</p>
+        <a className="chat-link" href={meta.url} target="_blank" rel="noreferrer">{meta.url}</a>
         <article className="link-preview">
           {meta.image && <img src={meta.image} alt="Ảnh xem trước thiệp" />}
           <div>

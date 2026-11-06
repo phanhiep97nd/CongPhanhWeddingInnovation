@@ -4,6 +4,15 @@ import { useDatabase, app, request, register, createWedding, authorized, Guest, 
 useDatabase();
 
 describe('weddings', () => {
+  it('stores whether guest wishes scroll over the card and exposes it publicly', async () => {
+    const account = await register();
+    const wedding = (await createWedding(account.token)).body;
+    expect((await request(app).put(`/weddings/${wedding.id}`).set(authorized(account.token)).send({ theme: { primary: '#b76e79', blessings: 'no' } })).status).toBe(400);
+    const saved = await request(app).put(`/weddings/${wedding.id}`).set(authorized(account.token)).send({ theme: { primary: '#b76e79', blessings: false }, published: true });
+    expect(saved.status).toBe(200);
+    expect(saved.body.theme).toMatchObject({ primary: '#b76e79', blessings: false });
+    expect((await request(app).get(`/public/weddings/${saved.body.slug}`)).body.theme.blessings).toBe(false);
+  });
   it('creates a wedding without exposing owner', async () => {
     const account = await register();
     const result = await createWedding(account.token);

@@ -1,0 +1,7978 @@
+{
+ "tpl-e0ead20053787a9c": {
+  "sample": {
+   "day": 15,
+   "month": 12,
+   "year": 2026
+  },
+  "fields": {
+   "f17": {
+    "pattern": "NĂM {yyyy}",
+    "upper": true
+   },
+   "f18": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f19": {
+    "pattern": "{d}"
+   },
+   "f20": {
+    "pattern": "Tháng {m}"
+   },
+   "f21": {
+    "pattern": "Vào lúc {time} {wd:vi:L}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "10:30"
+    }
+   }
+  }
+ },
+ "tpl-0532e178b077880d": {
+  "sample": {
+   "day": 25,
+   "month": 12,
+   "year": 2026
+  },
+  "fields": {
+   "f79": {
+    "pattern": "{wd:vi:T}, {d}/{m}/{yyyy}"
+   },
+   "f80": {
+    "pattern": "Âm lịch {ld}/{lm} | {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "12:00 PM",
+     "meridiem": "upper",
+     "gap": true
+    }
+   },
+   "f130": {
+    "pattern": "16 GIỜ 00 | {wd:vi:T} | {d}.{m}.{yyyy}"
+   },
+   "f131": {
+    "pattern": "(Nhằm ngày {ldd} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-f4325844edab59cd": {
+  "sample": {
+   "day": 20,
+   "month": 12,
+   "year": 2026
+  },
+  "fields": {
+   "f33": {
+    "pattern": "{wd:vi:T} - {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "09 : 30"
+    }
+   },
+   "f35": {
+    "pattern": "{wd:vi:T} - {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "14 : 00"
+    }
+   },
+   "f37": {
+    "pattern": "{d}.{m}.{yyyy}"
+   },
+   "f38": {
+    "pattern": "{d}.{m}.{yyyy}"
+   },
+   "f55": {
+    "pattern": "{wd:vi:L} - {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "09:30"
+    }
+   },
+   "f56": {
+    "pattern": "{d} . {m} . {yyyy}"
+   },
+   "f57": {
+    "pattern": "Tức Ngày {ld} tháng {lm} năm {lyear:T}"
+   },
+   "f64": {
+    "pattern": "Tức Ngày {ld} tháng {lm} năm {lyear:T}"
+   },
+   "f69": {
+    "pattern": "Vào {wd:vi:T} - {time}",
+    "time": {
+     "sep": "h",
+     "pad": true,
+     "sample": "09h00"
+    }
+   },
+   "f70": {
+    "pattern": "{d}"
+   },
+   "f71": {
+    "pattern": "Tháng {m}"
+   },
+   "f72": {
+    "pattern": "năm {yyyy}"
+   },
+   "f73": {
+    "pattern": "Tức Ngày {ld} tháng {lm} năm {lyear:T}"
+   },
+   "f76": {
+    "pattern": "Vào {wd:vi:T} - {time}",
+    "time": {
+     "sep": "h",
+     "pad": true,
+     "sample": "14h00"
+    }
+   },
+   "f78": {
+    "pattern": "Tức Ngày {ld} tháng {lm} năm {lyear:T}"
+   },
+   "f142": {
+    "pattern": "{d}"
+   }
+  }
+ },
+ "tpl-7648aceb16e91217": {
+  "sample": {
+   "day": 20,
+   "month": 5,
+   "year": 2050
+  },
+  "fields": {
+   "f50": {
+    "pattern": "{yyyy}.{mm}.{d}"
+   },
+   "f116": {
+    "pattern": "{wd:vi:T}, {d}.{mm}.{yyyy}"
+   },
+   "f117": {
+    "pattern": "Âm lịch {ld}/{lm} | {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "12:00 PM",
+     "meridiem": "upper",
+     "gap": true
+    }
+   }
+  }
+ },
+ "tpl-d8770114820d2c8b": {
+  "sample": {
+   "day": 16,
+   "month": 11,
+   "year": 2025
+  },
+  "fields": {
+   "f32": {
+    "pattern": "{d}.{m}.{yyyy}"
+   },
+   "f52": {
+    "pattern": "{wd:vi:T}"
+   },
+   "f53": {
+    "pattern": "Tháng {m}"
+   },
+   "f54": {
+    "pattern": "{yyyy}"
+   },
+   "f55": {
+    "pattern": "{d}"
+   }
+  }
+ },
+ "tpl-c80a468cf7d3cd65": {
+  "sample": {
+   "day": 6,
+   "month": 12,
+   "year": 2026
+  },
+  "fields": {
+   "f38": {
+    "pattern": "{wd:vi:U} - {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "12:00"
+    },
+    "upper": true
+   },
+   "f39": {
+    "pattern": "{dd} . {m}. {yyyy}"
+   },
+   "f53": {
+    "pattern": "{dd}.{m}.{yyyy}"
+   },
+   "f54": {
+    "pattern": "{wd:vi:T}"
+   },
+   "f56": {
+    "pattern": "Tức ngày {ld} tháng {lm} năm {lyear:T}"
+   },
+   "f64": {
+    "pattern": "{ld}/{lm} âm lịch"
+   },
+   "f67": {
+    "pattern": "{dd} . {m} . {yyyy}"
+   },
+   "f68": {
+    "pattern": "{ld}/{lm} âm lịch"
+   }
+  }
+ },
+ "tpl-1cce164f545b5257": {
+  "sample": {
+   "day": 20,
+   "month": 5,
+   "year": 2050
+  },
+  "fields": {
+   "f36": {
+    "pattern": "{yyyy}.{mm}.{d}"
+   },
+   "f89": {
+    "pattern": "Âm lịch {ld}/{lm} | {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "12:00 PM",
+     "meridiem": "upper",
+     "gap": true
+    }
+   }
+  }
+ },
+ "tpl-0b59fd94844f2353": {
+  "sample": {
+   "day": 12,
+   "month": 10,
+   "year": 2025
+  },
+  "fields": {
+   "f68": {
+    "pattern": "{d}"
+   },
+   "f69": {
+    "pattern": "{wd:vi:T}"
+   },
+   "f71": {
+    "pattern": "Tháng {m}"
+   },
+   "f72": {
+    "pattern": "{yyyy}"
+   },
+   "f150": {
+    "pattern": "{wd:vi:S} ngày {d} tháng {m} năm {yyyy}"
+   },
+   "f151": {
+    "pattern": "Ngày {ld} tháng {lmm} âm lịch"
+   }
+  }
+ },
+ "tpl-9e7eae7f25151a5c": {
+  "sample": {
+   "day": 19,
+   "month": 9,
+   "year": 2026
+  },
+  "fields": {
+   "f51": {
+    "pattern": "(Tức ngày {ldd} tháng {lmm} năm {lyear:T})"
+   },
+   "f52": {
+    "pattern": "Năm {yyyy}"
+   },
+   "f54": {
+    "pattern": "Tháng {mm}"
+   },
+   "f55": {
+    "pattern": "{wd:vi:T}"
+   },
+   "f56": {
+    "pattern": "{d}"
+   },
+   "f72": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f74": {
+    "pattern": "(Tức ngày {ldd} tháng {lmm} năm 2026 )"
+   },
+   "f85": {
+    "pattern": "{wd:vi:T}"
+   },
+   "f86": {
+    "pattern": "{d}"
+   },
+   "f87": {
+    "pattern": "Năm {yyyy}"
+   },
+   "f89": {
+    "pattern": "Tháng {mm}"
+   },
+   "f90": {
+    "pattern": "(Tức ngày {ldd} tháng {lmm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-492156ab4fe54ebb": {
+  "sample": {
+   "day": 12,
+   "month": 12,
+   "year": 2026
+  },
+  "fields": {
+   "f19": {
+    "pattern": "{d}.{m}.{yyyy}"
+   },
+   "f44": {
+    "pattern": "Nhằm ngày {ld} tháng {lm} năm {lyear:T}"
+   },
+   "f45": {
+    "pattern": "{time} - {wd:vi:L}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "10:30"
+    }
+   },
+   "f46": {
+    "pattern": "{d}.{m}.{yyyy}"
+   }
+  }
+ },
+ "tpl-e75e009d4189f188": {
+  "sample": {
+   "day": 20,
+   "month": 8,
+   "year": 2025
+  },
+  "fields": {
+   "f33": {
+    "pattern": "{d}/{mm}/{yyyy}"
+   },
+   "f111": {
+    "pattern": "{wd:num:T} ngày {d} tháng {mm} năm {yyyy}"
+   },
+   "f112": {
+    "pattern": "Ngày {ld} tháng {lmm} âm lịch {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "12:00PM",
+     "meridiem": "upper",
+     "gap": false
+    }
+   }
+  }
+ },
+ "tpl-da03e4ffbb40397a": {
+  "sample": {
+   "day": 30,
+   "month": 12,
+   "year": 2026
+  },
+  "fields": {
+   "f62": {
+    "pattern": "{time} , {wd:vi:U}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "09 : 00"
+    },
+    "upper": true
+   },
+   "f63": {
+    "pattern": "{d}"
+   },
+   "f64": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f65": {
+    "pattern": "NĂM {yyyy}",
+    "upper": true
+   },
+   "f66": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm 2026)"
+   }
+  }
+ },
+ "tpl-4cf97cbd726daca7": {
+  "sample": {
+   "day": 20,
+   "month": 8,
+   "year": 2025
+  },
+  "fields": {
+   "f80": {
+    "pattern": "{wd:num:T} ngày {d} tháng {mm} năm {yyyy}"
+   },
+   "f81": {
+    "pattern": "Ngày {ld} tháng {lmm} âm lịch {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "12:00 PM",
+     "meridiem": "upper",
+     "gap": true
+    }
+   }
+  }
+ },
+ "tpl-22df1b924841a0f3": {
+  "sample": {
+   "day": 31,
+   "month": 12,
+   "year": 2026
+  },
+  "fields": {
+   "f30": {
+    "pattern": "{d}.{m}.{yyyy}"
+   },
+   "f52": {
+    "pattern": "Nhằm ngày {ld} tháng {lm} năm {lyear:T}"
+   }
+  }
+ },
+ "tpl-ae7229ebf3e3798c": {
+  "sample": {
+   "day": 14,
+   "month": 12,
+   "year": 2025
+  },
+  "fields": {
+   "f50": {
+    "pattern": "{d}"
+   },
+   "f52": {
+    "pattern": "Tháng {m}"
+   },
+   "f53": {
+    "pattern": "Năm {yyyy}"
+   },
+   "f54": {
+    "pattern": "{wd:vi:T}"
+   },
+   "f75": {
+    "pattern": "{d}.{m}.{yyyy}"
+   },
+   "f76": {
+    "pattern": "{wd:vi:T}"
+   },
+   "f78": {
+    "pattern": "(Nhằm ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f87": {
+    "pattern": "{d}.{m}.{yyyy}"
+   },
+   "f88": {
+    "pattern": "{wd:vi:T}"
+   },
+   "f90": {
+    "pattern": "(Nhằm ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-e67cb146deb89a79": {
+  "sample": {
+   "day": 28,
+   "month": 1,
+   "year": 2026
+  },
+  "fields": {
+   "f48": {
+    "pattern": "{d}.{mm}.{yyyy}"
+   },
+   "f65": {
+    "pattern": "{d}"
+   },
+   "f66": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f73": {
+    "pattern": "{d}"
+   },
+   "f76": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-4fe378473dbd4647": {
+  "sample": {
+   "day": 14,
+   "month": 2,
+   "year": 2025
+  },
+  "fields": {
+   "f32": {
+    "pattern": "{d}.{m}.{yyyy}"
+   },
+   "f39": {
+    "pattern": "{wd:en:T}"
+   },
+   "f70": {
+    "pattern": "{wd:num:T}, ngày {d} tháng {m} năm {yyyy}"
+   }
+  }
+ },
+ "tpl-1702b1accbeba875": {
+  "sample": {
+   "day": 25,
+   "month": 12,
+   "year": 2025
+  },
+  "fields": {
+   "f57": {
+    "pattern": "{wd:num:T} ngày {d} tháng {m} năm {yyyy}"
+   },
+   "f58": {
+    "pattern": "Ngày {ld} tháng {lm} âm lịch {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "12:00 AM",
+     "meridiem": "upper",
+     "gap": true
+    }
+   }
+  }
+ },
+ "tpl-c61e99fa867ac605": {
+  "sample": {
+   "day": 20,
+   "month": 5,
+   "year": 2030
+  },
+  "fields": {
+   "f36": {
+    "pattern": "{yyyy}-{mm}-{d} {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "12:00"
+    }
+   }
+  }
+ },
+ "tpl-80ff9c258deec514": {
+  "sample": {
+   "day": 20,
+   "month": 8,
+   "year": 2025
+  },
+  "fields": {
+   "f57": {
+    "pattern": "{d}/{mm}/{yyyy}"
+   },
+   "f126": {
+    "pattern": "{wd:num:T} ngày {d} tháng {mm} năm {yyyy}"
+   },
+   "f127": {
+    "pattern": "Ngày {ld} tháng {lmm} âm lịch {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "12:00PM",
+     "meridiem": "upper",
+     "gap": false
+    }
+   }
+  }
+ },
+ "tpl-548821ebb4014801": {
+  "sample": {
+   "day": 20,
+   "month": 5,
+   "year": 2025
+  },
+  "fields": {
+   "f102": {
+    "pattern": "{wd:num:L} , Ngày {d} tháng {mm} năm {yyyy}"
+   },
+   "f103": {
+    "pattern": "(Ngày {ld} tháng {lmm} âm lịch vào lúc 12h:00PM )"
+   }
+  }
+ },
+ "tpl-1587c4b382c1db2c": {
+  "sample": {
+   "day": 20,
+   "month": 8,
+   "year": 2026
+  },
+  "fields": {
+   "f46": {
+    "pattern": "{d}.{mm}.{yyyy}"
+   },
+   "f70": {
+    "pattern": "{d}.{mm}.{yyyy}"
+   },
+   "f71": {
+    "pattern": "({ld}/{lmm} âm lịch )"
+   },
+   "f76": {
+    "pattern": "{d}.{mm}.{yyyy}"
+   },
+   "f77": {
+    "pattern": "({ld}/{lmm} âm lịch )"
+   }
+  }
+ },
+ "tpl-b117d9d7de76b72a": {
+  "sample": {
+   "day": 27,
+   "month": 5,
+   "year": 2025
+  },
+  "fields": {
+   "f124": {
+    "pattern": "{wd:num:T} ngày {d} tháng {m} năm {yyyy}"
+   },
+   "f125": {
+    "pattern": "Ngày {ld} tháng {lm} âm lịch {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "12:00PM",
+     "meridiem": "upper",
+     "gap": false
+    }
+   }
+  }
+ },
+ "tpl-97b49030bd71cb67": {
+  "sample": {
+   "day": 20,
+   "month": 9,
+   "year": 2025
+  },
+  "fields": {
+   "f50": {
+    "pattern": "{wd:num:T} ngày {d} tháng {mm} năm {yyyy}"
+   },
+   "f51": {
+    "pattern": "Ngày {ldd} tháng {lmm} âm lịch {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "12:00 PM",
+     "meridiem": "upper",
+     "gap": true
+    }
+   },
+   "f111": {
+    "pattern": "{wd:num:T} ngày {d} tháng {mm} năm {yyyy}"
+   },
+   "f112": {
+    "pattern": "Ngày {ldd} tháng {lmm} âm lịch {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "12:00PM",
+     "meridiem": "upper",
+     "gap": false
+    }
+   },
+   "f124": {
+    "pattern": "{d}.{mm}.{yyyy}"
+   }
+  }
+ },
+ "tpl-1b91ee38222b2751": {
+  "sample": {
+   "day": 28,
+   "month": 12,
+   "year": 2025
+  },
+  "fields": {
+   "f44": {
+    "pattern": "{d}.{m}.{yyyy}"
+   },
+   "f65": {
+    "pattern": "{d}"
+   },
+   "f66": {
+    "pattern": "{wd:vi:T}"
+   },
+   "f67": {
+    "pattern": "Tháng {m}"
+   },
+   "f69": {
+    "pattern": "Năm {yyyy}"
+   },
+   "f70": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-bcc375014cb76441": {
+  "sample": {
+   "day": 28,
+   "month": 5,
+   "year": 2026
+  },
+  "fields": {
+   "f37": {
+    "pattern": "{d}.{mm}.{yyyy}"
+   },
+   "f96": {
+    "pattern": "{d} . {mm} . {yyyy}"
+   },
+   "f97": {
+    "pattern": "Tức Ngày {ld} Tháng {lmm} Năm {lyear:T}"
+   },
+   "f104": {
+    "pattern": "{d} . {mm} . {yyyy}"
+   },
+   "f105": {
+    "pattern": "Tức Ngày {ld} Tháng {lmm} Năm {lyear:T}"
+   }
+  }
+ },
+ "tpl-4b218cdc9c62036e": {
+  "sample": {
+   "day": 18,
+   "month": 9,
+   "year": 2025
+  },
+  "fields": {
+   "f21": {
+    "pattern": "{d} / {mm} / {yyyy}"
+   },
+   "f36": {
+    "pattern": "{d} / {mm} / {yyyy}"
+   }
+  }
+ },
+ "tpl-e03275e1ed942fd1": {
+  "sample": {
+   "day": 20,
+   "month": 8,
+   "year": 2025
+  },
+  "fields": {
+   "f41": {
+    "pattern": "{d}/{mm}/{yyyy}"
+   },
+   "f107": {
+    "pattern": "{wd:num:T} ngày {d} tháng {mm} năm {yyyy}"
+   },
+   "f108": {
+    "pattern": "Ngày {ld} tháng {lmm} âm lịch {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "12:00PM",
+     "meridiem": "upper",
+     "gap": false
+    }
+   }
+  }
+ },
+ "tpl-1acde4f1a8cda443": {
+  "sample": {
+   "day": 30,
+   "month": 5,
+   "year": 2025
+  },
+  "fields": {
+   "f115": {
+    "pattern": "{wd:num:T} ngày {d} tháng {mm} năm {yyyy}"
+   },
+   "f116": {
+    "pattern": "Ngày {ld} tháng {lmm} âm lịch {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "12:00PM",
+     "meridiem": "upper",
+     "gap": false
+    }
+   }
+  }
+ },
+ "tpl-4a14153b2bd94e07": {
+  "sample": {
+   "day": 20,
+   "month": 5,
+   "year": 2025
+  },
+  "fields": {
+   "f37": {
+    "pattern": "Ngày {d} tháng {mm} năm {yyyy}"
+   },
+   "f101": {
+    "pattern": "{wd:num:T} ngày {d} tháng {mm} năm {yyyy}"
+   },
+   "f102": {
+    "pattern": "Ngày {ld} tháng {lmm} âm lịch {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "11:45AM",
+     "meridiem": "upper",
+     "gap": false
+    }
+   }
+  }
+ },
+ "tpl-4feee0657291130d": {
+  "sample": {
+   "day": 22,
+   "month": 4,
+   "year": 2026
+  },
+  "fields": {
+   "f36": {
+    "pattern": "{d}.{mm}.{yyyy}"
+   },
+   "f50": {
+    "pattern": "{d}"
+   },
+   "f55": {
+    "pattern": "Nhằm ngày {ldd} tháng {lmm} năm {lyear:T}"
+   },
+   "f115": {
+    "pattern": "{d}.{mm}.{yyyy}"
+   },
+   "f116": {
+    "pattern": "Tức ngày {ldd} tháng {lmm} năm {lyear:T}"
+   },
+   "f123": {
+    "pattern": "Tức ngày {ldd} tháng {lmm} năm {lyear:T}"
+   },
+   "f130": {
+    "pattern": "{d}"
+   },
+   "f133": {
+    "pattern": "Nhằm ngày {ldd} tháng {lmm} năm {lyear:T}"
+   }
+  }
+ },
+ "tpl-afa3cd6f2a4d1b01": {
+  "sample": {
+   "day": 5,
+   "month": 1,
+   "year": 2026
+  },
+  "fields": {
+   "f35": {
+    "pattern": "{dd} . {mm} . {yyyy}"
+   },
+   "f58": {
+    "pattern": "{time} {wd:num:T}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "09:30"
+    }
+   }
+  }
+ },
+ "tpl-d66cd11ea1bfa426": {
+  "sample": {
+   "day": 19,
+   "month": 12,
+   "year": 2025
+  },
+  "fields": {
+   "f21": {
+    "pattern": "{yyyy}"
+   },
+   "f22": {
+    "pattern": "{d}"
+   },
+   "f23": {
+    "pattern": "Tháng {m}"
+   },
+   "f24": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   }
+  }
+ },
+ "tpl-d0cb0ad30c7e9119": {
+  "sample": {
+   "day": 25,
+   "month": 10,
+   "year": 2025
+  },
+  "fields": {
+   "f82": {
+    "pattern": "{wd:num:T} ngày {d} tháng {m} năm {yyyy}"
+   },
+   "f83": {
+    "pattern": "Ngày {ld} tháng {lm} âm lịch {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "12:00PM",
+     "meridiem": "upper",
+     "gap": false
+    }
+   }
+  }
+ },
+ "tpl-3a73935fd18d080d": {
+  "sample": {
+   "day": 28,
+   "month": 2,
+   "year": 2026
+  },
+  "fields": {
+   "f31": {
+    "pattern": "{d}"
+   },
+   "f32": {
+    "pattern": "Tháng {m}"
+   },
+   "f33": {
+    "pattern": "{yyyy}"
+   },
+   "f34": {
+    "pattern": "{wd:vi:T}"
+   },
+   "f38": {
+    "pattern": "Tức ngày {ld} tháng {lmm} năm {lyear:T}"
+   },
+   "f99": {
+    "pattern": "{yyyy}"
+   },
+   "f101": {
+    "pattern": "tháng {m}"
+   },
+   "f103": {
+    "pattern": "Tức ngày {ld} tháng {lmm} năm {lyear:T}"
+   }
+  }
+ },
+ "tpl-e8d7e9c680ad2850": {
+  "sample": {
+   "day": 20,
+   "month": 6,
+   "year": 2026
+  },
+  "fields": {
+   "f46": {
+    "pattern": "{d}.{mm}.{yyyy}"
+   },
+   "f47": {
+    "pattern": "{time}, {wd:vi:T}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "18:00"
+    }
+   },
+   "f69": {
+    "pattern": "{d}.{mm}.{yyyy}"
+   },
+   "f70": {
+    "pattern": "( {ld}/{lmm} âm lịch )"
+   },
+   "f101": {
+    "pattern": "{time}, {wd:vi:T}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "18:00"
+    }
+   }
+  }
+ },
+ "tpl-06bffaf459fac7ba": {
+  "sample": {
+   "day": 28,
+   "month": 10,
+   "year": 2025
+  },
+  "fields": {
+   "f113": {
+    "pattern": "{wd:num:T} ngày {d} tháng {m} năm {yyyy}"
+   },
+   "f114": {
+    "pattern": "Ngày {ld} tháng {lmm} âm lịch 18h:00 PM"
+   }
+  }
+ },
+ "tpl-468a1c47b2e00c7d": {
+  "sample": {
+   "day": 20,
+   "month": 5,
+   "year": 2050
+  },
+  "fields": {
+   "f31": {
+    "pattern": "{yyyy}-{mm}-{d} {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "12:00"
+    }
+   },
+   "f122": {
+    "pattern": "{wd:vi:T}, {d}/{mm}/{yyyy}"
+   },
+   "f123": {
+    "pattern": "Âm lịch: {ld}/{lm} | {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "12:00 PM",
+     "meridiem": "upper",
+     "gap": true
+    }
+   }
+  }
+ },
+ "tpl-1e9e8f28e2322e0d": {
+  "sample": {
+   "day": 24,
+   "month": 6,
+   "year": 2025
+  },
+  "fields": {
+   "f37": {
+    "pattern": "{ld}/{lmm} âm lịch"
+   },
+   "f38": {
+    "pattern": "{d}/{mm}/{yyyy}"
+   },
+   "f121": {
+    "pattern": "{wd:num:T} ngày {d} tháng {mm} năm {yyyy}"
+   },
+   "f122": {
+    "pattern": "Ngày {ld} tháng {lmm} âm lịch {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "12:00 PM",
+     "meridiem": "upper",
+     "gap": true
+    }
+   }
+  }
+ },
+ "tpl-aa20469005fc8bb1": {
+  "sample": {
+   "day": 20,
+   "month": 5,
+   "year": 2050
+  },
+  "fields": {
+   "f12": {
+    "pattern": "{yyyy}.{mm}.{d} {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "12:00"
+    }
+   }
+  }
+ },
+ "tpl-9d4ff3b61ed49e57": {
+  "sample": {
+   "day": 21,
+   "month": 5,
+   "year": 2025
+  },
+  "fields": {
+   "f43": {
+    "pattern": "Lisa & Mona {d}/{mm}/{yyyy} {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "13:00"
+    }
+   },
+   "f91": {
+    "pattern": "{wd:num:T} Ngày {d} tháng {m} năm {yyyy}"
+   },
+   "f92": {
+    "pattern": "Ngày {ld} tháng {lm} âm lịch"
+   }
+  }
+ },
+ "tpl-00c7552ddfa8c8e7": {
+  "sample": {
+   "day": 20,
+   "month": 3,
+   "year": 2025
+  },
+  "fields": {
+   "f37": {
+    "pattern": "{yyyy}-{mm}-{d} {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "16:00"
+    }
+   }
+  }
+ },
+ "tpl-f9af5a5171955666": {
+  "sample": {
+   "day": 20,
+   "month": 8,
+   "year": 2025
+  },
+  "fields": {
+   "f24": {
+    "pattern": "{d}/{mm}/{yyyy}"
+   },
+   "f33": {
+    "pattern": "{wd:num:T} ngày {d} tháng {mm} năm {yyyy}"
+   },
+   "f34": {
+    "pattern": "Ngày {ld} tháng {lmm} âm lịch {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "12:00PM",
+     "meridiem": "upper",
+     "gap": false
+    }
+   }
+  }
+ },
+ "tpl-61ca9e8c0fed24c7": {
+  "sample": {
+   "day": 20,
+   "month": 9,
+   "year": 2025
+  },
+  "fields": {
+   "f77": {
+    "pattern": "{wd:num:T} ngày {d} tháng {mm} năm {yyyy}"
+   },
+   "f108": {
+    "pattern": "Ngày {ld} tháng {lmm} âm lịch {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "12:00 AM",
+     "meridiem": "upper",
+     "gap": true
+    }
+   }
+  }
+ },
+ "tpl-f642da261d8b1f87": {
+  "sample": {
+   "day": 20,
+   "month": 5,
+   "year": 2025
+  },
+  "fields": {
+   "f55": {
+    "pattern": "{d} - {mm} - {yyyy}"
+   },
+   "f60": {
+    "pattern": "{d}/{mm}/{yyyy} {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "16:00PM",
+     "meridiem": "upper",
+     "gap": false
+    },
+    "upper": true
+   },
+   "f61": {
+    "pattern": "{ld}/{lmm} âm lịch"
+   }
+  }
+ },
+ "tpl-4877f4e87fb482db": {
+  "sample": {
+   "day": 25,
+   "month": 11,
+   "year": 2025
+  },
+  "fields": {
+   "f27": {
+    "pattern": "{d}/{m}/{yyyy} {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "12:00"
+    }
+   },
+   "f43": {
+    "pattern": "nhằm ngày {ld} tháng {lmm} năm {lyear:S}"
+   }
+  }
+ },
+ "tpl-d4d336d7b027452e": {
+  "sample": {
+   "day": 20,
+   "month": 8,
+   "year": 2025
+  },
+  "fields": {
+   "f35": {
+    "pattern": "{wd:num:T} ngày {d} tháng {mm} năm {yyyy}"
+   },
+   "f36": {
+    "pattern": "Ngày {ld} tháng {lmm} âm lịch {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "12:00PM",
+     "meridiem": "upper",
+     "gap": false
+    }
+   },
+   "f115": {
+    "pattern": "{wd:num:T} ngày {d} tháng {mm} năm {yyyy}"
+   },
+   "f116": {
+    "pattern": "Ngày {ld} tháng {lm} âm lịch {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "12:00PM",
+     "meridiem": "upper",
+     "gap": false
+    }
+   }
+  }
+ },
+ "tpl-23cea5a2849b7bae": {
+  "sample": {
+   "day": 30,
+   "month": 6,
+   "year": 2049
+  },
+  "fields": {
+   "f39": {
+    "pattern": "- {yyyy}.{m}.{d} -"
+   }
+  }
+ },
+ "tpl-1da4393c71974212": {
+  "sample": {
+   "day": 25,
+   "month": 12,
+   "year": 2025
+  },
+  "fields": {
+   "f88": {
+    "pattern": "{wd:num:T} ngày {d} tháng {m} năm {yyyy}"
+   },
+   "f89": {
+    "pattern": "Ngày {ld} tháng {lm} âm lịch {time}",
+    "time": {
+     "sep": "h",
+     "pad": true,
+     "sample": "11h30 PM",
+     "meridiem": "upper",
+     "gap": true
+    }
+   }
+  }
+ },
+ "tpl-11eef04c54521c46": {
+  "sample": {
+   "day": 20,
+   "month": 5,
+   "year": 2050
+  },
+  "fields": {
+   "f111": {
+    "pattern": "{wd:vi:T}, {d}/{mm}/{yyyy}"
+   },
+   "f112": {
+    "pattern": "Âm lịch {ld}/{lm} | {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "12:00 PM",
+     "meridiem": "upper",
+     "gap": true
+    }
+   }
+  }
+ },
+ "tpl-630fcfdcfbb073c1": {
+  "sample": {
+   "day": 25,
+   "month": 12,
+   "year": 2025
+  },
+  "fields": {
+   "f39": {
+    "pattern": "{d}/{m}/{yyyy} {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "12:00"
+    }
+   },
+   "f113": {
+    "pattern": "{wd:num:T} ngày {d} tháng {m} năm {yyyy}"
+   },
+   "f114": {
+    "pattern": "Ngày {ld} tháng {lm} âm lịch {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "12:00PM",
+     "meridiem": "upper",
+     "gap": false
+    }
+   }
+  }
+ },
+ "tpl-7540dc52bb9817bf": {
+  "sample": {
+   "day": 25,
+   "month": 5,
+   "year": 2026
+  },
+  "fields": {
+   "f20": {
+    "pattern": "{d}.{mm}.{yyyy}"
+   },
+   "f29": {
+    "pattern": "Tháng {mm}"
+   },
+   "f30": {
+    "pattern": "năm {yyyy}"
+   }
+  }
+ },
+ "tpl-b3055d239c7b6a52": {
+  "sample": {
+   "day": 28,
+   "month": 12,
+   "year": 2025
+  },
+  "fields": {
+   "f32": {
+    "pattern": "{d}.{m}.{yyyy}"
+   },
+   "f70": {
+    "pattern": "{wd:vi:S}, ngày {d} tháng {m} năm {yyyy}"
+   },
+   "f71": {
+    "pattern": "Ngày {ld} tháng {lm} âm lịch {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "12:00PM",
+     "meridiem": "upper",
+     "gap": false
+    }
+   }
+  }
+ },
+ "tpl-2644042b9815a598": {
+  "sample": {
+   "day": 25,
+   "month": 7,
+   "year": 2025
+  },
+  "fields": {
+   "f112": {
+    "pattern": "{wd:num:T} ngày {d} tháng {mm} năm {yyyy}"
+   },
+   "f113": {
+    "pattern": "Ngày {ld} tháng {lm} âm lịch {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "16:00 PM",
+     "meridiem": "upper",
+     "gap": true
+    }
+   }
+  }
+ },
+ "tpl-df57846ef1060dde": {
+  "sample": {
+   "day": 20,
+   "month": 8,
+   "year": 2025
+  },
+  "fields": {
+   "f46": {
+    "pattern": "{d}/{mm}/{yyyy}"
+   },
+   "f101": {
+    "pattern": "{wd:num:T} ngày {d} tháng {mm} năm {yyyy}"
+   },
+   "f142": {
+    "pattern": "ngày {ld} tháng {lmm} âm lịch {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "12:00"
+    }
+   }
+  }
+ },
+ "tpl-50b621c9257c9390": {
+  "sample": {
+   "day": 28,
+   "month": 12,
+   "year": 2025
+  },
+  "fields": {
+   "f41": {
+    "pattern": "Tháng {m}"
+   },
+   "f42": {
+    "pattern": "{d}"
+   },
+   "f43": {
+    "pattern": "{yyyy}"
+   },
+   "f44": {
+    "pattern": "{wd:vi:S}"
+   },
+   "f157": {
+    "pattern": "{wd:vi:S},{d}.{m}. {yyyy}"
+   }
+  }
+ },
+ "tpl-5365668d323790e2": {
+  "sample": {
+   "day": 25,
+   "month": 12,
+   "year": 2025
+  },
+  "fields": {
+   "f57": {
+    "pattern": "{d}/{m}/{yyyy}"
+   },
+   "f145": {
+    "pattern": "{wd:vi:S} ngày {d} tháng {m} năm {yyyy}"
+   }
+  }
+ },
+ "tpl-45ffc94faaf5fbd7": {
+  "sample": {
+   "day": 16,
+   "month": 8,
+   "year": 2025
+  },
+  "fields": {
+   "f52": {
+    "pattern": "Chúng ta hẹn gặp vào: 10 giờ 30 phút sáng, ngày {d} tháng {m} năm {yyyy} tại Khách sạn Tongyi Lou cùng nhau tụ hội lần nữa."
+   }
+  }
+ },
+ "tpl-3e3b9f4d50143999": {
+  "sample": {
+   "day": 20,
+   "month": 5,
+   "year": 2025
+  },
+  "fields": {
+   "f80": {
+    "pattern": "{wd:num:L} ngày {d} tháng {mm} năm {yyyy}"
+   },
+   "f81": {
+    "pattern": "ngày {ld} tháng {lmm} âm lịch"
+   }
+  }
+ },
+ "tpl-34daa9e46ceafacf": {
+  "sample": {
+   "day": 28,
+   "month": 2,
+   "year": 2026
+  },
+  "fields": {
+   "f25": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f26": {
+    "pattern": "{d}.{mm}.{yyyy}"
+   },
+   "f46": {
+    "pattern": "{d}"
+   },
+   "f50": {
+    "pattern": "{wd:vi:L}"
+   },
+   "f51": {
+    "pattern": "Nhằm ngày {ld} tháng {lmm} năm {lyear:T}"
+   }
+  }
+ },
+ "tpl-b4258eb8118238ba": {
+  "sample": {
+   "day": 20,
+   "month": 8,
+   "year": 2025
+  },
+  "fields": {
+   "f44": {
+    "pattern": "{d}/{mm}/{yyyy}"
+   },
+   "f50": {
+    "pattern": "Việt Nam/Lãng Mạn/{d}/{mm}/{yyyy}"
+   },
+   "f97": {
+    "pattern": "{d}/{mm}/{yyyy}"
+   },
+   "f126": {
+    "pattern": "{wd:num:T} ngày {d} tháng {mm} năm {yyyy}"
+   },
+   "f127": {
+    "pattern": "Ngày {ld} tháng {lmm} âm lịch {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "12:00 PM",
+     "meridiem": "upper",
+     "gap": true
+    }
+   }
+  }
+ },
+ "tpl-351ba23b53fbc639": {
+  "sample": {
+   "day": 14,
+   "month": 2,
+   "year": 2024
+  },
+  "fields": {
+   "f51": {
+    "pattern": "{d} . {mm} . {yyyy}"
+   }
+  }
+ },
+ "tpl-dbb8a88da981aae6": {
+  "sample": {
+   "day": 7,
+   "month": 9,
+   "year": 2025
+  },
+  "fields": {
+   "f36": {
+    "pattern": "{wd:vi:S}, Ngày {dd} tháng {mm} năm {yyyy}"
+   },
+   "f92": {
+    "pattern": "{wd:vi:S} ngày {dd} tháng {mm} năm {yyyy}"
+   },
+   "f93": {
+    "pattern": "Ngày {ld} tháng {lm} âm lịch, {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "12:00AM",
+     "meridiem": "upper",
+     "gap": false
+    }
+   }
+  }
+ },
+ "tpl-7c9872d8333b526a": {
+  "sample": {
+   "day": 24,
+   "month": 5,
+   "year": 2026
+  },
+  "fields": {
+   "f26": {
+    "pattern": "{time}, {wd:vi:T}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "08:00"
+    }
+   },
+   "f27": {
+    "pattern": "{d}.{mm}.{yyyy}"
+   }
+  }
+ },
+ "tpl-d23df68aa5cf8144": {
+  "sample": {
+   "day": 8,
+   "month": 5,
+   "year": 2025
+  },
+  "fields": {
+   "f108": {
+    "pattern": "{wd:num:T} ngày {dd} tháng {mm} năm {yyyy}"
+   },
+   "f109": {
+    "pattern": "Ngày {ldd} tháng {lmm} âm lịch {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "12:00 PM",
+     "meridiem": "upper",
+     "gap": true
+    }
+   }
+  }
+ },
+ "tpl-284e51ab0f5f8e70": {
+  "sample": {
+   "day": 2,
+   "month": 8,
+   "year": 2025
+  },
+  "fields": {
+   "f81": {
+    "pattern": "{dd}/{mm}/{yyyy}"
+   },
+   "f155": {
+    "pattern": "{wd:num:T} ngày {dd} tháng {mm} năm {yyyy}"
+   },
+   "f156": {
+    "pattern": "Ngày {ld} tháng {lmm} âm lịch {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "12:00 PM",
+     "meridiem": "upper",
+     "gap": true
+    }
+   }
+  }
+ },
+ "tpl-d6afe98fb19e778f": {
+  "sample": {
+   "day": 20,
+   "month": 9,
+   "year": 2025
+  },
+  "fields": {
+   "f40": {
+    "pattern": "{wd:num:T} ngày {d} tháng {mm} năm {yyyy}"
+   },
+   "f70": {
+    "pattern": "{wd:num:T} ngày {d} tháng {mm} năm {yyyy}"
+   },
+   "f71": {
+    "pattern": "Ngày {ldd} tháng {lmm} âm lịch {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "12:00 PM",
+     "meridiem": "upper",
+     "gap": true
+    }
+   },
+   "f126": {
+    "pattern": "{d}.{mm}.{yyyy}"
+   }
+  }
+ },
+ "tpl-a930569edaf83ec5": {
+  "sample": {
+   "day": 20,
+   "month": 5,
+   "year": 2026
+  },
+  "fields": {
+   "f11": {
+    "pattern": "{d}/{mm}/{yyyy}"
+   },
+   "f14": {
+    "pattern": "Time : {d}.{mm}.{yyyy}"
+   },
+   "f58": {
+    "pattern": "ngày {d} tháng {m} năm {yyyy}"
+   }
+  }
+ },
+ "tpl-68655fbfe3001e00": {
+  "sample": {
+   "day": 20,
+   "month": 8,
+   "year": 2025
+  },
+  "fields": {
+   "f128": {
+    "pattern": "{wd:num:T} ngày {d} tháng {mm} năm {yyyy}"
+   },
+   "f129": {
+    "pattern": "Ngày {ldd} tháng {lmm} âm lịch , {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "12:00 PM",
+     "meridiem": "upper",
+     "gap": true
+    }
+   },
+   "f147": {
+    "pattern": "{d}.{mm}.{yyyy}"
+   }
+  }
+ },
+ "tpl-6153a4e820af6bb7": {
+  "sample": {
+   "day": 28,
+   "month": 8,
+   "year": 2025
+  },
+  "fields": {
+   "f50": {
+    "pattern": "{wd:num:T} ngày {d} tháng {mm} năm {yyyy}"
+   },
+   "f51": {
+    "pattern": "Ngày {ld} tháng {lmm} âm lịch {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "17:00 PM",
+     "meridiem": "upper",
+     "gap": true
+    }
+   }
+  }
+ },
+ "tpl-f331504f7a01b22b": {
+  "sample": {
+   "day": 13,
+   "month": 2,
+   "year": 2026
+  },
+  "fields": {
+   "f49": {
+    "pattern": "{d}.{mm}.{yyyy}"
+   },
+   "f50": {
+    "pattern": "{time}, {wd:vi:T}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "14:00"
+    }
+   },
+   "f51": {
+    "pattern": "Tức Ngày {ld} tháng {lm} Năm {lyear:T}"
+   }
+  }
+ },
+ "tpl-5c8a5a53d381c69f": {
+  "sample": {
+   "day": 20,
+   "month": 8,
+   "year": 2026
+  },
+  "fields": {
+   "f20": {
+    "pattern": "{d}.{mm}.{yyyy}"
+   },
+   "f61": {
+    "pattern": "{wd:vi:L}"
+   },
+   "f62": {
+    "pattern": "Tức ngày {ld} tháng {lmm} âm lịch"
+   }
+  }
+ },
+ "tpl-b7fb22e32d6fb7cc": {
+  "sample": {
+   "day": 31,
+   "month": 12,
+   "year": 2026
+  },
+  "fields": {
+   "f30": {
+    "pattern": "{d}.{m}.{yyyy}"
+   }
+  }
+ },
+ "tpl-73d2db5295d5d1d6": {
+  "sample": {
+   "day": 20,
+   "month": 5,
+   "year": 2026
+  },
+  "fields": {
+   "f53": {
+    "pattern": "{d}.{mm}.{yyyy}"
+   },
+   "f54": {
+    "pattern": "Tức ngày{ld} tháng {lmm} âm lịch"
+   },
+   "f120": {
+    "pattern": "{d}.{mm}.{yyyy}"
+   }
+  }
+ },
+ "tpl-33298399e6e04454": {
+  "sample": {
+   "day": 20,
+   "month": 9,
+   "year": 2025
+  },
+  "fields": {
+   "f49": {
+    "pattern": "{d}.{mm}.{yyyy}"
+   },
+   "f100": {
+    "pattern": "{wd:num:T} Ngày {d} tháng {mm} năm {yyyy}"
+   },
+   "f101": {
+    "pattern": "Ngày {ldd} tháng {lmm} âm lịch {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "12:00 PM",
+     "meridiem": "upper",
+     "gap": true
+    }
+   }
+  }
+ },
+ "tpl-b4b7bfffca5dc25d": {
+  "sample": {
+   "day": 31,
+   "month": 12,
+   "year": 2025
+  },
+  "fields": {
+   "f36": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f68": {
+    "pattern": "{d}.{m}.{yyyy}"
+   }
+  }
+ },
+ "tpl-32da6c220018b491": {
+  "sample": {
+   "day": 24,
+   "month": 5,
+   "year": 2026
+  },
+  "fields": {
+   "f98": {
+    "pattern": "Tức Ngày {ld} tháng {lmm} năm {lyear:T}"
+   },
+   "f99": {
+    "pattern": "năm {yyyy}"
+   },
+   "f100": {
+    "pattern": "Tháng {mm}"
+   },
+   "f101": {
+    "pattern": "{d}"
+   },
+   "f102": {
+    "pattern": "{wd:vi:T} - {time}",
+    "time": {
+     "sep": "h",
+     "pad": true,
+     "sample": "09h00"
+    }
+   },
+   "f105": {
+    "pattern": "Tức Ngày {ld} tháng {lmm} năm {lyear:T}"
+   },
+   "f106": {
+    "pattern": "năm {yyyy}"
+   },
+   "f107": {
+    "pattern": "Tháng {mm}"
+   },
+   "f108": {
+    "pattern": "{d}"
+   },
+   "f109": {
+    "pattern": "{wd:vi:T} - {time}",
+    "time": {
+     "sep": "h",
+     "pad": true,
+     "sample": "11h00"
+    }
+   },
+   "f120": {
+    "pattern": "{d}.{mm}.{yyyy}"
+   }
+  }
+ },
+ "tpl-50c579b4efa64b95": {
+  "sample": {
+   "day": 28,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f57": {
+    "pattern": "{wd:vi:T}, ngày {d} tháng {m} năm {yyyy}"
+   }
+  }
+ },
+ "tpl-c3cfedd6adc3f4f2": {
+  "sample": {
+   "day": 28,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f46": {
+    "pattern": "{wd:vi:T}, ngày {d} tháng {m} năm {yyyy}"
+   },
+   "f47": {
+    "pattern": "(tức ngày {ld} tháng {lm} âm lịch)."
+   },
+   "f75": {
+    "pattern": "{d}.{m}.{yyyy}"
+   }
+  }
+ },
+ "tpl-e59755ae0f227b9d": {
+  "sample": {
+   "day": 29,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f40": {
+    "pattern": "{d}/{m}/{yyyy}"
+   },
+   "f46": {
+    "pattern": "(Tức ngày {ldd}/{lm} Năm {lyear:T})"
+   },
+   "f47": {
+    "pattern": "{d}/{m}/{yyyy}"
+   },
+   "f63": {
+    "pattern": "{time} {wd:vi:S}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "10:30"
+    }
+   }
+  }
+ },
+ "tpl-a427fb1bbc802575": {
+  "sample": {
+   "day": 28,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f74": {
+    "pattern": "{wd:vi:T}, ngày {d} tháng {m} năm {yyyy}"
+   }
+  }
+ },
+ "tpl-f378d3ef845169fb": {
+  "sample": {
+   "day": 28,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f18": {
+    "pattern": "Tức Ngày {ld} tháng {lm} năm {lyear:T}"
+   },
+   "f19": {
+    "pattern": "năm {yyyy}"
+   },
+   "f20": {
+    "pattern": "Tháng {m}"
+   },
+   "f21": {
+    "pattern": "{d}"
+   },
+   "f22": {
+    "pattern": "{wd:vi:L} - {time}",
+    "time": {
+     "sep": "h",
+     "pad": true,
+     "sample": "10h00"
+    }
+   },
+   "f24": {
+    "pattern": "{d}.{m}.{yyyy}"
+   }
+  }
+ },
+ "tpl-a38030a39d76293e": {
+  "sample": {
+   "day": 30,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f24": {
+    "pattern": "{wd:vi:U} | {d}. {m}. {yyyy}",
+    "upper": true
+   },
+   "f49": {
+    "pattern": "{d}.{m}.{yyyy}"
+   }
+  }
+ },
+ "tpl-46688c749c17daaa": {
+  "sample": {
+   "day": 28,
+   "month": 12,
+   "year": 2026
+  },
+  "fields": {
+   "f31": {
+    "pattern": "18 giờ 30 ngày {d}/{m}/{yyyy}"
+   }
+  }
+ },
+ "tpl-718c9984c70cba6d": {
+  "sample": {
+   "day": 28,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f23": {
+    "pattern": "{d}.{m}.{yyyy} - 29.11.2026"
+   },
+   "f24": {
+    "pattern": "( Tức ngày 11-12 tháng 10 năm {lyear:T} )"
+   },
+   "f39": {
+    "pattern": "{wd:vi:L}, ngày {d} tháng {m} năm {yyyy}"
+   },
+   "f40": {
+    "pattern": "Tức ngày {ld} tháng {lm} năm {lyear:T}"
+   },
+   "f46": {
+    "pattern": "{wd:vi:L}, ngày {d} tháng {m} năm {yyyy}"
+   },
+   "f47": {
+    "pattern": "Tức ngày {ld} tháng {lm} năm {lyear:T}"
+   },
+   "f53": {
+    "pattern": "Năm {yyyy}"
+   },
+   "f54": {
+    "pattern": "Tháng {m}"
+   },
+   "f55": {
+    "pattern": "Tức ngày {ld} tháng {lm} năm {lyear:T}"
+   }
+  }
+ },
+ "tpl-b43f912125eae487": {
+  "sample": {
+   "day": 29,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f38": {
+    "pattern": "{d}.{m}.{yyyy}"
+   },
+   "f42": {
+    "pattern": "{wd:vi:L}, ngày {d} tháng {m} năm {yyyy}"
+   },
+   "f43": {
+    "pattern": "Tức ngày {ld} tháng {lm} năm {lyear:T}"
+   },
+   "f60": {
+    "pattern": "Tức ngày {ld} tháng {lm} năm {lyear:T}"
+   }
+  }
+ },
+ "tpl-d68e94eeddf24523": {
+  "sample": {
+   "day": 29,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f64": {
+    "pattern": "{d} . {m} . {yyyy}"
+   },
+   "f101": {
+    "pattern": "Vào {wd:vi:T} - {time}",
+    "time": {
+     "sep": "h",
+     "pad": true,
+     "sample": "16h00"
+    }
+   },
+   "f102": {
+    "pattern": "{d}"
+   },
+   "f103": {
+    "pattern": "Năm {yyyy}"
+   },
+   "f104": {
+    "pattern": "Tháng {m}"
+   },
+   "f105": {
+    "pattern": "Tức Ngày {ld} tháng {lm} năm {lyear:T}"
+   }
+  }
+ },
+ "tpl-316ef4948b176712": {
+  "sample": {
+   "day": 30,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f31": {
+    "pattern": "{d}.{m}.{yyyy}"
+   },
+   "f34": {
+    "pattern": "{wd:vi:T} - {time}",
+    "time": {
+     "sep": "h",
+     "pad": true,
+     "sample": "16h30"
+    }
+   },
+   "f49": {
+    "pattern": "Vào {wd:vi:T} - {time}",
+    "time": {
+     "sep": "h",
+     "pad": true,
+     "sample": "16h30"
+    }
+   },
+   "f50": {
+    "pattern": "{d}"
+   },
+   "f51": {
+    "pattern": "Năm {yyyy}"
+   },
+   "f52": {
+    "pattern": "Tháng {m}"
+   },
+   "f53": {
+    "pattern": "Tức Ngày {ld} tháng {lm} năm {lyear:T}"
+   }
+  }
+ },
+ "tpl-d45d292d25536b6e": {
+  "sample": {
+   "day": 29,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f41": {
+    "pattern": "{d}.{m}.{yyyy}"
+   },
+   "f46": {
+    "pattern": "{wd:vi:U} {d}.{m}.{yyyy}",
+    "upper": true
+   },
+   "f52": {
+    "pattern": "{wd:vi:U} NGÀY {d} . {m} . {yyyy}",
+    "upper": true
+   },
+   "f69": {
+    "pattern": "TỨC NGÀY {ld} THÁNG {lm} NĂM {lyear:U}",
+    "upper": true
+   }
+  }
+ },
+ "tpl-99d5ba4b78e480b0": {
+  "sample": {
+   "day": 29,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f28": {
+    "pattern": "{d}/{m}/{yyyy}"
+   },
+   "f43": {
+    "pattern": "{time} - {wd:vi:T}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "14:00"
+    }
+   },
+   "f44": {
+    "pattern": "{d}/{m}/{yyyy}"
+   },
+   "f45": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f48": {
+    "pattern": "{time} - {wd:vi:T}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "16:00"
+    }
+   },
+   "f49": {
+    "pattern": "{d}/{m}/{yyyy}"
+   },
+   "f50": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-aa1e9230c2863b6b": {
+  "sample": {
+   "day": 28,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f88": {
+    "pattern": "{wd:vi:T}, ngày {d} tháng {m} năm {yyyy}"
+   }
+  }
+ },
+ "tpl-d6dd355f50ec5dd1": {
+  "sample": {
+   "day": 29,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f15": {
+    "pattern": "{d}.{m}.{yyyy}"
+   },
+   "f62": {
+    "pattern": "Ngày {d} tháng {m} năm {yyyy}"
+   },
+   "f63": {
+    "pattern": "(tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-d124acfb165f4c2d": {
+  "sample": {
+   "day": 10,
+   "month": 7,
+   "year": 2026
+  },
+  "fields": {
+   "f18": {
+    "pattern": "16h, Ngày {d}/{mm}/{yyyy}"
+   },
+   "f35": {
+    "pattern": "Khoảnh khắc này cuối cùng cũng đã tới! Ngày {d}/{mm}/{yyyy} này đánh dấu việc mình chính thức hoàn thành chặng đường đại học và bước sang một chương mới của cuộc đời!"
+   }
+  }
+ },
+ "tpl-8e959e55cf53c76e": {
+  "sample": {
+   "day": 30,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f43": {
+    "pattern": "{d}.{m}.{yyyy}"
+   },
+   "f70": {
+    "pattern": "{d}.{m}.{yyyy}"
+   },
+   "f87": {
+    "pattern": "Vào {wd:vi:S} - {time}",
+    "time": {
+     "sep": "h",
+     "pad": true,
+     "sample": "14h00"
+    }
+   },
+   "f88": {
+    "pattern": "{d}"
+   },
+   "f89": {
+    "pattern": "Năm {yyyy}"
+   },
+   "f90": {
+    "pattern": "Tháng {m}"
+   },
+   "f91": {
+    "pattern": "Tức Ngày {ld} tháng {lm} năm {lyear:T}"
+   }
+  }
+ },
+ "tpl-c2aa1271294f952c": {
+  "sample": {
+   "day": 24,
+   "month": 5,
+   "year": 2026
+  },
+  "fields": {
+   "f66": {
+    "pattern": "{d}.{mm}.{yyyy}"
+   },
+   "f73": {
+    "pattern": "Vào {wd:vi:L} - {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "09:00"
+    }
+   },
+   "f74": {
+    "pattern": "{d}.{mm}.{yyyy}"
+   },
+   "f75": {
+    "pattern": "Tức ngày {ld} tháng {lmm} âm lịch"
+   },
+   "f78": {
+    "pattern": "Vào {wd:vi:L} - {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "12:00"
+    }
+   },
+   "f79": {
+    "pattern": "{d}.{mm}.{yyyy}"
+   },
+   "f80": {
+    "pattern": "Tức ngày {ld} tháng {lmm} âm lịch"
+   }
+  }
+ },
+ "tpl-aa33e03fec7b41b3": {
+  "sample": {
+   "day": 29,
+   "month": 5,
+   "year": 2026
+  },
+  "fields": {
+   "f77": {
+    "pattern": "{time} {d}-{mm}-{yyyy}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "16:00"
+    }
+   },
+   "f116": {
+    "pattern": "{d}"
+   },
+   "f119": {
+    "pattern": "Tức Ngày {ld} tháng {lm} năm {lyear:T}"
+   }
+  }
+ },
+ "tpl-ee198195f62a1a57": {
+  "sample": {
+   "day": 28,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f40": {
+    "pattern": "{time}, {d}.{m}.{yyyy}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "11:00"
+    }
+   },
+   "f67": {
+    "pattern": "{wd:vi:T}, ngày {d} tháng {m} năm {yyyy}"
+   },
+   "f68": {
+    "pattern": "(Tức ngày {ld} tháng {lm} âm lịch)."
+   }
+  }
+ },
+ "tpl-f722003238d6300e": {
+  "sample": {
+   "day": 29,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f58": {
+    "pattern": "{time} | {d}.{m}.{yyyy}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "16:00"
+    }
+   }
+  }
+ },
+ "tpl-d23a71dea80ee087": {
+  "sample": {
+   "day": 21,
+   "month": 6,
+   "year": 2026
+  },
+  "fields": {
+   "f56": {
+    "pattern": "{d}/{mm}/{yyyy}"
+   },
+   "f72": {
+    "pattern": "Tức Ngày {ld} tháng {lmm} năm {lyear:T}"
+   },
+   "f78": {
+    "pattern": "Tức Ngày {ld} tháng {lmm} năm {lyear:T}"
+   },
+   "f79": {
+    "pattern": "năm {yyyy}"
+   },
+   "f80": {
+    "pattern": "Tháng {mm}"
+   },
+   "f81": {
+    "pattern": "{d}"
+   },
+   "f103": {
+    "pattern": "{wd:vi:T}"
+   },
+   "f166": {
+    "pattern": "{d}.{mm}.{yyyy}"
+   }
+  }
+ },
+ "tpl-a3a21a0828023fbe": {
+  "sample": {
+   "day": 28,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f13": {
+    "pattern": "Năm {yyyy}"
+   },
+   "f15": {
+    "pattern": "Tháng {m}"
+   },
+   "f17": {
+    "pattern": "{d}"
+   }
+  }
+ },
+ "tpl-6e2991b76cdd1bf8": {
+  "sample": {
+   "day": 29,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f38": {
+    "pattern": "{d}/{m}/{yyyy}"
+   },
+   "f60": {
+    "pattern": "Vào {wd:vi:T} - {time}",
+    "time": {
+     "sep": "h",
+     "pad": true,
+     "sample": "14h00"
+    }
+   },
+   "f61": {
+    "pattern": "{d}"
+   },
+   "f62": {
+    "pattern": "Năm {yyyy}"
+   },
+   "f63": {
+    "pattern": "Tháng {m}"
+   },
+   "f64": {
+    "pattern": "Tức Ngày {ld} tháng {lm} năm {lyear:T}"
+   }
+  }
+ },
+ "tpl-614702a90c388341": {
+  "sample": {
+   "day": 29,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f40": {
+    "pattern": "{d}/{m}/{yyyy}"
+   },
+   "f46": {
+    "pattern": "(Tức ngày {ldd}/{lm} Năm {lyear:T})"
+   },
+   "f47": {
+    "pattern": "{d}/{m}/{yyyy}"
+   },
+   "f63": {
+    "pattern": "{time} {wd:vi:S}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "10:30"
+    }
+   }
+  }
+ },
+ "tpl-412c029badbcee73": {
+  "sample": {
+   "day": 28,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f49": {
+    "pattern": "{wd:vi:T}, {d} tháng {m} năm {yyyy}"
+   },
+   "f62": {
+    "pattern": "{d}.{m}.{yyyy}"
+   }
+  }
+ },
+ "tpl-b0d024ee206af928": {
+  "sample": {
+   "day": 30,
+   "month": 3,
+   "year": 2027
+  },
+  "fields": {
+   "f25": {
+    "pattern": "ngày {d}/{mm}/{yyyy}"
+   },
+   "f26": {
+    "pattern": "(Âm lịch: ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-d1bf7566868c7a53": {
+  "sample": {
+   "day": 29,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f54": {
+    "pattern": "{d}/{m}/{yyyy}"
+   },
+   "f61": {
+    "pattern": "{d}.{m}.{yyyy}"
+   },
+   "f75": {
+    "pattern": "{time} - {wd:vi:T}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "15:00"
+    }
+   },
+   "f78": {
+    "pattern": "{time} - {wd:vi:T}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "16:00"
+    }
+   },
+   "f79": {
+    "pattern": "{d}.{m}.{yyyy}"
+   },
+   "f80": {
+    "pattern": "(Tức Ngày {ld} Tháng {lm} Năm {lyear:T})"
+   },
+   "f81": {
+    "pattern": "{d}.{m}.{yyyy}"
+   },
+   "f82": {
+    "pattern": "(Tức Ngày {ld} Tháng {lm} Năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-e1a3805004b3221e": {
+  "sample": {
+   "day": 28,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f31": {
+    "pattern": "{d} / {m} / {yyyy}"
+   },
+   "f48": {
+    "pattern": "Vào {wd:vi:T} - {time}",
+    "time": {
+     "sep": "h",
+     "pad": true,
+     "sample": "14h00"
+    }
+   },
+   "f49": {
+    "pattern": "{d}"
+   },
+   "f50": {
+    "pattern": "Năm {yyyy}"
+   },
+   "f51": {
+    "pattern": "Tháng {m}"
+   },
+   "f52": {
+    "pattern": "Tức Ngày {ld} tháng {lm} năm {lyear:T}"
+   },
+   "f55": {
+    "pattern": "{time} - {wd:vi:S}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "16:30"
+    }
+   },
+   "f56": {
+    "pattern": "{d} . {m} . {yyyy}"
+   },
+   "f57": {
+    "pattern": "{ld}/{lm} âm lịch"
+   },
+   "f59": {
+    "pattern": "{time} - {wd:vi:S}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "18:00"
+    }
+   },
+   "f60": {
+    "pattern": "{d} . {m} . {yyyy}"
+   },
+   "f61": {
+    "pattern": "{ld}/{lm} âm lịch"
+   }
+  }
+ },
+ "tpl-33a5050d26f80a19": {
+  "sample": {
+   "day": 29,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f68": {
+    "pattern": "Vào {wd:vi:T} - {time}",
+    "time": {
+     "sep": "h",
+     "pad": true,
+     "sample": "14h00"
+    }
+   },
+   "f69": {
+    "pattern": "{d}"
+   },
+   "f70": {
+    "pattern": "Năm {yyyy}"
+   },
+   "f71": {
+    "pattern": "Tháng {m}"
+   },
+   "f72": {
+    "pattern": "Tức Ngày {ld} tháng {lm} năm {lyear:T}"
+   }
+  }
+ },
+ "tpl-a712bee905656912": {
+  "sample": {
+   "day": 28,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f56": {
+    "pattern": "{d}/{m}/{yyyy}"
+   },
+   "f71": {
+    "pattern": "{wd:vi:T}, ngày {d} tháng {m} năm {yyyy}"
+   },
+   "f72": {
+    "pattern": "(tức ngày {ld} tháng {lm} âm lịch)"
+   }
+  }
+ },
+ "tpl-286339875d97ada5": {
+  "sample": {
+   "day": 28,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f47": {
+    "pattern": "{wd:vi:T}, ngày {d} tháng{m} năm {yyyy}"
+   },
+   "f48": {
+    "pattern": "Ngày {ld} tháng {lm} âm lịch, {time} trưa",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "12:00"
+    }
+   }
+  }
+ },
+ "tpl-bcffd74f38edd5b2": {
+  "sample": {
+   "day": 28,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f45": {
+    "pattern": "{wd:vi:T}, ngày {d} tháng {m} năm {yyyy}"
+   }
+  }
+ },
+ "tpl-10de3282d1de6c9a": {
+  "sample": {
+   "day": 28,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f92": {
+    "pattern": "{wd:vi:T}, ngày {d} tháng {m} năm {yyyy}"
+   },
+   "f97": {
+    "pattern": "Vui lòng giữ lịch cho ngày {d} tháng {m} năm {yyyy}"
+   },
+   "f112": {
+    "pattern": "Vào ngày {d} tháng {m} năm {yyyy}"
+   },
+   "f118": {
+    "pattern": "{yyyy}-{m}-{d} {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "20:07"
+    }
+   },
+   "f137": {
+    "pattern": "{d}.{m}.{yyyy}"
+   }
+  }
+ },
+ "tpl-6012065c36e880b9": {
+  "sample": {
+   "day": 28,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f127": {
+    "pattern": "{wd:vi:T}, ngày {d} tháng {m} năm {yyyy}"
+   },
+   "f128": {
+    "pattern": "(tức ngày {ld} tháng {lm} âm lịch)"
+   }
+  }
+ },
+ "tpl-64b4b6f0a23e944c": {
+  "sample": {
+   "day": 28,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f46": {
+    "pattern": "{d} / {m} / {yyyy}"
+   },
+   "f53": {
+    "pattern": "{wd:vi:T}, ngày {d} tháng {m} năm {yyyy}"
+   },
+   "f54": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-55403524fa3596df": {
+  "sample": {
+   "day": 10,
+   "month": 5,
+   "year": 2026
+  },
+  "fields": {
+   "f90": {
+    "pattern": "17 giờ - {d}/{mm}/{yyyy} - {wd:num:T}"
+   },
+   "f91": {
+    "pattern": "(Tức ngày {ldd} tháng {lmm} âm lịch)"
+   },
+   "f124": {
+    "pattern": "{d}.{mm}.{yyyy}"
+   }
+  }
+ },
+ "tpl-181955689dbdc124": {
+  "sample": {
+   "day": 29,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f19": {
+    "pattern": "{wd:vi:T} ngày {d} tháng{m} năm {yyyy}"
+   },
+   "f20": {
+    "pattern": "Nhằm ngày {ld} tháng {lm} Âm lịch"
+   },
+   "f23": {
+    "pattern": "{d}.{m}.{yyyy}"
+   },
+   "f36": {
+    "pattern": "{d} . {m} . {yyyy}"
+   }
+  }
+ },
+ "tpl-8f17062047524878": {
+  "sample": {
+   "day": 28,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f11": {
+    "pattern": "(tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f12": {
+    "pattern": "Ngày {d} tháng {m} năm {yyyy}"
+   },
+   "f13": {
+    "pattern": "{time} - {wd:vi:T}",
+    "time": {
+     "sep": "h",
+     "pad": true,
+     "sample": "16h30"
+    }
+   },
+   "f20": {
+    "pattern": "{d}.{m}.{yyyy}"
+   }
+  }
+ },
+ "tpl-66ec921d0bc83664": {
+  "sample": {
+   "day": 28,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f23": {
+    "pattern": "{time} – Ngày {d} tháng {m} năm {yyyy}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "12:00 PM",
+     "meridiem": "upper",
+     "gap": true
+    }
+   }
+  }
+ },
+ "tpl-75bda94dca61fcd2": {
+  "sample": {
+   "day": 20,
+   "month": 2,
+   "year": 2026
+  },
+  "fields": {
+   "f53": {
+    "pattern": "{d} . {mm} . {yyyy}"
+   },
+   "f66": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:L})"
+   }
+  }
+ },
+ "tpl-b65dbe6429863ce4": {
+  "sample": {
+   "day": 28,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f34": {
+    "pattern": "(Nhằm ngày {ldd} tháng {lm} năm {lyear:T}"
+   },
+   "f47": {
+    "pattern": "16 GIỜ 00 | {wd:vi:U} | {d}.{m}.{yyyy}",
+    "upper": true
+   },
+   "f58": {
+    "pattern": "{wd:vi:U} - {d}.{m}.{yyyy}",
+    "upper": true
+   }
+  }
+ },
+ "tpl-474f75cae299cbdd": {
+  "sample": {
+   "day": 29,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f40": {
+    "pattern": "{d}/{m}/{yyyy}"
+   },
+   "f46": {
+    "pattern": "(Tức ngày {ldd}/{lm} Năm {lyear:T})"
+   },
+   "f47": {
+    "pattern": "{d}/{m}/{yyyy}"
+   },
+   "f63": {
+    "pattern": "{time} {wd:vi:S}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "10:30"
+    }
+   }
+  }
+ },
+ "tpl-e85b80c20e8865c3": {
+  "sample": {
+   "day": 29,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f29": {
+    "pattern": "{time} {d}-{m}-{yyyy}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "16:00"
+    }
+   },
+   "f87": {
+    "pattern": "{wd:en:U}",
+    "upper": true
+   },
+   "f89": {
+    "pattern": "{d}"
+   },
+   "f93": {
+    "pattern": "Vào lúc {time} {wd:vi:T}, {d} tháng {m} năm {yyyy}",
+    "time": {
+     "sep": "h",
+     "pad": true,
+     "sample": "12h00"
+    }
+   },
+   "f94": {
+    "pattern": "(Âm lịch: 22 tháng 10 năm {lyear:T})"
+   },
+   "f98": {
+    "pattern": "{d}.{m}.{yyyy}"
+   }
+  }
+ },
+ "tpl-c28a6c3e5d0ddc6a": {
+  "sample": {
+   "day": 28,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f36": {
+    "pattern": "{wd:vi:T}, {d}/{m}/{yyyy}"
+   },
+   "f37": {
+    "pattern": "Âm lịch: {ld}/{lm} | {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "12:00 PM",
+     "meridiem": "upper",
+     "gap": true
+    }
+   }
+  }
+ },
+ "tpl-8367117fbbbb65e0": {
+  "sample": {
+   "day": 28,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f43": {
+    "pattern": "{d}.{m}.{yyyy}"
+   },
+   "f59": {
+    "pattern": "{wd:vi:T} | {d}.{m}.{yyyy}"
+   },
+   "f60": {
+    "pattern": "Âm lịch {ld}/{lm} | {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "12:00 PM",
+     "meridiem": "upper",
+     "gap": true
+    }
+   }
+  }
+ },
+ "tpl-f3036f6e0bbc8309": {
+  "sample": {
+   "day": 29,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f42": {
+    "pattern": "{wd:vi:L}"
+   },
+   "f54": {
+    "pattern": "{d}.{m}.{yyyy}"
+   },
+   "f76": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f77": {
+    "pattern": "NĂM {yyyy}",
+    "upper": true
+   },
+   "f78": {
+    "pattern": "{d}"
+   },
+   "f79": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-d40c3a1b59eea369": {
+  "sample": {
+   "day": 29,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f22": {
+    "pattern": "{d}.{m}.{yyyy}"
+   },
+   "f45": {
+    "pattern": "{wd:vi:L}, ngày {d} tháng {m} năm {yyyy}"
+   },
+   "f46": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f50": {
+    "pattern": "{wd:vi:L}, ngày {d} tháng {m} năm {yyyy}"
+   },
+   "f51": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-58eb69a463c147a5": {
+  "sample": {
+   "day": 29,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f54": {
+    "pattern": "{d}.{m}.{yyyy}"
+   },
+   "f73": {
+    "pattern": "Vào {wd:vi:T} - {time}",
+    "time": {
+     "sep": "h",
+     "pad": true,
+     "sample": "14h00"
+    }
+   },
+   "f74": {
+    "pattern": "{d}"
+   },
+   "f75": {
+    "pattern": "Năm {yyyy}"
+   },
+   "f76": {
+    "pattern": "Tháng {m}"
+   },
+   "f77": {
+    "pattern": "Tức Ngày {ld} tháng {lm} năm {lyear:T}"
+   }
+  }
+ },
+ "tpl-32fa7fa0b71f73f2": {
+  "sample": {
+   "day": 29,
+   "month": 12,
+   "year": 2026
+  },
+  "fields": {
+   "f17": {
+    "pattern": "Ngày {d} tháng {m} năm {yyyy}"
+   }
+  }
+ },
+ "tpl-03b1d9fba5c38946": {
+  "sample": {
+   "day": 28,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f68": {
+    "pattern": "{wd:vi:T}, ngày {d} tháng {m} năm {yyyy}"
+   },
+   "f69": {
+    "pattern": "(tức ngày {ld} tháng {lm} âm lịch)."
+   }
+  }
+ },
+ "tpl-963f35e42a78408d": {
+  "sample": {
+   "day": 14,
+   "month": 6,
+   "year": 2026
+  },
+  "fields": {
+   "f44": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f75": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f76": {
+    "pattern": "{yyyy}"
+   },
+   "f77": {
+    "pattern": "Tức ngày {ld} tháng {lm} năm {lyear:T}"
+   },
+   "f84": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f85": {
+    "pattern": "{d}"
+   },
+   "f86": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f87": {
+    "pattern": "{yyyy}"
+   },
+   "f88": {
+    "pattern": "Tức ngày {ld} tháng {lm} năm {lyear:T}"
+   }
+  }
+ },
+ "tpl-86038dbacb2c3c65": {
+  "sample": {
+   "day": 30,
+   "month": 7,
+   "year": 2026
+  },
+  "fields": {
+   "f42": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f70": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f71": {
+    "pattern": "{d}"
+   },
+   "f72": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f73": {
+    "pattern": "{yyyy}"
+   },
+   "f74": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f80": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f81": {
+    "pattern": "{d}"
+   },
+   "f82": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f83": {
+    "pattern": "{yyyy}"
+   },
+   "f84": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-79b09b3ea58a90f7": {
+  "sample": {
+   "day": 4,
+   "month": 1,
+   "year": 2027
+  },
+  "fields": {
+   "f58": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f80": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f81": {
+    "pattern": "{dd}"
+   },
+   "f82": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f83": {
+    "pattern": "{yyyy}"
+   },
+   "f84": {
+    "pattern": "Tức ngày {ld} tháng {lm} năm {lyear:T}"
+   },
+   "f87": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f88": {
+    "pattern": "{dd}"
+   },
+   "f89": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f90": {
+    "pattern": "{yyyy}"
+   },
+   "f91": {
+    "pattern": "Tức ngày {ld} tháng {lm} năm {lyear:T}"
+   },
+   "f98": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f99": {
+    "pattern": "{dd}"
+   },
+   "f100": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f101": {
+    "pattern": "{yyyy}"
+   },
+   "f102": {
+    "pattern": "Tức ngày {ld} tháng {lm} năm {lyear:T}"
+   }
+  }
+ },
+ "tpl-a60107fb110fdd99": {
+  "sample": {
+   "day": 1,
+   "month": 2,
+   "year": 2026
+  },
+  "fields": {
+   "f75": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f103": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f104": {
+    "pattern": "{dd}"
+   },
+   "f105": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f106": {
+    "pattern": "{yyyy}"
+   },
+   "f107": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f114": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f115": {
+    "pattern": "{dd}"
+   },
+   "f116": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f117": {
+    "pattern": "{yyyy}"
+   },
+   "f118": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-605779a484ca197d": {
+  "sample": {
+   "day": 3,
+   "month": 5,
+   "year": 2026
+  },
+  "fields": {
+   "f43": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f69": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f70": {
+    "pattern": "{dd}"
+   },
+   "f71": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f72": {
+    "pattern": "{yyyy}"
+   },
+   "f73": {
+    "pattern": "Tức ngày {ld} tháng {lm} năm {lyear:T}"
+   },
+   "f78": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f79": {
+    "pattern": "{dd}"
+   },
+   "f80": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f81": {
+    "pattern": "{yyyy}"
+   },
+   "f82": {
+    "pattern": "Tức ngày {ld} tháng {lm} năm {lyear:T}"
+   }
+  }
+ },
+ "tpl-c5b969177be18893": {
+  "sample": {
+   "day": 11,
+   "month": 5,
+   "year": 2026
+  },
+  "fields": {
+   "f46": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f84": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f85": {
+    "pattern": "{wd:en:U}",
+    "upper": true
+   },
+   "f86": {
+    "pattern": "{d}"
+   },
+   "f87": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f89": {
+    "pattern": "{yyyy}"
+   },
+   "f90": {
+    "pattern": "Tức ngày {ld} tháng {lm} năm {lyear:T}"
+   },
+   "f95": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f96": {
+    "pattern": "{wd:en:U}",
+    "upper": true
+   },
+   "f97": {
+    "pattern": "{d}"
+   },
+   "f98": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f100": {
+    "pattern": "{yyyy}"
+   },
+   "f101": {
+    "pattern": "Tức ngày {ld} tháng {lm} năm {lyear:T}"
+   }
+  }
+ },
+ "tpl-c4c188a44aab3898": {
+  "sample": {
+   "day": 30,
+   "month": 5,
+   "year": 2026
+  },
+  "fields": {
+   "f46": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f84": {
+    "pattern": "Tức ngày {ld} tháng {lm} năm {lyear:T} / 農曆乙巳年臘月十四"
+   },
+   "f89": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f91": {
+    "pattern": "{d}"
+   },
+   "f92": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f94": {
+    "pattern": "{yyyy}"
+   },
+   "f95": {
+    "pattern": "Tức ngày {ld} tháng {lm} năm {lyear:T} / 農曆丙午年四月十四"
+   }
+  }
+ },
+ "tpl-746383769f784f4a": {
+  "sample": {
+   "day": 10,
+   "month": 4,
+   "year": 2027
+  },
+  "fields": {
+   "f77": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f101": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f105": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f110": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f111": {
+    "pattern": "{d}"
+   },
+   "f112": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f113": {
+    "pattern": "{yyyy}"
+   },
+   "f114": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-6b25838edacf1eea": {
+  "sample": {
+   "day": 24,
+   "month": 12,
+   "year": 2027
+  },
+  "fields": {
+   "f46": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f69": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f70": {
+    "pattern": "{d}"
+   },
+   "f71": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f72": {
+    "pattern": "{yyyy}"
+   },
+   "f73": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f76": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f77": {
+    "pattern": "{d}"
+   },
+   "f78": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f79": {
+    "pattern": "{yyyy}"
+   },
+   "f80": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f85": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f86": {
+    "pattern": "{d}"
+   },
+   "f87": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f88": {
+    "pattern": "{yyyy}"
+   },
+   "f89": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-43729fb27e39b6d9": {
+  "sample": {
+   "day": 18,
+   "month": 3,
+   "year": 2027
+  },
+  "fields": {
+   "f42": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f63": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f64": {
+    "pattern": "{d}"
+   },
+   "f65": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f66": {
+    "pattern": "{yyyy}"
+   },
+   "f67": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f70": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f71": {
+    "pattern": "{d}"
+   },
+   "f72": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f73": {
+    "pattern": "{yyyy}"
+   },
+   "f74": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f79": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f80": {
+    "pattern": "{d}"
+   },
+   "f81": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f82": {
+    "pattern": "{yyyy}"
+   },
+   "f83": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-69eb091fccf0333c": {
+  "sample": {
+   "day": 5,
+   "month": 5,
+   "year": 2027
+  },
+  "fields": {
+   "f65": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f86": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f87": {
+    "pattern": "{dd}"
+   },
+   "f88": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f89": {
+    "pattern": "{yyyy}"
+   },
+   "f90": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f96": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f97": {
+    "pattern": "{dd}"
+   },
+   "f98": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f99": {
+    "pattern": "{yyyy}"
+   },
+   "f100": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-78171f19361c6186": {
+  "sample": {
+   "day": 12,
+   "month": 6,
+   "year": 2027
+  },
+  "fields": {
+   "f44": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f65": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f66": {
+    "pattern": "{d}"
+   },
+   "f67": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f68": {
+    "pattern": "{yyyy}"
+   },
+   "f69": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f72": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f73": {
+    "pattern": "{d}"
+   },
+   "f74": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f75": {
+    "pattern": "{yyyy}"
+   },
+   "f76": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f82": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f83": {
+    "pattern": "{d}"
+   },
+   "f84": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f85": {
+    "pattern": "{yyyy}"
+   },
+   "f86": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-1a4530a356a71a3d": {
+  "sample": {
+   "day": 25,
+   "month": 4,
+   "year": 2027
+  },
+  "fields": {
+   "f46": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f67": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f68": {
+    "pattern": "{d}"
+   },
+   "f69": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f70": {
+    "pattern": "{yyyy}"
+   },
+   "f71": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f77": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f78": {
+    "pattern": "{d}"
+   },
+   "f79": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f80": {
+    "pattern": "{yyyy}"
+   },
+   "f81": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-7dcf4227d57ab2ba": {
+  "sample": {
+   "day": 13,
+   "month": 3,
+   "year": 2027
+  },
+  "fields": {
+   "f66": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f90": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f91": {
+    "pattern": "{d}"
+   },
+   "f92": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f93": {
+    "pattern": "{yyyy}"
+   },
+   "f94": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f99": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f100": {
+    "pattern": "{d}"
+   },
+   "f101": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f102": {
+    "pattern": "{yyyy}"
+   },
+   "f103": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-cbdcbbad0ddd26bf": {
+  "sample": {
+   "day": 12,
+   "month": 7,
+   "year": 2026
+  },
+  "fields": {
+   "f68": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f91": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f92": {
+    "pattern": "{d}"
+   },
+   "f93": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f94": {
+    "pattern": "{yyyy}"
+   },
+   "f95": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f101": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f102": {
+    "pattern": "{d}"
+   },
+   "f103": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f104": {
+    "pattern": "{yyyy}"
+   },
+   "f105": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-4b54afaa82b40df8": {
+  "sample": {
+   "day": 24,
+   "month": 5,
+   "year": 2026
+  },
+  "fields": {
+   "f44": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f70": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f71": {
+    "pattern": "{d}"
+   },
+   "f72": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f73": {
+    "pattern": "{yyyy}"
+   },
+   "f74": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f79": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f80": {
+    "pattern": "{d}"
+   },
+   "f81": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f82": {
+    "pattern": "{yyyy}"
+   },
+   "f83": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-9f55de681da569de": {
+  "sample": {
+   "day": 18,
+   "month": 4,
+   "year": 2026
+  },
+  "fields": {
+   "f58": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f87": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f89": {
+    "pattern": "{d}"
+   },
+   "f90": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f92": {
+    "pattern": "{yyyy}"
+   },
+   "f93": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T} / 음력 3월 2일)"
+   },
+   "f100": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f102": {
+    "pattern": "{d}"
+   },
+   "f103": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f105": {
+    "pattern": "{yyyy}"
+   },
+   "f106": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T} / 음력 3월 2일)"
+   }
+  }
+ },
+ "tpl-8184f2605190479c": {
+  "sample": {
+   "day": 24,
+   "month": 5,
+   "year": 2026
+  },
+  "fields": {
+   "f44": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f71": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f72": {
+    "pattern": "{d}"
+   },
+   "f73": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f74": {
+    "pattern": "{yyyy}"
+   },
+   "f75": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f81": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f82": {
+    "pattern": "{d}"
+   },
+   "f83": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f84": {
+    "pattern": "{yyyy}"
+   },
+   "f85": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-0a89e216f37a7ca3": {
+  "sample": {
+   "day": 1,
+   "month": 2,
+   "year": 2026
+  },
+  "fields": {
+   "f32": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f59": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f60": {
+    "pattern": "{dd}"
+   },
+   "f61": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f62": {
+    "pattern": "{yyyy}"
+   },
+   "f63": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f68": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f69": {
+    "pattern": "{dd}"
+   },
+   "f70": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f71": {
+    "pattern": "{yyyy}"
+   },
+   "f72": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-f7edb9c4fdc91fdc": {
+  "sample": {
+   "day": 26,
+   "month": 4,
+   "year": 2026
+  },
+  "fields": {
+   "f33": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f59": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f60": {
+    "pattern": "{d}"
+   },
+   "f61": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f62": {
+    "pattern": "{yyyy}"
+   },
+   "f63": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f69": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f70": {
+    "pattern": "{d}"
+   },
+   "f71": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f72": {
+    "pattern": "{yyyy}"
+   },
+   "f73": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-2a7db10fd7b8f638": {
+  "sample": {
+   "day": 10,
+   "month": 10,
+   "year": 2027
+  },
+  "fields": {
+   "f35": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f57": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f58": {
+    "pattern": "{d}"
+   },
+   "f59": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f60": {
+    "pattern": "{yyyy}"
+   },
+   "f61": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f65": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f66": {
+    "pattern": "{d}"
+   },
+   "f67": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f68": {
+    "pattern": "{yyyy}"
+   },
+   "f69": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f75": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f76": {
+    "pattern": "{d}"
+   },
+   "f77": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f78": {
+    "pattern": "{yyyy}"
+   },
+   "f79": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-695891cc3c7de2d2": {
+  "sample": {
+   "day": 26,
+   "month": 4,
+   "year": 2026
+  },
+  "fields": {
+   "f39": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f65": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f66": {
+    "pattern": "{d}"
+   },
+   "f67": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f68": {
+    "pattern": "{yyyy}"
+   },
+   "f69": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f74": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f75": {
+    "pattern": "{d}"
+   },
+   "f76": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f77": {
+    "pattern": "{yyyy}"
+   },
+   "f78": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-8f783e0effd4785c": {
+  "sample": {
+   "day": 26,
+   "month": 4,
+   "year": 2026
+  },
+  "fields": {
+   "f46": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f72": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f73": {
+    "pattern": "{d}"
+   },
+   "f74": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f75": {
+    "pattern": "{yyyy}"
+   },
+   "f76": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f82": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f83": {
+    "pattern": "{d}"
+   },
+   "f84": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f85": {
+    "pattern": "{yyyy}"
+   },
+   "f86": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-6c6dc26af3f0eeb3": {
+  "sample": {
+   "day": 19,
+   "month": 9,
+   "year": 2026
+  },
+  "fields": {
+   "f61": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f86": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f87": {
+    "pattern": "{d}"
+   },
+   "f88": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f89": {
+    "pattern": "{yyyy}"
+   },
+   "f90": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f96": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f97": {
+    "pattern": "{d}"
+   },
+   "f98": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f99": {
+    "pattern": "{yyyy}"
+   },
+   "f100": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-259ec0476c1576ec": {
+  "sample": {
+   "day": 19,
+   "month": 12,
+   "year": 2026
+  },
+  "fields": {
+   "f60": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f85": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f86": {
+    "pattern": "{d}"
+   },
+   "f87": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f88": {
+    "pattern": "{yyyy}"
+   },
+   "f89": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f94": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f95": {
+    "pattern": "{d}"
+   },
+   "f96": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f97": {
+    "pattern": "{yyyy}"
+   },
+   "f98": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-186e1fd389d09d00": {
+  "sample": {
+   "day": 22,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f64": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f89": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f90": {
+    "pattern": "{d}"
+   },
+   "f91": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f92": {
+    "pattern": "{yyyy}"
+   },
+   "f93": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f99": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f100": {
+    "pattern": "{d}"
+   },
+   "f101": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f102": {
+    "pattern": "{yyyy}"
+   },
+   "f103": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-00c0b86de142e062": {
+  "sample": {
+   "day": 26,
+   "month": 4,
+   "year": 2026
+  },
+  "fields": {
+   "f53": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f79": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f80": {
+    "pattern": "{d}"
+   },
+   "f81": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f82": {
+    "pattern": "{yyyy}"
+   },
+   "f83": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f89": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f90": {
+    "pattern": "{d}"
+   },
+   "f91": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f92": {
+    "pattern": "{yyyy}"
+   },
+   "f93": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-648efb541fe7e6f0": {
+  "sample": {
+   "day": 2,
+   "month": 8,
+   "year": 2026
+  },
+  "fields": {
+   "f42": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f68": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f69": {
+    "pattern": "{dd}"
+   },
+   "f70": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f71": {
+    "pattern": "{yyyy}"
+   },
+   "f72": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f77": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f78": {
+    "pattern": "{dd}"
+   },
+   "f79": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f80": {
+    "pattern": "{yyyy}"
+   },
+   "f81": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-085e1d36fd68d4b9": {
+  "sample": {
+   "day": 19,
+   "month": 7,
+   "year": 2027
+  },
+  "fields": {
+   "f44": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f65": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f66": {
+    "pattern": "{d}"
+   },
+   "f67": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f68": {
+    "pattern": "{yyyy}"
+   },
+   "f69": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f74": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f75": {
+    "pattern": "{d}"
+   },
+   "f76": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f77": {
+    "pattern": "{yyyy}"
+   },
+   "f78": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-eb0bfafb6f9e3ec6": {
+  "sample": {
+   "day": 19,
+   "month": 12,
+   "year": 2026
+  },
+  "fields": {
+   "f45": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f70": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f71": {
+    "pattern": "{d}"
+   },
+   "f72": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f73": {
+    "pattern": "{yyyy}"
+   },
+   "f74": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f79": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f80": {
+    "pattern": "{d}"
+   },
+   "f81": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f82": {
+    "pattern": "{yyyy}"
+   },
+   "f83": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-70be8d01516088f3": {
+  "sample": {
+   "day": 16,
+   "month": 1,
+   "year": 2027
+  },
+  "fields": {
+   "f45": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f70": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f71": {
+    "pattern": "{d}"
+   },
+   "f72": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f73": {
+    "pattern": "{yyyy}"
+   },
+   "f74": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f79": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f80": {
+    "pattern": "{d}"
+   },
+   "f81": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f82": {
+    "pattern": "{yyyy}"
+   },
+   "f83": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-34bda42e1182fbf3": {
+  "sample": {
+   "day": 14,
+   "month": 3,
+   "year": 2027
+  },
+  "fields": {
+   "f49": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f74": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f75": {
+    "pattern": "{d}"
+   },
+   "f76": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f77": {
+    "pattern": "{yyyy}"
+   },
+   "f78": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f84": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f85": {
+    "pattern": "{d}"
+   },
+   "f86": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f87": {
+    "pattern": "{yyyy}"
+   },
+   "f88": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-74f8b5bcff77c131": {
+  "sample": {
+   "day": 18,
+   "month": 4,
+   "year": 2027
+  },
+  "fields": {
+   "f44": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f70": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f71": {
+    "pattern": "{yyyy}"
+   },
+   "f72": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f77": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f78": {
+    "pattern": "{d}"
+   },
+   "f79": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f80": {
+    "pattern": "{yyyy}"
+   },
+   "f81": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-7255de6f5ad54447": {
+  "sample": {
+   "day": 19,
+   "month": 12,
+   "year": 2026
+  },
+  "fields": {
+   "f30": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f56": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f57": {
+    "pattern": "{d}"
+   },
+   "f58": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f59": {
+    "pattern": "{yyyy}"
+   },
+   "f60": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f65": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f66": {
+    "pattern": "{d}"
+   },
+   "f67": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f68": {
+    "pattern": "{yyyy}"
+   },
+   "f69": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-3fea882e0b3cdeba": {
+  "sample": {
+   "day": 2,
+   "month": 8,
+   "year": 2026
+  },
+  "fields": {
+   "f48": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f73": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f74": {
+    "pattern": "{dd}"
+   },
+   "f75": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f76": {
+    "pattern": "{yyyy}"
+   },
+   "f77": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f82": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f83": {
+    "pattern": "{dd}"
+   },
+   "f84": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f85": {
+    "pattern": "{yyyy}"
+   },
+   "f86": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-86d5222f334def3d": {
+  "sample": {
+   "day": 19,
+   "month": 9,
+   "year": 2026
+  },
+  "fields": {
+   "f39": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f64": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f65": {
+    "pattern": "{d}"
+   },
+   "f66": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f67": {
+    "pattern": "{yyyy}"
+   },
+   "f68": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f74": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f75": {
+    "pattern": "{d}"
+   },
+   "f76": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f77": {
+    "pattern": "{yyyy}"
+   },
+   "f78": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-79b50b99136fdeb4": {
+  "sample": {
+   "day": 19,
+   "month": 9,
+   "year": 2026
+  },
+  "fields": {
+   "f58": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f83": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f84": {
+    "pattern": "{d}"
+   },
+   "f85": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f86": {
+    "pattern": "{yyyy}"
+   },
+   "f87": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f93": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f94": {
+    "pattern": "{d}"
+   },
+   "f95": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f96": {
+    "pattern": "{yyyy}"
+   },
+   "f97": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-8c507f969a26ed0f": {
+  "sample": {
+   "day": 14,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f54": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f78": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f82": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f88": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f89": {
+    "pattern": "{d}"
+   },
+   "f90": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f91": {
+    "pattern": "{yyyy}"
+   },
+   "f92": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-a6ca3962dc7af9c2": {
+  "sample": {
+   "day": 19,
+   "month": 12,
+   "year": 2026
+  },
+  "fields": {
+   "f44": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f68": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f69": {
+    "pattern": "{d}"
+   },
+   "f70": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f71": {
+    "pattern": "{yyyy}"
+   },
+   "f72": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f77": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f78": {
+    "pattern": "{d}"
+   },
+   "f79": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f80": {
+    "pattern": "{yyyy}"
+   },
+   "f81": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-bca3a3d4f79768b2": {
+  "sample": {
+   "day": 19,
+   "month": 12,
+   "year": 2026
+  },
+  "fields": {
+   "f44": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f68": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f69": {
+    "pattern": "{d}"
+   },
+   "f70": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f71": {
+    "pattern": "{yyyy}"
+   },
+   "f72": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f77": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f78": {
+    "pattern": "{d}"
+   },
+   "f79": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f80": {
+    "pattern": "{yyyy}"
+   },
+   "f81": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-777826bea71e491e": {
+  "sample": {
+   "day": 20,
+   "month": 2,
+   "year": 2027
+  },
+  "fields": {
+   "f50": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f74": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f75": {
+    "pattern": "{d}"
+   },
+   "f76": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f77": {
+    "pattern": "{yyyy}"
+   },
+   "f78": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f84": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f85": {
+    "pattern": "{d}"
+   },
+   "f86": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f87": {
+    "pattern": "{yyyy}"
+   },
+   "f88": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-8cbece41f9a8ea4b": {
+  "sample": {
+   "day": 2,
+   "month": 8,
+   "year": 2026
+  },
+  "fields": {
+   "f43": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f68": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f69": {
+    "pattern": "{dd}"
+   },
+   "f70": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f71": {
+    "pattern": "{yyyy}"
+   },
+   "f72": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f78": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f79": {
+    "pattern": "{dd}"
+   },
+   "f80": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f81": {
+    "pattern": "{yyyy}"
+   },
+   "f82": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-551a3261b11778b9": {
+  "sample": {
+   "day": 8,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f56": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f81": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f82": {
+    "pattern": "{dd}"
+   },
+   "f83": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f84": {
+    "pattern": "{yyyy}"
+   },
+   "f85": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f91": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f92": {
+    "pattern": "{dd}"
+   },
+   "f93": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f94": {
+    "pattern": "{yyyy}"
+   },
+   "f95": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-2704b66b56dc2ab2": {
+  "sample": {
+   "day": 22,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f35": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f60": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f61": {
+    "pattern": "{d}"
+   },
+   "f62": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f63": {
+    "pattern": "{yyyy}"
+   },
+   "f64": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f70": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f71": {
+    "pattern": "{d}"
+   },
+   "f72": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f73": {
+    "pattern": "{yyyy}"
+   },
+   "f74": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-7e302215e1edca73": {
+  "sample": {
+   "day": 13,
+   "month": 10,
+   "year": 2027
+  },
+  "fields": {
+   "f48": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f70": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f71": {
+    "pattern": "{d}"
+   },
+   "f72": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f73": {
+    "pattern": "{yyyy}"
+   },
+   "f74": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f79": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f80": {
+    "pattern": "{d}"
+   },
+   "f81": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f82": {
+    "pattern": "{yyyy}"
+   },
+   "f83": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-f26b5705ae2d0816": {
+  "sample": {
+   "day": 20,
+   "month": 11,
+   "year": 2027
+  },
+  "fields": {
+   "f45": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f66": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f67": {
+    "pattern": "{d}"
+   },
+   "f68": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f69": {
+    "pattern": "{yyyy}"
+   },
+   "f70": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f76": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f77": {
+    "pattern": "{d}"
+   },
+   "f78": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f79": {
+    "pattern": "{yyyy}"
+   },
+   "f80": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-7bee1df4a891c7e3": {
+  "sample": {
+   "day": 30,
+   "month": 5,
+   "year": 2026
+  },
+  "fields": {
+   "f37": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f69": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f75": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f76": {
+    "pattern": "{d}"
+   },
+   "f77": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f78": {
+    "pattern": "{yyyy}"
+   },
+   "f79": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-d64412a657999be9": {
+  "sample": {
+   "day": 3,
+   "month": 5,
+   "year": 2026
+  },
+  "fields": {
+   "f64": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f92": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f93": {
+    "pattern": "{dd}"
+   },
+   "f94": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f95": {
+    "pattern": "{yyyy}"
+   },
+   "f96": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f102": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f103": {
+    "pattern": "{dd}"
+   },
+   "f104": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f105": {
+    "pattern": "{yyyy}"
+   },
+   "f106": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-3e606d94840dba32": {
+  "sample": {
+   "day": 2,
+   "month": 8,
+   "year": 2026
+  },
+  "fields": {
+   "f59": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f87": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f88": {
+    "pattern": "{dd}"
+   },
+   "f89": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f90": {
+    "pattern": "{yyyy}"
+   },
+   "f91": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f97": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f98": {
+    "pattern": "{dd}"
+   },
+   "f99": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f100": {
+    "pattern": "{yyyy}"
+   },
+   "f101": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-37938bc9aa3c2346": {
+  "sample": {
+   "day": 11,
+   "month": 5,
+   "year": 2026
+  },
+  "fields": {
+   "f31": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f57": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f58": {
+    "pattern": "{d}"
+   },
+   "f59": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f60": {
+    "pattern": "{yyyy}"
+   },
+   "f61": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f67": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f68": {
+    "pattern": "{d}"
+   },
+   "f69": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f70": {
+    "pattern": "{yyyy}"
+   },
+   "f71": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-a369aad2501d0d80": {
+  "sample": {
+   "day": 21,
+   "month": 6,
+   "year": 2026
+  },
+  "fields": {
+   "f36": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f63": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f64": {
+    "pattern": "{d}"
+   },
+   "f65": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f66": {
+    "pattern": "{yyyy}"
+   },
+   "f67": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f73": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f74": {
+    "pattern": "{d}"
+   },
+   "f75": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f76": {
+    "pattern": "{yyyy}"
+   },
+   "f77": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-f1f69ed638a9d19a": {
+  "sample": {
+   "day": 31,
+   "month": 5,
+   "year": 2026
+  },
+  "fields": {
+   "f37": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f63": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f64": {
+    "pattern": "{d}"
+   },
+   "f65": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f66": {
+    "pattern": "{yyyy}"
+   },
+   "f67": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f73": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f74": {
+    "pattern": "{d}"
+   },
+   "f75": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f76": {
+    "pattern": "{yyyy}"
+   },
+   "f77": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-eeb2d0fb0393508d": {
+  "sample": {
+   "day": 3,
+   "month": 1,
+   "year": 2026
+  },
+  "fields": {
+   "f44": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f69": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f70": {
+    "pattern": "{dd}"
+   },
+   "f71": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f72": {
+    "pattern": "{yyyy}"
+   },
+   "f73": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f78": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f79": {
+    "pattern": "{dd}"
+   },
+   "f80": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f81": {
+    "pattern": "{yyyy}"
+   },
+   "f82": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-8d7ba876fbd13880": {
+  "sample": {
+   "day": 19,
+   "month": 12,
+   "year": 2026
+  },
+  "fields": {
+   "f43": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f68": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f72": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f77": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f78": {
+    "pattern": "{d}"
+   },
+   "f79": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f80": {
+    "pattern": "{yyyy}"
+   },
+   "f81": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-a928ffdf461e5e7c": {
+  "sample": {
+   "day": 8,
+   "month": 6,
+   "year": 2026
+  },
+  "fields": {
+   "f40": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f68": {
+    "pattern": "{dd}"
+   },
+   "f69": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f71": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f75": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f76": {
+    "pattern": "{dd}"
+   },
+   "f77": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f78": {
+    "pattern": "{yyyy}"
+   },
+   "f79": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-21ba3ff5f44a7c61": {
+  "sample": {
+   "day": 24,
+   "month": 5,
+   "year": 2026
+  },
+  "fields": {
+   "f63": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f97": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f99": {
+    "pattern": "{d}"
+   },
+   "f100": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f102": {
+    "pattern": "{yyyy}"
+   },
+   "f103": {
+    "pattern": "Tức ngày {ld} tháng {lm} năm {lyear:T} / 農曆丙午年四月初八"
+   },
+   "f108": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f110": {
+    "pattern": "{d}"
+   },
+   "f111": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f113": {
+    "pattern": "{yyyy}"
+   },
+   "f114": {
+    "pattern": "Tức ngày {ld} tháng {lm} năm {lyear:T} / 農曆丙午年四月初八"
+   }
+  }
+ },
+ "tpl-7dce6c71623b45fa": {
+  "sample": {
+   "day": 10,
+   "month": 5,
+   "year": 2026
+  },
+  "fields": {
+   "f42": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f71": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f72": {
+    "pattern": "{d}"
+   },
+   "f73": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f74": {
+    "pattern": "{yyyy}"
+   },
+   "f75": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f81": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f82": {
+    "pattern": "{d}"
+   },
+   "f83": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f84": {
+    "pattern": "{yyyy}"
+   },
+   "f85": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-ba45b19ab74f7394": {
+  "sample": {
+   "day": 21,
+   "month": 6,
+   "year": 2026
+  },
+  "fields": {
+   "f20": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f46": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f47": {
+    "pattern": "{d}"
+   },
+   "f48": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f49": {
+    "pattern": "{yyyy}"
+   },
+   "f50": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f54": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f55": {
+    "pattern": "{d}"
+   },
+   "f56": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f57": {
+    "pattern": "{yyyy}"
+   },
+   "f58": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-36f21631ee63ac23": {
+  "sample": {
+   "day": 14,
+   "month": 6,
+   "year": 2026
+  },
+  "fields": {
+   "f23": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f53": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f55": {
+    "pattern": "{d}"
+   },
+   "f56": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f58": {
+    "pattern": "{yyyy}"
+   },
+   "f59": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T} / 음력 4월 29일)"
+   },
+   "f64": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f66": {
+    "pattern": "{d}"
+   },
+   "f67": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f69": {
+    "pattern": "{yyyy}"
+   },
+   "f70": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T} / 음력 4월 29일)"
+   }
+  }
+ },
+ "tpl-9410f77f294f9009": {
+  "sample": {
+   "day": 10,
+   "month": 5,
+   "year": 2026
+  },
+  "fields": {
+   "f33": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f57": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f58": {
+    "pattern": "{d}"
+   },
+   "f59": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f60": {
+    "pattern": "{yyyy}"
+   },
+   "f61": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f67": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f68": {
+    "pattern": "{d}"
+   },
+   "f69": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f70": {
+    "pattern": "{yyyy}"
+   },
+   "f71": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-55531bff4f258c6b": {
+  "sample": {
+   "day": 19,
+   "month": 12,
+   "year": 2026
+  },
+  "fields": {
+   "f39": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f65": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f66": {
+    "pattern": "{d}"
+   },
+   "f67": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f68": {
+    "pattern": "{yyyy}"
+   },
+   "f69": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f74": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f75": {
+    "pattern": "{d}"
+   },
+   "f76": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f77": {
+    "pattern": "{yyyy}"
+   },
+   "f78": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-1906212dd038d415": {
+  "sample": {
+   "day": 3,
+   "month": 1,
+   "year": 2026
+  },
+  "fields": {
+   "f51": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f77": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f78": {
+    "pattern": "{dd}"
+   },
+   "f79": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f80": {
+    "pattern": "{yyyy}"
+   },
+   "f81": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f87": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f88": {
+    "pattern": "{dd}"
+   },
+   "f89": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f90": {
+    "pattern": "{yyyy}"
+   },
+   "f91": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-add1a2766edb6cc9": {
+  "sample": {
+   "day": 3,
+   "month": 1,
+   "year": 2026
+  },
+  "fields": {
+   "f40": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f65": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f66": {
+    "pattern": "{dd}"
+   },
+   "f67": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f68": {
+    "pattern": "{yyyy}"
+   },
+   "f69": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f74": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f75": {
+    "pattern": "{dd}"
+   },
+   "f76": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f77": {
+    "pattern": "{yyyy}"
+   },
+   "f78": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-588c790ea59698ac": {
+  "sample": {
+   "day": 19,
+   "month": 12,
+   "year": 2026
+  },
+  "fields": {
+   "f49": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f74": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f78": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f84": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f85": {
+    "pattern": "{d}"
+   },
+   "f86": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f87": {
+    "pattern": "{yyyy}"
+   },
+   "f88": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-e55be566e0c17428": {
+  "sample": {
+   "day": 17,
+   "month": 11,
+   "year": 2027
+  },
+  "fields": {
+   "f58": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f79": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f80": {
+    "pattern": "{d}"
+   },
+   "f81": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f82": {
+    "pattern": "{yyyy}"
+   },
+   "f83": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f86": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f87": {
+    "pattern": "{d}"
+   },
+   "f88": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f89": {
+    "pattern": "{yyyy}"
+   },
+   "f90": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f96": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f97": {
+    "pattern": "{d}"
+   },
+   "f98": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f99": {
+    "pattern": "{yyyy}"
+   },
+   "f100": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-1884d8fd8b5dc377": {
+  "sample": {
+   "day": 19,
+   "month": 12,
+   "year": 2026
+  },
+  "fields": {
+   "f44": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f69": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f70": {
+    "pattern": "{d}"
+   },
+   "f71": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f72": {
+    "pattern": "{yyyy}"
+   },
+   "f73": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f79": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f80": {
+    "pattern": "{d}"
+   },
+   "f81": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f82": {
+    "pattern": "{yyyy}"
+   },
+   "f83": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-f39fa35a58733d17": {
+  "sample": {
+   "day": 26,
+   "month": 8,
+   "year": 2027
+  },
+  "fields": {
+   "f56": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f77": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f78": {
+    "pattern": "{d}"
+   },
+   "f79": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f80": {
+    "pattern": "{yyyy}"
+   },
+   "f81": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f87": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f88": {
+    "pattern": "{d}"
+   },
+   "f89": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f90": {
+    "pattern": "{yyyy}"
+   },
+   "f91": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-2c45103fb2174fd7": {
+  "sample": {
+   "day": 6,
+   "month": 9,
+   "year": 2027
+  },
+  "fields": {
+   "f61": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f82": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f83": {
+    "pattern": "{dd}"
+   },
+   "f84": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f85": {
+    "pattern": "{yyyy}"
+   },
+   "f86": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f92": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f93": {
+    "pattern": "{dd}"
+   },
+   "f94": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f95": {
+    "pattern": "{yyyy}"
+   },
+   "f96": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-f17c3de8e0297e5d": {
+  "sample": {
+   "day": 11,
+   "month": 2,
+   "year": 2027
+  },
+  "fields": {
+   "f49": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f70": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f71": {
+    "pattern": "{d}"
+   },
+   "f72": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f73": {
+    "pattern": "{yyyy}"
+   },
+   "f74": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f77": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f78": {
+    "pattern": "{d}"
+   },
+   "f79": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f80": {
+    "pattern": "{yyyy}"
+   },
+   "f81": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f87": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f88": {
+    "pattern": "{d}"
+   },
+   "f89": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f90": {
+    "pattern": "{yyyy}"
+   },
+   "f91": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-6fc11164a759ed83": {
+  "sample": {
+   "day": 19,
+   "month": 12,
+   "year": 2026
+  },
+  "fields": {
+   "f44": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f69": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f70": {
+    "pattern": "{d}"
+   },
+   "f71": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f72": {
+    "pattern": "{yyyy}"
+   },
+   "f73": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f79": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f80": {
+    "pattern": "{d}"
+   },
+   "f81": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f82": {
+    "pattern": "{yyyy}"
+   },
+   "f83": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-4c8d81c9f487b5f2": {
+  "sample": {
+   "day": 14,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f36": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f62": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f63": {
+    "pattern": "{d}"
+   },
+   "f64": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f65": {
+    "pattern": "{yyyy}"
+   },
+   "f66": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f72": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f73": {
+    "pattern": "{d}"
+   },
+   "f74": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f75": {
+    "pattern": "{yyyy}"
+   },
+   "f76": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-6267fba25b03832e": {
+  "sample": {
+   "day": 19,
+   "month": 12,
+   "year": 2026
+  },
+  "fields": {
+   "f30": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f55": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f56": {
+    "pattern": "{d}"
+   },
+   "f57": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f58": {
+    "pattern": "{yyyy}"
+   },
+   "f59": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f65": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f66": {
+    "pattern": "{d}"
+   },
+   "f67": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f68": {
+    "pattern": "{yyyy}"
+   },
+   "f69": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-b0f325bdbf0c2239": {
+  "sample": {
+   "day": 16,
+   "month": 1,
+   "year": 2027
+  },
+  "fields": {
+   "f24": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f49": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f50": {
+    "pattern": "{d}"
+   },
+   "f51": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f52": {
+    "pattern": "{yyyy}"
+   },
+   "f53": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f59": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f60": {
+    "pattern": "{d}"
+   },
+   "f61": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f62": {
+    "pattern": "{yyyy}"
+   },
+   "f63": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-f26e88b847ea99ce": {
+  "sample": {
+   "day": 19,
+   "month": 12,
+   "year": 2026
+  },
+  "fields": {
+   "f22": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f47": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f48": {
+    "pattern": "{d}"
+   },
+   "f49": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f50": {
+    "pattern": "{yyyy}"
+   },
+   "f51": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f57": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f58": {
+    "pattern": "{d}"
+   },
+   "f59": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f60": {
+    "pattern": "{yyyy}"
+   },
+   "f61": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-0ef601b9e07e2fde": {
+  "sample": {
+   "day": 22,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f30": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f55": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f56": {
+    "pattern": "{d}"
+   },
+   "f57": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f58": {
+    "pattern": "{yyyy}"
+   },
+   "f59": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f64": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f65": {
+    "pattern": "{d}"
+   },
+   "f66": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f67": {
+    "pattern": "{yyyy}"
+   },
+   "f68": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-1f9b2c8a81b42abe": {
+  "sample": {
+   "day": 19,
+   "month": 12,
+   "year": 2026
+  },
+  "fields": {
+   "f40": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f65": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f66": {
+    "pattern": "{d}"
+   },
+   "f67": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f68": {
+    "pattern": "{yyyy}"
+   },
+   "f69": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f75": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f76": {
+    "pattern": "{d}"
+   },
+   "f77": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f78": {
+    "pattern": "{yyyy}"
+   },
+   "f79": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-65b8107930caf284": {
+  "sample": {
+   "day": 14,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f34": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f59": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f60": {
+    "pattern": "{d}"
+   },
+   "f61": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f62": {
+    "pattern": "{yyyy}"
+   },
+   "f63": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f69": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f70": {
+    "pattern": "{d}"
+   },
+   "f71": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f72": {
+    "pattern": "{yyyy}"
+   },
+   "f73": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-7f7e726f3e811cc0": {
+  "sample": {
+   "day": 31,
+   "month": 5,
+   "year": 2026
+  },
+  "fields": {
+   "f41": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f70": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f71": {
+    "pattern": "{d}"
+   },
+   "f72": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f73": {
+    "pattern": "{yyyy}"
+   },
+   "f74": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f78": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f79": {
+    "pattern": "{d}"
+   },
+   "f80": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f81": {
+    "pattern": "{yyyy}"
+   },
+   "f82": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-1d9f3a0d0ad09ec0": {
+  "sample": {
+   "day": 17,
+   "month": 5,
+   "year": 2026
+  },
+  "fields": {
+   "f58": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f83": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f84": {
+    "pattern": "{d}"
+   },
+   "f85": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f86": {
+    "pattern": "{yyyy}"
+   },
+   "f87": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f93": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f94": {
+    "pattern": "{d}"
+   },
+   "f95": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f96": {
+    "pattern": "{yyyy}"
+   },
+   "f97": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-07c6c3b5a7bb8bff": {
+  "sample": {
+   "day": 1,
+   "month": 11,
+   "year": 2025
+  },
+  "fields": {
+   "f62": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f91": {
+    "pattern": "{dd}"
+   },
+   "f92": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f94": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f101": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f102": {
+    "pattern": "{dd}"
+   },
+   "f103": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f104": {
+    "pattern": "{yyyy}"
+   },
+   "f105": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-868aac0728ad2b8a": {
+  "sample": {
+   "day": 14,
+   "month": 6,
+   "year": 2026
+  },
+  "fields": {
+   "f60": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f89": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f90": {
+    "pattern": "{yyyy}"
+   },
+   "f91": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f95": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f96": {
+    "pattern": "{d}"
+   },
+   "f97": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f98": {
+    "pattern": "{yyyy}"
+   },
+   "f99": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-eeb33d0664fa1146": {
+  "sample": {
+   "day": 31,
+   "month": 5,
+   "year": 2026
+  },
+  "fields": {
+   "f71": {
+    "pattern": "{d} tháng {m}, {yyyy}"
+   },
+   "f101": {
+    "pattern": "{wd:en:U}",
+    "upper": true
+   },
+   "f102": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f103": {
+    "pattern": "{d}"
+   },
+   "f105": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f106": {
+    "pattern": "{yyyy}"
+   },
+   "f107": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f112": {
+    "pattern": "{wd:en:U}",
+    "upper": true
+   },
+   "f113": {
+    "pattern": "{wd:vi:U}",
+    "upper": true
+   },
+   "f114": {
+    "pattern": "{d}"
+   },
+   "f116": {
+    "pattern": "THÁNG {mm}",
+    "upper": true
+   },
+   "f117": {
+    "pattern": "{yyyy}"
+   },
+   "f118": {
+    "pattern": "(Tức ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-f237f869f469172b": {
+  "sample": {
+   "day": 20,
+   "month": 12,
+   "year": 2026
+  },
+  "fields": {
+   "f38": {
+    "pattern": "{d}/{m}/{yyyy}"
+   }
+  }
+ },
+ "tpl-1ee2fea77dae3a8b": {
+  "sample": {
+   "day": 15,
+   "month": 10,
+   "year": 2026
+  },
+  "fields": {
+   "f58": {
+    "pattern": "16 GIỜ 00 | {wd:vi:U} {d}.{m}.{yyyy}",
+    "upper": true
+   },
+   "f59": {
+    "pattern": "(Nhằm ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-fe3336651d25f010": {
+  "sample": {
+   "day": 20,
+   "month": 10,
+   "year": 2027
+  },
+  "fields": {
+   "f49": {
+    "pattern": "{d}/{m}/{yyyy}"
+   },
+   "f68": {
+    "pattern": "{d}/{m}/{yyyy}"
+   },
+   "f69": {
+    "pattern": "Nhằm ngày {ld} tháng {lm} năm {lyear:L}"
+   },
+   "f76": {
+    "pattern": "{d}/{m}/{yyyy}"
+   },
+   "f77": {
+    "pattern": "Nhằm ngày {ld} tháng {lm} năm {lyear:L}"
+   }
+  }
+ },
+ "tpl-0f2bfcb17251ceb6": {
+  "sample": {
+   "day": 20,
+   "month": 8,
+   "year": 2025
+  },
+  "fields": {
+   "f32": {
+    "pattern": "{d}"
+   },
+   "f37": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f38": {
+    "pattern": "{yyyy}"
+   },
+   "f40": {
+    "pattern": "(Nhằm ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-fdcf66d75d0c91e2": {
+  "sample": {
+   "day": 20,
+   "month": 10,
+   "year": 2027
+  },
+  "fields": {
+   "f18": {
+    "pattern": "{d}.{m}.{yyyy}"
+   },
+   "f42": {
+    "pattern": "{time} - {wd:num:T} {d}.{m}.{yyyy}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "10:30"
+    }
+   },
+   "f43": {
+    "pattern": "Nhằm ngày {ld} tháng {lm} năm {lyear:L}"
+   }
+  }
+ },
+ "tpl-390dae6df4f697a6": {
+  "sample": {
+   "day": 20,
+   "month": 10,
+   "year": 2027
+  },
+  "fields": {
+   "f34": {
+    "pattern": "{d}/{m}/{yyyy}"
+   },
+   "f108": {
+    "pattern": "{d}/{m}/{yyyy}"
+   }
+  }
+ },
+ "tpl-b5148abeeb943be8": {
+  "sample": {
+   "day": 25,
+   "month": 12,
+   "year": 2027
+  },
+  "fields": {
+   "f54": {
+    "pattern": "{d}.{m}.{yyyy}"
+   },
+   "f56": {
+    "pattern": "(Nhằm ngày {ldd} tháng {lm} năm {lyear:T})"
+   },
+   "f119": {
+    "pattern": "{d}.{m}.{yyyy}"
+   }
+  }
+ },
+ "tpl-d250466bf06a3abd": {
+  "sample": {
+   "day": 15,
+   "month": 3,
+   "year": 2021
+  },
+  "fields": {
+   "f48": {
+    "pattern": "{d}.{mm}.{yyyy} THE FIRST MEET Ngày chúng mình lần đầu gặp nhau."
+   }
+  }
+ },
+ "tpl-4905806cafcc629c": {
+  "sample": {
+   "day": 24,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f62": {
+    "pattern": "{time} {wd:num:T}, Ngày {d} tháng {m} năm {yyyy}",
+    "time": {
+     "sep": "h",
+     "pad": true,
+     "sample": "11h30"
+    }
+   }
+  }
+ },
+ "tpl-dd04c1752b33de3e": {
+  "sample": {
+   "day": 24,
+   "month": 10,
+   "year": 2027
+  },
+  "fields": {
+   "f72": {
+    "pattern": "{yyyy}.{m}.{d}"
+   },
+   "f105": {
+    "pattern": "Ngày {d} tháng {m}, {yyyy}"
+   },
+   "f121": {
+    "pattern": "{yyyy}.{m}.{d}"
+   }
+  }
+ },
+ "tpl-2e126464011567d4": {
+  "sample": {
+   "day": 24,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f36": {
+    "pattern": "{wd:num:T}, Ngày {d} tháng {m}, {yyyy}"
+   }
+  }
+ },
+ "tpl-d30391585fae3a0e": {
+  "sample": {
+   "day": 20,
+   "month": 12,
+   "year": 2027
+  },
+  "fields": {
+   "f29": {
+    "pattern": "{d}.{m}.{yyyy}"
+   },
+   "f41": {
+    "pattern": "{d}.{m}.{yyyy}"
+   },
+   "f42": {
+    "pattern": "( Nhằm ngày 20.11.2027 năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-bc6e5c2dc6872681": {
+  "sample": {
+   "day": 20,
+   "month": 12,
+   "year": 2027
+  },
+  "fields": {
+   "f55": {
+    "pattern": "{d}"
+   },
+   "f56": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f57": {
+    "pattern": "NĂM {yyyy}",
+    "upper": true
+   }
+  }
+ },
+ "tpl-f1f00e87b6d913cb": {
+  "sample": {
+   "day": 20,
+   "month": 10,
+   "year": 2027
+  },
+  "fields": {
+   "f34": {
+    "pattern": "{d}/{m}/{yyyy}"
+   }
+  }
+ },
+ "tpl-46e179b39b7463e3": {
+  "sample": {
+   "day": 24,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f57": {
+    "pattern": "{wd:num:T}, Ngày {d} tháng {m}, {yyyy}"
+   }
+  }
+ },
+ "tpl-136e75c21775c167": {
+  "sample": {
+   "day": 30,
+   "month": 5,
+   "year": 2026
+  },
+  "fields": {
+   "f25": {
+    "pattern": "{wd:en:U}",
+    "upper": true
+   },
+   "f28": {
+    "pattern": "{wd:vi:T}, ngày {d} tháng {m} năm {yyyy}"
+   }
+  }
+ },
+ "tpl-45cfb4ef005a63dd": {
+  "sample": {
+   "day": 24,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f95": {
+    "pattern": "{wd:num:T}, ngày {d} Tháng {m}, {yyyy} | {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "12:00"
+    }
+   },
+   "f104": {
+    "pattern": "{d}. {m}. {yyyy}"
+   }
+  }
+ },
+ "tpl-81a65980159bca39": {
+  "sample": {
+   "day": 24,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f68": {
+    "pattern": "Vào lúc {time} {wd:num:T}, Ngày {d} tháng {m}, {yyyy}",
+    "time": {
+     "sep": "h",
+     "pad": true,
+     "sample": "11h00"
+    }
+   }
+  }
+ },
+ "tpl-ff3f26ce1ef26edc": {
+  "sample": {
+   "day": 24,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f24": {
+    "pattern": "{d} Tháng {m}, {yyyy}"
+   },
+   "f34": {
+    "pattern": "{time} {wd:num:T}, Ngày {d} tháng {m} năm {yyyy}",
+    "time": {
+     "sep": "h",
+     "pad": true,
+     "sample": "11h30"
+    }
+   }
+  }
+ },
+ "tpl-44e249ecb56ad62e": {
+  "sample": {
+   "day": 23,
+   "month": 5,
+   "year": 2027
+  },
+  "fields": {
+   "f33": {
+    "pattern": "{d}.{mm}.{yyyy}"
+   },
+   "f43": {
+    "pattern": "{d}.{mm}.{yyyy}"
+   },
+   "f45": {
+    "pattern": "{wd:vi:T}"
+   }
+  }
+ },
+ "tpl-d2273d0a5d5ebe40": {
+  "sample": {
+   "day": 25,
+   "month": 9,
+   "year": 2027
+  },
+  "fields": {
+   "f33": {
+    "pattern": "{d}/{mm}/{yyyy}"
+   },
+   "f46": {
+    "pattern": "{d}"
+   },
+   "f48": {
+    "pattern": "Tháng {m}"
+   }
+  }
+ },
+ "tpl-93ad6c177a67608d": {
+  "sample": {
+   "day": 12,
+   "month": 5,
+   "year": 2027
+  },
+  "fields": {
+   "f59": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f60": {
+    "pattern": "NĂM {yyyy}",
+    "upper": true
+   },
+   "f62": {
+    "pattern": "(Nhằm ngày: {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f127": {
+    "pattern": "{m}.{d}.{yyyy}"
+   }
+  }
+ },
+ "tpl-af91976b33dfa05a": {
+  "sample": {
+   "day": 23,
+   "month": 12,
+   "year": 2027
+  },
+  "fields": {
+   "f45": {
+    "pattern": "NGÀY {d}. {m}.{yyyy}",
+    "upper": true
+   },
+   "f54": {
+    "pattern": "NGÀY {d}. {m}.{yyyy}",
+    "upper": true
+   }
+  }
+ },
+ "tpl-73c01e3e9988c45d": {
+  "sample": {
+   "day": 22,
+   "month": 12,
+   "year": 2027
+  },
+  "fields": {
+   "f38": {
+    "pattern": "Tháng {m}"
+   },
+   "f39": {
+    "pattern": "{d}"
+   },
+   "f40": {
+    "pattern": "{yyyy}"
+   },
+   "f45": {
+    "pattern": "( Nhằm ngày 20.11.2027 năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-898fb738d1618a78": {
+  "sample": {
+   "day": 24,
+   "month": 10,
+   "year": 2027
+  },
+  "fields": {
+   "f63": {
+    "pattern": "{yyyy}.{m}.{d}"
+   }
+  }
+ },
+ "tpl-f9c0e31609224954": {
+  "sample": {
+   "day": 24,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f68": {
+    "pattern": "{wd:num:T}, Ngày {d} tháng {m}, {yyyy}"
+   },
+   "f74": {
+    "pattern": "{wd:num:T}, Ngày {d} tháng {m} năm {yyyy}, {time} Trưa",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "12:00"
+    }
+   }
+  }
+ },
+ "tpl-8fa054ec2d806198": {
+  "sample": {
+   "day": 25,
+   "month": 7,
+   "year": 2027
+  },
+  "fields": {
+   "f24": {
+    "pattern": "{d}.{mm}.{yyyy}"
+   }
+  }
+ },
+ "tpl-19d3876f0545814b": {
+  "sample": {
+   "day": 20,
+   "month": 6,
+   "year": 2027
+  },
+  "fields": {
+   "f23": {
+    "pattern": "{d} . {mm} . {yyyy}"
+   }
+  }
+ },
+ "tpl-cf4a5756ae809d1a": {
+  "sample": {
+   "day": 28,
+   "month": 12,
+   "year": 2027
+  },
+  "fields": {
+   "f82": {
+    "pattern": "{d} tháng {m} năm {yyyy}"
+   }
+  }
+ },
+ "tpl-881cbd8bf5f8677f": {
+  "sample": {
+   "day": 25,
+   "month": 5,
+   "year": 2027
+  },
+  "fields": {
+   "f33": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f34": {
+    "pattern": "{d}"
+   },
+   "f35": {
+    "pattern": "{yyyy}"
+   },
+   "f115": {
+    "pattern": "{d}.{mm}.{yyyy}"
+   }
+  }
+ },
+ "tpl-a971744a613a1fa0": {
+  "sample": {
+   "day": 20,
+   "month": 5,
+   "year": 2027
+  },
+  "fields": {
+   "f50": {
+    "pattern": "Tháng {m}"
+   },
+   "f51": {
+    "pattern": "{d}"
+   },
+   "f52": {
+    "pattern": "Năm {yyyy}"
+   },
+   "f53": {
+    "pattern": "( Nhằm ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ },
+ "tpl-b57e155c452fd472": {
+  "sample": {
+   "day": 24,
+   "month": 10,
+   "year": 2027
+  },
+  "fields": {
+   "f65": {
+    "pattern": "Ngày {d} tháng {m}, {yyyy}"
+   },
+   "f82": {
+    "pattern": "{yyyy}.{m}.{d}"
+   },
+   "f111": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f113": {
+    "pattern": "NĂM {yyyy}",
+    "upper": true
+   }
+  }
+ },
+ "tpl-8e5bdfc7145b4004": {
+  "sample": {
+   "day": 20,
+   "month": 10,
+   "year": 2027
+  },
+  "fields": {
+   "f25": {
+    "pattern": "{d}.{m}.{yyyy}"
+   },
+   "f43": {
+    "pattern": "{d}.{m}.{yyyy}"
+   },
+   "f53": {
+    "pattern": "{d}.{m}.{yyyy}"
+   }
+  }
+ },
+ "tpl-9c0e2d70fa439767": {
+  "sample": {
+   "day": 24,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f74": {
+    "pattern": "Ngày {d} tháng {m}, {yyyy}"
+   },
+   "f92": {
+    "pattern": "{wd:num:T}, Ngày {d} tháng {m}, {yyyy}"
+   },
+   "f101": {
+    "pattern": "{yyyy}"
+   },
+   "f102": {
+    "pattern": "Tháng {m}"
+   }
+  }
+ },
+ "tpl-a1e328379e9b3bb7": {
+  "sample": {
+   "day": 15,
+   "month": 3,
+   "year": 2021
+  },
+  "fields": {
+   "f65": {
+    "pattern": "{d}.{mm}.{yyyy} THE FIRST MEET",
+    "upper": true
+   }
+  }
+ },
+ "tpl-71cf8134a1802334": {
+  "sample": {
+   "day": 24,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f18": {
+    "pattern": "{time} {wd:num:T}, Ngày {d} tháng {m}, {yyyy}",
+    "time": {
+     "sep": "h",
+     "pad": true,
+     "sample": "11h30"
+    }
+   }
+  }
+ },
+ "tpl-972a14144f24180c": {
+  "sample": {
+   "day": 24,
+   "month": 10,
+   "year": 2026
+  },
+  "fields": {
+   "f66": {
+    "pattern": "{wd:en:U} / {time}",
+    "time": {
+     "sep": ":",
+     "pad": true,
+     "sample": "12:00 PM",
+     "meridiem": "upper",
+     "gap": true
+    },
+    "upper": true
+   },
+   "f80": {
+    "pattern": "{yyyy}. {m}. {d}"
+   }
+  }
+ },
+ "tpl-a39211d76e1277b1": {
+  "sample": {
+   "day": 4,
+   "month": 4,
+   "year": 2026
+  },
+  "fields": {
+   "f103": {
+    "pattern": "{time} {wd:num:U}, NGÀY {d} THÁNG {m} NĂM {yyyy}",
+    "time": {
+     "sep": "H",
+     "pad": true,
+     "sample": "12H00"
+    },
+    "upper": true
+   },
+   "f105": {
+    "pattern": "{yyyy}"
+   },
+   "f106": {
+    "pattern": "Tháng {m}"
+   }
+  }
+ },
+ "tpl-5238b98f99ff20ce": {
+  "sample": {
+   "day": 24,
+   "month": 10,
+   "year": 2027
+  },
+  "fields": {
+   "f66": {
+    "pattern": "{yyyy}.{m}.{d}"
+   }
+  }
+ },
+ "tpl-fe4712ae3a0ce04c": {
+  "sample": {
+   "day": 15,
+   "month": 3,
+   "year": 2021
+  },
+  "fields": {
+   "f65": {
+    "pattern": "{d}.{mm}.{yyyy}"
+   },
+   "f67": {
+    "pattern": "{d}.{mm}.{yyyy}"
+   },
+   "f69": {
+    "pattern": "{d}.{mm}.{yyyy}"
+   },
+   "f71": {
+    "pattern": "{d}.{mm}.{yyyy}"
+   },
+   "f73": {
+    "pattern": "{d}.{mm}.{yyyy}"
+   }
+  }
+ },
+ "tpl-2290cc78fe643cef": {
+  "sample": {
+   "day": 24,
+   "month": 11,
+   "year": 2026
+  },
+  "fields": {
+   "f60": {
+    "pattern": "{wd:num:T}, Ngày {d} tháng {m}, {yyyy}"
+   }
+  }
+ },
+ "tpl-db5316bb257f3422": {
+  "sample": {
+   "day": 20,
+   "month": 10,
+   "year": 2027
+  },
+  "fields": {
+   "f45": {
+    "pattern": "{d}.{m}.{yyyy}"
+   },
+   "f65": {
+    "pattern": "{d}"
+   },
+   "f66": {
+    "pattern": "Tháng {m}"
+   },
+   "f125": {
+    "pattern": "{d}.{m}.{yyyy}"
+   }
+  }
+ },
+ "tpl-7dc308d0bb20fca5": {
+  "sample": {
+   "day": 20,
+   "month": 10,
+   "year": 2026
+  },
+  "fields": {
+   "f34": {
+    "pattern": "{d}.{m}.{yyyy}"
+   }
+  }
+ },
+ "tpl-d754b07ce376c593": {
+  "sample": {
+   "day": 31,
+   "month": 12,
+   "year": 2027
+  },
+  "fields": {
+   "f58": {
+    "pattern": "{d}.{m}.{yyyy}"
+   }
+  }
+ },
+ "tpl-094abfd9a8688abc": {
+  "sample": {
+   "day": 15,
+   "month": 3,
+   "year": 2021
+  },
+  "fields": {
+   "f49": {
+    "pattern": "Nhằm ngày {ld} tháng {lm} năm 2028"
+   },
+   "f62": {
+    "pattern": "{d}.{mm}.{yyyy} THE FIRST MEET",
+    "upper": true
+   }
+  }
+ },
+ "tpl-febb01079d31b2f3": {
+  "sample": {
+   "day": 25,
+   "month": 12,
+   "year": 2027
+  },
+  "fields": {
+   "f31": {
+    "pattern": "{d}.{m}.{yyyy}"
+   },
+   "f39": {
+    "pattern": "{d}"
+   },
+   "f42": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   }
+  }
+ },
+ "tpl-5314eaa1545d37bd": {
+  "sample": {
+   "day": 20,
+   "month": 10,
+   "year": 2028
+  },
+  "fields": {
+   "f54": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f55": {
+    "pattern": "{d}"
+   },
+   "f56": {
+    "pattern": "NĂM {yyyy}",
+    "upper": true
+   },
+   "f149": {
+    "pattern": "{d}.{m}.{yyyy}"
+   }
+  }
+ },
+ "tpl-aef5b3d0b405085f": {
+  "sample": {
+   "day": 20,
+   "month": 10,
+   "year": 2027
+  },
+  "fields": {
+   "f21": {
+    "pattern": "{d}.{m}.{yyyy}"
+   },
+   "f29": {
+    "pattern": "{d}"
+   },
+   "f30": {
+    "pattern": "Tháng {m}"
+   }
+  }
+ },
+ "tpl-40a3710b1304c0c6": {
+  "sample": {
+   "day": 15,
+   "month": 3,
+   "year": 2021
+  },
+  "fields": {
+   "f84": {
+    "pattern": "{d}.{mm}.{yyyy} — THE FIRST MEET Ngày chúng mình lần đầu gặp nhau."
+   }
+  }
+ },
+ "tpl-df93ff719c494384": {
+  "sample": {
+   "day": 20,
+   "month": 6,
+   "year": 2027
+  },
+  "fields": {
+   "f21": {
+    "pattern": "{d} . {mm} . {yyyy}"
+   },
+   "f27": {
+    "pattern": "{d}"
+   },
+   "f28": {
+    "pattern": "Tháng {mm}"
+   }
+  }
+ },
+ "tpl-8c256b562d24a616": {
+  "sample": {
+   "day": 15,
+   "month": 5,
+   "year": 2027
+  },
+  "fields": {
+   "f40": {
+    "pattern": "{d}.{mm}.{yyyy}"
+   },
+   "f48": {
+    "pattern": "{d}.{mm}.{yyyy}"
+   }
+  }
+ },
+ "tpl-16acf61bfe7f5b8e": {
+  "sample": {
+   "day": 15,
+   "month": 5,
+   "year": 2027
+  },
+  "fields": {
+   "f29": {
+    "pattern": "{d}.{mm}.{yyyy}"
+   },
+   "f57": {
+    "pattern": "{d}.{mm}.{yyyy}"
+   }
+  }
+ },
+ "tpl-f49d777f7ca822f7": {
+  "sample": {
+   "day": 20,
+   "month": 10,
+   "year": 2027
+  },
+  "fields": {
+   "f61": {
+    "pattern": "{d}"
+   },
+   "f62": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f63": {
+    "pattern": "NĂM {yyyy}",
+    "upper": true
+   },
+   "f64": {
+    "pattern": "(NHẰM NGÀY {ld} THÁNG {lmm} NĂM {lyear:U})",
+    "upper": true
+   }
+  }
+ },
+ "tpl-039b714d06dffadd": {
+  "sample": {
+   "day": 20,
+   "month": 10,
+   "year": 2027
+  },
+  "fields": {
+   "f58": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f59": {
+    "pattern": "{d}"
+   },
+   "f60": {
+    "pattern": "NĂM {yyyy}",
+    "upper": true
+   },
+   "f61": {
+    "pattern": "(Nhằm ngày {ld} tháng {lm} năm {lyear:L})"
+   }
+  }
+ },
+ "tpl-5ea088b4e1385e0d": {
+  "sample": {
+   "day": 20,
+   "month": 10,
+   "year": 2027
+  },
+  "fields": {
+   "f31": {
+    "pattern": "{d}.{m}.{yyyy}"
+   },
+   "f88": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f89": {
+    "pattern": "{d}"
+   },
+   "f90": {
+    "pattern": "NĂM {yyyy}",
+    "upper": true
+   },
+   "f91": {
+    "pattern": "(Nhằm ngày {ld} tháng {lm} năm {lyear:L})"
+   },
+   "f96": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f98": {
+    "pattern": "NĂM {yyyy}",
+    "upper": true
+   },
+   "f99": {
+    "pattern": "(Nhằm ngày 29 tháng 110 năm {lyear:L})"
+   }
+  }
+ },
+ "tpl-3a7908e17fe8a23e": {
+  "sample": {
+   "day": 20,
+   "month": 10,
+   "year": 2027
+  },
+  "fields": {
+   "f27": {
+    "pattern": "{d}.{m}.{yyyy}"
+   },
+   "f42": {
+    "pattern": "{d}"
+   },
+   "f43": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f44": {
+    "pattern": "NĂM {yyyy}",
+    "upper": true
+   },
+   "f45": {
+    "pattern": "(Nhằm ngày {ld} tháng {lm} năm {lyear:L})"
+   },
+   "f52": {
+    "pattern": "THÁNG {m}",
+    "upper": true
+   },
+   "f53": {
+    "pattern": "NĂM {yyyy}",
+    "upper": true
+   },
+   "f54": {
+    "pattern": "(Nhằm ngày {ld} tháng {lm} năm {lyear:L})"
+   }
+  }
+ },
+ "tpl-a537550ab3d139ae": {
+  "sample": {
+   "day": 20,
+   "month": 10,
+   "year": 2027
+  },
+  "fields": {
+   "f44": {
+    "pattern": "{d}.{m}.{yyyy}"
+   },
+   "f57": {
+    "pattern": "(Nhằm ngày {ld} tháng {lm} năm {lyear:T})"
+   },
+   "f64": {
+    "pattern": "(Nhằm ngày {ld} tháng {lm} năm {lyear:T})"
+   }
+  }
+ }
+}

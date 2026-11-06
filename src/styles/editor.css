@@ -299,3 +299,38 @@ button, a, summary, input, select, textarea { touch-action: manipulation; -webki
   outline: 2px solid #c9a46a;
   outline-offset: 2px;
 }
+
+/* dd/mm/yyyy date field with a calendar button; the native picker stays hidden behind it. */
+.date-input { position: relative; display: flex; align-items: center; flex-wrap: wrap; width: 100%; }
+.date-input > input:first-child { flex: 1; min-width: 0; padding-right: 2.75rem; }
+.date-input > button { position: absolute; right: .35rem; top: .35rem; display: grid; place-items: center; width: 2.2rem; height: 2.2rem; min-height: 0; padding: 0; border: 0; border-radius: 50%; background: transparent; color: #a85e65; cursor: pointer; }
+.date-input > button:hover { background: #f9e8ea; }
+.date-input-native { position: absolute; right: 0; bottom: 0; width: 1px; height: 1px; opacity: 0; pointer-events: none; border: 0; padding: 0; }
+.date-input > small { width: 100%; margin-top: .3rem; color: #b3261e; font-size: .78rem; }
+.date-input > input[aria-invalid] { border-color: #b3261e; }
+
+/* Single background-music control: current track, upload, or a pasted link. */
+.field-label { font-size: .85rem; font-weight: 600; }
+.field-hint { margin: 0; font-size: .82rem; color: #765552; line-height: 1.5; }
+.music-current { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1rem; }
+.music-current audio { max-width: 100%; }
+.music-upload { position: relative; overflow: hidden; width: max-content; max-width: 100%; cursor: pointer; gap: .35rem; }
+.music-upload small { font-weight: 400; opacity: .75; }
+.music-upload input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.music-upload.is-disabled { opacity: .55; cursor: not-allowed; }
+.music-link summary { cursor: pointer; font-size: .85rem; color: #765552; }
+.music-link input { margin-top: .5rem; width: 100%; }
+
+.chat-bubble .chat-link { display: block; margin: 0 0 .5rem; color: #1a5fb4; font-size: .82rem; text-decoration: underline; overflow-wrap: anywhere; }
+.link-preview small { display: block; margin-top: .35rem; color: #6b6b6b; letter-spacing: .02em; }
+
+.slug-status { margin: 0; font-size: .85rem; }
+.slug-status.is-ok { color: #2e6b34; }
+.slug-status.is-error { color: #b3261e; }
+.slug-status.is-pending { color: #765552; }
+.slug-suggestion { justify-self: start; font-size: .85rem; }
+.share-image-option summary { cursor: pointer; font-size: .9rem; color: #4c6635; font-weight: 600; }
+.share-image-option[open] summary { margin-bottom: .6rem; }
+
+.gift-qr { display: grid; gap: .5rem; }
+.gift-qr-preview { width: 160px; height: 160px; object-fit: contain; border: 1px solid #e8c7cb; border-radius: 12px; background: #fff; padding: .4rem; }

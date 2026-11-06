@@ -15,7 +15,6 @@ export default function ImagesTab({ wedding: w, change, onUpgrade }: { wedding: 
   };
   return <div className="editor-stack">
     <ImageField label="Ảnh bìa" value={w.coverImage} onChange={coverImage => change({ coverImage })} />
-    <ImageField label="Ảnh chia sẻ (OG)" value={w.ogImage} onChange={ogImage => change({ ogImage })} />
     <ImageField label="Ảnh câu chuyện" value={w.story.image} onChange={image => change({ story: { ...w.story, image } })} />
     <h3>Bộ sưu tập ảnh
     </h3>

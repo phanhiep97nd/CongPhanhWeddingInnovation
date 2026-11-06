@@ -99,6 +99,17 @@ describe('plan routes', () => {
     expect(result.body.giftBox).toEqual({ note: '', accounts: [] });
   });
 
+  it('shows the gift box from the basic plan, with uploaded QR codes for e-wallets', async () => {
+    const { account, wedding, owner, publicPath } = await setup();
+    const momo = { label: 'MoMo', bankBin: '', bankName: '', accountNumber: '', accountName: 'Lan', qrImage: 'https://cdn.example.test/momo.png' };
+    expect((await request(app).put(owner).set(authorized(account.token)).send({ giftBox: { note: '', accounts: [{ ...momo, qrImage: '' }] } })).status).toBe(400);
+    expect((await request(app).put(owner).set(authorized(account.token)).send({ giftBox: { note: 'Cảm ơn', accounts: [momo] } })).status).toBe(200);
+    await Wedding.updateOne({ _id: wedding.id }, { $set: { plan: 'basic' } });
+    const result = await request(app).get(publicPath);
+    expect(result.body.entitlements.giftBox).toBe(true);
+    expect(result.body.giftBox.accounts[0]).toMatchObject({ label: 'MoMo', qrImage: 'https://cdn.example.test/momo.png' });
+  });
+
   it('shows prepared gift box on premium', async () => {
     const { account, wedding, owner, publicPath } = await setup();
     await request(app).put(owner).set(authorized(account.token)).send({ giftBox: { note: 'Thank you', accounts: [] } });

@@ -9,7 +9,6 @@ import LockedFeature from "../billing/LockedFeature";
 import GuestQrDialog from "./GuestQrDialog";
 import { exportGuestExcel } from "../../lib/excel";
 import { Link } from "react-router-dom";
-import SharePreview from "./SharePreview";
 import { useConfirmSheet } from "../ConfirmSheet";
 
 export default function GuestsTab({ wedding, weddingId: legacyId, slug: legacySlug, onUpgrade = () => {} }: { wedding?: Wedding; weddingId?: string; slug?: string; onUpgrade?: () => void; }) {
@@ -125,7 +124,6 @@ export default function GuestsTab({ wedding, weddingId: legacyId, slug: legacySl
   }
   return <div className="editor-stack">
     {sheet}
-    {wedding && <SharePreview wedding={wedding} guests={guests} />}
     <p>{guests.length}/{wedding?.limits?.guests ?? "∞"} khách</p>
     {wedding?.limits?.guests != null && guests.length >= wedding.limits.guests && <LockedFeature plan="basic" label="Thêm khách không giới hạn" onUpgrade={onUpgrade} />}
     {lockedPlan && <LockedFeature plan={lockedPlan} onUpgrade={onUpgrade} />}

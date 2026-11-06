@@ -81,13 +81,14 @@ function buildMeta(wedding, guestName = '', options = {}) {
     description = `Gửi ${guestName}: ${description}`;
   }
 
-  const siteOrigin = (options.siteOrigin || process.env.SITE_ORIGIN || process.env.VITE_SITE_BASE || 'https://congphanh.vercel.app').replace(/\/$/, '');
+  const siteOrigin = (options.siteOrigin || process.env.SITE_ORIGIN || process.env.VITE_SITE_BASE || 'https://hythiep.net').replace(/\/$/, '');
   const guestPath = options.code ? `/${encodeURIComponent(options.code)}` : '';
   return {
     title: limitText(title, 90),
     description: limitText(description, 200),
-    // Weddings without a photo fall back to the Hỷ Thiệp brand card (the middleware makes it absolute).
-    image: personalizedOgImage(wedding.ogImage || wedding.coverImage || '', guestName) || '/brand/og-default.png',
+    // The chosen share photo, else the cover, else (library cards) the first photo the owner put on the card or the
+    // template cover; the Hỷ Thiệp brand card is the last resort. Relative paths are made absolute by the middleware.
+    image: personalizedOgImage(wedding.ogImage || wedding.coverImage || require('./templateLibrary').shareImage(wedding.importedTemplate) || '', guestName) || '/brand/og-default.png',
     siteName: process.env.BRAND_NAME || 'Hỷ Thiệp',
     guestName,
     url: `${siteOrigin}/w/${encodeURIComponent(wedding.slug)}${guestPath}`
