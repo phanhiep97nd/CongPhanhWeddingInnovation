@@ -1,0 +1,97 @@
+name: Deploy HyThiep to home server
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-hythiep-home
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: [self-hosted, linux, hythiep]
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+        working-directory: /home/deploy/apps/hythiep
+    env:
+      LOG: /home/deploy/deploy-logs/hythiep.log
+    steps:
+      - name: Kiểm tra checkout và file môi trường
+        run: |
+          mkdir -p "$(dirname "$LOG")"
+          if [ -f "$LOG" ] && [ "$(stat -c%s "$LOG")" -gt 5000000 ]; then
+            mv "$LOG" "$LOG.1"
+          fi
+          echo "[$(date -Is)] DEPLOY START event=$GITHUB_SHA" | tee -a "$LOG"
+          test "$(git branch --show-current)" = main
+          test -z "$(git status --porcelain)"
+          test -f .env
+          git rev-parse HEAD > /home/deploy/hythiep-previous-commit.txt
+
+      - name: Sao lưu PostgreSQL trước cập nhật
+        run: |
+          umask 077
+          mkdir -p backups
+          backup_file="backups/hythiep-$(date -u +%Y%m%d-%H%M%S)-$GITHUB_RUN_ID.dump"
+          docker compose -f docker-compose.home.yml exec -T db pg_dump -U hythiep -d hythiep -Fc > "$backup_file"
+          test -s "$backup_file"
+          docker compose -f docker-compose.home.yml exec -T db pg_restore --list < "$backup_file" > /dev/null
+          echo "Backup OK: $backup_file" | tee -a "$LOG"
+
+      - name: Cập nhật main bằng token tạm của job
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          auth=$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)
+          git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic $auth" \
+            pull --ff-only https://github.com/phanhiep97nd/CongPhanhWeddingInnovation.git main
+          unset auth
+          echo "Deploy commit $(git rev-parse HEAD)" | tee -a "$LOG"
+
+      - name: Build và chạy
+        run: |
+          docker compose -f docker-compose.home.yml config --quiet
+          docker compose -f docker-compose.home.yml up -d --build 2>&1 | tee -a "$LOG"
+
+      - name: Kiểm tra web và API qua nginx
+        run: |
+          check() {
+            for i in $(seq 1 30); do
+              if curl --connect-timeout 3 --max-time 5 -fsS -o /dev/null "$1"; then
+                echo "OK $1" | tee -a "$LOG"
+                return 0
+              fi
+              sleep 2
+            done
+            echo "FAIL $1" | tee -a "$LOG"
+            return 1
+          }
+          base_url="http://$(docker compose -f docker-compose.home.yml port web 80)"
+          check "$base_url/"
+          check "$base_url/dashboard"
+          check "$base_url/api/"
+          check "$base_url/api/public/pricing"
+          curl --max-time 10 -fsS "$base_url/api/" \
+            | python3 -c 'import json,sys; assert json.load(sys.stdin).get("status") == "ok"'
+          docker compose -f docker-compose.home.yml exec -T web nginx -t
+
+      - name: Chẩn đoán nếu lỗi
+        if: failure()
+        run: |
+          docker compose -f docker-compose.home.yml ps 2>&1 | tee -a "$LOG"
+          docker compose -f docker-compose.home.yml logs --tail=50 2>&1 | tee -a "$LOG"
+
+      - name: Ghi kết quả
+        if: always()
+        env:
+          DEPLOY_STATUS: ${{ job.status }}
+        run: |
+          echo "[$(date -Is)] DEPLOY $DEPLOY_STATUS commit=$(git rev-parse HEAD)" | tee -a "$LOG"
