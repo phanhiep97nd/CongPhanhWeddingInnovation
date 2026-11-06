@@ -55,11 +55,11 @@ it("creates a wedding with the suggested slug", async () => {
         : [],
   } as Response));
   render(
-    <MemoryRouter initialEntries={["/dashboard"]}>
+    <MemoryRouter initialEntries={["/thiep-cua-toi"]}>
       <AuthProvider>
         <Routes>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/dashboard/:id" element={<p>Thiệp đã tạo</p>} />
+          <Route path="/thiep-cua-toi" element={<Dashboard />} />
+          <Route path="/thiep-cua-toi/:id" element={<p>Thiệp đã tạo</p>} />
         </Routes>
       </AuthProvider>
     </MemoryRouter>,

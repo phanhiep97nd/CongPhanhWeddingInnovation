@@ -74,8 +74,12 @@ router.get('/', async (request, response, next) => {
       invitationKind: wedding.invitationKind,
       eventTitle: wedding.eventTitle,
       dateText: wedding.dateText,
+      eventDate: wedding.eventDate,
       eventTime: wedding.eventTime,
       coverImage: wedding.coverImage,
+      // The picture for the card list: the cover, else the photo a shared link shows (first owner photo or template cover).
+      image: wedding.coverImage || require('../lib/templateLibrary').shareImage(wedding.importedTemplate) || '',
+      templateId: wedding.importedTemplate?.templateId || null,
       published: wedding.published,
       plan: wedding.plan || 'free',
       expiresAt: expiresAt(wedding, settings),

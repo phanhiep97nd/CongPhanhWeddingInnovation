@@ -1,7 +1,8 @@
-import { BRAND_NAME } from "../lib/brand";
+import { BRAND_NAME, BRAND_TAGLINE } from "../lib/brand";
 import BrandLogo from "../components/BrandLogo";
 import LandingDesignGallery from "../components/LandingDesignGallery";
 import { Link } from "react-router-dom";
+import { CalendarDays, CircleCheck, Heart, Images, Mic, Sparkles } from "lucide-react";
 
 export default function Landing() {
   return (
@@ -23,14 +24,20 @@ export default function Landing() {
           <p className="landing-eyebrow">Hỷ Thiệp · Gửi niềm vui, giữ kỷ niệm</p>
           <h1>Một lời mời dành riêng cho từng người thương
           </h1>
-          <p>Ngày cưới, sinh nhật hay buổi tân gia đầu tiên — kể câu chuyện của bạn bằng ảnh và lời riêng. Gửi lời mời có tên từng khách và nhận xác nhận tham dự ngay trên thiệp.
+          <p>Chọn một trong hơn 280 mẫu thiệp, chạm thẳng vào thiệp để sửa. Tên hai bạn, ngày cưới, lịch, ngày âm lịch và đồng hồ đếm ngược tự điền theo thông tin của bạn. Mỗi khách mở thiệp thấy tên mình trên phong thư, nghe lời mời bằng chính giọng hai bạn và xác nhận tham dự ngay trên thiệp.
           </p>
           <div className="actions">
             <Link className="button" to="/register">Tạo thiệp miễn phí
             </Link>
             <a className="text-button" href="#bo-suu-tap">Khám phá bộ sưu tập ↗</a>
           </div>
-          <div className="hero-details"><span>✦ Sửa ngay trên điện thoại</span><span>♡ Lời mời có tên riêng</span><span>✓ Theo dõi người tham dự</span></div>
+          <ul className="hero-details" aria-label="Điểm nổi bật">
+            <li>✦ Hơn 280 mẫu thiệp</li>
+            <li>♡ Tên từng khách trên phong thư</li>
+            <li>♪ Lời mời bằng giọng nói</li>
+            <li>◷ Ngày, lịch âm, đếm ngược tự điền</li>
+            <li>✓ Xác nhận tham dự trên thiệp</li>
+          </ul>
         </div>
         <div className="landing-preview" aria-label="Bản xem trước thiệp cưới">
           <img src="/images/DSCF7944.jpg" alt="Ảnh cưới trong bản xem trước thiệp" />
@@ -45,22 +52,18 @@ export default function Landing() {
         </div>
       </section>
       <div className="occasion-ribbon" aria-label="Thiệp cho mọi dịp">Ngày chung đôi <span>✦</span> Thêm tuổi mới <span>✦</span> Về nhà mới <span>✦</span> Gặp gỡ & sẻ chia</div>
-      <section className="landing-story">
-        <h2>Chuẩn bị nhẹ nhàng, đón ngày vui trọn vẹn
-        </h2>
-        <div>
-          <p>
-            <strong>Mời đúng người.
-            </strong> Mỗi khách có một liên kết riêng và nhìn thấy tên mình ngay khi mở thiệp.
-          </p>
-          <p>
-            <strong>Biết ai sẽ đến.
-            </strong> Khách xác nhận tham dự trên thiệp; danh sách được cập nhật cho hai bạn.
-          </p>
-          <p>
-            <strong>Giữ trọn khoảnh khắc.
-            </strong> Bật hoặc ẩn từng phần của thiệp, rồi đón ảnh khách gửi vào cùng một nơi.
-          </p>
+      <section className="landing-highlights" aria-labelledby="diem-noi-bat">
+        <div className="landing-highlights-head">
+          <p className="landing-eyebrow">Vì sao chọn {BRAND_NAME}</p>
+          <h2 id="diem-noi-bat">Chuẩn bị nhẹ nhàng, đón ngày vui trọn vẹn</h2>
+        </div>
+        <div className="landing-highlights-grid">
+          <article><span aria-hidden="true"><Sparkles size={19} /></span><h3>Chạm vào thiệp để sửa</h3><p>Hơn 280 mẫu thiệp cưới, sinh nhật, tân gia. Bấm vào chữ hay ảnh ngay trên thiệp, ô sửa mở ra bên cạnh, cả trên điện thoại.</p></article>
+          <article><span aria-hidden="true"><CalendarDays size={19} /></span><h3>Thông tin tự điền</h3><p>Nhập tên và ngày cưới một lần: tên viết tắt, lịch tháng cưới, thứ, ngày âm lịch và đồng hồ đếm ngược trên thiệp tự cập nhật.</p></article>
+          <article><span aria-hidden="true"><Heart size={19} /></span><h3>Lời mời gửi tận tên</h3><p>Mỗi khách có một đường dẫn riêng. Tên họ hiện trên phong thư mở thiệp và trên ảnh xem trước khi gửi qua Zalo, Messenger.</p></article>
+          <article><span aria-hidden="true"><Mic size={19} /></span><h3>Lời mời bằng giọng nói</h3><p>Ghi âm trực tiếp hoặc tải lên một lời mời riêng cho từng khách; khách bấm nghe ngay khi mở thiệp.</p></article>
+          <article><span aria-hidden="true"><Images size={19} /></span><h3>Album trong một lần tải</h3><p>Chọn nhiều ảnh cùng lúc, thiệp tự xếp ảnh vào các khung của mẫu. Thêm hộp mừng cưới với mã QR ngân hàng hoặc ví điện tử.</p></article>
+          <article><span aria-hidden="true"><CircleCheck size={19} /></span><h3>Biết ai sẽ đến</h3><p>Khách xác nhận tham dự và gửi lời chúc trên thiệp. Danh sách, số người và mã QR từng khách nằm gọn trong tài khoản của bạn.</p></article>
         </div>
       </section>
       <section className="landing-link-preview">
@@ -99,7 +102,29 @@ export default function Landing() {
         <h2>Ngày vui bắt đầu từ một lời mời thật riêng.</h2>
         <Link className="button" to="/register">Tạo thiệp miễn phí</Link>
       </section>
-      <footer className="landing-footer"><span>{BRAND_NAME}</span><span>Một nơi nhỏ cho những ngày thật đáng nhớ.</span><a href="#cau-hoi">Câu hỏi thường gặp</a></footer>
+      <footer className="landing-footer">
+        <div className="landing-footer-main">
+          <div className="landing-footer-brand">
+            <Link className="brand" to="/" aria-label={BRAND_NAME}><BrandLogo /></Link>
+            <p>{BRAND_TAGLINE}. Một nơi nhỏ cho những ngày thật đáng nhớ.</p>
+          </div>
+          <nav aria-label="Sản phẩm">
+            <h2>Sản phẩm</h2>
+            <a href="#bo-suu-tap">Kho mẫu thiệp</a>
+            <a href="#cach-tao">Cách tạo thiệp</a>
+            <a href="#cau-hoi">Câu hỏi thường gặp</a>
+          </nav>
+          <nav aria-label="Tài khoản">
+            <h2>Tài khoản</h2>
+            <Link to="/register">Tạo thiệp miễn phí</Link>
+            <Link to="/login">Đăng nhập</Link>
+          </nav>
+        </div>
+        <div className="landing-footer-bottom">
+          <span>© {new Date().getFullYear()} {BRAND_NAME} · hythiep.net</span>
+          <span>Thiết kế &amp; phát triển bởi <strong>Hiepphan</strong></span>
+        </div>
+      </footer>
     </main>
   );
 }

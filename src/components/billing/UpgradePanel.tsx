@@ -57,7 +57,10 @@ export default function UpgradePanel({ wedding }: { wedding: Wedding }) {
           <p className="plan-price">{money(pricing.prices[plan])}</p>
           {wedding.plan === "basic" && plan === "premium" && <p>Chỉ cần trả thêm {money(amount)}</p>}
           <ul>
-            {pricing.features.filter(feature => feature.plan === "basic" || plan === "premium").map(feature => <li key={feature.key}>{feature.label}</li>)}
+            {/* Every feature is listed on both plans; ones a plan lacks are greyed out so the difference is visible. */}
+            {pricing.features.map(feature => feature.plan === "basic" || plan === "premium"
+              ? <li key={feature.key}>{feature.label}</li>
+              : <li key={feature.key} className="plan-missing" aria-label={`${feature.label} (chỉ có ở gói Cao cấp)`}>{feature.label}</li>)}
           </ul>
           <button className="button" disabled={active || busy !== null} onClick={() => void checkout(plan)}>
             {active ? "Gói hiện tại" : busy === plan ? "Đang mở thanh toán…" : `Chọn gói ${planName(plan)}`}

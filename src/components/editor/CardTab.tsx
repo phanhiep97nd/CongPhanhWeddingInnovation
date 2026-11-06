@@ -54,8 +54,8 @@ function BasicPanel({ wedding: w, change, focusTemplates }: Props) {
   </Panel>;
 }
 // Card settings: the gift box shown behind the "Hộp quà" button, then sharing.
-const GiftPanel = ({ wedding: w, change, onUpgrade }: Props) => <Panel title="Hộp mừng cưới" hint={w.giftBox?.accounts.length ? `${w.giftBox.accounts.length} tài khoản / mã QR · nút Hộp quà trên thiệp` : "Tài khoản ngân hàng, mã QR để khách gửi quà"}>
-  <GiftBoxEditor wedding={w} change={change} onUpgrade={onUpgrade} />
+const GiftPanel = ({ wedding: w, change }: Props) => <Panel title="Hộp mừng cưới" hint={w.giftBox?.accounts.length ? `${w.giftBox.accounts.length} tài khoản / mã QR · nút Hộp quà trên thiệp` : "Tài khoản ngân hàng, mã QR để khách gửi quà"}>
+  <GiftBoxEditor wedding={w} change={change} />
 </Panel>;
 const SharingPanel = ({ wedding: w, change, onUpgrade }: Props) => <Panel title="Chia sẻ & cài đặt" hint={`${w.published ? "Đã xuất bản" : "Đang ẩn"} · đường dẫn, nhạc nền, nội dung khi chia sẻ`}>
   <SharingFields wedding={w} change={change} onUpgrade={onUpgrade} />

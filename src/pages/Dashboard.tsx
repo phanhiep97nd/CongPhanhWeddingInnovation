@@ -8,7 +8,7 @@ import { useAuth } from "../lib/auth";
 import type { Wedding, WeddingSummary } from "../lib/types";
 import { cldUrl } from "../lib/images";
 import { chosenTemplate, invitationKinds, invitationTitle, templateChoiceKey } from '../lib/templateLibrary';
-import { slugify } from '../lib/links';
+import { editorPath, slugify } from '../lib/links';
 
 
 export default function Dashboard() {
@@ -59,7 +59,7 @@ export default function Dashboard() {
     try {
       const result = await api<Wedding>("/weddings", json("POST", { slug, invitationKind: kind, eventTitle: kind === 'wedding' ? '' : eventTitle.trim(), ...(choice ? { importedTemplate: { templateId: choice.id, values: {}, opening: true, motion: true }, published: false } : {}), couple: { groom: groom.trim(), bride: bride.trim(), groomFull: "", brideFull: "" } }), true);
       sessionStorage.removeItem(templateChoiceKey);
-      navigate(`/dashboard/${result.id}${choice || kind !== 'wedding' ? '?tab=templates' : ''}`);
+      navigate(`${editorPath(result.id)}${choice || kind !== 'wedding' ? '?tab=templates' : ''}`);
     } catch (err) {
       setError((err as Error).message);
     } finally {
@@ -140,25 +140,26 @@ export default function Dashboard() {
         </div>
       )}
       <div className="wedding-cards">
-        {items.map(item => <article key={item.id} className="wedding-card">
-          {item.coverImage && <img src={cldUrl(item.coverImage, 640)} alt="Ảnh bìa" loading="lazy" decoding="async" />}
-          <div>
-            <h2>
-              {invitationTitle(item)}
-            </h2>
-            <p>
-              {item.dateText || "Chưa đặt ngày"} ·{" "}
-              {item.guestCount} khách
+        {items.map(item => {
+          const title = invitationTitle(item);
+          const date = item.eventDate ? new Date(item.eventDate).toLocaleDateString("vi-VN", { timeZone: "UTC" }) : item.dateText;
+          const initials = item.couple && (!item.invitationKind || item.invitationKind === "wedding") ? [item.couple.groom, item.couple.bride].map(name => name?.trim().split(/s+/).at(-1)?.[0] || "").join(" & ") : title.slice(0, 1);
+          return <article key={item.id} className="wedding-card">
+          <Link className="wedding-card-media" to={editorPath(item.id)} tabIndex={-1} aria-hidden="true">
+            {item.image ? <img src={cldUrl(item.image, 640)} alt="" loading="lazy" decoding="async" /> : <span className="wedding-card-initials">{initials}</span>}
+            <span className={`wedding-card-status${item.published ? " is-live" : ""}`}>{item.published ? "Đã xuất bản" : "Đang ẩn"}</span>
+          </Link>
+          <div className="wedding-card-body">
+            <h2>{title}</h2>
+            <p className="wedding-card-meta">
+              <span>{date || "Chưa đặt ngày"}{item.eventTime ? ` · ${item.eventTime}` : ""}</span>
+              <span>{item.guestCount} khách mời</span>
+              {item.expiresAt && <span>Hết hạn {new Date(item.expiresAt).toLocaleDateString("vi-VN")}</span>}
             </p>
-            <p>
-              {item.published ? "Đã xuất bản" : "Đang ẩn"}
-            </p>
-            {item.expiresAt && <p>Hết hạn {new Date(item.expiresAt).toLocaleDateString("vi-VN")}</p>}
+            <p className="wedding-card-link">/w/{item.slug}</p>
             <div className="actions">
-              <Link className="button" to={`/dashboard/${item.id}`}>Sửa
-              </Link>
-              <a className="button-outline" href={`/w/${item.slug}`} target="_blank" rel="noreferrer">Xem thiệp
-              </a>
+              <Link className="button" to={editorPath(item.id)}>Sửa</Link>
+              <a className="button-outline" href={`/w/${item.slug}`} target="_blank" rel="noreferrer">Xem thiệp</a>
               <div className="wedding-more">
                 <button className="text-button wedding-more-toggle" aria-expanded={openMenu === item.id} aria-label="Thêm thao tác" onClick={() => setOpenMenu(openMenu === item.id ? null : item.id)}>⋯</button>
                 <div className={openMenu === item.id ? "wedding-more-actions open" : "wedding-more-actions"}>
@@ -168,7 +169,8 @@ export default function Dashboard() {
               </div>
             </div>
           </div>
-        </article>)}
+        </article>;
+        })}
       </div>
     </div>
   </main>;

@@ -67,6 +67,57 @@ describe('couple names in library templates', () => {
     expect(library.render(library.selection({ templateId: id, values: { [year]: 'Năm đẹp nhất' } }), { wedding })).toContain('Năm đẹp nhất');
     expect(library.softValues(id, { ...wedding, eventDate: null })).toEqual({});
   });
+  it('counts down to the wedding date and time in Vietnam, in split, single-text and placeholder countdowns', () => {
+    const { JSDOM, VirtualConsole } = load('jsdom');
+    const countdowns = load('../data/template-countdown-bindings.json');
+    const wedding = { invitationKind: 'wedding', eventDate: '2027-02-14', eventTime: '17:45', couple: { groom: 'Minh', bride: 'An' } };
+    const target = Date.UTC(2027, 1, 14, 10, 45);
+    const now = Date.now(), seconds = Math.floor((target - now) / 1000);
+    const parts = [Math.floor(seconds / 86400), Math.floor(seconds / 3600) % 24, Math.floor(seconds / 60) % 60];
+    const split = 'tpl-00c7552ddfa8c8e7', text = 'tpl-085e1d36fd68d4b9', placeholder = 'tpl-21ba3ff5f44a7c61';
+    expect(countdowns[split][0]).toMatchObject({ kind: 'split' });
+    const values = library.boundValues(split, wedding);
+    expect(countdowns[split][0].keys.slice(0, 3).map(key => Number(values[key]))).toEqual(parts);
+    expect(library.boundValues(text, wedding)[countdowns[text][0].key]).toMatch(new RegExp(`^${parts[0]} ngày ${parts[1]} giờ \\d+ phút \\d+ giây$`));
+    expect(library.boundValues(placeholder, wedding)[countdowns[placeholder][0].key]).toMatch(/^\d+ ngày \d+ giờ \d+ phút \d+ giây$/);
+    // The runtime keeps ticking on the card (minimal DOM: jsdom cannot parse some captured template CSS).
+    const runtime = load('../lib/templateContent').resolve(text, wedding).runtime;
+    const page = new JSDOM(`<p data-ht-fields="${countdowns[text][0].key}">0 ngày</p><script>${load('../lib/templateContent').runtimeScript(runtime)}</script>`, { runScripts: 'dangerously', virtualConsole: new VirtualConsole() }).window;
+    expect(page.document.querySelector('p').textContent).toMatch(new RegExp(`^${parts[0]} ngày ${parts[1]} giờ`));
+    page.close();
+    // Without a wedding date the sample stays; after the wedding the countdown rests at zero.
+    expect(library.boundValues(split, { ...wedding, eventDate: null })[countdowns[split][0].keys[0]]).toBeUndefined();
+    expect(library.boundValues(text, { ...wedding, eventDate: '2020-01-01' })[countdowns[text][0].key]).toBe('0 ngày 0 giờ 0 phút 0 giây');
+    expect(library.editableFields(split).find(field => field.key === countdowns[split][0].keys[0]).binding).toEqual({ source: 'schedule', label: 'Ngày và giờ cưới' });
+  }, 30000);
+  it('fills album positions from the owner album in order, repeating photos and capping the album at the positions', () => {
+    const albums = load('../data/template-album-bindings.json');
+    const id = Object.keys(albums).find(key => albums[key].photos.length >= 4 && albums[key].photos.some(keys => keys.length > 1)) || Object.keys(albums)[0];
+    const positions = albums[id].photos;
+    const photos = ['https://img.example/a.jpg', 'https://img.example/b.jpg'];
+    const selected = library.selection({ templateId: id, values: {}, album: photos });
+    const html = library.render(selected);
+    // Each slot's own tag carries its photo (img src or background-image); positions alternate a, b, a, b…
+    const tagOf = key => html.match(new RegExp(`<[^>]*data-ht-fields="(?:[^"]* )?${key}(?: [^"]*)?"[^>]*>`))?.[0] || '';
+    positions.forEach((keys, index) => keys.forEach(key => expect(tagOf(key)).toContain(photos[index % 2])));
+    const fields = library.editableFields(id);
+    expect(fields.find(field => field.key === positions[1][0]).album).toBe(1);
+    expect(fields.filter(field => field.album !== undefined)).toHaveLength(positions.flat().length);
+    // A single edit made before the album existed still wins over it; the share picture is the first album photo shown.
+    expect(library.render(library.selection({ templateId: id, values: { [positions[0][0]]: 'https://img.example/own.jpg' }, album: photos }))).toContain('https://img.example/own.jpg');
+    expect(library.shareImage(selected)).toMatch(/^https:\/\/img\.example\//);
+    expect(() => library.selection({ templateId: id, values: {}, album: Array.from({ length: positions.length + 1 }, () => photos[0]) })).toThrow(`tối đa ${positions.length} ảnh`);
+    expect(() => library.selection({ templateId: id, values: {}, album: ['http://img.example/a.jpg'] })).toThrow('HTTPS');
+  });
+  it('ends free cards with a thin hythiep.net line and hides it on plans with Ẩn thương hiệu', () => {
+    const selected = library.selection({ templateId: 'tpl-e0ead20053787a9c', values: {} });
+    const wedding = { invitationKind: 'wedding', couple: { groom: 'Minh', bride: 'An' } };
+    const free = library.render(selected, { wedding: { ...wedding, plan: 'free' } });
+    expect(free).toContain("line.id='ht-brand'");
+    expect(free).toContain('Thiệp hỷ gửi tận tên từng người');
+    expect(free).toContain("'data-ht-href','https://hythiep.net'");
+    for (const plan of ['basic', 'premium']) expect(library.render(selected, { wedding: { ...wedding, plan } })).not.toContain("line.id='ht-brand'");
+  });
   it('plays the owner music on premium cards and points map buttons at the venue map link', () => {
     const id = 'tpl-e0ead20053787a9c';
     const wedding = { invitationKind: 'wedding', plan: 'premium', musicUrl: 'https://cdn.example.test/song.mp3', venue: { name: '', address: '', mapUrl: 'https://maps.google.com/?q=Hoa+Sen' }, couple: { groom: 'Minh', bride: 'An' } };

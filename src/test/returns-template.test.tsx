@@ -20,7 +20,7 @@ beforeEach(() => {
 
 describe("payment return", () => {
   it("syncs a paid order and refreshes the wedding", async () => {
-    window.history.replaceState({}, "", "/dashboard/w1?payment=success&orderCode=123");
+    window.history.replaceState({}, "", "/thiep-cua-toi/w1?payment=success&orderCode=123");
     let weddingReads = 0;
     let syncSeen = false;
     const fetchMock = vi.fn().mockImplementation(async (url: string, options?: RequestInit) => {
@@ -34,7 +34,7 @@ describe("payment return", () => {
       return response({});
     });
     vi.stubGlobal("fetch", fetchMock);
-    render(<MemoryRouter initialEntries={["/dashboard/w1"]}><Routes><Route path="/dashboard/:id" element={<Editor />} /></Routes></MemoryRouter>);
+    render(<MemoryRouter initialEntries={["/thiep-cua-toi/w1"]}><Routes><Route path="/thiep-cua-toi/:id" element={<Editor />} /></Routes></MemoryRouter>);
     expect(await screen.findByText("Thanh toán thành công. Gói thiệp đã được cập nhật.")).toBeInTheDocument();
     expect(weddingReads).toBe(1);
     expect(syncSeen).toBe(true);
@@ -42,10 +42,10 @@ describe("payment return", () => {
   });
 
   it("treats a cancelled checkout as a neutral notice", async () => {
-    window.history.replaceState({}, "", "/dashboard/w1?payment=cancel&orderCode=123");
+    window.history.replaceState({}, "", "/thiep-cua-toi/w1?payment=cancel&orderCode=123");
     const fetchMock = vi.fn().mockImplementation(async (url: string) => response(url.includes("pricing") ? pricing : url.endsWith("/orders") ? [] : wedding));
     vi.stubGlobal("fetch", fetchMock);
-    render(<MemoryRouter initialEntries={["/dashboard/w1"]}><Routes><Route path="/dashboard/:id" element={<Editor />} /></Routes></MemoryRouter>);
+    render(<MemoryRouter initialEntries={["/thiep-cua-toi/w1"]}><Routes><Route path="/thiep-cua-toi/:id" element={<Editor />} /></Routes></MemoryRouter>);
     // The notice is first shown on the loading screen, then re-rendered inside the editor: wait for the editor.
     await screen.findByRole("button", { name: "Lưu thay đổi" });
     expect(screen.getByText(/Đã hủy thanh toán/)).toBeInTheDocument();
@@ -54,9 +54,9 @@ describe("payment return", () => {
   });
 
   it("keeps pending payment as pending", async () => {
-    window.history.replaceState({}, "", "/dashboard/w1?payment=success&orderCode=123");
+    window.history.replaceState({}, "", "/thiep-cua-toi/w1?payment=success&orderCode=123");
     vi.stubGlobal("fetch", vi.fn().mockImplementation(async (url: string) => response(url.includes("pricing") ? pricing : url.includes("/sync") ? { status: "pending", plan: "free" } : url.endsWith("/orders") ? [] : wedding)));
-    render(<MemoryRouter initialEntries={["/dashboard/w1"]}><Routes><Route path="/dashboard/:id" element={<Editor />} /></Routes></MemoryRouter>);
+    render(<MemoryRouter initialEntries={["/thiep-cua-toi/w1"]}><Routes><Route path="/thiep-cua-toi/:id" element={<Editor />} /></Routes></MemoryRouter>);
     expect(await screen.findByText(/Thanh toán đang chờ xác nhận/)).toBeInTheDocument();
   });
 });
@@ -100,7 +100,7 @@ describe("files and settings", () => {
 
   it("prints an entitled guest QR sheet", async () => {
     vi.stubGlobal("fetch", vi.fn().mockImplementation(async (url: string) => response(url.endsWith("/guests") ? [guest] : { ...wedding, entitlements: premiumEntitlements })));
-    render(<MemoryRouter initialEntries={["/dashboard/w1/qr"]}><Routes><Route path="/dashboard/:id/qr" element={<GuestQrPrint />} /></Routes></MemoryRouter>);
+    render(<MemoryRouter initialEntries={["/thiep-cua-toi/w1/qr"]}><Routes><Route path="/thiep-cua-toi/:id/qr" element={<GuestQrPrint />} /></Routes></MemoryRouter>);
     expect(await screen.findByAltText("Mã QR của Bác Nam")).toBeInTheDocument();
     expect(screen.getByText(`${window.location.origin}/w/hoa-minh/abc`)).toBeInTheDocument();
   });

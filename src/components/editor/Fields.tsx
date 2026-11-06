@@ -7,6 +7,7 @@ import SharePreview from "./SharePreview";
 import ImageField from "./ImageField";
 import { slugify } from "../../lib/links";
 import DateInput from "./DateInput";
+import MapField from "./MapField";
 import { invitationKinds } from '../../lib/templateLibrary';
 type Change = (patch: Partial<Wedding>) => void;
 
@@ -34,8 +35,7 @@ export function BasicInfoFields({ wedding: w, change }: { wedding: Wedding; chan
     {!imported && <Field label="Ngày hiển thị" value={w.dateText} onChange={dateText => change({ dateText })} />}
     <Field label="Tên địa điểm" value={w.venue.name} onChange={name => change({ venue: { ...w.venue, name } })} />
     <Field label="Địa chỉ" value={w.venue.address} onChange={address => change({ venue: { ...w.venue, address } })} />
-    <Field label="Liên kết bản đồ" type="url" value={w.venue.mapUrl} onChange={mapUrl => change({ venue: { ...w.venue, mapUrl } })} />
-    {imported && <p className="full field-hint">Nút "Chỉ đường" / "Mở bản đồ" trên thiệp mở liên kết bản đồ này. Ngày, thứ, giờ và ngày âm lịch trên thiệp tự theo ngày cưới.</p>}
+    <MapField value={w.venue.mapUrl} onChange={mapUrl => change({ venue: { ...w.venue, mapUrl } })} />
   </div>;
 }
 
@@ -103,6 +103,11 @@ export function SharingFields({ wedding: w, change, onUpgrade }: { wedding: Wedd
       {imported && w.musicUrl && <p className="field-hint">Nhạc này thay nhạc có sẵn của mẫu; mẫu không có nhạc sẽ có nút ♪ để khách bật.</p>}
       {audioError && <p role="alert" className="error">{audioError}</p>}
       {!w.entitlements?.customMusic && <LockedFeature plan="premium" label="Nhạc nền riêng" onUpgrade={onUpgrade} />}
+    </div>
+    {/* Paid cards drop the thin hythiep.net line at the end of the card; free cards see the option greyed out. */}
+    <div className="full editor-stack">
+      <label className={`checkbox-row${w.entitlements?.removeBranding ? "" : " is-locked"}`}><input type="checkbox" checked={Boolean(w.entitlements?.removeBranding)} disabled /> Ẩn dòng “hythiep.net” ở cuối thiệp</label>
+      {!w.entitlements?.removeBranding && <LockedFeature plan="basic" label="Ẩn dòng thương hiệu" onUpgrade={onUpgrade} />}
     </div>
     {!imported && <label>Màu chủ đạo
       <input type="color" value={w.theme.primary || "#b76e79"} onChange={e => change({ theme: { ...w.theme, primary: e.target.value } })} />

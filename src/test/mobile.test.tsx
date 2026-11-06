@@ -92,7 +92,7 @@ describe("phone editing controls", () => {
     const original = window.matchMedia;
     window.matchMedia = vi.fn().mockImplementation(query => ({ matches: query.includes("768px"), media: query, addListener: vi.fn(), removeListener: vi.fn(), addEventListener: vi.fn(), removeEventListener: vi.fn(), dispatchEvent: vi.fn() }));
     vi.spyOn(globalThis, "fetch").mockImplementation(async input => ({ ok: true, status: 200, json: async () => String(input).endsWith("/guests") ? [] : String(input).includes("preview-meta") ? { title: "Thiệp", description: "Lời mời", image: "", url: "https://example.com/w/hoa-minh", siteName: BRAND_NAME } : wedding } as Response));
-    const { container } = render(<MemoryRouter initialEntries={["/dashboard/w1"]}><Routes><Route path="/dashboard/:id" element={<Editor />} /></Routes></MemoryRouter>);
+    const { container } = render(<MemoryRouter initialEntries={["/thiep-cua-toi/w1"]}><Routes><Route path="/thiep-cua-toi/:id" element={<Editor />} /></Routes></MemoryRouter>);
     fireEvent.change(await screen.findByLabelText("Tên chú rể"), { target: { value: "Minh mới" } });
     const save = container.querySelector<HTMLButtonElement>(".editor-save-bar button");
     expect(save).toBeEnabled();

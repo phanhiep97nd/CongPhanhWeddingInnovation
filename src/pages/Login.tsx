@@ -3,6 +3,7 @@ import BrandLogo from "../components/BrandLogo";
 import { useState, type FormEvent } from "react";
 import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../lib/auth";
+import { CARDS_PATH } from "../lib/links";
 
 export default function Login() {
   const { user, login } = useAuth();
@@ -18,7 +19,7 @@ export default function Login() {
   });
   const [errorField, setErrorField] = useState<"email" | "password" | null>(null);
   const [busy, setBusy] = useState(false);
-  if (user) return <Navigate to="/dashboard" replace />;
+  if (user) return <Navigate to={CARDS_PATH} replace />;
   async function submit(event: FormEvent) {
     event.preventDefault();
     if (!/^\S+@\S+\.\S+$/.test(email)) { setErrorField("email"); return setError("Nhập địa chỉ email hợp lệ."); }
@@ -28,7 +29,7 @@ export default function Login() {
     setErrorField(null);
     try {
       await login(email.trim(), password);
-      navigate((location.state as { from?: string; } | null)?.from || "/dashboard", { replace: true });
+      navigate((location.state as { from?: string; } | null)?.from || CARDS_PATH, { replace: true });
     } catch (cause) {
       setError((cause as Error).message);
     } finally {

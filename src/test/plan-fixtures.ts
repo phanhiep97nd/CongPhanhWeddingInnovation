@@ -6,9 +6,9 @@ export const freeEntitlements: Entitlements = {
   largeGallery: false,
   excelExport: false,
   guestQr: false,
-  giftBox: false,
   photoWall: false,
   customMusic: false,
+  voiceInvite: false,
   permanent: false,
   premiumTemplates: false,
 };
@@ -57,7 +57,8 @@ export const pricing: Pricing = {
   paidGalleryLimit: 50,
   features: [
     { key: "unlimitedGuests", label: "Khách không giới hạn", plan: "basic" },
-    { key: "giftBox", label: "Hộp mừng cưới", plan: "basic" },
+    { key: "guestQr", label: "Mã QR khách mời", plan: "basic" },
+    { key: "voiceInvite", label: "Lời mời ghi âm cho từng khách", plan: "premium" },
   ],
 };
 

@@ -2,11 +2,13 @@ import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { api, json, PlanRequiredError } from "../../lib/api";
 import { guestsCsv } from "../../lib/csv";
 import { parseBulkGuests } from "../../lib/guests";
-import { inviteLink } from "../../lib/links";
+import { inviteLink, qrPrintPath } from "../../lib/links";
 import type { Guest, Stats, Wedding } from "../../lib/types";
 import { Field } from "./Fields";
 import LockedFeature from "../billing/LockedFeature";
+import LockedButton from "../billing/LockedButton";
 import GuestQrDialog from "./GuestQrDialog";
+import VoiceInviteField from "./VoiceInviteField";
 import { exportGuestExcel } from "../../lib/excel";
 import { Link } from "react-router-dom";
 import { useConfirmSheet } from "../ConfirmSheet";
@@ -21,6 +23,9 @@ export default function GuestsTab({ wedding, weddingId: legacyId, slug: legacySl
   const [invitationName, setInvitationName] = useState("");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [voiceUrl, setVoiceUrl] = useState("");
+  const [voiceBusy, setVoiceBusy] = useState(false);
+  const voiceLocked = !wedding?.entitlements?.voiceInvite;
   const [bulk, setBulk] = useState("");
   const [editing, setEditing] = useState<Guest | null>(null);
   const editingDialog = useRef<HTMLDialogElement>(null);
@@ -52,10 +57,11 @@ export default function GuestsTab({ wedding, weddingId: legacyId, slug: legacySl
     e.preventDefault();
     if (!invitationName.trim()) return;
     try {
-      await api<Guest>(`${base}/guests`, json("POST", { invitationName: invitationName.trim(), name: name.trim(), phone: phone.trim() }), true);
+      await api<Guest>(`${base}/guests`, json("POST", { invitationName: invitationName.trim(), name: name.trim(), phone: phone.trim(), ...(voiceUrl ? { voiceUrl } : {}) }), true);
       setInvitationName("");
       setName("");
       setPhone("");
+      setVoiceUrl("");
       await refresh();
       setMessage("Đã thêm khách mời.");
     } catch (err) {
@@ -88,11 +94,12 @@ export default function GuestsTab({ wedding, weddingId: legacyId, slug: legacySl
     e.preventDefault();
     if (!editing) return;
     try {
-      await api<Guest>(`${base}/guests/${editing.id}`, json("PUT", { invitationName: editing.invitationName, name: editing.name, phone: editing.phone, status: editing.status, guestCount: editing.guestCount, joinGroup: editing.joinGroup, pickupPoint: editing.pickupPoint, room: editing.room, note: editing.note }), true);
+      await api<Guest>(`${base}/guests/${editing.id}`, json("PUT", { invitationName: editing.invitationName, name: editing.name, phone: editing.phone, status: editing.status, guestCount: editing.guestCount, joinGroup: editing.joinGroup, pickupPoint: editing.pickupPoint, room: editing.room, note: editing.note, voiceUrl: editing.voiceUrl || "" }), true);
       setEditing(null);
       await refresh();
       setMessage("Đã lưu khách mời.");
     } catch (err) {
+      if (err instanceof PlanRequiredError) setLockedPlan(err.requiredPlan);
       setMessage((err as Error).message);
     }
   }
@@ -153,8 +160,9 @@ export default function GuestsTab({ wedding, weddingId: legacyId, slug: legacySl
         <Field label="Tên trên thiệp" value={invitationName} onChange={setInvitationName} />
         <Field label="Tên thật" value={name} onChange={setName} />
         <Field label="SĐT" type="tel" autoComplete="tel" value={phone} onChange={setPhone} />
+        <VoiceInviteField value={voiceUrl} onChange={setVoiceUrl} locked={voiceLocked} onUpgrade={onUpgrade} onBusy={setVoiceBusy} />
       </div>
-      <button className="button">Thêm khách
+      <button className="button" disabled={voiceBusy}>Thêm khách
       </button>
     </form>
     <div className="editor-item">
@@ -172,11 +180,10 @@ export default function GuestsTab({ wedding, weddingId: legacyId, slug: legacySl
       </button>
       <button className="button-outline" onClick={exportCsv}>Xuất CSV
       </button>
-      {wedding?.entitlements?.excelExport && <button className="button-outline" onClick={() => void exportGuestExcel(guests, window.location.origin, slug).catch(cause => setMessage((cause as Error).message))}>Xuất Excel</button>}
-      {wedding?.entitlements?.guestQr && <Link className="button-outline" to={`/dashboard/${weddingId}/qr`}>In mã QR</Link>}
+      {/* Paid tools stay visible, greyed out with a lock, so owners see what an upgrade adds. */}
+      {wedding?.entitlements?.excelExport ? <button className="button-outline" onClick={() => void exportGuestExcel(guests, window.location.origin, slug).catch(cause => setMessage((cause as Error).message))}>Xuất Excel</button> : wedding && <LockedButton plan="basic" onUpgrade={onUpgrade}>Xuất Excel</LockedButton>}
+      {wedding?.entitlements?.guestQr ? <Link className="button-outline" to={qrPrintPath(weddingId)}>In mã QR</Link> : wedding && <LockedButton plan="basic" onUpgrade={onUpgrade}>In mã QR</LockedButton>}
     </div>
-    {wedding && !wedding.entitlements?.excelExport && <LockedFeature plan="basic" label="Xuất Excel" onUpgrade={onUpgrade} />}
-    {wedding && !wedding.entitlements?.guestQr && <LockedFeature plan="basic" label="Mã QR khách mời" onUpgrade={onUpgrade} />}
     {message && <p role="status">
       {message}
     </p>}
@@ -208,13 +215,13 @@ export default function GuestsTab({ wedding, weddingId: legacyId, slug: legacySl
           {g.name} ·{" "}
           {g.phone}
         </p>
-        <p><span className={`status-chip status-${g.status}`}>{g.status === "yes" ? "Tham dự" : g.status === "no" ? "Không đến" : "Chờ"}</span> · {g.guestCount} người · {g.room}</p>
+        <p><span className={`status-chip status-${g.status}`}>{g.status === "yes" ? "Tham dự" : g.status === "no" ? "Không đến" : "Chờ"}</span> · {g.guestCount} người · {g.room}{g.voiceUrl ? " · 🎙 Có lời mời ghi âm" : ""}</p>
         <div className="actions">
           <button onClick={() => void copy(inviteLink(window.location.origin, slug, g.code))}>Sao chép liên kết
           </button>
           <button onClick={() => setEditing(g)}>Sửa
           </button>
-          {wedding?.entitlements?.guestQr && <button onClick={() => setQrGuest(g)}>Mã QR</button>}
+          {wedding?.entitlements?.guestQr ? <button onClick={() => setQrGuest(g)}>Mã QR</button> : wedding && <LockedButton plan="basic" onUpgrade={onUpgrade}>Mã QR</LockedButton>}
           <button onClick={() => void remove(g)}>Xóa
           </button>
         </div>
@@ -241,8 +248,9 @@ export default function GuestsTab({ wedding, weddingId: legacyId, slug: legacySl
         <label className="checkbox-row">
           <input type="checkbox" checked={editing.joinGroup} onChange={e => setEditing({ ...editing, joinGroup: e.target.checked })} /> Đi cùng đoàn
         </label>
+        <VoiceInviteField value={editing.voiceUrl || ""} onChange={value => setEditing(current => current && { ...current, voiceUrl: value })} locked={voiceLocked && !editing.voiceUrl} onUpgrade={onUpgrade} onBusy={setVoiceBusy} />
         <div className="actions">
-          <button className="button">Lưu
+          <button className="button" disabled={voiceBusy}>Lưu
           </button>
           <button type="button" onClick={() => setEditing(null)}>Hủy
           </button>

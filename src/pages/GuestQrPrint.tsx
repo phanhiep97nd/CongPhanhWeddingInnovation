@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import QRCode from "qrcode";
 import { api } from "../lib/api";
-import { inviteLink } from "../lib/links";
+import { editorPath, inviteLink } from "../lib/links";
 import type { Guest, Wedding } from "../lib/types";
 
 interface QrCard { guest: Guest; link: string; image: string; }
@@ -27,7 +27,7 @@ export default function GuestQrPrint() {
   }, [id]);
   return <main className="qr-print-page shell">
     <header className="dash-header no-print">
-      <Link to={`/dashboard/${id}`}>← Về danh sách khách</Link>
+      <Link to={editorPath(id!)}>← Về danh sách khách</Link>
       <button className="button" disabled={!cards.length} onClick={() => window.print()}>In mã QR</button>
     </header>
     <h1 className="no-print">Mã QR khách mời</h1>

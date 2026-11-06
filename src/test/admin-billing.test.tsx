@@ -30,13 +30,13 @@ function adminRoutes(role: "user" | "admin", path: string) {
     return response({ items: [], total: 0, page: 1, limit: 20 });
   }));
   render(<MemoryRouter initialEntries={[path]}><AuthProvider><Routes>
-    <Route path="/dashboard" element={<p>Danh sách thiệp</p>} />
+    <Route path="/thiep-cua-toi" element={<p>Danh sách thiệp</p>} />
     <Route path="/admin" element={<AdminLayout />}><Route index element={<Overview />} /><Route path="users" element={<Users />} /></Route>
   </Routes></AuthProvider></MemoryRouter>);
 }
 
 describe("admin access and overview", () => {
-  it("redirects a regular user to dashboard", async () => {
+  it("redirects a regular user to their cards", async () => {
     adminRoutes("user", "/admin");
     expect(await screen.findByText("Danh sách thiệp")).toBeInTheDocument();
   });
@@ -146,7 +146,7 @@ describe("admin orders and settings", () => {
 describe("editor and guests", () => {
   it("shows the sticky editor save header", async () => {
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue(response(wedding)));
-    render(<MemoryRouter initialEntries={["/dashboard/w1"]}><Routes><Route path="/dashboard/:id" element={<Editor />} /></Routes></MemoryRouter>);
+    render(<MemoryRouter initialEntries={["/thiep-cua-toi/w1"]}><Routes><Route path="/thiep-cua-toi/:id" element={<Editor />} /></Routes></MemoryRouter>);
     expect(await screen.findByRole("button", { name: "Lưu thay đổi" })).toBeInTheDocument();
     expect(document.querySelector(".editor-sticky-header")).toBeInTheDocument();
   });
@@ -162,11 +162,17 @@ describe("editor and guests", () => {
     expect(fetchMock.mock.calls.some(([url]) => String(url).endsWith("/bulk"))).toBe(false);
   });
 
-  it("shows free Excel and QR locks", async () => {
-    vi.stubGlobal("fetch", vi.fn().mockImplementation(async (url: string) => response(url.endsWith("/stats") ? { total: 0, yes: 0, no: 0, pending: 0, attendees: 0 } : [])));
-    render(<MemoryRouter><GuestsTab wedding={wedding} onUpgrade={vi.fn()} /></MemoryRouter>);
-    expect(await screen.findByText(/Xuất Excel cần gói Cơ bản/)).toBeInTheDocument();
-    expect(screen.getByText(/Mã QR khách mời cần gói Cơ bản/)).toBeInTheDocument();
+  it("shows free Excel and QR tools greyed out with a lock that opens the plans", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockImplementation(async (url: string) => response(url.endsWith("/stats") ? { total: 0, yes: 0, no: 0, pending: 0, attendees: 0 } : url.endsWith("/guests") ? [guest] : [])));
+    const onUpgrade = vi.fn();
+    render(<MemoryRouter><GuestsTab wedding={wedding} onUpgrade={onUpgrade} /></MemoryRouter>);
+    const excel = await screen.findByRole("button", { name: /Xuất Excel/ });
+    expect(excel).toHaveAttribute("aria-disabled", "true");
+    expect(excel).toHaveAttribute("title", "Cần gói Cơ bản. Bấm để xem gói.");
+    expect(screen.getByRole("button", { name: /In mã QR/ })).toHaveAttribute("aria-disabled", "true");
+    expect(await screen.findByRole("button", { name: /^Mã QR/ })).toHaveAttribute("aria-disabled", "true");
+    fireEvent.click(excel);
+    expect(onUpgrade).toHaveBeenCalled();
   });
 
   it("renders a QR image for a personal link", async () => {
@@ -176,7 +182,7 @@ describe("editor and guests", () => {
 
   it("locks the QR print page on a free wedding", async () => {
     vi.stubGlobal("fetch", vi.fn().mockImplementation(async (url: string) => response(url.endsWith("/guests") ? [guest] : { ...wedding, entitlements: freeEntitlements })));
-    render(<MemoryRouter initialEntries={["/dashboard/w1/qr"]}><Routes><Route path="/dashboard/:id/qr" element={<GuestQrPrint />} /></Routes></MemoryRouter>);
+    render(<MemoryRouter initialEntries={["/thiep-cua-toi/w1/qr"]}><Routes><Route path="/thiep-cua-toi/:id/qr" element={<GuestQrPrint />} /></Routes></MemoryRouter>);
     expect(await screen.findByText("Cần gói Cơ bản để in mã QR.")).toBeInTheDocument();
   });
 });

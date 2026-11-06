@@ -89,3 +89,35 @@ it("patches typed text into the open card without another server render and undo
   fireEvent.click(screen.getByRole("button", { name: /Hoàn tác/ }));
   expect(latest?.importedTemplate?.values).toEqual({});
 });
+
+vi.mock("../../lib/images", () => ({ uploadImage: vi.fn(async (file: File) => `https://img.example/${file.name}`) }));
+it("uploads album photos together into one album row, up to the album positions of the template", async () => {
+  const album = [
+    { key: "a1", type: "image", label: "Ảnh 4", value: "", album: 0 },
+    { key: "a2", type: "image", label: "Ảnh 5", value: "", album: 1 },
+    { key: "a3", type: "image", label: "Ảnh 6", value: "", album: 1 },
+    { key: "a4", type: "image", label: "Ảnh 7", value: "", album: 2 },
+    { key: "f1", type: "image", label: "Ảnh 1", value: "" },
+  ];
+  vi.stubGlobal("fetch", vi.fn(async (url: string) => url.endsWith("/fields") ? ok(album) : url.endsWith("/template-preview") ? ok({ html: "<html></html>", boundValues: {} }) : ok([])));
+  let latest: Wedding | undefined;
+  render(<Studio onChange={next => { latest = next; }} />);
+  const frame = await fromCard({ type: "ht:ready", order: ["f1", "a1", "a2", "a3", "a4"] });
+  await waitFor(() => expect(screen.getByText("Album ảnh")).toBeInTheDocument());
+  expect(screen.getByText("Ảnh mẫu · tối đa 3 ảnh")).toBeInTheDocument();
+  expect(screen.queryByText("Ảnh 5")).not.toBeInTheDocument();
+  // Clicking any album photo on the card opens the album and highlights all of its slots.
+  const post = vi.spyOn(frame.contentWindow!, "postMessage");
+  await fromCard({ type: "ht:field", keys: ["a3"] });
+  expect(post).toHaveBeenCalledWith({ type: "ht:select", key: "a1", keys: ["a1", "a2", "a3", "a4"], scroll: false }, "*");
+  const input = document.querySelector<HTMLInputElement>(".studio-upload input[multiple]")!;
+  const files = ["1.jpg", "2.jpg", "3.jpg", "4.jpg"].map(name => new File(["x"], name, { type: "image/jpeg" }));
+  fireEvent.change(input, { target: { files } });
+  await waitFor(() => expect(latest?.importedTemplate?.album).toEqual(["https://img.example/1.jpg", "https://img.example/2.jpg", "https://img.example/3.jpg"]));
+  expect(screen.getByRole("alert")).toHaveTextContent("Album của mẫu này có 3 khung ảnh nên chỉ thêm được 3 ảnh.");
+  expect(screen.getByText("3/3 ảnh")).toBeInTheDocument();
+  fireEvent.click(screen.getByRole("button", { name: "Đưa ảnh 1 ra sau" }));
+  expect(latest?.importedTemplate?.album?.slice(0, 2)).toEqual(["https://img.example/2.jpg", "https://img.example/1.jpg"]);
+  fireEvent.click(screen.getByRole("button", { name: "Bỏ ảnh 3" }));
+  expect(latest?.importedTemplate?.album).toHaveLength(2);
+}, 30000);

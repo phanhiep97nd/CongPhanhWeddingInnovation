@@ -20,8 +20,8 @@ const schemas = {
     dates: ['planActivatedAt', 'eventDate'], relations: { owner: 'User' }
   },
   Guest: {
-    table: 'guests', fields: ['wedding', 'code', 'name', 'invitationName', 'phone', 'status', 'guestCount', 'joinGroup', 'pickupPoint', 'room', 'note'],
-    defaults: { code: null, phone: '', status: 'pending', guestCount: 1, joinGroup: false, pickupPoint: '', room: '', note: '' },
+    table: 'guests', fields: ['wedding', 'code', 'name', 'invitationName', 'phone', 'status', 'guestCount', 'joinGroup', 'pickupPoint', 'room', 'note', 'voiceUrl'],
+    defaults: { code: null, phone: '', status: 'pending', guestCount: 1, joinGroup: false, pickupPoint: '', room: '', note: '', voiceUrl: '' },
     required: ['wedding', 'name', 'invitationName'], relations: { wedding: 'Wedding' }
   },
   Photo: {

@@ -46,7 +46,8 @@ function calendars(id, date) {
       Month: monthNames[date.month - 1], MONTH: monthNames[date.month - 1].toUpperCase(), Mon: monthNames[date.month - 1].slice(0, 3), MON: monthNames[date.month - 1].slice(0, 3).toUpperCase()
     })[token]);
   }
-  return { values, runtime: { year: date.year, month: date.month, day: date.day, calendars: entries.map(({ days, weekStart }) => ({ days, weekStart })) } };
+  const sample = dateBindings[id]?.sample;
+  return { values, runtime: { year: date.year, month: date.month, day: date.day, calendars: entries.map(({ days, weekStart }) => ({ days, weekStart, ...(sample ? { sample } : {}) })) } };
 }
 // Text stating the wedding date (solar, weekday, time, lunar), derived by scripts/derive-date-bindings.mjs.
 // These are soft: they follow the date entered in Thông tin until the owner edits that text on the card.
@@ -84,10 +85,40 @@ function softDates(id, wedding, date) {
 // Map buttons ("Chỉ đường", "Mở bản đồ trực tuyến") derived by scripts/derive-venue-bindings.mjs; they open the
 // map link entered in Thông tin.
 const venueBindings = require('../data/template-venue-bindings.json');
-const mapLinks = (id, wedding) => venueBindings[id]?.map && /^https?:\/\//i.test(wedding?.venue?.mapUrl || '') ? { maps: venueBindings[id].map, mapUrl: wedding.venue.mapUrl } : null;
+const googleMapHosts = new Set(require('../data/google-map-hosts.json'));
+function mapLinks(id, wedding) {
+  if (!venueBindings[id]?.map || !wedding?.venue?.mapUrl) return null;
+  let url; try { url = new URL(wedding.venue.mapUrl); } catch { return null; }
+  if (url.protocol !== 'https:' || url.username || url.password) return null;
+  const embed = googleMapHosts.has(url.hostname) && /^\/maps(?:\/|$)/.test(url.pathname) && (url.pathname === '/maps/embed' || url.pathname.startsWith('/maps/embed/') || url.searchParams.get('output') === 'embed');
+  return { maps: venueBindings[id].map, mapUrl: url.href, mapEmbed: embed };
+}
+// Countdowns of the other templates, derived by scripts/derive-countdown-bindings.mjs. Their original scripts were
+// not captured, so the renderer counts down to the wedding date and time (Vietnam time) and the runtime keeps ticking.
+const countdownBindings = require('../data/template-countdown-bindings.json');
+const countdownKeys = id => (countdownBindings[id] || []).flatMap(entry => entry.keys || [entry.key]);
+function weddingTarget(wedding, date) {
+  if (!date) return null;
+  const [hours, minutes] = (/^\d{1,2}:\d{2}$/.test(wedding?.eventTime || '') ? wedding.eventTime : '00:00').split(':').map(Number);
+  return Date.UTC(date.year, date.month - 1, date.day, hours - 7, minutes);
+}
+const countdownParts = target => {
+  const seconds = Math.max(0, Math.floor((target - Date.now()) / 1000));
+  return [Math.floor(seconds / 86400), Math.floor(seconds / 3600) % 24, Math.floor(seconds / 60) % 60, seconds % 60];
+};
+function countdowns(id, wedding, date) {
+  const entries = countdownBindings[id], target = weddingTarget(wedding, date);
+  if (!entries || target === null) return { values: {}, runtime: null };
+  const parts = countdownParts(target), values = {};
+  for (const entry of entries) {
+    if (entry.keys) entry.keys.forEach((key, index) => { values[key] = entry.pad && index ? String(parts[index]).padStart(2, '0') : String(parts[index]); });
+    else values[entry.key] = entry.pattern.replace(/\{([dhms])\}/g, (_, unit) => String(parts['dhms'.indexOf(unit)]));
+  }
+  return { values, runtime: { countdowns: entries, target } };
+}
 function bindingFor(id, key) {
   if (nameBindings[id]?.fields[key]) return { source: 'names', label: labels.names };
-  if (calendarKeys(id).includes(key)) return { source: 'schedule', label: labels.schedule };
+  if (calendarKeys(id).includes(key) || countdownKeys(id).includes(key)) return { source: 'schedule', label: labels.schedule };
   if (id !== templateId) return undefined;
   const group = Object.keys(groups).find(group => groups[group].includes(key));
   return group ? { source: sources[group], label: labels[sources[group]] } : undefined;
@@ -96,7 +127,11 @@ function resolve(id, wedding) {
   const date = weddingDate(wedding);
   const calendar = calendars(id, date);
   const links = mapLinks(id, wedding);
-  if (id !== templateId) return { values: { ...names(id, wedding), ...calendar.values }, soft: softDates(id, wedding, date), runtime: calendar.runtime || links ? { ...(calendar.runtime || {}), ...(links || {}) } : null };
+  if (id !== templateId) {
+    const countdown = countdowns(id, wedding, date);
+    const runtime = calendar.runtime || links || countdown.runtime ? { ...(calendar.runtime || {}), ...(links || {}), ...(countdown.runtime || {}) } : null;
+    return { values: { ...names(id, wedding), ...calendar.values, ...countdown.values }, soft: softDates(id, wedding, date), runtime };
+  }
   if (!wedding) return { values: {}, soft: {}, runtime: null };
   const values = { ...calendar.values };
   const groom = wedding.couple?.groomFull || wedding.couple?.groom || '';
@@ -117,10 +152,12 @@ function resolve(id, wedding) {
   const target = date ? Date.UTC(year, month - 1, day, hours - 7, minutes) : null;
   const remaining = target ? Math.max(0, Math.floor((target - Date.now()) / 1000)) : 0;
   [Math.floor(remaining / 86400), Math.floor(remaining / 3600) % 24, Math.floor(remaining / 60) % 60, remaining % 60].forEach((value, index) => { values[groups.countdown[index]] = String(value); });
-  return { values, soft: {}, runtime: { ...(calendar.runtime || {}), loveBegins: { target, mapUrl: wedding.venue?.mapUrl || '' } } };
+  return { values, soft: {}, runtime: { ...(calendar.runtime || {}), ...(links || {}), loveBegins: { target } } };
 }
 // Rebuild each bound calendar grid for the wedding month: blank cells before day 1, one cell per day, and the
-// sample's highlighted cell (heart, filled circle…) moved to the wedding day. Cells styled per weekday keep that style.
+// sample's marked cells (a heart on the wedding day, another on the eve…) moved with the wedding day. Cells styled per
+// weekday keep that style. Marks keep their distance from the wedding day when the sample date is known and matches the
+// sample grid; otherwise a single mark moves to the wedding day, and with none the wedding day gets a ring.
 const calendarRuntime = `function htCalendar(spec,date){
   const nodes=spec.days.map(key=>document.querySelector('[data-ht-fields~="'+key+'"]')).filter(Boolean);
   if(nodes.length<28)return;
@@ -137,31 +174,54 @@ const calendarRuntime = `function htCalendar(spec,date){
   const signature=item=>{const copy=item.cloneNode(true);const text=label(copy);if(text)text.textContent='';return copy.outerHTML.replace(/ data-ht-fields="[^"]*"/g,'');};
   const groups=new Map();dayCells.forEach((item,index)=>{const key=signature(item);if(!groups.has(key))groups.set(key,[]);groups.get(key).push(index);});
   const ranked=[...groups].sort((a,b)=>b[1].length-a[1].length),normal=dayCells[ranked[0][1][0]];
-  const sampleOffset=first-from,special=ranked.find(([,list])=>list.length===1&&ranked.length>1),columns=new Map();
-  for(const [,list] of ranked.slice(1)){if(list.length<2)continue;const cols=new Set(list.map(index=>(sampleOffset+index)%7));if(cols.size===1)columns.set([...cols][0],dayCells[list[0]]);}
+  const sampleOffset=first-from,columns=new Map(),marks=[];
+  for(const [,list] of ranked.slice(1)){const cols=new Set(list.map(index=>(sampleOffset+index)%7));if(list.length>1&&cols.size===1)columns.set([...cols][0],dayCells[list[0]]);else marks.push(...list);}
+  const sample=spec.sample,moved=new Map();
+  if(sample&&marks.length<=4&&(new Date(Date.UTC(sample.year,sample.month-1,1)).getUTCDay()-spec.weekStart+7)%7===sampleOffset){for(const index of marks)moved.set(date.day+index+1-sample.day,dayCells[index]);}
+  else if(marks.length===1)moved.set(date.day,dayCells[marks[0]]);
   const offset=(new Date(Date.UTC(date.year,date.month-1,1)).getUTCDay()-spec.weekStart+7)%7;
   const count=new Date(Date.UTC(date.year,date.month,0)).getUTCDate();
   const fresh=[];
   for(let index=0;index<offset;index++){const item=blank?blank.cloneNode(true):normal.cloneNode(true);if(!blank){const text=label(item);if(text)text.textContent='';item.style.visibility='hidden';}fresh.push(item);}
   for(let day=1;day<=count;day++){
-    const source=day===date.day&&special?dayCells[special[1][0]]:columns.get((offset+day-1)%7)||normal;
+    const source=moved.get(day)||columns.get((offset+day-1)%7)||normal;
     const item=source.cloneNode(true),text=label(item);
     if(text){text.textContent=String(day);text.setAttribute('data-ht-fields',spec.days[Math.min(day,spec.days.length)-1]);}
-    if(day===date.day&&!special&&text){text.style.borderRadius='50%';text.style.boxShadow='0 0 0 2px currentColor';}
+    if(day===date.day&&!moved.has(day)&&text){text.style.borderRadius='50%';text.style.boxShadow='0 0 0 2px currentColor';}
     fresh.push(item);
   }
   const anchor=children[to+1]||null;children.slice(from,to+1).forEach(item=>item.remove());
   for(const item of fresh)grid.insertBefore(item,anchor);
 }`;
-function runtimeScript(data) {
+function runtimeScript(data, editing = false) {
   if (!data) return '';
   return `(()=>{
     const data=${JSON.stringify(data).replaceAll('<', '\\u003c')};
     const field=key=>document.querySelector('[data-ht-fields~="'+key+'"]');
     ${calendarRuntime}
     if(data.calendars&&data.year)for(const spec of data.calendars)htCalendar(spec,data);
+    if(data.countdowns){const count=()=>{const seconds=Math.max(0,Math.floor((data.target-Date.now())/1000));
+      const parts=[Math.floor(seconds/86400),Math.floor(seconds/3600)%24,Math.floor(seconds/60)%60,seconds%60];
+      for(const entry of data.countdowns){
+        if(entry.keys)entry.keys.forEach((key,index)=>{const node=field(key);if(node)node.textContent=entry.pad&&index?String(parts[index]).padStart(2,'0'):String(parts[index]);});
+        else{const node=field(entry.key);if(node)node.textContent=entry.pattern.replace(/\\{([dhms])\\}/g,(_,unit)=>String(parts['dhms'.indexOf(unit)]));}
+      }};count();setInterval(count,1000);}
     // The page around the sandboxed card opens map links (data-ht-href) in a new tab.
-    if(data.maps)for(const key of data.maps){const link=field(key)?.closest('a');if(link)link.setAttribute('data-ht-href',data.mapUrl);}
+    if(data.maps)for(const key of data.maps){
+      const link=field(key)?.closest('a');if(!link)continue;
+      if(!data.mapEmbed){link.setAttribute('data-ht-href',data.mapUrl);continue;}
+      // Restore the map in the exact slot where the imported layout had its map link.
+      // Captured map containers already reserve their dimensions, including canvas scaling.
+      const placeholder=link.closest('.offline-embed'),mapContainer=placeholder?.parentElement;
+      const slot=document.createElement('div');slot.setAttribute('data-ht-map',key);slot.setAttribute('data-ht-fields',key);
+      slot.style.cssText='display:block;width:100%;height:240px;min-height:200px;overflow:hidden;border-radius:8px;pointer-events:auto';
+      if(mapContainer&&getComputedStyle(mapContainer).height!=='auto'&&parseFloat(getComputedStyle(mapContainer).height)>=200){slot.style.height='100%';slot.style.minHeight='0';}
+      const frame=document.createElement('iframe');frame.src=data.mapUrl;frame.title='Bản đồ địa điểm tổ chức';
+      frame.loading='lazy';frame.referrerPolicy='strict-origin-when-cross-origin';frame.allowFullscreen=true;
+      // In the editor, taps select the venue; the published map stays interactive.
+      frame.style.cssText='display:block;width:100%;height:100%;border:0;pointer-events:${editing ? 'none' : 'auto'}';
+      slot.append(frame);(placeholder||link).replaceWith(slot);
+    }
     const love=data.loveBegins;if(!love)return;
     // Bounds come from this layout's fixed design coordinates, before canvas zoom.
     // Keep long names/venues inside their allocated space rather than over the next row.
@@ -172,7 +232,6 @@ function runtimeScript(data) {
       let size=base;while(size>28&&(node.scrollHeight>maxHeight||node.scrollWidth>node.clientWidth+1)){size-=2;node.style.fontSize=size+'px';}
     }}
     fitText();document.fonts.ready.then(fitText);window.addEventListener('resize',fitText);
-    const map=field('f103');if(map&&/^https?:\\/\\//i.test(love.mapUrl||''))map.setAttribute('data-ht-href',love.mapUrl);
     function tick(){const seconds=love.target?Math.max(0,Math.floor((love.target-Date.now())/1000)):0;
       [Math.floor(seconds/86400),Math.floor(seconds/3600)%24,Math.floor(seconds/60)%60,seconds%60].forEach((value,index)=>{const node=field(['f37','f39','f41','f43'][index]);if(node)node.textContent=String(value);});}
     tick();if(love.target)setInterval(tick,1000);

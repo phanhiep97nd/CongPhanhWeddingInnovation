@@ -11,6 +11,8 @@ import LockedFeature from "../components/billing/LockedFeature";
 import { PlanRequiredError } from "../lib/api";
 import { useConfirmSheet } from "../components/ConfirmSheet";
 import { ArrowLeft } from "lucide-react";
+import { parseMapInput } from '../lib/mapInput';
+import { CARDS_PATH } from "../lib/links";
 type Tab = "card" | "guests" | "photos" | "billing";
 const tabs: { key: Tab; label: string; }[] = [{ key: "card", label: "Chỉnh sửa thiệp" }, { key: "guests", label: "Khách mời" }, { key: "photos", label: "Ảnh khách gửi" }, { key: "billing", label: "Gói & thanh toán" }];
 
@@ -99,6 +101,12 @@ export default function Editor() {
   const change = (patch: Partial<Wedding>) => setDraft(w => w ? { ...w, ...patch } : w);
   async function save() {
     if (!dirty) return;
+    if (draft && !parseMapInput(draft.venue.mapUrl).ok) {
+      const input = document.querySelector<HTMLInputElement>('[data-map-input][aria-invalid="true"]');
+      const panel = input?.closest('details'); if (panel) panel.open = true;
+      input?.focus(); input?.reportValidity();
+      return;
+    }
     setSaving(true);
     setMessage("");
     try {
@@ -116,13 +124,13 @@ export default function Editor() {
     }
   }
   async function back() {
-    if (!dirty || await confirm("Bạn có thay đổi chưa lưu. Rời trang?")) navigate("/dashboard");
+    if (!dirty || await confirm("Bạn có thay đổi chưa lưu. Rời trang?")) navigate(CARDS_PATH);
   }
   if (!draft) return <main className="shell">
     <p>
       {message || "Đang tải thiệp..."}
     </p>
-    <Link to="/dashboard">Về danh sách
+    <Link to={CARDS_PATH}>Về danh sách
     </Link>
   </main>;
   return <main className="editor">

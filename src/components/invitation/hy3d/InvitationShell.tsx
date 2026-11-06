@@ -5,6 +5,7 @@ import { cldUrl } from "../../../lib/images";
 import { WeddingContext } from "../original/WeddingContext";
 import { RSVPForm } from "../original/RSVPForm";
 import GiftBoxSection from "../original/GiftBoxSection";
+import VenueMap from '../VenueMap';
 import { ChevronDown, Heart } from "lucide-react";
 import type { Hy3dCanvasHandle } from "./Hy3dCanvas";
 import { observeResize } from "./observeResize";
@@ -226,7 +227,7 @@ function StopContent({ stopKey, wedding, guest, rooms, photos }: {
         <p className="hy3d-venue">{wedding.venue.name}</p>
         {wedding.venue.address && <p>{wedding.venue.address}</p>}
         <div className="hy3d-actions">
-          {wedding.venue.mapUrl && <a className="hy3d-button" href={wedding.venue.mapUrl} target="_blank" rel="noreferrer">Xem bản đồ</a>}
+          <VenueMap venue={wedding.venue} />
           {wedding.zaloGroupLink && <a className="hy3d-button is-quiet" href={wedding.zaloGroupLink} target="_blank" rel="noreferrer">Nhóm Zalo</a>}
         </div>
       </>

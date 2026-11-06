@@ -6,7 +6,7 @@ Nền tảng tạo thiệp cưới cá nhân: chỉnh sửa nội dung và ảnh
 
 Mỗi thiệp bắt đầu ở gói Miễn phí: tối đa 10 khách và 6 ảnh theo cấu hình mặc định, có dòng thương hiệu, hết hạn 30 ngày sau ngày cưới (hoặc 365 ngày sau khi tạo nếu chưa có ngày cưới). Đường dẫn mới có hậu tố 4 ký tự.
 
-Gói Cơ bản mở khách không giới hạn, tối đa 50 ảnh, xuất Excel, mã QR khách mời, hộp mừng cưới (tài khoản ngân hàng với mã VietQR tự tạo hoặc ảnh mã QR tải lên) và bỏ dòng thương hiệu. Gói Cao cấp thêm ảnh khách gửi, nhạc nền riêng, đường dẫn tùy chỉnh, mẫu Tối giản và thiệp không hết hạn. Giá mặc định là 30.000đ và 99.000đ; quản trị viên có thể đổi giá và giới hạn. Nâng từ Cơ bản lên Cao cấp chỉ thanh toán chênh lệch.
+Gói Cơ bản mở khách không giới hạn, tối đa 50 ảnh, xuất Excel, mã QR khách mời và bỏ dòng thương hiệu. Hộp mừng cưới (tài khoản ngân hàng với mã VietQR tự tạo hoặc ảnh mã QR tải lên) dùng được ở mọi gói. Gói Cao cấp thêm ảnh khách gửi, nhạc nền riêng, đường dẫn tùy chỉnh, mẫu Tối giản và thiệp không hết hạn. Giá mặc định là 30.000đ và 99.000đ; quản trị viên có thể đổi giá và giới hạn. Nâng từ Cơ bản lên Cao cấp chỉ thanh toán chênh lệch.
 
 ## Phát triển
 
@@ -100,7 +100,7 @@ Phạm vi đồng bộ này mới được xác nhận cho Our Love Begins. Ki�
 
 ### PayOS
 
-Đặt `PAYOS_CLIENT_ID`, `PAYOS_API_KEY`, `PAYOS_CHECKSUM_KEY` trong `.env` production. Compose đặt `SITE_ORIGIN=https://hythiep.net`. Webhook là `https://hythiep.net/api/payos/webhook`. Liên kết thanh toán quay về `/dashboard/:id?payment=success&orderCode=...` hoặc `payment=cancel`; trang biên tập gọi sync để xác nhận ngay cả khi webhook chưa đến.
+Đặt `PAYOS_CLIENT_ID`, `PAYOS_API_KEY`, `PAYOS_CHECKSUM_KEY` trong `.env` production. Compose đặt `SITE_ORIGIN=https://hythiep.net`. Webhook là `https://hythiep.net/api/payos/webhook`. Liên kết thanh toán quay về `/thiep-cua-toi/:id?payment=success&orderCode=...` hoặc `payment=cancel` (liên kết `/dashboard/...` cũ tự chuyển sang địa chỉ mới); trang biên tập gọi sync để xác nhận ngay cả khi webhook chưa đến.
 
 ### Quản trị
 

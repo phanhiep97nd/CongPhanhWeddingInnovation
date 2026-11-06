@@ -3,6 +3,7 @@ import BrandLogo from "../components/BrandLogo";
 import { useState, type FormEvent } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "../lib/auth";
+import { CARDS_PATH } from "../lib/links";
 
 export default function Register() {
   const { user, register } = useAuth();
@@ -14,7 +15,7 @@ export default function Register() {
   const [error, setError] = useState("");
   const [errorField, setErrorField] = useState<"name" | "email" | "password" | null>(null);
   const [busy, setBusy] = useState(false);
-  if (user) return <Navigate to="/dashboard" replace />;
+  if (user) return <Navigate to={CARDS_PATH} replace />;
   async function submit(event: FormEvent) {
     event.preventDefault();
     if (!name.trim()) { setErrorField("name"); return setError("Nhập tên của bạn."); }
@@ -25,7 +26,7 @@ export default function Register() {
     setErrorField(null);
     try {
       await register(email.trim(), password, name.trim());
-      navigate("/dashboard", { replace: true });
+      navigate(CARDS_PATH, { replace: true });
     } catch (cause) {
       setError((cause as Error).message);
     } finally {

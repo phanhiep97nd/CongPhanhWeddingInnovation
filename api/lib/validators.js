@@ -159,7 +159,9 @@ const guestFields = {
   joinGroup: bool,
   pickupPoint: value => string(value, 200),
   room: value => string(value, 100),
-  note: value => string(value, 1000)
+  note: value => string(value, 1000),
+  // A recorded or uploaded invitation for this guest (Premium).
+  voiceUrl: url
 };
 
 function normalizeSections(sectionsToNormalize, customSections) {

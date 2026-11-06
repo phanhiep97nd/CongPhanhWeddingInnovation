@@ -70,7 +70,7 @@ export default function InvitationToolbar({ slug, wedding, guestName = '', fixed
     } catch (error) { if (version === generation.current) setStatus((error as Error).message); }
     finally { if (version === generation.current) setBusy(false); }
   }
-  const hasGift = wedding?.entitlements?.giftBox && wedding.giftBox?.accounts.length;
+  const hasGift = wedding?.giftBox?.accounts.length;
   return <div className={`invitation-toolbar-layer${fixed ? ' invitation-toolbar-fixed' : ''}`}>
     {!frame && <div ref={blessingRoot} className="invitation-blessing-host" />}
     <nav className="invitation-toolbar" aria-label="Tương tác trên thiệp">

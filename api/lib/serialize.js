@@ -7,8 +7,10 @@ function serialize(document, omit = []) {
   return result;
 }
 
-function publicGuest(guest) {
+// The guest's recorded invitation is shown only while the card's plan includes it.
+function publicGuest(guest, voice = false) {
   return {
+    ...(voice && guest.voiceUrl ? { voiceUrl: guest.voiceUrl } : {}),
     code: guest.code,
     invitationName: guest.invitationName,
     status: guest.status,

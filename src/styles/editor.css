@@ -334,3 +334,33 @@ button, a, summary, input, select, textarea { touch-action: manipulation; -webki
 
 .gift-qr { display: grid; gap: .5rem; }
 .gift-qr-preview { width: 160px; height: 160px; object-fit: contain; border: 1px solid #e8c7cb; border-radius: 12px; background: #fff; padding: .4rem; }
+
+/* Album photos in the template studio: uploaded together, reordered and removed here. */
+.studio-album { list-style: none; margin: 0 0 10px; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 8px; }
+.studio-album li { position: relative; aspect-ratio: 1; border-radius: 8px; overflow: hidden; background: #f4ece9; }
+.studio-album img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.studio-album li > span { position: absolute; top: 4px; left: 4px; min-width: 18px; padding: 0 4px; border-radius: 9px; background: #000a; color: #fff; font-size: 11px; line-height: 18px; text-align: center; }
+.studio-album-actions { position: absolute; inset: auto 0 0; display: flex; justify-content: space-between; padding: 4px; background: linear-gradient(transparent, #0008); }
+.studio-album-actions button { display: grid; place-items: center; width: 24px; height: 24px; border: 0; border-radius: 50%; background: #fffe; color: #5a3a3e; cursor: pointer; }
+.studio-album-actions button:disabled { opacity: .35; cursor: default; }
+
+/* Recorded invitation for one guest (Premium). */
+.voice-invite { display: grid; gap: 8px; }
+.voice-invite-label { font-weight: 600; }
+.voice-invite-label small { font-weight: 400; color: var(--muted, #7a6a6c); }
+.voice-invite audio { width: 100%; max-width: 420px; height: 36px; }
+.voice-invite-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.voice-invite-actions > * { display: inline-flex; align-items: center; gap: 6px; }
+.voice-invite-actions input[type="file"] { display: none; }
+.voice-invite-actions .is-disabled { opacity: .5; pointer-events: none; }
+.voice-recording { background: #b3261e; border-color: #b3261e; animation: voice-pulse 1.2s ease-in-out infinite; }
+@keyframes voice-pulse { 50% { box-shadow: 0 0 0 6px #b3261e33; } }
+
+/* Features outside the card's plan stay visible but greyed out, with a lock, so owners see what an upgrade adds. */
+.locked-button { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border: 1px dashed #d6cdce; border-radius: 999px; background: #f1eeee; color: #938a8c; font: inherit; font-size: .9rem; cursor: not-allowed; }
+.locked-button small { padding: 1px 7px; border-radius: 999px; background: #e4dcdd; color: #7a6f71; font-size: .7rem; font-weight: 600; }
+.locked-button:hover { border-color: #c9848b; color: #7a3b46; }
+.editor-stack input:disabled, .editor-stack select:disabled, .editor-stack textarea:disabled, .form-grid input:disabled { background: #f1eeee; color: #9a9294; border-color: #e2dadb; cursor: not-allowed; }
+.button-outline:disabled, .music-upload.is-disabled, .voice-invite-actions .is-disabled { background: #f1eeee; color: #9a9294; border-color: #e2dadb; }
+.checkbox-row.is-locked { color: #9a9294; cursor: not-allowed; }
+.plan-grid li.plan-missing { color: #aaa1a3; text-decoration: line-through; text-decoration-color: #cfc6c7; }

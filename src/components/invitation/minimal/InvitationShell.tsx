@@ -6,6 +6,7 @@ import { api, json } from "../../../lib/api";
 import { WeddingContext } from "../original/WeddingContext";
 import { RSVPForm } from "../original/RSVPForm";
 import GiftBoxSection from "../original/GiftBoxSection";
+import VenueMap from '../VenueMap';
 import { uploadImage } from "../../../lib/images";
 import "./minimal.css";
 
@@ -72,7 +73,7 @@ export default function InvitationShell({ wedding, guest, slug }: { wedding: Wed
           <p>{wedding.dateText}</p>
           <h3>{wedding.venue.name}</h3>
           <p>{wedding.venue.address}</p>
-          {wedding.venue.mapUrl && <a href={wedding.venue.mapUrl} target="_blank" rel="noreferrer">Xem bản đồ ↗</a>}
+          <VenueMap venue={wedding.venue} />
         </section>;
         if (key === "rsvp") return <section key={key} id="rsvp"><h2>Xác nhận tham dự</h2><RSVPForm defaultName={guest?.invitationName || ""} guestId={guest?.code} /></section>;
         if (key === "rooms") return <section key={key} id="rooms">

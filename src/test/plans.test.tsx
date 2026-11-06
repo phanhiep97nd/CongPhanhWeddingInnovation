@@ -55,14 +55,24 @@ describe("upgrade panel", () => {
     vi.stubGlobal("fetch", vi.fn().mockImplementation(async (path: string) => response(path.includes("pricing") ? pricing : [])));
     render(<UpgradePanel wedding={wedding} />);
     expect(await screen.findByText("99.000đ")).toBeInTheDocument();
-    // The gift box is a basic feature, so it is listed for both paid plans.
-    expect(screen.getAllByText("Hộp mừng cưới").length).toBeGreaterThan(0);
+    // Basic features are listed for both paid plans.
+    expect(screen.getAllByText("Mã QR khách mời")).toHaveLength(2);
   });
 
   it("shows only the price difference for basic to premium", async () => {
     vi.stubGlobal("fetch", vi.fn().mockImplementation(async (path: string) => response(path.includes("pricing") ? pricing : [])));
     render(<UpgradePanel wedding={{ ...wedding, plan: "basic" }} />);
     expect(await screen.findByText(/69.000đ/)).toBeInTheDocument();
+  });
+
+  it("lists premium-only features on the basic plan greyed out", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockImplementation(async (path: string) => response(path.includes("pricing") ? pricing : [])));
+    render(<UpgradePanel wedding={wedding} />);
+    const premiumOnly = pricing.features.find(feature => feature.plan === "premium")!;
+    const items = await screen.findAllByText(premiumOnly.label);
+    expect(items).toHaveLength(2);
+    expect(items[0]).toHaveClass("plan-missing");
+    expect(items[1]).not.toHaveClass("plan-missing");
   });
 
   it("posts the chosen plan before checkout", async () => {
@@ -120,10 +130,10 @@ describe("gated editor controls", () => {
     expect(screen.getByRole("button", { name: "Thêm ảnh" })).toBeEnabled();
   });
 
-  it("shows photo wall and gift box locks in section controls", () => {
+  it("locks the photo wall but not the gift box in section controls", () => {
     render(<SectionsTab wedding={wedding} change={vi.fn()} onUpgrade={vi.fn()} />);
     expect(screen.getByText(/Ảnh khách gửi cần gói Cao cấp/)).toBeInTheDocument();
-    expect(screen.getByText(/Hộp mừng cưới cần gói Cơ bản/)).toBeInTheDocument();
+    expect(screen.queryByText(/Hộp mừng cưới cần gói/)).not.toBeInTheDocument();
   });
 
   it("removes section locks when premium", () => {
@@ -131,24 +141,27 @@ describe("gated editor controls", () => {
     expect(screen.queryByText(/cần gói Cao cấp/)).not.toBeInTheDocument();
   });
 
-  it("lets free owners prepare a gift account", () => {
+  it("lets free owners set up a gift account without an upgrade prompt", () => {
     const change = vi.fn();
-    render(<GiftBoxEditor wedding={wedding} change={change} onUpgrade={vi.fn()} />);
-    expect(screen.getByText(/Hiển thị hộp mừng cưới trên thiệp cần gói Cơ bản/)).toBeInTheDocument();
+    render(<GiftBoxEditor wedding={wedding} change={change} />);
+    expect(screen.queryByText(/cần gói/)).not.toBeInTheDocument();
     fireEvent.change(screen.getByLabelText("Số tài khoản"), { target: { value: "abc123" } });
     expect(change).toHaveBeenCalled();
   });
 
   it("limits gift accounts to four", () => {
     const accounts = Array.from({ length: 4 }, (_, index) => ({ ...wedding.giftBox!.accounts[0], id: String(index) }));
-    render(<GiftBoxEditor wedding={{ ...wedding, giftBox: { note: "", accounts } }} change={vi.fn()} onUpgrade={vi.fn()} />);
+    render(<GiftBoxEditor wedding={{ ...wedding, giftBox: { note: "", accounts } }} change={vi.fn()} />);
     expect(screen.getByRole("button", { name: "Thêm tài khoản hoặc mã QR" })).toBeDisabled();
   });
 });
 
 describe("invitation additions and data", () => {
-  it("hides gift accounts without entitlement", () => {
-    render(<GiftBoxSection wedding={wedding} />);
+  it("shows gift accounts on every plan and nothing without accounts", () => {
+    const { unmount } = render(<GiftBoxSection wedding={wedding} />);
+    expect(screen.getByText("Lời chúc")).toBeInTheDocument();
+    unmount();
+    render(<GiftBoxSection wedding={{ ...wedding, giftBox: { note: "Lời chúc", accounts: [] } }} />);
     expect(screen.queryByText("Lời chúc")).not.toBeInTheDocument();
   });
 

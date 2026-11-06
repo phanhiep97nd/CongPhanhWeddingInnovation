@@ -3,15 +3,13 @@ import { banks, vietQrUrl } from "../../lib/banks";
 import { clientId } from "../../lib/sections";
 import { Field } from "./Fields";
 import ImageField from "./ImageField";
-import LockedFeature from "../billing/LockedFeature";
 
-// Bank accounts or QR codes guests use to send a wedding gift; shown behind the "Hộp quà" button on the card.
+// Bank accounts or QR codes guests use to send a wedding gift; shown behind the "Hộp quà" button on the card, on every plan.
 // An account needs either a bank and account number (its VietQR code is generated) or an uploaded QR image
 // (e-wallets such as MoMo or ZaloPay, or the QR a bank app gives).
-export default function GiftBoxEditor({ wedding, change, onUpgrade }: {
+export default function GiftBoxEditor({ wedding, change }: {
   wedding: Wedding;
   change: (patch: Partial<Wedding>) => void;
-  onUpgrade: () => void;
 }) {
   const giftBox = wedding.giftBox || { note: "", accounts: [] };
   const update = (index: number, patch: Partial<GiftAccount>) => {
@@ -20,8 +18,7 @@ export default function GiftBoxEditor({ wedding, change, onUpgrade }: {
   const couple = `${wedding.couple.groom} ${wedding.couple.bride}`;
 
   return <div className="editor-stack gift-box-editor">
-    {!wedding.entitlements?.giftBox && <LockedFeature plan="basic" label="Hiển thị hộp mừng cưới trên thiệp" onUpgrade={onUpgrade} />}
-    <p className="field-hint">Khách bấm nút <strong>Hộp quà</strong> trên thiệp để xem các tài khoản và mã QR dưới đây. Bạn có thể chuẩn bị trước; hộp mừng cưới hiện trên thiệp từ gói Cơ bản.</p>
+    <p className="field-hint">Khách bấm nút <strong>Hộp quà</strong> trên thiệp để xem các tài khoản và mã QR dưới đây.</p>
     <Field label="Lời nhắn" value={giftBox.note} textarea onChange={note => change({ giftBox: { ...giftBox, note: note.slice(0, 300) } })} />
     {giftBox.accounts.map((account, index) => {
       const generated = account.bankBin && account.accountNumber ? vietQrUrl(account.bankBin, account.accountNumber, account.accountName, couple) : "";

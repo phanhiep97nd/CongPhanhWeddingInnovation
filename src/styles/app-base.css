@@ -218,27 +218,6 @@ textarea {
   justify-self: start;
 }
 
-.wedding-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
-  gap: 1rem;
-}
-
-.wedding-card {
-  overflow: hidden;
-  padding: 0;
-}
-
-.wedding-card img {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-}
-
-.wedding-card > div {
-  padding: 1.3rem;
-}
-
 .editor-title {
   display: flex;
   align-items: center;

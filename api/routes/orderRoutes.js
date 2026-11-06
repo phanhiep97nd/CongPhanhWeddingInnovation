@@ -30,7 +30,7 @@ router.post('/', async (request, response, next) => {
     }
 
     const origin = process.env.SITE_ORIGIN.replace(/\/$/, '');
-    const base = `${origin}/dashboard/${request.wedding._id}`;
+    const base = `${origin}/thiep-cua-toi/${request.wedding._id}`;
     for (let attempt = 0; attempt < 5; attempt++) {
       const orderCode = await uniqueOrderCode();
       const data = await payos.createPaymentLink({

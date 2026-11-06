@@ -4,7 +4,7 @@ export type SectionKey = "story" | "timeline" | "gallery" | "info" | "rsvp" | "p
 export type Plan = "free" | "basic" | "premium";
 export type Template = "classic" | "minimal" | "hy3d";
 export type ViewMode = "3d" | "mixed" | "normal";
-export type FeatureKey = "unlimitedGuests" | "removeBranding" | "largeGallery" | "excelExport" | "guestQr" | "giftBox" | "photoWall" | "customMusic" | "permanent" | "premiumTemplates";
+export type FeatureKey = "unlimitedGuests" | "removeBranding" | "largeGallery" | "excelExport" | "guestQr" | "photoWall" | "customMusic" | "voiceInvite" | "permanent" | "premiumTemplates";
 export type Entitlements = Record<FeatureKey, boolean>;
 
 export interface GiftAccount {
@@ -91,7 +91,7 @@ export interface CustomSection {
 export interface Wedding {
   invitationKind?: "wedding" | "birthday" | "housewarming" | "graduation" | "event";
   eventTitle?: string;
-  importedTemplate?: { templateId: string; values: Record<string, string>; opening: boolean; motion: boolean; envelope?: EnvelopeTexts } | null;
+  importedTemplate?: { templateId: string; values: Record<string, string>; opening: boolean; motion: boolean; album?: string[]; envelope?: EnvelopeTexts } | null;
   hasImportedTemplate?: boolean;
   id: string;
   slug: string;
@@ -130,6 +130,10 @@ export interface Wedding {
 }
 
 export interface WeddingSummary {
+  eventDate?: string | null;
+  /** Cover photo, else the card's share picture (first owner photo or template cover). */
+  image?: string;
+  templateId?: string | null;
   invitationKind?: Wedding["invitationKind"];
   eventTitle?: string;
   id: string;
@@ -170,11 +174,13 @@ export interface Guest {
   pickupPoint: string;
   room: string;
   note: string;
+  /** A recorded invitation played on this guest's card (Premium). */
+  voiceUrl?: string;
   createdAt: string;
   updatedAt: string;
 }
 
-export type PublicGuest = Pick<Guest, "code" | "invitationName" | "status" | "guestCount" | "joinGroup" | "pickupPoint" | "room">;
+export type PublicGuest = Pick<Guest, "code" | "invitationName" | "status" | "guestCount" | "joinGroup" | "pickupPoint" | "room" | "voiceUrl">;
 
 export interface Photo {
   id: string;

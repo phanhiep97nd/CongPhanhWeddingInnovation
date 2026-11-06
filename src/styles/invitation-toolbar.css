@@ -20,3 +20,10 @@
 .invitation-toolbar-close{display:flex;align-items:center;justify-content:center;margin-left:auto;min-width:44px;min-height:44px;border:0;border-radius:50%;background:#f4e0e4;color:#593d43;cursor:pointer}
 .invitation-wish-list{margin-top:20px;border-top:1px solid #e8ced4;overflow-wrap:anywhere}
 .invitation-wish-list p{padding:10px 0;border-bottom:1px solid #e8ced480}
+/* The couple's recorded invitation for this guest: top centre, above the card and its opening. */
+.guest-voice{position:fixed;z-index:2147483000;top:max(12px,env(safe-area-inset-top));left:50%;transform:translateX(-50%);max-width:calc(100% - 24px)}
+.guest-voice button{display:flex;align-items:center;gap:8px;padding:9px 16px;border:1px solid #e8ced4;border-radius:999px;background:#fffaf9f2;color:#7a3b46;font:600 14px/1.2 system-ui,sans-serif;box-shadow:0 6px 20px #59263222;cursor:pointer;backdrop-filter:blur(6px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.guest-voice button span{overflow:hidden;text-overflow:ellipsis}
+.guest-voice button[aria-pressed="true"]{background:#7a3b46;color:#fff;border-color:#7a3b46}
+.guest-voice button[aria-pressed="true"] svg{animation:guest-voice-pulse 1s ease-in-out infinite}
+@keyframes guest-voice-pulse{50%{transform:scale(1.2)}}

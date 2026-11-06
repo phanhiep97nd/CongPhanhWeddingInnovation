@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react";
-import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes, useLocation, useParams } from "react-router-dom";
 import { AuthProvider, ProtectedRoute } from "./lib/auth";
+import { CARDS_PATH } from "./lib/links";
 const Landing = lazy(() => import("./pages/Landing"));
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
@@ -24,6 +25,13 @@ export function Home() {
   return <Landing />;
 }
 
+// Old /dashboard links (bookmarks, payment return pages of earlier orders) land on the same page, query string included.
+function LegacyDashboard() {
+  const { "*": rest = "" } = useParams();
+  const { search, hash } = useLocation();
+  return <Navigate replace to={`${CARDS_PATH}${rest ? `/${rest}` : ""}${search}${hash}`} />;
+}
+
 export default function App() {
   return <BrowserRouter>
     <AuthProvider>
@@ -33,13 +41,14 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/dashboard" element={<ProtectedRoute>
+          <Route path={CARDS_PATH} element={<ProtectedRoute>
             <Dashboard />
           </ProtectedRoute>} />
-          <Route path="/dashboard/:id" element={<ProtectedRoute>
+          <Route path={`${CARDS_PATH}/:id`} element={<ProtectedRoute>
             <Editor />
           </ProtectedRoute>} />
-          <Route path="/dashboard/:id/qr" element={<ProtectedRoute><GuestQrPrint /></ProtectedRoute>} />
+          <Route path={`${CARDS_PATH}/:id/qr`} element={<ProtectedRoute><GuestQrPrint /></ProtectedRoute>} />
+          <Route path="/dashboard/*" element={<LegacyDashboard />} />
           <Route path="/admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
             <Route index element={<AdminOverview />} />
             <Route path="users" element={<AdminUsers />} />

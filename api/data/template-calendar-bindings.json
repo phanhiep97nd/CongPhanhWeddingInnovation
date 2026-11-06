@@ -159,6 +159,10 @@
     {
      "key": "f77",
      "pattern": "Tháng {m}"
+    },
+    {
+     "key": "f113",
+     "pattern": "Tháng {m}"
     }
    ]
   }
@@ -317,7 +321,13 @@
     "f102",
     "f103"
    ],
-   "weekStart": 1
+   "weekStart": 1,
+   "labels": [
+    {
+     "key": "f104",
+     "pattern": "Tháng {m}"
+    }
+   ]
   }
  ],
  "tpl-1cce164f545b5257": [
@@ -566,7 +576,13 @@
     "f110",
     "f111"
    ],
-   "weekStart": 1
+   "weekStart": 1,
+   "labels": [
+    {
+     "key": "f112",
+     "pattern": "Tháng {m}"
+    }
+   ]
   }
  ],
  "tpl-22df1b924841a0f3": [
@@ -1086,7 +1102,13 @@
     "f67",
     "f68"
    ],
-   "weekStart": 1
+   "weekStart": 1,
+   "labels": [
+    {
+     "key": "f69",
+     "pattern": "Tháng {mm}.{yyyy}"
+    }
+   ]
   }
  ],
  "tpl-e03275e1ed942fd1": [
@@ -8420,7 +8442,13 @@
     "f97",
     "f98"
    ],
-   "weekStart": 1
+   "weekStart": 1,
+   "labels": [
+    {
+     "key": "f99",
+     "pattern": "THÁNG {m}"
+    }
+   ]
   }
  ],
  "tpl-fdcf66d75d0c91e2": [
@@ -8938,8 +8966,7 @@
     "f68",
     "f69",
     "f70",
-    "f71",
-    "f72"
+    "f71"
    ],
    "weekStart": 1
   }
@@ -9026,6 +9053,10 @@
     {
      "key": "f59",
      "pattern": "{Month} {yyyy}"
+    },
+    {
+     "key": "f98",
+     "pattern": "THÁNG {m}"
     }
    ]
   }
@@ -9552,6 +9583,10 @@
     {
      "key": "f64",
      "pattern": "{Month} {yyyy}"
+    },
+    {
+     "key": "f103",
+     "pattern": "tháng {m}"
     }
    ]
   }
@@ -10234,7 +10269,13 @@
     "f67",
     "f68"
    ],
-   "weekStart": 1
+   "weekStart": 1,
+   "labels": [
+    {
+     "key": "f69",
+     "pattern": "Tháng {m}"
+    }
+   ]
   }
  ],
  "tpl-a537550ab3d139ae": [
@@ -10272,7 +10313,13 @@
     "f110",
     "f111"
    ],
-   "weekStart": 1
+   "weekStart": 1,
+   "labels": [
+    {
+     "key": "f112",
+     "pattern": "Tháng {m}"
+    }
+   ]
   }
  ]
 }

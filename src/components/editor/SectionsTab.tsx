@@ -20,7 +20,6 @@ export default function SectionsTab({ wedding: w, change, onUpgrade = () => {} }
             {sectionLabel(item.key, w.customSections)}
           </label>
           {item.key === "photoWall" && !w.entitlements?.photoWall && <LockedFeature plan="premium" label="Ảnh khách gửi" onUpgrade={onUpgrade} />}
-          {item.key === "giftBox" && !w.entitlements?.giftBox && <LockedFeature plan="basic" label="Hộp mừng cưới" onUpgrade={onUpgrade} />}
           <div className="actions">
             <button aria-label={`Chuyển ${sectionLabel(item.key, w.customSections)} lên`} disabled={i === 0} onClick={() => change({ sections: moveSection(w.sections, i, -1) })}>↑
             </button>

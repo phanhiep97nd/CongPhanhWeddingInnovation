@@ -18,7 +18,7 @@ export default function GiftBoxSection({ wedding }: { wedding: Wedding; key?: st
       if (root) root.style.overflowY = previousRoot;
     };
   }, [qrImage]);
-  if (!wedding.entitlements?.giftBox || !wedding.giftBox?.accounts.length) return null;
+  if (!wedding.giftBox?.accounts.length) return null;
   const couple = `${wedding.couple.groom} ${wedding.couple.bride}`;
 
   return <section className="py-20 px-5 bg-blush text-secondary text-center">

@@ -57,10 +57,10 @@ describe("authentication UI", () => {
     expect(localStorage.getItem("wi_token")).toBeNull();
   });
   it("redirects protected routes", async () => {
-    render(<MemoryRouter initialEntries={["/dashboard"]}>
+    render(<MemoryRouter initialEntries={["/thiep-cua-toi"]}>
       <AuthProvider>
         <Routes>
-          <Route path="/dashboard" element={<ProtectedRoute>
+          <Route path="/thiep-cua-toi" element={<ProtectedRoute>
             <p>Bảng điều khiển
             </p>
           </ProtectedRoute>} />
@@ -74,10 +74,10 @@ describe("authentication UI", () => {
   it("returns to the protected page after login", async () => {
     vi.spyOn(globalThis, "fetch").mockResolvedValue(response({ token: "jwt", user: { id: "u", name: "Lan", email: "lan@test.vn" } }));
     render(
-      <MemoryRouter initialEntries={["/dashboard"]}>
+      <MemoryRouter initialEntries={["/thiep-cua-toi"]}>
         <AuthProvider>
           <Routes>
-            <Route path="/dashboard" element={<ProtectedRoute><p>Danh sách thiệp</p></ProtectedRoute>} />
+            <Route path="/thiep-cua-toi" element={<ProtectedRoute><p>Danh sách thiệp</p></ProtectedRoute>} />
             <Route path="/login" element={<Login />} />
           </Routes>
         </AuthProvider>
@@ -157,7 +157,7 @@ describe("editor UI", () => {
   it("sends only changed fields when saving", async () => {
     const updated = { ...wedding, dateText: "02 · 02 · 2027" };
     const fetchMock = vi.spyOn(globalThis, "fetch").mockImplementation(async (_input, options) => response(options?.method === "PUT" ? updated : wedding));
-    render(<MemoryRouter initialEntries={["/dashboard/w1"]}><Routes><Route path="/dashboard/:id" element={<Editor />} /></Routes></MemoryRouter>);
+    render(<MemoryRouter initialEntries={["/thiep-cua-toi/w1"]}><Routes><Route path="/thiep-cua-toi/:id" element={<Editor />} /></Routes></MemoryRouter>);
     fireEvent.change(await screen.findByLabelText("Ngày hiển thị"), { target: { value: updated.dateText } });
     expect(screen.getByText("Chưa lưu")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Lưu thay đổi" }));

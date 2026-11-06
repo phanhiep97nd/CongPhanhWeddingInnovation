@@ -1,16 +1,18 @@
 import { useEffect, useMemo, useRef, useState, type RefObject } from 'react';
-import { ChevronLeft, Check, ChevronRight, ImageIcon, Link2, List, Mail, Play, MousePointerClick, Redo2, RotateCcw, Search, Type, Undo2, Upload, UserRound, X } from 'lucide-react';
+import { ChevronLeft, Check, ChevronRight, ImageIcon, Images, Link2, List, Mail, Play, MousePointerClick, Redo2, RotateCcw, Search, Type, Undo2, Upload, UserRound, X } from 'lucide-react';
 import { api, json } from '../../lib/api';
 import { uploadImage } from '../../lib/images';
 import { type TemplateBindingSource, type TemplateField } from '../../lib/templateLibrary';
 import type { EnvelopeTexts, Wedding } from '../../lib/types';
 import TemplateLibrary from '../TemplateLibrary';
 import DateInput from './DateInput';
+import MapField from './MapField';
+import { parseMapInput } from '../../lib/mapInput';
 import InvitationToolbar from '../invitation/InvitationToolbar';
 
 type Selection = NonNullable<Wedding['importedTemplate']>;
 type Kind = 'all' | 'text' | 'image' | 'edited';
-type Rendered = { templateId: string; opening: boolean; motion: boolean; content: string; envelope: string; values: Selection['values'] };
+type Rendered = { templateId: string; opening: boolean; motion: boolean; content: string; envelope: string; album: string; values: Selection['values'] };
 // The shared opening envelope is edited like a part of the card, under this pseudo key.
 const ENVELOPE = '__envelope';
 const envelopeParts: { key: keyof EnvelopeTexts; label: string; placeholder: string }[] = [
@@ -40,7 +42,7 @@ function InfoFields({ source, wedding: w, change, first }: { source: TemplateBin
   return <div className="studio-info">
     <label>Tên địa điểm<input ref={first} value={venue.name} onChange={e => change({ venue: { ...venue, name: e.target.value } })} /></label>
     <label>Địa chỉ<input value={venue.address} onChange={e => change({ venue: { ...venue, address: e.target.value } })} /></label>
-    <label>Liên kết bản đồ<input type="url" inputMode="url" value={venue.mapUrl} placeholder="https://maps.google.com/…" onChange={e => change({ venue: { ...venue, mapUrl: e.target.value } })} /></label>
+    <MapField value={venue.mapUrl} onChange={mapUrl => change({ venue: { ...venue, mapUrl } })} />
   </div>;
 }
 // Texts with the same content (ignoring case and spacing) are one piece of information edited once.
@@ -66,6 +68,7 @@ export default function ImportedTemplateEditor({ wedding, change }: { wedding: W
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
   const [previewBusy, setPreviewBusy] = useState(false);
+  const [albumProgress, setAlbumProgress] = useState('');
   // Phones edit one part at a time in a popup; the full list stays folded until asked for.
   const [sheet, setSheet] = useState(false);
   const [listOpen, setListOpen] = useState(false);
@@ -102,6 +105,13 @@ export default function ImportedTemplateEditor({ wedding, change }: { wedding: W
     const index = new Map<string, number>(order.map((key, at) => [key, at]));
     const owner = new Map<string, string>(), groups = new Map<string, string>(), sameText = new Map<string, string>(), members = new Map<string, string[]>();
     const rows = [...fields].sort((a, b) => (index.get(a.key) ?? Infinity) - (index.get(b.key) ?? Infinity)).filter(field => {
+      // The album is one row: the owner uploads its photos together instead of replacing them one by one.
+      if (field.album !== undefined) {
+        const lead = groups.get('album');
+        if (lead) { owner.set(field.key, lead); members.get(lead)!.push(field.key); return false; }
+        groups.set('album', field.key); members.set(field.key, [field.key]); owner.set(field.key, field.key);
+        return true;
+      }
       const group = field.binding?.source;
       if (group && groups.has(group)) { owner.set(field.key, groups.get(group)!); return false; }
       if (group) groups.set(group, field.key);
@@ -121,10 +131,12 @@ export default function ImportedTemplateEditor({ wedding, change }: { wedding: W
   const membersOf = (key: string) => members.get(key) || [key];
 
   const post = (message: Record<string, unknown>) => frame.current?.contentWindow?.postMessage(message, '*');
-  const edited = (field: TemplateField) => Boolean(selected && membersOf(field.key).some(key => Object.hasOwn(selected.values, key)));
+  const edited = (field: TemplateField) => Boolean(selected && ((field.album !== undefined && selected.album?.length) || membersOf(field.key).some(key => Object.hasOwn(selected.values, key))));
+  // Album positions of this template: the most photos the owner can upload.
+  const albumLimit = useMemo(() => fields.reduce((most, field) => field.album === undefined ? most : Math.max(most, field.album + 1), 0), [fields]);
   // Calendar cells have no text of their own to show; the wedding date stands for them.
   const weddingDay = wedding.eventDate ? new Date(wedding.eventDate).toLocaleDateString('vi-VN', { timeZone: 'UTC' }) : '';
-  const valueOf = (field: TemplateField) => field.binding ? boundValues[field.key] || (field.binding.source === 'schedule' ? weddingDay : '') : field.type === 'text' ? selected?.values[field.key] ?? softValues[field.key] ?? field.value : selected?.values[field.key] || images[field.key] || '';
+  const valueOf = (field: TemplateField) => field.binding ? boundValues[field.key] || (field.binding.source === 'schedule' ? weddingDay : '') : field.type === 'text' ? selected?.values[field.key] ?? softValues[field.key] ?? field.value : field.album !== undefined ? selected?.album?.[0] || images[field.key] || '' : selected?.values[field.key] || images[field.key] || '';
 
   useEffect(() => {
     setFields([]); setOrder([]); setActive(''); setOpeningKind(''); setDetached(new Set()); setHtml(''); setBoundValues({}); setSoftValues({}); setImages({}); setHistory([]); setFuture([]); setSheet(false);
@@ -149,12 +161,15 @@ export default function ImportedTemplateEditor({ wedding, change }: { wedding: W
   useEffect(() => {
     const version = ++revision.current;
     if (!selected) return;
+    // Field errors belong beside the input, not underneath the template preview.
+    // Preserve the last valid preview while the owner is typing an incomplete URL.
+    if (!parseMapInput(wedding.venue.mapUrl).ok) { setPreviewBusy(false); return; }
     const content = { couple: wedding.couple, eventDate: wedding.eventDate, eventTime: wedding.eventTime, dateText: wedding.dateText, venue: wedding.venue };
     const contentKey = JSON.stringify(content);
     const timer = setTimeout(() => {
       const shown = rendered.current;
-      const envelopeKey = JSON.stringify(selected.envelope || {});
-      if (shown && shown.templateId === selected.templateId && shown.opening === selected.opening && shown.motion === selected.motion && shown.content === contentKey && shown.envelope === envelopeKey) {
+      const envelopeKey = JSON.stringify(selected.envelope || {}), albumKey = JSON.stringify(selected.album || []);
+      if (shown && shown.templateId === selected.templateId && shown.opening === selected.opening && shown.motion === selected.motion && shown.content === contentKey && shown.envelope === envelopeKey && shown.album === albumKey) {
         const changed = [...new Set([...Object.keys(shown.values), ...Object.keys(selected.values)])].filter(key => shown.values[key] !== selected.values[key]);
         const patched = changed.every(key => { const field = fieldsRef.current.get(key); return field?.type === 'text' && live.current.get(key) === (selected.values[key] ?? softRef.current[key] ?? field.value); });
         if (patched) { rendered.current = { ...shown, values: selected.values }; return; }
@@ -162,7 +177,7 @@ export default function ImportedTemplateEditor({ wedding, change }: { wedding: W
       setPreviewBusy(true);
       api<{ html: string; boundValues: Record<string, string>; softValues?: Record<string, string>; images?: Record<string, string>; opening?: 'shared' | 'native' }>(`/weddings/${wedding.id}/template-preview`, json('POST', { ...selected, content }), true).then(result => {
         if (version !== revision.current) return;
-        rendered.current = { templateId: selected.templateId, opening: selected.opening, motion: selected.motion, content: contentKey, envelope: envelopeKey, values: selected.values };
+        rendered.current = { templateId: selected.templateId, opening: selected.opening, motion: selected.motion, content: contentKey, envelope: envelopeKey, album: albumKey, values: selected.values };
         live.current.clear();
         setHtml(result.html); setBoundValues(result.boundValues); setSoftValues(result.softValues || {}); setImages(result.images || {}); setOpeningKind(result.opening || ''); setError('');
       }).catch(e => { if (version === revision.current) setError(e.message); }).finally(() => { if (version === revision.current) setPreviewBusy(false); });
@@ -298,6 +313,48 @@ export default function ImportedTemplateEditor({ wedding, change }: { wedding: W
     } catch (e) { setError((e as Error).message); } finally { setBusy(false); }
   }
 
+  // Photos picked together upload in order; the album keeps at most one photo per album position of the template.
+  async function uploadAlbum(files: File[]) {
+    if (!selected) return;
+    const templateId = selected.templateId, room = albumLimit - (selected.album?.length || 0);
+    const chosen = files.slice(0, Math.max(0, room));
+    setError(files.length > chosen.length ? `Album của mẫu này có ${albumLimit} khung ảnh nên chỉ thêm được ${chosen.length} ảnh.` : '');
+    if (!chosen.length) return;
+    setBusy(true);
+    try {
+      const urls: string[] = [];
+      for (const [index, file] of chosen.entries()) { setAlbumProgress(`${index + 1}/${chosen.length}`); urls.push(await uploadImage(file)); }
+      const current = latest.current;
+      if (current?.templateId === templateId) setAlbum(current, [...(current.album || []), ...urls]);
+    } catch (e) { setError((e as Error).message); } finally { setBusy(false); setAlbumProgress(''); }
+  }
+  // Older cards replaced album photos one by one; once the album is set, those single edits give way to it.
+  function setAlbum(current: Selection, album: string[]) {
+    const values = Object.fromEntries(Object.entries(current.values).filter(([key]) => fieldMap.get(key)?.album === undefined));
+    update({ ...current, values, album });
+  }
+  const move = (album: string[], from: number, to: number) => { const next = [...album]; [next[from], next[to]] = [next[to], next[from]]; return next; };
+  const albumEditor = (lead: TemplateField) => {
+    if (!selected) return null;
+    const album = selected.album || [];
+    return <>
+      <p className="studio-hint"><Images size={13} aria-hidden="true" /> Album của mẫu này có {albumLimit} khung ảnh. Chọn nhiều ảnh cùng lúc; ảnh được xếp vào các khung theo thứ tự và lặp lại khi bạn có ít ảnh hơn số khung.</p>
+      {album.length > 0 ? <ol className="studio-album" aria-label="Ảnh trong album">{album.map((photo, index) => <li key={`${index}-${photo}`}>
+        <img src={photo} alt={`Ảnh ${index + 1}`} />
+        <span>{index + 1}</span>
+        <div className="studio-album-actions">
+          <button type="button" aria-label={`Đưa ảnh ${index + 1} lên trước`} disabled={index === 0} onClick={() => setAlbum(selected, move(album, index, index - 1))}><ChevronLeft size={14} aria-hidden="true" /></button>
+          <button type="button" aria-label={`Bỏ ảnh ${index + 1}`} onClick={() => setAlbum(selected, album.filter((_, at) => at !== index))}><X size={14} aria-hidden="true" /></button>
+          <button type="button" aria-label={`Đưa ảnh ${index + 1} ra sau`} disabled={index === album.length - 1} onClick={() => setAlbum(selected, move(album, index, index + 1))}><ChevronRight size={14} aria-hidden="true" /></button>
+        </div>
+      </li>)}</ol> : <div className="studio-image">{valueOf(lead) ? <img src={valueOf(lead)} alt="" /> : <ImageIcon size={32} aria-hidden="true" />}</div>}
+      <div className="studio-editor-actions">
+        <label className={`button studio-upload${busy || album.length >= albumLimit ? ' is-busy' : ''}`}><Upload size={16} aria-hidden="true" /> {busy ? `Đang tải ảnh ${albumProgress}…` : album.length >= albumLimit ? 'Album đã đủ ảnh' : album.length ? 'Thêm ảnh' : 'Tải ảnh album'}<input type="file" accept="image/*" multiple disabled={busy || album.length >= albumLimit} onChange={e => { const files = [...(e.target.files || [])]; e.target.value = ''; if (files.length) void uploadAlbum(files); }} /></label>
+        <span className="studio-count">{album.length}/{albumLimit} ảnh</span>
+        {album.length > 0 && <button type="button" className="studio-chip" onClick={() => setAlbum(selected, [])}><RotateCcw size={15} aria-hidden="true" /> Về ảnh mẫu</button>}
+      </div>
+    </>;
+  };
   const envelopeEditor = selected && <div className="studio-editor" key={ENVELOPE}>
     {!selected.opening && <p className="studio-hint">Hiệu ứng mở thiệp đang tắt nên khách sẽ không thấy phong thư. <button type="button" className="text-button" onClick={() => update({ ...selected, opening: true })}>Bật lại</button></p>}
     <div className="studio-info">{envelopeParts.map((part, index) => <label key={part.key}>{part.label}<input ref={index === 0 ? infoInput : undefined} maxLength={120} value={selected.envelope?.[part.key] || ''} placeholder={part.placeholder} onChange={e => setEnvelope(part.key, e.target.value)} /></label>)}</div>
@@ -309,7 +366,7 @@ export default function ImportedTemplateEditor({ wedding, change }: { wedding: W
     {field.binding ? <>
       <InfoFields source={field.binding.source} wedding={wedding} change={change} first={infoInput} />
       <p className="studio-hint"><Link2 size={13} aria-hidden="true" /> Đồng bộ với thông tin thiệp: lịch, đếm ngược và trang khách dùng cùng dữ liệu này.</p>
-    </> : field.type === 'text' ? <>
+    </> : field.album !== undefined ? albumEditor(field) : field.type === 'text' ? <>
       <label htmlFor={`studio-${field.key}`} className="sr-only">Nội dung</label>
       <textarea id={`studio-${field.key}`} ref={editorInput} rows={Math.min(8, Math.max(2, valueOf(field).split('\n').length + 1))} maxLength={5000} value={valueOf(field)} onChange={e => setValue(field.key, e.target.value, true)} />
       {membersOf(field.key).length > 1 && <p className="studio-hint"><Link2 size={13} aria-hidden="true" /> Sửa một lần cho cả {membersOf(field.key).length} chỗ có cùng nội dung trên thiệp. <button type="button" className="text-button" onClick={() => setDetached(old => new Set([...old, ...membersOf(field.key)]))}>Tách để sửa riêng</button></p>}
@@ -335,7 +392,7 @@ export default function ImportedTemplateEditor({ wedding, change }: { wedding: W
   </div>;
 
   return <section className="imported-studio">
-    <div className="studio-heading"><div><p className="landing-eyebrow">Không gian sáng tạo</p>{selected ? <><h2>Mẫu thiệp của bạn</h2><p>Bấm trực tiếp vào chữ hoặc ảnh trên thiệp, ô chỉnh sửa tương ứng sẽ mở ngay bên cạnh. Chữ thay đổi tức thì khi bạn gõ.</p></> : <><h2>Bộ sưu tập mẫu</h2><p>Chọn một mẫu, sau đó sửa chữ và ảnh trực tiếp trên thiệp.</p></>}</div><button type="button" className="button-outline" onClick={() => setBrowse(!browse)}>{browse ? 'Đóng bộ sưu tập' : selected ? 'Đổi mẫu' : 'Xem bộ sưu tập'}</button></div>
+    <div className="studio-heading"><div><p className="landing-eyebrow">Không gian sáng tạo</p>{selected ? <h2>Mẫu thiệp của bạn</h2> : <><h2>Bộ sưu tập mẫu</h2><p>Chọn một mẫu, sau đó sửa chữ và ảnh trực tiếp trên thiệp.</p></>}</div><button type="button" className="button-outline" onClick={() => setBrowse(!browse)}>{browse ? 'Đóng bộ sưu tập' : selected ? 'Đổi mẫu' : 'Xem bộ sưu tập'}</button></div>
     {browse && <TemplateLibrary selectedId={selectedId} initialCategory={wedding.invitationKind} onSelect={item => {
       if (selected && item.id !== selectedId && Object.keys(selected.values).length && !window.confirm('Đổi mẫu sẽ thay nội dung đang sửa trong mẫu hiện tại. Tiếp tục?')) return;
       if (item.id !== selectedId) change({ invitationKind: item.category, importedTemplate: { templateId: item.id, values: {}, opening: true, motion: true } });
@@ -373,9 +430,9 @@ export default function ImportedTemplateEditor({ wedding, change }: { wedding: W
             {fields.length > 0 && !visible.length && <li className="studio-list-note">Không có phần nào khớp.</li>}
             {visible.map(row => {
               const isActive = row.key === active, value = valueOf(row);
-              const title = row.binding ? row.binding.label : row.type === 'text' ? value.trim() || '(Để trống)' : row.label;
+              const title = row.binding ? row.binding.label : row.album !== undefined ? 'Album ảnh' : row.type === 'text' ? value.trim() || '(Để trống)' : row.label;
               const copies = membersOf(row.key).length;
-              const note = row.binding ? value.trim() || 'Chưa nhập' : row.type === 'image' ? (edited(row) ? 'Ảnh của bạn' : 'Ảnh mẫu') : [copies > 1 ? `Giống nhau ở ${copies} chỗ` : 'Chữ', edited(row) ? 'Đã sửa' : Object.hasOwn(softValues, row.key) ? 'Theo ngày cưới' : ''].filter(Boolean).join(' · ');
+              const note = row.binding ? value.trim() || 'Chưa nhập' : row.album !== undefined ? (selected.album?.length ? `${selected.album.length}/${albumLimit} ảnh của bạn` : `Ảnh mẫu · tối đa ${albumLimit} ảnh`) : row.type === 'image' ? (edited(row) ? 'Ảnh của bạn' : 'Ảnh mẫu') : [copies > 1 ? `Giống nhau ở ${copies} chỗ` : 'Chữ', edited(row) ? 'Đã sửa' : Object.hasOwn(softValues, row.key) ? 'Theo ngày cưới' : ''].filter(Boolean).join(' · ');
               return <li key={row.key} data-key={row.key} className={isActive ? 'is-active' : undefined}>
                 <button type="button" className="studio-row" aria-expanded={isActive} onClick={() => select(row.key, 'list')} onMouseEnter={() => post({ type: 'ht:hover', keys: membersOf(row.key) })} onMouseLeave={() => post({ type: 'ht:hover', key: '' })} onFocus={() => post({ type: 'ht:hover', keys: membersOf(row.key) })} onBlur={() => post({ type: 'ht:hover', key: '' })}>
                   <span className="studio-row-icon" aria-hidden="true">{row.type === 'image' ? value ? <img src={value} alt="" loading="lazy" /> : <ImageIcon size={16} /> : row.binding ? <Link2 size={15} /> : <Type size={16} />}</span>
@@ -390,7 +447,7 @@ export default function ImportedTemplateEditor({ wedding, change }: { wedding: W
           <button type="button" className="text-button studio-reset" onClick={() => { if (window.confirm('Trở lại giao diện gốc của Hỷ Thiệp? Nội dung đang sửa trong mẫu sẽ được bỏ.')) change({ importedTemplate: null }); }}>Dùng giao diện Hỷ Thiệp nguyên bản</button>
         </div>
         <div className="studio-preview">
-          <p aria-live="polite" className={previewBusy ? 'is-busy' : undefined}>{previewBusy ? 'Đang cập nhật bản nháp…' : <><MousePointerClick size={14} aria-hidden="true" /> Chạm vào chữ hoặc ảnh trên thiệp để sửa</>}</p>
+          {previewBusy && <p aria-live="polite" className="is-busy">Đang cập nhật bản nháp…</p>}
           {html ? <div className="invitation-toolbar-host"><iframe key={replay} ref={frame} title="Chỉnh sửa trực tiếp mẫu thiệp" sandbox="allow-scripts" srcDoc={html} onLoad={() => { post({ type: 'ht:restore', ...position.current, skipOpening: !playOpening.current && activeRef.current !== ENVELOPE }); playOpening.current = false; }} /><InvitationToolbar frame={frame} key={`${selectedId}-${replay}`} wedding={wedding} /></div> : <p>Đang mở mẫu…</p>}
           {selected.opening && html && <button type="button" className="studio-chip studio-replay" onClick={() => { playOpening.current = true; position.current = { top: 0, inner: 0 }; setReplay(value => value + 1); }}><Play size={14} aria-hidden="true" /> Xem hiệu ứng mở thiệp</button>}
           <small>Nhớ bấm “Lưu thay đổi” để cập nhật thiệp gửi cho khách.</small>
@@ -398,7 +455,7 @@ export default function ImportedTemplateEditor({ wedding, change }: { wedding: W
       </div>
       <dialog ref={popup} className="studio-popup" aria-label="Chỉnh sửa phần đã chọn" onClose={() => setSheet(false)} onClick={event => { if (event.target === event.currentTarget) setSheet(false); }}>
         {sheet && (field || active === ENVELOPE) && <>
-          <div className="studio-popup-head"><span className="studio-row-icon" aria-hidden="true">{!field ? <Mail size={16} /> : field.type === 'image' ? <ImageIcon size={16} /> : field.binding ? <Link2 size={15} /> : <Type size={16} />}</span><strong>{!field ? 'Phong thư mở đầu' : field.binding ? field.binding.label : field.type === 'image' ? field.label : 'Sửa chữ'}</strong><button type="button" aria-label="Đóng" onClick={() => setSheet(false)}><X size={18} /></button></div>
+          <div className="studio-popup-head"><span className="studio-row-icon" aria-hidden="true">{!field ? <Mail size={16} /> : field.album !== undefined ? <Images size={16} /> : field.type === 'image' ? <ImageIcon size={16} /> : field.binding ? <Link2 size={15} /> : <Type size={16} />}</span><strong>{!field ? 'Phong thư mở đầu' : field.binding ? field.binding.label : field.album !== undefined ? 'Album ảnh' : field.type === 'image' ? field.label : 'Sửa chữ'}</strong><button type="button" aria-label="Đóng" onClick={() => setSheet(false)}><X size={18} /></button></div>
           {editor}
           <button type="button" className="button studio-popup-done" onClick={() => setSheet(false)}><Check size={16} aria-hidden="true" /> Xong</button>
         </>}

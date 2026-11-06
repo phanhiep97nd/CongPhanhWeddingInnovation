@@ -39,7 +39,7 @@ describe("premium editor gates", () => {
 
   it("disables the minimal template for free", async () => {
     vi.stubGlobal("fetch", editorFetch(wedding));
-    render(<MemoryRouter initialEntries={["/dashboard/w1"]}><Routes><Route path="/dashboard/:id" element={<Editor />} /></Routes></MemoryRouter>);
+    render(<MemoryRouter initialEntries={["/thiep-cua-toi/w1"]}><Routes><Route path="/thiep-cua-toi/:id" element={<Editor />} /></Routes></MemoryRouter>);
     await openPanel("Mẫu thiệp");
     expect(screen.getByRole("button", { name: /Tối giản/ })).toBeDisabled();
     expect(screen.getByText(/Mẫu Tối giản cần gói Cao cấp/)).toBeInTheDocument();
@@ -48,7 +48,7 @@ describe("premium editor gates", () => {
   it("allows the minimal template for premium", async () => {
     const change = { ...wedding, entitlements: premiumEntitlements, plan: "premium" as const };
     vi.stubGlobal("fetch", editorFetch(change));
-    render(<MemoryRouter initialEntries={["/dashboard/w1"]}><Routes><Route path="/dashboard/:id" element={<Editor />} /></Routes></MemoryRouter>);
+    render(<MemoryRouter initialEntries={["/thiep-cua-toi/w1"]}><Routes><Route path="/thiep-cua-toi/:id" element={<Editor />} /></Routes></MemoryRouter>);
     await openPanel("Mẫu thiệp");
     fireEvent.click(screen.getByRole("button", { name: /Tối giản/ }));
     expect(screen.getByRole("button", { name: /Tối giản/ })).toHaveClass("selected");

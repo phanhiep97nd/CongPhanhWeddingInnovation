@@ -47,7 +47,7 @@ router.get('/pricing', async (request, response, next) => {
     const labels = {
       unlimitedGuests: 'Không giới hạn khách mời', removeBranding: 'Ẩn thương hiệu',
       largeGallery: 'Thư viện ảnh lớn', excelExport: 'Xuất Excel', guestQr: 'Mã QR khách mời',
-      giftBox: 'Hộp mừng cưới', photoWall: 'Tường ảnh', customMusic: 'Nhạc riêng',
+      photoWall: 'Tường ảnh', customMusic: 'Nhạc riêng', voiceInvite: 'Lời mời ghi âm cho từng khách',
       permanent: 'Thiệp vĩnh viễn', premiumTemplates: 'Mẫu thiệp cao cấp'
     };
     response.json({
@@ -97,7 +97,6 @@ router.get('/weddings/:slug', (request, response) => {
   wedding.entitlements = entitlements;
   wedding.showBranding = !entitlements.removeBranding;
   if (!entitlements.premiumTemplates) { wedding.template = 'classic'; if (wedding.theme) wedding.theme = { ...wedding.theme, design: undefined }; }
-  if (!entitlements.giftBox) wedding.giftBox = { note: '', accounts: [] };
   else wedding.giftBox = wedding.giftBox || { note: '', accounts: [] };
   if (!entitlements.customMusic) wedding.musicUrl = '';
   if (!entitlements.photoWall) {
@@ -110,7 +109,7 @@ router.get('/weddings/:slug/guests/:code', async (request, response, next) => {
   try {
     const guest = await findGuest(request.wedding, request.params.code).lean();
     if (!guest) return response.status(404).json({ message: 'Không tìm thấy khách mời' });
-    response.json(publicGuest(guest));
+    response.json(publicGuest(guest, entitlementsFor(request.wedding.plan).voiceInvite));
   } catch (error) {
     next(error);
   }
@@ -130,7 +129,7 @@ router.put('/weddings/:slug/guests/:code/rsvp', limiter, async (request, respons
     if (!guest) return response.status(404).json({ message: 'Không tìm thấy khách mời' });
     Object.assign(guest, data);
     await guest.save();
-    response.json(publicGuest(guest));
+    response.json(publicGuest(guest, entitlementsFor(request.wedding.plan).voiceInvite));
   } catch (error) {
     next(error);
   }

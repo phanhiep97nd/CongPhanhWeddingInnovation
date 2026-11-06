@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { api, ApiError } from "../lib/api";
 import type { PublicGuest, Wedding } from "../lib/types";
 import InvitationToolbar from '../components/invitation/InvitationToolbar';
+import GuestVoice from '../components/invitation/GuestVoice';
 const ClassicInvitation = lazy(() => import("../components/invitation/original/InvitationShell"));
 const MinimalInvitation = lazy(() => import("../components/invitation/minimal/InvitationShell"));
 // The Hỷ 3D template offers two modes (3D / classic), chosen inside Hy3dModes.
@@ -75,6 +76,7 @@ export default function Invitation() {
     : wedding.template === "hy3d" ? Hy3dInvitation : ClassicInvitation;
   return <Suspense fallback={<p className="page-loading">Đang mở thiệp...</p>}>
     <Shell wedding={wedding} guest={guest} slug={slug} />
+    {guest?.voiceUrl && <GuestVoice src={guest.voiceUrl} couple={`${wedding.couple.groom} & ${wedding.couple.bride}`} />}
     {!wedding.hasImportedTemplate && <InvitationToolbar key={slug} slug={slug} wedding={wedding} guestName={guest?.invitationName} fixed />}
   </Suspense>;
 }

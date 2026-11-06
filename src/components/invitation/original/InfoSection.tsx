@@ -2,6 +2,7 @@
 // Keep JSX structure and classNames; only swap hardcoded content for wedding data.
 
 import React, { useState, useEffect, useRef } from "react";
+import VenueMap from '../VenueMap';
 import { motion, AnimatePresence, useScroll, useTransform, useInView } from "motion/react";
 import {
   Heart, BookOpen, Calendar, Image as ImageIcon,
@@ -146,25 +147,7 @@ export function InfoSection({ guestName, refreshKey, mode = "info" }: { guestNam
 
         {/* Google Maps */}
         {mode === "info" && <Reveal variants={fadeUp}>
-          <div className="rounded-3xl overflow-hidden shadow-lg border border-primary/20">
-            <div className="bg-gradient-to-r from-sage/20 to-primary/10 px-8 py-5 border-b border-primary/15">
-              <h4 className="font-serif text-2xl text-secondary italic flex items-center gap-3">
-                <MapPin size={20} className="text-sage" /> Địa điểm tổ chức
-              </h4>
-              <p className="text-secondary/50 text-xs mt-1">{wedding.venue.name}</p>
-            </div>
-            <div className="relative w-full" style={{ paddingBottom: "55%" }}>
-              <iframe
-                src={wedding.venue.mapUrl}
-                className="absolute inset-0 w-full h-full"
-                style={{ border: 0 }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title={wedding.venue.name}
-              />
-            </div>
-          </div>
+          <VenueMap venue={wedding.venue} />
         </Reveal>}
 
         {/* Dress Code */}

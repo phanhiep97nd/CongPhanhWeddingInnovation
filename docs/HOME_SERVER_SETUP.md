@@ -7,7 +7,7 @@
 ```text
 Internet → Cloudflare HTTPS → Tunnel hoanhoahong
   → 127.0.0.1:8050 → web (nginx + React)
-                       ├── /, /dashboard, /admin, /w/... → SPA
+                       ├── /, /thiep-cua-toi, /admin, /w/... → SPA
                        └── /api/* → api:3001/* → db:5432 (PostgreSQL)
                                                 └── volume postgres_data
 Trình duyệt → Cloudinary (ảnh/nhạc)
@@ -113,11 +113,11 @@ docker compose -f docker-compose.home.yml ps
 docker compose -f docker-compose.home.yml logs api db --tail=40
 curl -fsS http://127.0.0.1:8050/api/
 curl -fsS http://127.0.0.1:8050/api/public/pricing
-curl -I http://127.0.0.1:8050/dashboard
+curl -I http://127.0.0.1:8050/thiep-cua-toi
 docker compose -f docker-compose.home.yml exec -T web nginx -t
 ```
 
-Mong đợi db/api healthy, web Up; log API có `(PostgreSQL)`; `/api/` trả `{"status":"ok"}` sau khi kiểm tra DB thật; pricing trả JSON, dashboard trả 200. Schema được tạo tự động lần đầu.
+Mong đợi db/api healthy, web Up; log API có `(PostgreSQL)`; `/api/` trả `{"status":"ok"}` sau khi kiểm tra DB thật; pricing trả JSON, /thiep-cua-toi trả 200. Schema được tạo tự động lần đầu.
 
 ## 6. Kết nối hythiep.net vào Cloudflare
 
@@ -148,7 +148,7 @@ Domain chính trả 200; www trả 308 giữ path/query; API trả status ok.
 ## 7. Kiểm tra chức năng và thanh toán
 
 - Đăng ký/đăng nhập, tạo/sửa/xuất bản thiệp, upload ảnh; kiểm tra Network gọi cùng domain `/api/...`.
-- Mở link `/w/<slug>/<code>`, gửi RSVP và kiểm tra dashboard. Với gói tương ứng thử nhạc, ảnh khách, QR và Excel. `402 PLAN_REQUIRED` là giới hạn gói.
+- Mở link `/w/<slug>/<code>`, gửi RSVP và kiểm tra trang Thiệp của tôi. Với gói tương ứng thử nhạc, ảnh khách, QR và Excel. `402 PLAN_REQUIRED` là giới hạn gói.
 - Đăng nhập email trong `ADMIN_EMAILS`, mở `/admin`, kiểm tra thống kê, người dùng, đơn hàng và giá.
 
 Cấp quyền cho tài khoản đã có rồi đăng nhập lại:

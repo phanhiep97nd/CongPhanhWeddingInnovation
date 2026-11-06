@@ -138,10 +138,36 @@
 .landing-steps p { padding: 1rem 0; border-bottom: 1px solid #d4e0c4; }
 .landing-close { padding: 5rem 1.5rem; text-align: center; background: #e8eddf; }
 .landing-close h2 { max-width: 18ch; margin: 0 auto 2rem; }
-.landing-footer { display: flex; justify-content: space-between; gap: 1rem; padding: 2rem max(1.5rem, calc((100vw - 1100px)/2)); font-size: .85rem; }
+.landing-footer { padding: 3.5rem max(1.5rem, calc((100vw - 1100px)/2)) 1.5rem; background: #3f3134; color: #e9dcdd; font-size: .9rem; }
+.landing-footer-main { display: grid; grid-template-columns: 1.6fr 1fr 1fr; gap: 2.5rem; padding-bottom: 2.5rem; border-bottom: 1px solid #ffffff1f; }
+.landing-footer .brand { color: #fff; font-size: 1.9rem; }
+.landing-footer-brand p { max-width: 34ch; margin: .9rem 0 0; line-height: 1.7; color: #cdbcbe; }
+.landing-footer nav { display: grid; align-content: start; gap: .7rem; }
+.landing-footer h2 { margin: 0 0 .3rem; font: 600 .75rem/1 system-ui, sans-serif; letter-spacing: .14em; text-transform: uppercase; color: #f2b8bf; }
+.landing-footer nav a { color: #e9dcdd; text-decoration: none; }
+.landing-footer nav a:hover { color: #fff; text-decoration: underline; text-underline-offset: 4px; }
+.landing-footer-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem 1.5rem; padding-top: 1.25rem; color: #b9a7a9; font-size: .8rem; }
+.landing-footer-bottom strong { color: #fff; font-weight: 600; letter-spacing: .02em; }
+.landing-highlights { max-width: 1100px; margin: auto; padding: 4.5rem 1.5rem 6rem; }
+.landing-highlights-head { max-width: 40rem; margin-bottom: 2.5rem; }
+.landing-highlights-head h2 { margin: .4rem 0 0; font: italic clamp(2.5rem, 4vw, 4rem)/1.08 var(--font-cormorant); color: #4c6635; text-wrap: balance; }
+.landing-highlights-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; }
+.landing-highlights-grid article { padding: 1.6rem; border: 1px solid #ecd3d6; border-radius: 1.25rem; background: #fffaf9; }
+.landing-highlights-grid article > span { display: grid; place-items: center; width: 2.6rem; height: 2.6rem; border-radius: 50%; background: #f9e8ea; color: #a85e65; font-size: 1.15rem; }
+.landing-highlights-grid h3 { margin: 1rem 0 .4rem; font-size: 1.05rem; font-weight: 700; line-height: 1.35; color: #4a3a3c; }
+.landing-highlights-grid p { margin: 0; line-height: 1.65; color: #765552; font-size: .92rem; }
+.hero-details { list-style: none; padding: 0; }
+@media (max-width: 900px) { .landing-highlights-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 600px) {
+  .landing-highlights { padding: 3rem 1rem 4rem; }
+  .landing-highlights-grid { grid-template-columns: minmax(0, 1fr); gap: .9rem; }
+  .landing-footer-main { grid-template-columns: 1fr 1fr; gap: 2rem 1.5rem; }
+  .landing-footer-brand { grid-column: 1 / -1; }
+  .landing-footer-bottom { flex-direction: column; }
+}
 
 @media (max-width: 768px) {
-  .landing-hero, .landing-story, .landing-link-preview, .landing-steps { grid-template-columns: minmax(0, 1fr); }
+  .landing-hero, .landing-link-preview, .landing-steps { grid-template-columns: minmax(0, 1fr); }
   .landing-hero { min-height: 0; gap: 2rem; }
   .landing-copy h1 { max-width: 16ch; }
   .landing-preview { min-height: 470px; }
@@ -159,38 +185,11 @@
   .landing-preview { min-height: 380px; }
   .landing-preview-copy { inset-inline: .6rem; }
   .landing-preview-copy h2 { font-size: clamp(1.8rem, 8vw, 2.4rem); }
-  .landing-footer { flex-direction: column; }
 }
 
 .landing-preview-copy h2 span {
   color: #a85e65;
 }
 
-.landing-story {
-  max-width: 1100px;
-  margin: auto;
-  padding: 3rem 1.5rem 7rem;
-  display: grid;
-  grid-template-columns: .7fr 1fr;
-  gap: 4rem;
-}
 
-/* Declared after the base rule above, so it must restate the mobile stack itself. */
-@media (max-width: 768px) {
-  .landing-story {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 1.5rem;
-    padding-bottom: 4rem;
-  }
-}
-
-.landing-story h2 {
-  font: italic clamp(2.5rem, 4vw, 4rem) var(--font-cormorant);
-}
-
-.landing-story p {
-  padding: 1.2rem 0;
-  border-bottom: 1px solid #d4e0c4;
-  line-height: 1.75;
-}
-
+.landing-footer .brand-word { color: #fbeef0; }

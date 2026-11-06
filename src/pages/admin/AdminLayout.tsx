@@ -2,13 +2,14 @@ import { Link, NavLink, Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../../lib/auth";
 import { BRAND_NAME } from "../../lib/brand";
 import BrandLogo from "../../components/BrandLogo";
+import { CARDS_PATH } from "../../lib/links";
 
 export default function AdminLayout() {
   const { user, loading } = useAuth();
   // Wait for /auth/me: on a reload of /admin the user is still null for a moment.
   if (loading) return <p className="page-loading">Đang tải tài khoản...</p>;
   if (!user) return <Navigate to="/login" state={{ from: "/admin" }} replace />;
-  if (user.role !== "admin") return <Navigate to="/dashboard" replace />;
+  if (user.role !== "admin") return <Navigate to={CARDS_PATH} replace />;
   return <main className="admin-page">
     <header className="dash-header admin-header">
       <Link className="brand" to="/admin" aria-label={`${BRAND_NAME} quản trị`}><BrandLogo suffix="Quản trị" /></Link>
@@ -18,7 +19,7 @@ export default function AdminLayout() {
         <NavLink to="/admin/orders">Đơn hàng</NavLink>
         <NavLink to="/admin/settings">Cài đặt</NavLink>
       </nav>
-      <Link to="/dashboard">Thiệp của tôi</Link>
+      <Link to={CARDS_PATH}>Thiệp của tôi</Link>
     </header>
     <div className="shell admin-content"><Outlet /></div>
   </main>;

@@ -4,9 +4,9 @@ const FEATURES = {
   largeGallery: 'basic',
   excelExport: 'basic',
   guestQr: 'basic',
-  giftBox: 'basic',
   photoWall: 'premium',
   customMusic: 'premium',
+  voiceInvite: 'premium',
   permanent: 'premium',
   premiumTemplates: 'premium'
 };

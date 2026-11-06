@@ -18,7 +18,7 @@ describe('plan routes', () => {
   it('returns all owner plan metadata', async () => {
     const { wedding } = await setup();
     expect(wedding).toMatchObject({ plan: 'free', limits: { guests: 10, gallery: 6 }, usage: { guests: 0 }, prices: { basic: 30000, premium: 99000 } });
-    expect(wedding.entitlements.giftBox).toBe(false);
+    expect(wedding.entitlements.customMusic).toBe(false);
     expect(wedding.expiresAt).toBeTruthy();
   });
 
@@ -91,31 +91,15 @@ describe('plan routes', () => {
     expect((await request(app).get('/public/weddings/new-wedding')).status).toBe(200);
   });
 
-  it('hides prepared gift box on free', async () => {
+  it('shows the gift box on every plan, including the free plan, with uploaded QR codes for e-wallets', async () => {
     const { account, owner, publicPath } = await setup();
-    const giftBox = { note: 'Thank you', accounts: [{ label: 'Bride', bankBin: '970436', bankName: 'VCB', accountNumber: '12345678', accountName: 'LAN' }] };
-    expect((await request(app).put(owner).set(authorized(account.token)).send({ giftBox })).status).toBe(200);
-    const result = await request(app).get(publicPath);
-    expect(result.body.giftBox).toEqual({ note: '', accounts: [] });
-  });
-
-  it('shows the gift box from the basic plan, with uploaded QR codes for e-wallets', async () => {
-    const { account, wedding, owner, publicPath } = await setup();
     const momo = { label: 'MoMo', bankBin: '', bankName: '', accountNumber: '', accountName: 'Lan', qrImage: 'https://cdn.example.test/momo.png' };
     expect((await request(app).put(owner).set(authorized(account.token)).send({ giftBox: { note: '', accounts: [{ ...momo, qrImage: '' }] } })).status).toBe(400);
     expect((await request(app).put(owner).set(authorized(account.token)).send({ giftBox: { note: 'Cảm ơn', accounts: [momo] } })).status).toBe(200);
-    await Wedding.updateOne({ _id: wedding.id }, { $set: { plan: 'basic' } });
     const result = await request(app).get(publicPath);
-    expect(result.body.entitlements.giftBox).toBe(true);
-    expect(result.body.giftBox.accounts[0]).toMatchObject({ label: 'MoMo', qrImage: 'https://cdn.example.test/momo.png' });
-  });
-
-  it('shows prepared gift box on premium', async () => {
-    const { account, wedding, owner, publicPath } = await setup();
-    await request(app).put(owner).set(authorized(account.token)).send({ giftBox: { note: 'Thank you', accounts: [] } });
-    await Wedding.updateOne({ _id: wedding.id }, { $set: { plan: 'premium' } });
-    const result = await request(app).get(publicPath);
-    expect(result.body.giftBox.note).toBe('Thank you');
+    expect(result.body.plan).toBe('free');
+    expect(result.body.entitlements).not.toHaveProperty('giftBox');
+    expect(result.body.giftBox).toMatchObject({ note: 'Cảm ơn', accounts: [{ label: 'MoMo', qrImage: 'https://cdn.example.test/momo.png' }] });
   });
 
   it('hides prepared custom music on free', async () => {
@@ -135,6 +119,25 @@ describe('plan routes', () => {
     const { publicPath } = await setup();
     const result = await request(app).get(publicPath);
     expect(result.body.sections.find(section => section.key === 'photoWall').enabled).toBe(false);
+  });
+
+  it('records a voice invitation per guest on premium only and plays it on that guest card', async () => {
+    const { account, wedding, owner, publicPath } = await setup();
+    const voiceUrl = 'https://res.cloudinary.com/demo/video/upload/voice.webm';
+    const locked = await request(app).post(`${owner}/guests`).set(authorized(account.token)).send({ invitationName: 'Cô Lan', voiceUrl });
+    expect(locked.status).toBe(402);
+    expect(locked.body).toMatchObject({ feature: 'voiceInvite', requiredPlan: 'premium' });
+    await Wedding.updateOne({ _id: wedding.id }, { $set: { plan: 'premium' } });
+    const guest = (await request(app).post(`${owner}/guests`).set(authorized(account.token)).send({ invitationName: 'Cô Lan', voiceUrl })).body;
+    expect(guest.voiceUrl).toBe(voiceUrl);
+    expect((await request(app).get(`${publicPath}/guests/${guest.code}`)).body.voiceUrl).toBe(voiceUrl);
+    expect((await request(app).post(`${owner}/guests`).set(authorized(account.token)).send({ invitationName: 'Bác Hai', voiceUrl: 'http://example.com/a.mp3' })).status).toBe(400);
+    // After a downgrade the recording is no longer played, other details still save, and a new recording is refused.
+    await Wedding.updateOne({ _id: wedding.id }, { $set: { plan: 'basic' } });
+    expect((await request(app).get(`${publicPath}/guests/${guest.code}`)).body.voiceUrl).toBeUndefined();
+    expect((await request(app).put(`${owner}/guests/${guest.id}`).set(authorized(account.token)).send({ invitationName: 'Cô Lan Anh', voiceUrl })).status).toBe(200);
+    expect((await request(app).put(`${owner}/guests/${guest.id}`).set(authorized(account.token)).send({ voiceUrl: voiceUrl + '?v=2' })).status).toBe(402);
+    expect((await request(app).put(`${owner}/guests/${guest.id}`).set(authorized(account.token)).send({ voiceUrl: '' })).body.voiceUrl).toBe('');
   });
 
   it('shows photo wall section on premium', async () => {
@@ -180,10 +183,12 @@ describe('plan routes', () => {
     expect((await request(app).post(`${publicPath}/photos`).send({ url: 'https://example.com/p.jpg' })).status).toBe(403);
   });
 
-  it('returns current pricing and ten features', async () => {
+  it('returns current pricing and ten labelled features, without the free gift box', async () => {
     const result = await request(app).get('/public/pricing');
     expect(result.body.prices).toEqual({ basic: 30000, premium: 99000 });
     expect(result.body.features).toHaveLength(10);
+    expect(result.body.features.map(feature => feature.key)).not.toContain('giftBox');
+    expect(result.body.features.find(feature => feature.key === 'voiceInvite')).toEqual({ key: 'voiceInvite', label: 'Lời mời ghi âm cho từng khách', plan: 'premium' });
   });
 
   it('uses admin settings for free limits', async () => {

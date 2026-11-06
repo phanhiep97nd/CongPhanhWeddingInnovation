@@ -5,7 +5,10 @@ const { guestFields } = require('../lib/validators');
 const { serialize } = require('../lib/serialize');
 const { createGuest, createGuests } = require('../lib/guestCodes');
 const { getSettings } = require('../models/Settings');
-const { limitsFor, paywall } = require('../lib/plans');
+const { entitlementsFor, limitsFor, paywall } = require('../lib/plans');
+
+// Adding or changing a guest's recorded invitation needs Premium; removing one is always allowed.
+const voiceLocked = (wedding, data) => Boolean(data.voiceUrl) && !entitlementsFor(wedding.plan).voiceInvite;
 
 const router = express.Router({ mergeParams: true });
 
@@ -27,6 +30,7 @@ router.post('/', async (request, response, next) => {
     }
     const data = pick(request.body, guestFields);
     if (!data.invitationName) fail('Tên trên thiệp là bắt buộc');
+    if (voiceLocked(request.wedding, data)) { const error = paywall('voiceInvite'); return response.status(error.status).json(error.body); }
     data.name = data.name || data.invitationName;
     const guest = await createGuest(request.wedding._id, data);
     response.status(201).json(serialize(guest, ['wedding']));
@@ -71,6 +75,11 @@ router.post('/bulk', async (request, response, next) => {
 router.put('/:guestId', async (request, response, next) => {
   try {
     const data = pick(request.body, guestFields);
+    if (voiceLocked(request.wedding, data)) {
+      const current = await Guest.findOne({ _id: request.params.guestId, wedding: request.wedding._id }).lean();
+      // Saving other details of a guest whose recording predates a downgrade keeps that recording as it is.
+      if (current?.voiceUrl !== data.voiceUrl) { const error = paywall('voiceInvite'); return response.status(error.status).json(error.body); }
+    }
     const guest = await Guest.findOneAndUpdate(
       { _id: request.params.guestId, wedding: request.wedding._id },
       { $set: data },
